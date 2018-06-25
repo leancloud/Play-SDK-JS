@@ -44,6 +44,7 @@ class Play extends EventEmitter {
         })
         .catch(function (error) {
             console.log(error);
+            self.emit(Event.OnConnectFailed, error.data);
         });
     }
 
@@ -95,8 +96,9 @@ class Play extends EventEmitter {
                 self.emit(Event.OnDisconnected);
             }
         };
-        this._websocket.onerror = function (evt) {
-            console.error(evt);
+        this._websocket.onerror = function (error) {
+            console.error(error);
+            self.emit(Event.OnConnectFailed, error.data);
         };
     }
 
@@ -121,8 +123,9 @@ class Play extends EventEmitter {
             }
             self.stopKeepAlive();
         };
-        this._websocket.onerror = function (evt) {
-            console.error(evt);
+        this._websocket.onerror = function (error) {
+            console.error(error);
+            self.emit(Event.OnConnectFailed, error.data);
         };
     }
 
