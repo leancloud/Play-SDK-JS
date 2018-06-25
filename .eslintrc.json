@@ -1,0 +1,11 @@
+{
+  "extends": ["airbnb-base", "prettier"],
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "no-console": [2, { "allow": ["warn", "error"] }],
+    "no-underscore-dangle": 0
+  }
+}

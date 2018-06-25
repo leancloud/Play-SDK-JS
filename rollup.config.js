@@ -7,8 +7,9 @@ export default {
   input: 'src/index.js',
   output: {
     name: 'play',
-    file: 'play.js',
+    file: 'dist/play.js',
     format: 'umd',
+    sourcemap: true,
   },
   plugins: [
     resolve({
@@ -17,7 +18,7 @@ export default {
     commonjs(),
     json(),
     replace({
-      'process.env.NODE_ENV': JSON.stringify( 'production' )
-    })
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
   ],
 };
