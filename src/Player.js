@@ -27,12 +27,12 @@ class Player {
 
     // 判断是不是当前客户端玩家
     isLocal() {
-        return this.play.actorId === this.actorId;
+        return (this.actorId !== -1) && (this.play.player.actorId === this.actorId);
     }
 
     // 判断是不是主机玩家
     isMaster() {
-        return this.play.masterActorId === this.actorId;
+        return (this.actorId !== -1) && (this.play.room.masterActorId === this.actorId);
     }
 
     // 判断是不是活跃状态

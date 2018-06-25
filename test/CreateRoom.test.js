@@ -86,4 +86,33 @@ describe('test create room', function () {
 
         play1.connect();
     });
+
+    it('test isMaster or isLocal', function (done) {
+        var roomName = '116';
+        var play1 = newPlay('hello6');
+        var play2 = newPlay('world6');
+
+        play1.on(Event.OnJoinedLobby, function () {
+            play1.createRoom(roomName);
+        });
+        play1.on(Event.OnCreatedRoom, function () {
+            expect(play1.room.name).to.be.equal(roomName);
+            play2.connect();
+        });
+        play1.on(Event.OnNewPlayerJoinedRoom, function (newPlayer) {
+            expect(play1.player.isMaster()).to.be.ok;
+            expect(newPlayer.isMaster()).to.be.not.ok;
+            expect(play1.player.isLocal()).to.be.ok;
+            expect(newPlayer.isLocal()).to.be.not.ok;
+            play1.disconnect();
+            play2.disconnect();
+            done();
+        });
+        
+        play2.on(Event.OnJoinedLobby, function () {
+            play2.joinRoom(roomName);
+        });
+
+        play1.connect();
+    });
 });
