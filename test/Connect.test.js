@@ -29,20 +29,25 @@ describe('test connection', function () {
         play.connect();
     });
 
-    // it('test connect with same id', function (done) {
-    //     var play1 = newPlay('hello');
-    //     var play2 = newPlay('hello2');
-    //     play1.on(Event.OnConnected, function () {
-    //         play2.connect();
-    //     });
-    //     play2.on(Event.OnConnected, function () {
-    //         console.log('play2 connected');
-    //     });
-    //     play2.on(Event.OnDisconnected, function () {
-    //         done();
-    //     });
-    //     play1.connect();
-    // });
+    it('test connect with same id', function (done) {
+        var play1 = newPlay('hello');
+        var play2 = newPlay('hello');
+        play1.on(Event.OnConnected, function () {
+            play2.connect();
+        });
+        play2.on(Event.OnConnected, function () {
+            console.log('play2 connected');
+        });
+        play2.on(Event.OnError, function (code, detail) {
+            console.log('error code: ' + code);
+            if (code === 4104) {
+                play1.disconnect();
+                play2.disconnect();
+                done();
+            }
+        });
+        play1.connect();
+    });
 
     it('test disconnect from master', function (done) {
         var play = newPlay('hello1');
