@@ -12,7 +12,7 @@ import { Player } from './Player';
 import { handleMasterMsg } from './handler/MasterHandler';
 import { handleGameMsg } from './handler/GameHandler';
 import { PlayObject } from './PlayObject';
-import { PlayVersion } from './Config';
+import { PlayVersion, MasterServerURL } from './Config';
 
 class Play extends EventEmitter {
     static getInstance() {
@@ -35,7 +35,7 @@ class Play extends EventEmitter {
         this._gameVersion = gameVersion;
         var self = this;
         var params = "appId=" + this._appId + "&secure=true";
-        axios.get("https://game-router-cn-e1.leancloud.cn/v1/router?" + params)
+        axios.get(MasterServerURL + params)
         .then(function (response) {
             var data = response.data;
             console.log(data);
