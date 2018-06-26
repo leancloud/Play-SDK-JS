@@ -1,6 +1,4 @@
-'use strict';
-
-class Player {
+export default class Player {
   constructor(play) {
     this.play = play;
     this.userId = '';
@@ -8,7 +6,7 @@ class Player {
   }
 
   static newFromJSONObject(play, playerJSONObject) {
-    var player = new Player(play);
+    const player = new Player(play);
     player.initWithJSONObject(playerJSONObject);
     return player;
   }
@@ -60,5 +58,3 @@ class Player {
     this.properties = Object.assign(this.properties, changedProperties);
   }
 }
-
-export { Player };

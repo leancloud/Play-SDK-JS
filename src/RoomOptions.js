@@ -1,8 +1,6 @@
-'use strict';
-
 const MAX_PLAYER_COUNT = 10;
 
-class RoomOptions {
+export default class RoomOptions {
   constructor() {
     this.opened = true;
     this.visible = true;
@@ -14,7 +12,7 @@ class RoomOptions {
   }
 
   toMsg() {
-    var options = {};
+    const options = {};
     if (!this.opened) options.open = this.opened;
     if (!this.visible) options.visible = this.visible;
     if (this.emptyRoomTtl > 0) options.emptyRoomTtl = this.emptyRoomTtl;
@@ -27,5 +25,3 @@ class RoomOptions {
     return options;
   }
 }
-
-export { RoomOptions };
