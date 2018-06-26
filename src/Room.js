@@ -1,14 +1,13 @@
-'use strict';
+import Player from './Player';
 
-import { Player } from './Player';
-
-class Room {
+export default class Room {
   constructor(play) {
     this.play = play;
   }
 
+  /* eslint no-param-reassign: ["error", { "props": false }] */
   static newFromJSONObject(play, roomJSONObject) {
-    var room = new Room(play);
+    const room = new Room(play);
     room.name = roomJSONObject.cid;
     room.opened = roomJSONObject.open;
     room.visible = roomJSONObject.visible;
@@ -16,9 +15,9 @@ class Room {
     room.masterActorId = roomJSONObject.masterActorId;
     room.expectedUserIds = roomJSONObject.expectMembers;
     room.players = {};
-    for (var i = 0; i < roomJSONObject.members.length; i++) {
-      var playerDTO = roomJSONObject.members[i];
-      var player = Player.newFromJSONObject(play, playerDTO);
+    for (let i = 0; i < roomJSONObject.members.length; i += 1) {
+      const playerDTO = roomJSONObject.members[i];
+      const player = Player.newFromJSONObject(play, playerDTO);
       if (player.userId === play.userId) {
         play.player = player;
       }
@@ -41,20 +40,15 @@ class Room {
   }
 
   getPlayer(actorId) {
-    var player = this.players[actorId];
+    const player = this.players[actorId];
     if (player === null) {
-      console.error('not found player: ' + actorId);
+      console.error(`not found player: ${actorId}`);
     }
     return player;
   }
 
   getPlayerList() {
-    var playerList = new Array();
-    for (var key in this.players) {
-      var player = this.players[key];
-      playerList.push(player);
-    }
-    return playerList;
+    return Object.values(this.players);
   }
 
   setMasterId(newMasterId) {
@@ -81,5 +75,3 @@ class Room {
     this.properties = Object.assign(this.properties, changedProperties);
   }
 }
-
-export { Room };

@@ -1,6 +1,4 @@
-'use strict';
-
-class LobbyRoom {
+export default class LobbyRoom {
   constructor(lobbyRoomDTO) {
     this.roomName = lobbyRoomDTO.cid;
     this.addr = lobbyRoomDTO.addr;
@@ -15,5 +13,3 @@ class LobbyRoom {
     }
   }
 }
-
-export { LobbyRoom };

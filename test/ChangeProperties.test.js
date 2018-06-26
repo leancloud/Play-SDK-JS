@@ -1,33 +1,26 @@
-var expect = require('chai').expect;
-import {
-  Play,
-  Room,
-  Player,
-  Event,
-  RoomOptions,
-  ReceiverGroup,
-  SendEventOptions,
-} from '../src/index';
-import { newPlay } from './Utils';
+import Event from '../src/Event';
+import newPlay from './Utils';
 
-describe('test change properties', function() {
-  it('test change room properties', function(done) {
-    var roomName = '311';
-    var play1 = newPlay('hello');
-    var play2 = newPlay('world');
-    var p1Flag = false;
-    var p2Flag = false;
+const { expect } = require('chai');
 
-    play1.on(Event.OnJoinedLobby, function() {
-      expect(play1._sessionToken).to.be.not.empty;
+describe('test change properties', () => {
+  it('test change room properties', done => {
+    const roomName = '311';
+    const play1 = newPlay('hello3110');
+    const play2 = newPlay('world3110');
+    let p1Flag = false;
+    let p2Flag = false;
+
+    play1.on(Event.OnJoinedLobby, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, function() {
+    play1.on(Event.OnCreatedRoom, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnRoomCustomPropertiesChanged, function(changedProps) {
-      var props = play1.room.getCustomProperties();
+    play1.on(Event.OnRoomCustomPropertiesChanged, () => {
+      const props = play1.room.getCustomProperties();
       expect(props.title).to.be.equal('room311');
       expect(props.gold).to.be.equal(1000);
       p1Flag = true;
@@ -38,19 +31,19 @@ describe('test change properties', function() {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, function() {
-      expect(play2._sessionToken).to.be.not.empty;
+    play2.on(Event.OnJoinedLobby, () => {
+      expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, function() {
+    play2.on(Event.OnJoinedRoom, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      var props = {
+      const props = {
         title: 'room311',
         gold: 1000,
       };
       play2.room.setCustomProperties(props);
     });
-    play2.on(Event.OnRoomCustomPropertiesChanged, function(changedProps) {
-      var props = play2.room.getCustomProperties();
+    play2.on(Event.OnRoomCustomPropertiesChanged, () => {
+      const props = play2.room.getCustomProperties();
       expect(props.title).to.be.equal('room311');
       expect(props.gold).to.be.equal(1000);
       p2Flag = true;
@@ -65,23 +58,23 @@ describe('test change properties', function() {
     play2.connect();
   });
 
-  it('test change room properties with cas', function(done) {
-    var roomName = '312';
-    var play1 = newPlay('hello');
-    var play2 = newPlay('world');
-    var p1Flag = false;
-    var p2Flag = false;
+  it('test change room properties with cas', done => {
+    const roomName = '312';
+    const play1 = newPlay('hello3120');
+    const play2 = newPlay('world3120');
+    let p1Flag = false;
+    let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, function() {
-      expect(play1._sessionToken).to.be.not.empty;
+    play1.on(Event.OnJoinedLobby, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, function() {
+    play1.on(Event.OnCreatedRoom, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnRoomCustomPropertiesChanged, function(changedProps) {
-      var props = play1.room.getCustomProperties();
+    play1.on(Event.OnRoomCustomPropertiesChanged, () => {
+      const props = play1.room.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.title).to.be.equal('room312');
       expect(props.gold).to.be.equal(1000);
@@ -93,29 +86,29 @@ describe('test change properties', function() {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, function() {
-      expect(play2._sessionToken).to.be.not.empty;
+    play2.on(Event.OnJoinedLobby, () => {
+      expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, function() {
+    play2.on(Event.OnJoinedRoom, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      var props = {
+      const props = {
         id: 1,
         title: 'room312',
         gold: 1000,
       };
       play2.room.setCustomProperties(props);
 
-      var p = {
+      const p = {
         id: 2,
         gold: 2000,
       };
-      var ep = {
+      const ep = {
         id: 2,
       };
       play2.room.setCustomProperties(p, ep);
     });
-    play2.on(Event.OnRoomCustomPropertiesChanged, function(changedProps) {
-      var props = play2.room.getCustomProperties();
+    play2.on(Event.OnRoomCustomPropertiesChanged, () => {
+      const props = play2.room.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.title).to.be.equal('room312');
       expect(props.gold).to.be.equal(1000);
@@ -131,37 +124,33 @@ describe('test change properties', function() {
     play2.connect();
   });
 
-  it('test change player properties', function(done) {
-    var roomName = '311';
-    var play1 = newPlay('hello');
-    var play2 = newPlay('world');
-    var p1Flag = false;
-    var p2Flag = false;
+  it('test change player properties', done => {
+    const roomName = '313';
+    const play1 = newPlay('hello3130');
+    const play2 = newPlay('world3130');
+    let p1Flag = false;
+    let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, function() {
-      expect(play1._sessionToken).to.be.not.empty;
+    play1.on(Event.OnJoinedLobby, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, function() {
+    play1.on(Event.OnCreatedRoom, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnPlayerCustomPropertiesChanged, function(
-      player,
-      changedProps
-    ) {
-      var props = player.getCustomProperties();
+    play1.on(Event.OnPlayerCustomPropertiesChanged, player => {
+      const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
-      var poker = props.poker;
+      const { poker } = props;
       expect(poker.flower).to.be.equal(1);
       expect(poker.num).to.be.equal(13);
-      var arr = props.arr;
-      expect(arr[0]).to.be.ok;
+      const { arr } = props;
+      expect(arr[0]).to.be.equal(true);
       expect(arr[1]).to.be.equal(111);
-      var poker = arr[2];
-      expect(poker.flower).to.be.equal(1);
-      expect(poker.num).to.be.equal(13);
+      expect(arr[2].flower).to.be.equal(1);
+      expect(arr[2].num).to.be.equal(13);
       p1Flag = true;
       if (p1Flag && p2Flag) {
         play1.disconnect();
@@ -170,40 +159,35 @@ describe('test change properties', function() {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, function() {
-      expect(play2._sessionToken).to.be.not.empty;
+    play2.on(Event.OnJoinedLobby, () => {
+      expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, function() {
+    play2.on(Event.OnJoinedRoom, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      var props = {
+      const props = {
         nickname: 'Li Lei',
         gold: 1000,
       };
-      var poker = {
+      const poker = {
         flower: 1,
         num: 13,
       };
       props.poker = poker;
-      var arr = [true, 111, poker];
+      const arr = [true, 111, poker];
       props.arr = arr;
       play2.player.setCustomProperties(props);
     });
-    play2.on(Event.OnPlayerCustomPropertiesChanged, function(
-      player,
-      changedProps
-    ) {
-      var props = player.getCustomProperties();
+    play2.on(Event.OnPlayerCustomPropertiesChanged, player => {
+      const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
-      var poker = props.poker;
+      const { poker } = props;
       expect(poker.flower).to.be.equal(1);
       expect(poker.num).to.be.equal(13);
-      var arr = props.arr;
-      expect(arr[0]).to.be.ok;
-      expect(arr[1]).to.be.equal(111);
-      var poker = arr[2];
-      expect(poker.flower).to.be.equal(1);
-      expect(poker.num).to.be.equal(13);
+      expect(props.arr[0]).to.be.equal(true);
+      expect(props.arr[1]).to.be.equal(111);
+      expect(props.arr[2].flower).to.be.equal(1);
+      expect(props.arr[2].num).to.be.equal(13);
       p2Flag = true;
       if (p1Flag && p2Flag) {
         play1.disconnect();
@@ -216,26 +200,23 @@ describe('test change properties', function() {
     play2.connect();
   });
 
-  it('test change player properties with cas', function(done) {
-    var roomName = '316';
-    var play1 = newPlay('hello');
-    var play2 = newPlay('world');
-    var p1Flag = false;
-    var p2Flag = false;
+  it('test change player properties with cas', done => {
+    const roomName = '316';
+    const play1 = newPlay('hello3160');
+    const play2 = newPlay('world3160');
+    let p1Flag = false;
+    let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, function() {
-      expect(play1._sessionToken).to.be.not.empty;
+    play1.on(Event.OnJoinedLobby, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, function() {
+    play1.on(Event.OnCreatedRoom, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnPlayerCustomPropertiesChanged, function(
-      player,
-      changedProps
-    ) {
-      var props = player.getCustomProperties();
+    play1.on(Event.OnPlayerCustomPropertiesChanged, player => {
+      const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
@@ -247,31 +228,28 @@ describe('test change properties', function() {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, function() {
-      expect(play2._sessionToken).to.be.not.empty;
+    play2.on(Event.OnJoinedLobby, () => {
+      expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, function() {
+    play2.on(Event.OnJoinedRoom, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      var props = {
+      const props = {
         id: 1,
         nickname: 'Li Lei',
         gold: 1000,
       };
       play2.player.setCustomProperties(props);
 
-      var p = {
+      const p = {
         nickname: 'Jim',
       };
-      var ep = {
+      const ep = {
         id: 0,
       };
       play2.player.setCustomProperties(p, ep);
     });
-    play2.on(Event.OnPlayerCustomPropertiesChanged, function(
-      player,
-      changedProps
-    ) {
-      var props = player.getCustomProperties();
+    play2.on(Event.OnPlayerCustomPropertiesChanged, player => {
+      const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);

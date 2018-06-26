@@ -1,5 +1,5 @@
 // 事件
-var Event = {
+const Event = {
   // 连接成功
   OnConnected: 'OnConnected',
   // 连接失败
@@ -40,4 +40,4 @@ var Event = {
   OnError: 'OnError',
 };
 
-export { Event };
+export default Event;
