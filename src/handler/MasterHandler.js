@@ -25,6 +25,9 @@ function handleLeftLobby(play) {
   play.emit(Event.OnLeftLobby);
 }
 
+// 处理统计信息
+function handleStatistic() {}
+
 // 房间列表更新
 function handleRoomList(play, msg) {
   play.lobbyRoomList = [];
@@ -95,6 +98,9 @@ export default function handleMasterMsg(play, message) {
           console.error(`no handler for lobby msg: ${msg.op}`);
           break;
       }
+      break;
+    case 'statistic':
+      handleStatistic();
       break;
     case 'conv':
       switch (msg.op) {
