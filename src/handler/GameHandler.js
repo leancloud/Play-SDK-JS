@@ -6,8 +6,8 @@ import Event from '../Event';
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {
   // 根据缓存加入房间的规则
-  play._cachedRoomMsg.i = play.getMsgId();
-  play.send(play._cachedRoomMsg);
+  play._cachedRoomMsg.i = play._getMsgId();
+  play._send(play._cachedRoomMsg);
 }
 
 // 创建房间
@@ -49,7 +49,7 @@ function handlePlayerLeftRoom(play, msg) {
 
 // 主机切换
 function handleMasterChanged(play, msg) {
-  play.room.setMasterId(msg.masterActorId);
+  play.room._setMasterId(msg.masterActorId);
   const newMaster = play.room.getPlayer(msg.masterActorId);
   play.emit(Event.OnMasterSwitched, newMaster);
 }
@@ -57,33 +57,33 @@ function handleMasterChanged(play, msg) {
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
   const opened = msg.toggle;
-  play.room.setOpened(opened);
+  play.room._setOpened(opened);
 }
 
 // 房间是否可见
 function handleRoomVisibleChanged(play, msg) {
   const visible = msg.toggle;
-  play.room.setVisible(visible);
+  play.room._setVisible(visible);
 }
 
 // 房间属性变更
 function handleRoomCustomPropertiesChanged(play, msg) {
   const changedProperties = msg.attr;
-  play.room.mergeProperties(changedProperties);
+  play.room._mergeProperties(changedProperties);
   play.emit(Event.OnRoomCustomPropertiesChanged, changedProperties);
 }
 
 // 玩家属性变更
 function handlePlayerCustomPropertiesChanged(play, msg) {
   const player = play.room.getPlayer(msg.initByActor);
-  player.mergeProperties(msg.attr);
+  player._mergeProperties(msg.attr);
   play.emit(Event.OnPlayerCustomPropertiesChanged, player, msg.attr);
 }
 
 // 玩家下线
 function handlePlayerOffline(play, msg) {
   const player = play.room.getPlayer(msg.initByActor);
-  player.setActive(false);
+  player._setActive(false);
   play.emit(Event.OnPlayerActivityChanged, player);
 }
 
@@ -91,7 +91,7 @@ function handlePlayerOffline(play, msg) {
 function handlePlayerOnline(play, msg) {
   const player = play.room.getPlayer(msg.member.actorId);
   player.initWithJSONObject(msg.member);
-  player.setActive(true);
+  player._setActive(true);
   play.emit(Event.OnPlayerActivityChanged, player);
 }
 
@@ -102,7 +102,7 @@ function handleLeaveRoom(play) {
   play.room = null;
   play.player = null;
   play.emit(Event.OnLeftRoom);
-  play.connectToMaster();
+  play._connectToMaster();
 }
 
 // 自定义事件
