@@ -22,7 +22,8 @@ describe('test create room', () => {
   });
 
   it('test create custom room', done => {
-    const roomName = '111';
+    const randId = parseInt(Math.random() * 1000000, 10);
+    const roomName = `id${randId}`;
     const play = newPlay('hello2');
     play.on(Event.OnJoinedLobby, () => {
       expect(play._sessionToken).to.be.not.equal(null);

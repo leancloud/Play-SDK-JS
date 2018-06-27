@@ -2,7 +2,7 @@ import Player from './Player';
 
 export default class Room {
   constructor(play) {
-    this.play = play;
+    this._play = play;
   }
 
   /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -51,27 +51,27 @@ export default class Room {
     return Object.values(this.players);
   }
 
-  setMasterId(newMasterId) {
-    this.masterActorId = newMasterId;
-  }
-
-  setOpened(opened) {
-    this.opened = opened;
-  }
-
-  setVisible(visible) {
-    this.visible = visible;
-  }
-
   setCustomProperties(properties, expectedValues = null) {
-    this.play.setRoomCustomProperties(properties, expectedValues);
+    this._play.setRoomCustomProperties(properties, expectedValues);
   }
 
   getCustomProperties() {
     return this.properties;
   }
 
-  mergeProperties(changedProperties) {
+  _mergeProperties(changedProperties) {
     this.properties = Object.assign(this.properties, changedProperties);
+  }
+
+  _setMasterId(newMasterId) {
+    this.masterActorId = newMasterId;
+  }
+
+  _setOpened(opened) {
+    this.opened = opened;
+  }
+
+  _setVisible(visible) {
+    this.visible = visible;
   }
 }

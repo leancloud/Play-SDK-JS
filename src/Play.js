@@ -37,7 +37,7 @@ export default class Play extends EventEmitter {
       .then(response => {
         console.warn(response.data);
         self._masterServer = response.data.server;
-        self.connectToMaster();
+        self._connectToMaster();
       })
       .catch(error => {
         console.warn(error);
@@ -47,7 +47,7 @@ export default class Play extends EventEmitter {
 
   // 重连
   reconnect() {
-    this.connectToMaster();
+    this._connectToMaster();
   }
 
   // 重连并重新加入房间
@@ -55,16 +55,16 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: this._cachedRoomMsg.cid,
       rejoin: true,
     };
-    this.connectToGame();
+    this._connectToGame();
   }
 
   // 断开连接
   disconnect() {
-    this.stopKeepAlive();
+    this._stopKeepAlive();
     if (this._websocket) {
       this._websocket.close();
       this._websocket = null;
@@ -72,68 +72,14 @@ export default class Play extends EventEmitter {
     console.warn(`${this.userId} disconnect.`);
   }
 
-  // 连接至大厅服务器
-  connectToMaster() {
-    this.cleanup();
-    this._switchingServer = true;
-    const self = this;
-    this._websocket = new WebSocket(this._masterServer);
-    this._websocket.onopen = () => {
-      console.warn('Lobby websocket opened');
-      self._switchingServer = false;
-      self.emit(Event.OnConnected);
-      self.sessionOpen();
-    };
-    this._websocket.onmessage = msg => {
-      handleMasterMsg(self, msg);
-    };
-    this._websocket.onclose = () => {
-      console.warn('Lobby websocket closed');
-      if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
-      }
-    };
-    this._websocket.onerror = error => {
-      console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
-    };
-  }
-
-  // 连接至游戏服务器
-  connectToGame() {
-    this.cleanup();
-    this._switchingServer = true;
-    const self = this;
-    this._websocket = new WebSocket(this._secureGameAddr);
-    this._websocket.onopen = () => {
-      console.warn('Game websocket opened');
-      self._switchingServer = false;
-      self.sessionOpen();
-    };
-    this._websocket.onmessage = msg => {
-      handleGameMsg(self, msg);
-    };
-    this._websocket.onclose = () => {
-      console.warn('Game websocket closed');
-      if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
-      }
-      self.stopKeepAlive();
-    };
-    this._websocket.onerror = error => {
-      console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
-    };
-  }
-
   // 加入大厅
   joinLobby() {
     const msg = {
       cmd: 'lobby',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 离开大厅
@@ -141,9 +87,9 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'lobby',
       op: 'remove',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 创建房间
@@ -160,7 +106,7 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'start',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: roomName,
     };
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
@@ -173,7 +119,7 @@ export default class Play extends EventEmitter {
     }
     // Router 创建房间的消息体
     const msg = this._cachedRoomMsg;
-    this.send(msg);
+    this._send(msg);
   }
 
   // 指定房间名加入房间
@@ -187,14 +133,14 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: roomName,
     };
     if (expectedUserIds) {
       this._cachedRoomMsg.expectMembers = expectedUserIds;
     }
     const msg = this._cachedRoomMsg;
-    this.send(msg);
+    this._send(msg);
   }
 
   // 重新加入房间
@@ -202,12 +148,12 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: roomName,
       rejoin: true,
     };
     const msg = this._cachedRoomMsg;
-    this.send(msg);
+    this._send(msg);
   }
 
   // 随机加入或创建房间
@@ -223,7 +169,7 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: roomName,
     };
     // 拷贝房间参数
@@ -237,14 +183,14 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: roomName,
       createOnNotFound: true,
     };
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    this.send(msg);
+    this._send(msg);
   }
 
   // 随机加入房间
@@ -260,7 +206,7 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
     };
     if (matchProperties) {
       this._cachedRoomMsg.expectAttr = matchProperties;
@@ -279,7 +225,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    this.send(msg);
+    this._send(msg);
   }
 
   // 设置房间开启 / 关闭
@@ -287,10 +233,10 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'open',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       toggle: opened,
     };
-    this.this.send(msg);
+    this.this._send(msg);
   }
 
   // 设置房间可见 / 不可见
@@ -298,10 +244,10 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'visible',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       toggle: visible,
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 离开房间
@@ -309,10 +255,10 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'remove',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       cid: this.room.name,
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 设置房主
@@ -320,10 +266,10 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'update-master-client',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       masterActorId: nextMasterActorId,
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 设置房间属性
@@ -339,13 +285,13 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'update',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       attr: properties,
     };
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    this.send(msg);
+    this._send(msg);
   }
 
   // 设置玩家属性
@@ -361,14 +307,14 @@ export default class Play extends EventEmitter {
     const msg = {
       cmd: 'conv',
       op: 'update-player-prop',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       targetActorId: actorId,
       playerProperty: properties,
     };
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    this.send(msg);
+    this._send(msg);
   }
 
   // 发送自定义消息
@@ -379,56 +325,110 @@ export default class Play extends EventEmitter {
     }
     const msg = {
       cmd: 'direct',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       eventId,
       msg: eventData,
       receiverGroup: options.receiverGroup,
       toActorIds: options.targetActorIds,
       cachingOption: options.cachingOption,
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 开始会话，建立连接后第一条消息
-  sessionOpen() {
+  _sessionOpen() {
     const msg = {
       cmd: 'session',
       op: 'open',
-      i: this.getMsgId(),
+      i: this._getMsgId(),
       appId: this._appId,
       peerId: this.userId,
       ua: `${PlayVersion}_${this._gameVersion}`,
     };
-    this.send(msg);
+    this._send(msg);
   }
 
   // 发送消息
-  send(msg) {
+  _send(msg) {
     const msgData = JSON.stringify(msg);
     console.warn(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
     // 心跳包
-    this.stopKeepAlive();
+    this._stopKeepAlive();
     const self = this;
     this._keepAlive = setTimeout(() => {
       const keepAliveMsg = {};
-      self.send(keepAliveMsg);
+      self._send(keepAliveMsg);
     }, 10000);
   }
 
-  getMsgId() {
+  // 连接至大厅服务器
+  _connectToMaster() {
+    this._cleanup();
+    this._switchingServer = true;
+    const self = this;
+    this._websocket = new WebSocket(this._masterServer);
+    this._websocket.onopen = () => {
+      console.warn('Lobby websocket opened');
+      self._switchingServer = false;
+      self.emit(Event.OnConnected);
+      self._sessionOpen();
+    };
+    this._websocket.onmessage = msg => {
+      handleMasterMsg(self, msg);
+    };
+    this._websocket.onclose = () => {
+      console.warn('Lobby websocket closed');
+      if (!self._switchingServer) {
+        self.emit(Event.OnDisconnected);
+      }
+    };
+    this._websocket.onerror = error => {
+      console.error(error);
+      self.emit(Event.OnConnectFailed, error.data);
+    };
+  }
+
+  // 连接至游戏服务器
+  _connectToGame() {
+    this._cleanup();
+    this._switchingServer = true;
+    const self = this;
+    this._websocket = new WebSocket(this._secureGameAddr);
+    this._websocket.onopen = () => {
+      console.warn('Game websocket opened');
+      self._switchingServer = false;
+      self._sessionOpen();
+    };
+    this._websocket.onmessage = msg => {
+      handleGameMsg(self, msg);
+    };
+    this._websocket.onclose = () => {
+      console.warn('Game websocket closed');
+      if (!self._switchingServer) {
+        self.emit(Event.OnDisconnected);
+      }
+      self._stopKeepAlive();
+    };
+    this._websocket.onerror = error => {
+      console.error(error);
+      self.emit(Event.OnConnectFailed, error.data);
+    };
+  }
+
+  _getMsgId() {
     this._msgId += 1;
     return this._msgId;
   }
 
-  stopKeepAlive() {
+  _stopKeepAlive() {
     if (this._keepAlive) {
       clearTimeout(this._keepAlive);
       this._keepAlive = null;
     }
   }
 
-  cleanup() {
+  _cleanup() {
     if (this._websocket) {
       this._websocket.onopen = null;
       this._websocket.onconnect = null;

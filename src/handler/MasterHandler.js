@@ -38,7 +38,7 @@ function handleGameServer(play, msg) {
   play._gameAddr = msg.addr;
   play._secureGameAddr = msg.secureAddr;
   if (msg.cid) play._cachedRoomMsg.cid = msg.cid;
-  play.connectToGame();
+  play._connectToGame();
 }
 
 // 创建房间

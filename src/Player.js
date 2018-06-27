@@ -1,6 +1,6 @@
 export default class Player {
   constructor(play) {
-    this.play = play;
+    this._play = play;
     this.userId = '';
     this.actorId = -1;
   }
@@ -23,12 +23,14 @@ export default class Player {
 
   // 判断是不是当前客户端玩家
   isLocal() {
-    return this.actorId !== -1 && this.play.player.actorId === this.actorId;
+    return this.actorId !== -1 && this._play.player.actorId === this.actorId;
   }
 
   // 判断是不是主机玩家
   isMaster() {
-    return this.actorId !== -1 && this.play.room.masterActorId === this.actorId;
+    return (
+      this.actorId !== -1 && this._play.room.masterActorId === this.actorId
+    );
   }
 
   // 判断是不是活跃状态
@@ -37,13 +39,13 @@ export default class Player {
   }
 
   // 设置活跃状态
-  setActive(active) {
+  _setActive(active) {
     this.inActive = !active;
   }
 
   // 设置自定义属性接口
   setCustomProperties(properties, expectedValues = null) {
-    this.play.setPlayerCustomProperties(
+    this._play.setPlayerCustomProperties(
       this.actorId,
       properties,
       expectedValues
@@ -54,7 +56,7 @@ export default class Player {
     return this.properties;
   }
 
-  mergeProperties(changedProperties) {
+  _mergeProperties(changedProperties) {
     this.properties = Object.assign(this.properties, changedProperties);
   }
 }
