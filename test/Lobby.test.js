@@ -7,7 +7,6 @@ describe('test lobby', () => {
   it('test join lobby manually', done => {
     const play = newPlay('play');
     play.on(Event.OnConnected, () => {
-      console.warn('lobby test connected');
       play.joinLobby();
     });
     play.on(Event.OnJoinedLobby, () => {

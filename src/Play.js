@@ -372,7 +372,6 @@ export default class Play extends EventEmitter {
       console.warn('Lobby websocket opened');
       self._switchingServer = false;
       self._sessionOpen();
-      self.emit(Event.OnConnected);
     };
     this._websocket.onmessage = msg => {
       handleMasterMsg(self, msg);
