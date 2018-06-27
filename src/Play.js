@@ -31,7 +31,7 @@ export default class Play extends EventEmitter {
     this._gameVersion = gameVersion;
     this._autoJoinLobby = autoJoinLobby;
     const self = this;
-    const params = `appId=${this._appId}&secure=true`;
+    const params = `appId=${this._appId}&secure=true&ua=${this._getUA()}`;
     axios
       .get(MasterServerURL + params)
       .then(response => {
@@ -343,7 +343,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       appId: this._appId,
       peerId: this.userId,
-      ua: `${PlayVersion}_${this._gameVersion}`,
+      ua: this._getUA(),
     };
     this._send(msg);
   }
@@ -371,8 +371,8 @@ export default class Play extends EventEmitter {
     this._websocket.onopen = () => {
       console.warn('Lobby websocket opened');
       self._switchingServer = false;
-      self.emit(Event.OnConnected);
       self._sessionOpen();
+      self.emit(Event.OnConnected);
     };
     this._websocket.onmessage = msg => {
       handleMasterMsg(self, msg);
@@ -437,6 +437,10 @@ export default class Play extends EventEmitter {
       this._websocket.close();
       this._websocket = null;
     }
+  }
+
+  _getUA() {
+    return `${PlayVersion}_${this._gameVersion}`;
   }
 }
 
