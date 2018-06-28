@@ -9,4 +9,4 @@ deploy:
   file: "./dist/play.js"
   skip_cleanup: true
   on:
-    repo: onerain88/Play-SDK-JS
+    tags: true
