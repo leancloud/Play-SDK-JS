@@ -54,7 +54,7 @@ describe('test lobby', () => {
     });
     play4.on(Event.OnLobbyRoomListUpdate, () => {
       if (play4.lobbyRoomList.length > 0) {
-        expect(play4.lobbyRoomList.length).equal(3);
+        expect(play4.lobbyRoomList.length >= 3).to.be.equal(true);
         play1.disconnect();
         play2.disconnect();
         play3.disconnect();

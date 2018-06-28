@@ -32,6 +32,9 @@ export default class Room {
   }
 
   addPlayer(newPlayer) {
+    if (!(newPlayer instanceof Player)) {
+      throw new TypeError(`${newPlayer} is not a Player`);
+    }
     this.players[newPlayer.actorId] = newPlayer;
   }
 
@@ -40,9 +43,12 @@ export default class Room {
   }
 
   getPlayer(actorId) {
+    if (!(typeof actorId === 'number')) {
+      throw new TypeError(`${actorId} is not a number`);
+    }
     const player = this.players[actorId];
     if (player === null) {
-      console.error(`not found player: ${actorId}`);
+      throw new TypeError(`player with id:${actorId} not found`);
     }
     return player;
   }
