@@ -17,6 +17,12 @@ export default class Play extends EventEmitter {
 
   // 初始化
   init(appId, appKey) {
+    if (!(typeof appId === 'string')) {
+      throw new TypeError(`${appId} is not a string`);
+    }
+    if (!(typeof appKey === 'string')) {
+      throw new TypeError(`${appKey} is not a string`);
+    }
     this._appId = appId;
     this._appKey = appKey;
     this._masterServer = null;
@@ -28,6 +34,12 @@ export default class Play extends EventEmitter {
 
   // 建立连接
   connect(gameVersion = '0.0.1', autoJoinLobby = true) {
+    if (gameVersion && !(typeof gameVersion === 'string')) {
+      throw new TypeError(`${gameVersion} is not a string`);
+    }
+    if (autoJoinLobby !== null && !(typeof autoJoinLobby === 'boolean')) {
+      throw new TypeError(`${autoJoinLobby} is not a boolean value`);
+    }
     this._gameVersion = gameVersion;
     this._autoJoinLobby = autoJoinLobby;
     const self = this;
@@ -94,13 +106,14 @@ export default class Play extends EventEmitter {
 
   // 创建房间
   createRoom(roomName, options = null, expectedUserIds = null) {
-    if (options !== null && !(options instanceof RoomOptions)) {
-      console.error('options must be RoomOptions');
-      return;
+    if (!(typeof roomName === 'string')) {
+      throw new TypeError(`${roomName} is not a String`);
     }
-    if (expectedUserIds !== null && !(expectedUserIds instanceof Array)) {
-      console.error('expectedUserIds must be Array with string');
-      return;
+    if (options !== null && !(options instanceof RoomOptions)) {
+      throw new TypeError(`${options} is not a RoomOptions`);
+    }
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an Array with String`);
     }
     // 缓存 GameServer 创建房间的消息体
     this._cachedRoomMsg = {
@@ -125,9 +138,11 @@ export default class Play extends EventEmitter {
   // 指定房间名加入房间
   // 可选：期望好友 IDs
   joinRoom(roomName, expectedUserIds = null) {
-    if (expectedUserIds !== null && !(expectedUserIds instanceof Array)) {
-      console.error('expectedUserIds must be Array with string');
-      return;
+    if (!(typeof roomName === 'string')) {
+      throw new TypeError(`${roomName} is not a string`);
+    }
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
     // 加入房间的消息体
     this._cachedRoomMsg = {
@@ -158,13 +173,14 @@ export default class Play extends EventEmitter {
 
   // 随机加入或创建房间
   joinOrCreateRoom(roomName, options = null, expectedUserIds = null) {
-    if (options !== null && !(options instanceof RoomOptions)) {
-      console.error('options must be RoomOptions');
-      return;
+    if (!(typeof roomName === 'string')) {
+      throw new TypeError(`${roomName} is not a string`);
     }
-    if (expectedUserIds !== null && !(expectedUserIds instanceof Array)) {
-      console.error('expectedUserIds must be Array with string');
-      return;
+    if (options !== null && !(options instanceof RoomOptions)) {
+      throw new TypeError(`${options} is not a RoomOptions`);
+    }
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -195,13 +211,11 @@ export default class Play extends EventEmitter {
 
   // 随机加入房间
   joinRandomRoom(matchProperties = null, expectedUserIds = null) {
-    if (matchProperties !== null && !(matchProperties instanceof Object)) {
-      console.error('match properties must be Object');
-      return;
+    if (matchProperties !== null && !(typeof matchProperties === 'object')) {
+      throw new TypeError(`${matchProperties} is not an object`);
     }
-    if (expectedUserIds !== null && !(expectedUserIds instanceof Array)) {
-      console.error('expectedUserIds must be Array with string');
-      return;
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -230,6 +244,9 @@ export default class Play extends EventEmitter {
 
   // 设置房间开启 / 关闭
   setRoomOpened(opened) {
+    if (!(typeof opened === 'boolean')) {
+      throw new TypeError(`${opened} is not a boolean value`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'open',
@@ -241,6 +258,9 @@ export default class Play extends EventEmitter {
 
   // 设置房间可见 / 不可见
   setRoomVisible(visible) {
+    if (!(typeof visible === 'boolean')) {
+      throw new TypeError(`${visible} is not a boolean value`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'visible',
@@ -263,6 +283,9 @@ export default class Play extends EventEmitter {
 
   // 设置房主
   setMaster(nextMasterActorId) {
+    if (!(typeof nextMasterActorId === 'number')) {
+      throw new TypeError(`${nextMasterActorId} is not a number`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'update-master-client',
@@ -274,13 +297,11 @@ export default class Play extends EventEmitter {
 
   // 设置房间属性
   setRoomCustomProperties(properties, expectedValues = null) {
-    if (!(properties instanceof Object)) {
-      console.error('property must be Object');
-      return;
+    if (!(typeof properties === 'object')) {
+      throw new TypeError(`${properties} is not an object`);
     }
-    if (expectedValues && !(expectedValues instanceof Object)) {
-      console.error('expectedValue must be Object');
-      return;
+    if (expectedValues && !(typeof expectedValues === 'object')) {
+      throw new TypeError(`${expectedValues} is not an object`);
     }
     const msg = {
       cmd: 'conv',
@@ -296,13 +317,14 @@ export default class Play extends EventEmitter {
 
   // 设置玩家属性
   setPlayerCustomProperties(actorId, properties, expectedValues = null) {
-    if (!(properties instanceof Object)) {
-      console.error('property must be Object');
-      return;
+    if (!(typeof actorId === 'number')) {
+      throw new TypeError(`${actorId} is not a number`);
     }
-    if (expectedValues && !(expectedValues instanceof Object)) {
-      console.error('expectedValue must be Object');
-      return;
+    if (!(typeof properties === 'object')) {
+      throw new TypeError(`${properties} is not an object`);
+    }
+    if (expectedValues && !(typeof expectedValues === 'object')) {
+      throw new TypeError(`${expectedValues} is not an object`);
     }
     const msg = {
       cmd: 'conv',
@@ -319,9 +341,11 @@ export default class Play extends EventEmitter {
 
   // 发送自定义消息
   sendEvent(eventId, eventData, options = new SendEventOptions()) {
-    if (!(eventData instanceof Object)) {
-      console.error('event data must be Object');
-      return;
+    if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
+      throw new TypeError(`${eventId} is not a string or number`);
+    }
+    if (!(typeof eventData === 'object')) {
+      throw new TypeError(`${eventData} is not an object`);
     }
     const msg = {
       cmd: 'direct',
@@ -350,6 +374,9 @@ export default class Play extends EventEmitter {
 
   // 发送消息
   _send(msg) {
+    if (!(typeof msg === 'object')) {
+      throw new TypeError(`${msg} is not an object`);
+    }
     const msgData = JSON.stringify(msg);
     console.warn(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
