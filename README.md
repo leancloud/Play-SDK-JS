@@ -2,7 +2,7 @@
 
 ## 安装
 
-将 dist/play.js 拖拽至 Cocos Creator 中作为源码引用（无需做插件配置）
+从 Release 下载 play.js 并拖拽至 Cocos Creator 中作为源码引用（无需做插件配置）
 
 ## 编译
 
@@ -11,6 +11,8 @@
 ```
 rollup -c
 ```
+
+dist/play.js 即为生成的库文件。
 
 ## 项目的目录结构
 
