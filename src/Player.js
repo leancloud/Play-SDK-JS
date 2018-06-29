@@ -23,13 +23,13 @@ export default class Player {
 
   // 判断是不是当前客户端玩家
   isLocal() {
-    return this.actorId !== -1 && this._play.player.actorId === this.actorId;
+    return this.actorId !== -1 && this._play._player.actorId === this.actorId;
   }
 
   // 判断是不是主机玩家
   isMaster() {
     return (
-      this.actorId !== -1 && this._play.room.masterActorId === this.actorId
+      this.actorId !== -1 && this._play._room.masterActorId === this.actorId
     );
   }
 

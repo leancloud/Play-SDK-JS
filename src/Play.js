@@ -9,12 +9,7 @@ import handleMasterMsg from './handler/MasterHandler';
 import handleGameMsg from './handler/GameHandler';
 import { PlayVersion, MasterServerURL } from './Config';
 
-let instance = null;
 export default class Play extends EventEmitter {
-  static getInstance() {
-    return instance;
-  }
-
   // 初始化
   init(appId, appKey) {
     if (!(typeof appId === 'string')) {
@@ -359,6 +354,15 @@ export default class Play extends EventEmitter {
     this._send(msg);
   }
 
+  // Getter
+  get room() {
+    return this._room;
+  }
+
+  get player() {
+    return this._player;
+  }
+
   // 开始会话，建立连接后第一条消息
   _sessionOpen() {
     const msg = {
@@ -469,5 +473,3 @@ export default class Play extends EventEmitter {
     return `${PlayVersion}_${this._gameVersion}`;
   }
 }
-
-instance = new Play();

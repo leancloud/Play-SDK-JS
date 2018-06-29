@@ -97,8 +97,8 @@ describe('test create room', () => {
       expect(newPlayer.isMaster()).to.be.equal(false);
       expect(play1.player.isLocal()).to.be.equal(true);
       expect(newPlayer.isLocal()).to.be.equal(false);
-      expect(play1.room.getPlayerList().length).to.be.equal(2);
-      expect(play2.room.getPlayerList().length).to.be.equal(2);
+      expect(play1.room.playerList.length).to.be.equal(2);
+      expect(play2.room.playerList.length).to.be.equal(2);
       play1.disconnect();
       play2.disconnect();
       done();

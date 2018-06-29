@@ -61,7 +61,7 @@ describe('test connection', () => {
       play.createRoom(roomName);
     });
     play.on(Event.OnCreatedRoom, () => {
-      expect(play.room.name).to.be.equal(roomName);
+      expect(play._room.name).to.be.equal(roomName);
       play.disconnect();
     });
     play.on(Event.OnDisconnected, () => {

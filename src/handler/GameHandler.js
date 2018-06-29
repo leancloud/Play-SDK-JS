@@ -16,7 +16,7 @@ function handleCreatedRoom(play, msg) {
     const { reasonCode: code, detail: failedDetail } = msg;
     play.emit(Event.OnCreateRoomFailed, code, failedDetail);
   } else {
-    play.room = Room.newFromJSONObject(play, msg);
+    play._room = Room.newFromJSONObject(play, msg);
     play.emit(Event.OnCreatedRoom);
     play.emit(Event.OnJoinedRoom);
   }
@@ -27,7 +27,7 @@ function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
     play.emit(Event.OnJoinRoomFailed, msg.reasonCode, msg.detail);
   } else {
-    play.room = Room.newFromJSONObject(play, msg);
+    play._room = Room.newFromJSONObject(play, msg);
     play.emit(Event.OnJoinedRoom);
   }
 }
@@ -35,61 +35,61 @@ function handleJoinedRoom(play, msg) {
 // 有新玩家加入房间
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player.newFromJSONObject(play, msg.member);
-  play.room.addPlayer(newPlayer);
+  play._room.addPlayer(newPlayer);
   play.emit(Event.OnNewPlayerJoinedRoom, newPlayer);
 }
 
 // 有玩家离开房间
 function handlePlayerLeftRoom(play, msg) {
   const actorId = msg.initByActor;
-  const leftPlayer = play.room.getPlayer(actorId);
-  play.room.removePlayer(actorId);
+  const leftPlayer = play._room.getPlayer(actorId);
+  play._room.removePlayer(actorId);
   play.emit(Event.OnPlayerLeftRoom, leftPlayer);
 }
 
 // 主机切换
 function handleMasterChanged(play, msg) {
-  play.room._setMasterId(msg.masterActorId);
-  const newMaster = play.room.getPlayer(msg.masterActorId);
+  play._room._setMasterId(msg.masterActorId);
+  const newMaster = play._room.getPlayer(msg.masterActorId);
   play.emit(Event.OnMasterSwitched, newMaster);
 }
 
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
   const opened = msg.toggle;
-  play.room._setOpened(opened);
+  play._room._setOpened(opened);
 }
 
 // 房间是否可见
 function handleRoomVisibleChanged(play, msg) {
   const visible = msg.toggle;
-  play.room._setVisible(visible);
+  play._room._setVisible(visible);
 }
 
 // 房间属性变更
 function handleRoomCustomPropertiesChanged(play, msg) {
   const changedProperties = msg.attr;
-  play.room._mergeProperties(changedProperties);
+  play._room._mergeProperties(changedProperties);
   play.emit(Event.OnRoomCustomPropertiesChanged, changedProperties);
 }
 
 // 玩家属性变更
 function handlePlayerCustomPropertiesChanged(play, msg) {
-  const player = play.room.getPlayer(msg.initByActor);
+  const player = play._room.getPlayer(msg.initByActor);
   player._mergeProperties(msg.attr);
   play.emit(Event.OnPlayerCustomPropertiesChanged, player, msg.attr);
 }
 
 // 玩家下线
 function handlePlayerOffline(play, msg) {
-  const player = play.room.getPlayer(msg.initByActor);
+  const player = play._room.getPlayer(msg.initByActor);
   player._setActive(false);
   play.emit(Event.OnPlayerActivityChanged, player);
 }
 
 // 玩家上线
 function handlePlayerOnline(play, msg) {
-  const player = play.room.getPlayer(msg.member.actorId);
+  const player = play._room.getPlayer(msg.member.actorId);
   player.initWithJSONObject(msg.member);
   player._setActive(true);
   play.emit(Event.OnPlayerActivityChanged, player);
@@ -99,8 +99,8 @@ function handlePlayerOnline(play, msg) {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 function handleLeaveRoom(play) {
   // 清理工作
-  play.room = null;
-  play.player = null;
+  play._room = null;
+  play._player = null;
   play.emit(Event.OnLeftRoom);
   play._connectToMaster();
 }

@@ -19,7 +19,7 @@ export default class Room {
       const playerDTO = roomJSONObject.members[i];
       const player = Player.newFromJSONObject(play, playerDTO);
       if (player.userId === play.userId) {
-        play.player = player;
+        play._player = player;
       }
       room.players[player.actorId] = player;
     }
@@ -53,7 +53,7 @@ export default class Room {
     return player;
   }
 
-  getPlayerList() {
+  get playerList() {
     return Object.values(this.players);
   }
 

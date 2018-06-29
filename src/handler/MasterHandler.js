@@ -8,7 +8,7 @@ function handleMasterServerSessionOpen(play, msg) {
   play._sessionToken = msg.st;
   const player = new Player(play);
   player.userId = play.userId;
-  play.player = player;
+  play._player = player;
   play.emit(Event.OnConnected);
   if (play._autoJoinLobby) {
     play.joinLobby();
