@@ -1,5 +1,5 @@
 // SDK 版本号
-const PlayVersion = '0.0.1';
-const MasterServerURL = 'https://game-router-cn-e1.leancloud.cn/v1/router?';
+export { version as PlayVersion } from '../package.json';
 
-export { PlayVersion, MasterServerURL };
+export const MasterServerURL =
+  'https://game-router-cn-e1.leancloud.cn/v1/router?';
