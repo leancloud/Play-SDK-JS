@@ -1,43 +1,43 @@
 // 事件
 const Event = {
   // 连接成功
-  OnConnected: 'OnConnected',
+  CONNECTED: 'connected',
   // 连接失败
-  OnConnectFailed: 'OnConnectionFail',
+  CONNECT_FAILED: 'connectFailed',
   // 断开连接
-  OnDisconnected: 'OnDisconnected',
+  DISCONNECTED: 'disconnected',
   // 加入到大厅
-  OnJoinedLobby: 'OnJoinedLobby',
+  JOINED_LOBBY: 'joinedLobby',
   // 离开大厅
-  OnLeftLobby: 'OnLeftLobby',
+  LEFT_LOBBY: 'leftLobby',
   // 大厅房间列表变化
-  OnLobbyRoomListUpdate: 'OnLobbyRoomListUpdate',
+  LOBBY_ROOM_LIST_UPDATE: 'lobbyRoomListUpdate',
   // 创建房间成功
-  OnCreatedRoom: 'OnCreatedRoom',
+  CREATED_ROOM: 'createdRoom',
   // 创建房间失败
-  OnCreateRoomFailed: 'OnCreateRoomFailed',
+  CREATE_ROOM_FAILED: 'createRoomFailed',
   // 加入房间成功
-  OnJoinedRoom: 'OnJoinedRoom',
+  JOINED_ROOM: 'joinedRoom',
   // 加入房间失败
-  OnJoinRoomFailed: 'OnJoinRoomFailed',
+  JOIN_ROOM_FAILED: 'joinRoomFailed',
   // 有新玩家加入房间
-  OnNewPlayerJoinedRoom: 'OnNewPlayerJoinedRoom',
+  NEW_PLAYER_JOINED_ROOM: 'newPlayerJoinedRoom',
   // 有玩家离开房间
-  OnPlayerLeftRoom: 'OnPlayerLeftRoom',
+  PLAYER_LEFT_ROOM: 'playerLeftRoom',
   // 玩家活跃属性变化
-  OnPlayerActivityChanged: 'OnPlayerActivityChanged',
+  PLAYER_ACTIVITY_CHANGED: 'playerActivityChanged',
   // 主机变更
-  OnMasterSwitched: 'OnMasterSwitched',
+  MASTER_SWITCHED: 'masterSwitched',
   // 离开房间
-  OnLeftRoom: 'OnLeftRoom',
+  LEFT_ROOM: 'leftRoom',
   // 房间自定义属性变化
-  OnRoomCustomPropertiesChanged: 'OnRoomCustomPropertiesChanged',
+  ROOM_CUSTOM_PROPERTIES_CHANGED: 'roomCustomPropertiesChanged',
   // 玩家自定义属性变化
-  OnPlayerCustomPropertiesChanged: 'OnPlayerCustomPropertiesChanged',
+  PLAYER_CUSTOM_PROPERTIES_CHANGED: 'playerCustomPropertiesChanged',
   // 自定义事件
-  OnEvent: 'OnEvent',
+  CUSTOM_EVENT: 'customEvent',
   // 错误事件
-  OnError: 'OnError',
+  ERROR: 'error',
 };
 
 export default Event;

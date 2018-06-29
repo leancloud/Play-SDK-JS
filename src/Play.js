@@ -9,6 +9,8 @@ import handleMasterMsg from './handler/MasterHandler';
 import handleGameMsg from './handler/GameHandler';
 import { PlayVersion, MasterServerURL } from './Config';
 
+const debug = require('debug')('Play');
+
 export default class Play extends EventEmitter {
   // 初始化
   init(appId, appKey) {
@@ -28,7 +30,7 @@ export default class Play extends EventEmitter {
   }
 
   // 建立连接
-  connect(gameVersion = '0.0.1', autoJoinLobby = true) {
+  connect({ gameVersion = '0.0.1', autoJoinLobby = true } = {}) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
@@ -42,13 +44,13 @@ export default class Play extends EventEmitter {
     axios
       .get(MasterServerURL + params)
       .then(response => {
-        console.warn(response.data);
+        debug(response.data);
         self._masterServer = response.data.server;
         self._connectToMaster();
       })
       .catch(error => {
-        console.warn(error);
-        self.emit(Event.OnConnectFailed, error.data);
+        console.error(error);
+        self.emit(Event.CONNECT_FAILED, error.data);
       });
   }
 
@@ -76,7 +78,7 @@ export default class Play extends EventEmitter {
       this._websocket.close();
       this._websocket = null;
     }
-    console.warn(`${this.userId} disconnect.`);
+    debug(`${this.userId} disconnect.`);
   }
 
   // 加入大厅
@@ -382,7 +384,7 @@ export default class Play extends EventEmitter {
       throw new TypeError(`${msg} is not an object`);
     }
     const msgData = JSON.stringify(msg);
-    console.warn(`${this.userId} msg: ${msg.op} -> ${msgData}`);
+    debug(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
     // 心跳包
     this._stopKeepAlive();
@@ -400,7 +402,7 @@ export default class Play extends EventEmitter {
     const self = this;
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
-      console.warn('Lobby websocket opened');
+      debug('Lobby websocket opened');
       self._switchingServer = false;
       self._sessionOpen();
     };
@@ -408,14 +410,14 @@ export default class Play extends EventEmitter {
       handleMasterMsg(self, msg);
     };
     this._websocket.onclose = () => {
-      console.warn('Lobby websocket closed');
+      debug('Lobby websocket closed');
       if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
+        self.emit(Event.DISCONNECTED);
       }
     };
     this._websocket.onerror = error => {
       console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
+      self.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 
@@ -426,7 +428,7 @@ export default class Play extends EventEmitter {
     const self = this;
     this._websocket = new WebSocket(this._secureGameAddr);
     this._websocket.onopen = () => {
-      console.warn('Game websocket opened');
+      debug('Game websocket opened');
       self._switchingServer = false;
       self._sessionOpen();
     };
@@ -434,15 +436,15 @@ export default class Play extends EventEmitter {
       handleGameMsg(self, msg);
     };
     this._websocket.onclose = () => {
-      console.warn('Game websocket closed');
+      debug('Game websocket closed');
       if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
+        self.emit(Event.DISCONNECTED);
       }
       self._stopKeepAlive();
     };
     this._websocket.onerror = error => {
       console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
+      self.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 

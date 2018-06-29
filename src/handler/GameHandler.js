@@ -3,6 +3,8 @@ import Player from '../Player';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 
+const debug = require('debug')('handler');
+
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {
   // 根据缓存加入房间的规则
@@ -14,21 +16,21 @@ function handleGameServerSessionOpen(play) {
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
     const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.OnCreateRoomFailed, code, failedDetail);
+    play.emit(Event.CREATE_ROOM_FAILED, code, failedDetail);
   } else {
     play._room = Room.newFromJSONObject(play, msg);
-    play.emit(Event.OnCreatedRoom);
-    play.emit(Event.OnJoinedRoom);
+    play.emit(Event.CREATED_ROOM);
+    play.emit(Event.JOINED_ROOM);
   }
 }
 
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.OnJoinRoomFailed, msg.reasonCode, msg.detail);
+    play.emit(Event.JOIN_ROOM_FAILED, msg.reasonCode, msg.detail);
   } else {
     play._room = Room.newFromJSONObject(play, msg);
-    play.emit(Event.OnJoinedRoom);
+    play.emit(Event.JOINED_ROOM);
   }
 }
 
@@ -36,7 +38,7 @@ function handleJoinedRoom(play, msg) {
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player.newFromJSONObject(play, msg.member);
   play._room.addPlayer(newPlayer);
-  play.emit(Event.OnNewPlayerJoinedRoom, newPlayer);
+  play.emit(Event.NEW_PLAYER_JOINED_ROOM, newPlayer);
 }
 
 // 有玩家离开房间
@@ -44,14 +46,14 @@ function handlePlayerLeftRoom(play, msg) {
   const actorId = msg.initByActor;
   const leftPlayer = play._room.getPlayer(actorId);
   play._room.removePlayer(actorId);
-  play.emit(Event.OnPlayerLeftRoom, leftPlayer);
+  play.emit(Event.PLAYER_LEFT_ROOM, leftPlayer);
 }
 
 // 主机切换
 function handleMasterChanged(play, msg) {
   play._room._setMasterId(msg.masterActorId);
   const newMaster = play._room.getPlayer(msg.masterActorId);
-  play.emit(Event.OnMasterSwitched, newMaster);
+  play.emit(Event.MASTER_SWITCHED, newMaster);
 }
 
 // 房间开启 / 关闭
@@ -70,21 +72,21 @@ function handleRoomVisibleChanged(play, msg) {
 function handleRoomCustomPropertiesChanged(play, msg) {
   const changedProperties = msg.attr;
   play._room._mergeProperties(changedProperties);
-  play.emit(Event.OnRoomCustomPropertiesChanged, changedProperties);
+  play.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, changedProperties);
 }
 
 // 玩家属性变更
 function handlePlayerCustomPropertiesChanged(play, msg) {
   const player = play._room.getPlayer(msg.initByActor);
   player._mergeProperties(msg.attr);
-  play.emit(Event.OnPlayerCustomPropertiesChanged, player, msg.attr);
+  play.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player, msg.attr);
 }
 
 // 玩家下线
 function handlePlayerOffline(play, msg) {
   const player = play._room.getPlayer(msg.initByActor);
   player._setActive(false);
-  play.emit(Event.OnPlayerActivityChanged, player);
+  play.emit(Event.PLAYER_ACTIVITY_CHANGED, player);
 }
 
 // 玩家上线
@@ -92,7 +94,7 @@ function handlePlayerOnline(play, msg) {
   const player = play._room.getPlayer(msg.member.actorId);
   player.initWithJSONObject(msg.member);
   player._setActive(true);
-  play.emit(Event.OnPlayerActivityChanged, player);
+  play.emit(Event.PLAYER_ACTIVITY_CHANGED, player);
 }
 
 // 离开房间
@@ -101,19 +103,19 @@ function handleLeaveRoom(play) {
   // 清理工作
   play._room = null;
   play._player = null;
-  play.emit(Event.OnLeftRoom);
+  play.emit(Event.LEFT_ROOM);
   play._connectToMaster();
 }
 
 // 自定义事件
 function handleEvent(play, msg) {
   const { eventId: evtId, msg: param, fromActorId: senderId } = msg;
-  play.emit(Event.OnEvent, evtId, param, senderId);
+  play.emit(Event.CUSTOM_EVENT, evtId, param, senderId);
 }
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  console.warn(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
@@ -170,7 +172,7 @@ export default function handleGameMsg(play, message) {
           handleEvent(play, msg);
           break;
         default:
-          console.warn(`no handler for game msg: ${msg.op}`);
+          console.error(`no handler for game msg: ${msg.op}`);
           break;
       }
       break;

@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "chai": "^4.1.2",
+    "debug": "^3.1.0",
     "eventemitter3": "^3.1.0",
     "isomorphic-ws": "^4.0.1",
     "rollup-plugin-json": "^3.0.0",
