@@ -6,7 +6,7 @@ export default class Room {
   }
 
   /* eslint no-param-reassign: ["error", { "props": false }] */
-  static newFromJSONObject(play, roomJSONObject) {
+  static _newFromJSONObject(play, roomJSONObject) {
     const room = new Room(play);
     room.name = roomJSONObject.cid;
     room.opened = roomJSONObject.open;
@@ -17,9 +17,9 @@ export default class Room {
     room.players = {};
     for (let i = 0; i < roomJSONObject.members.length; i += 1) {
       const playerDTO = roomJSONObject.members[i];
-      const player = Player.newFromJSONObject(play, playerDTO);
+      const player = Player._newFromJSONObject(play, playerDTO);
       if (player.userId === play.userId) {
-        play.player = player;
+        play._player = player;
       }
       room.players[player.actorId] = player;
     }
@@ -53,12 +53,12 @@ export default class Room {
     return player;
   }
 
-  getPlayerList() {
+  get playerList() {
     return Object.values(this.players);
   }
 
-  setCustomProperties(properties, expectedValues = null) {
-    this._play.setRoomCustomProperties(properties, expectedValues);
+  setCustomProperties(properties, { expectedValues = null } = {}) {
+    this._play._setRoomCustomProperties(properties, expectedValues);
   }
 
   getCustomProperties() {

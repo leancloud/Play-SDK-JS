@@ -11,18 +11,18 @@ describe('test master', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.OnNewPlayerJoinedRoom, newPlayer => {
+    play1.on(Event.NEW_PLAYER_JOINED_ROOM, newPlayer => {
       play1.setMaster(newPlayer.actorId);
     });
-    play1.on(Event.OnMasterSwitched, newMaster => {
+    play1.on(Event.MASTER_SWITCHED, newMaster => {
       expect(play1.room.masterActorId).to.be.equal(newMaster.actorId);
       p1Flag = true;
       if (p1Flag && p2Flag) {
@@ -32,14 +32,14 @@ describe('test master', () => {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
-    play2.on(Event.OnMasterSwitched, newMaster => {
+    play2.on(Event.MASTER_SWITCHED, newMaster => {
       expect(play2.room.masterActorId).to.be.equal(newMaster.actorId);
       p2Flag = true;
       if (p1Flag && p2Flag) {
@@ -58,31 +58,31 @@ describe('test master', () => {
     const play2 = newPlay('world2');
     let newConnect = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       if (newConnect) {
         return;
       }
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.OnNewPlayerJoinedRoom, () => {
+    play1.on(Event.NEW_PLAYER_JOINED_ROOM, () => {
       play1.leaveRoom();
     });
-    play1.on(Event.OnLeftRoom, () => {
+    play1.on(Event.LEFT_ROOM, () => {
       newConnect = true;
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       play2.joinRoom(roomName);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
-    play2.on(Event.OnMasterSwitched, newMaster => {
+    play2.on(Event.MASTER_SWITCHED, newMaster => {
       expect(play2.room.masterActorId).to.be.equal(newMaster.actorId);
       setTimeout(() => {
         play1.disconnect();

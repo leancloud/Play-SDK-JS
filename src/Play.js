@@ -7,24 +7,36 @@ import SendEventOptions from './SendEventOptions';
 import RoomOptions from './RoomOptions';
 import handleMasterMsg from './handler/MasterHandler';
 import handleGameMsg from './handler/GameHandler';
-import { PlayVersion, MasterServerURL } from './Config';
+import {
+  PlayVersion,
+  NorthCNServerURL,
+  EastCNServerURL,
+  USServerURL,
+} from './Config';
 
-let instance = null;
-export default class Play extends EventEmitter {
-  static getInstance() {
-    return instance;
-  }
+const debug = require('debug')('Play');
 
+const Region = {
+  NORTH_CN: 0,
+  EAST_CN: 1,
+  US: 2,
+};
+
+class Play extends EventEmitter {
   // 初始化
-  init(appId, appKey) {
-    if (!(typeof appId === 'string')) {
-      throw new TypeError(`${appId} is not a string`);
+  init(opts) {
+    if (!(typeof opts.appId === 'string')) {
+      throw new TypeError(`${opts.appId} is not a string`);
     }
-    if (!(typeof appKey === 'string')) {
-      throw new TypeError(`${appKey} is not a string`);
+    if (!(typeof opts.appKey === 'string')) {
+      throw new TypeError(`${opts.appKey} is not a string`);
     }
-    this._appId = appId;
-    this._appKey = appKey;
+    if (!(typeof opts.region === 'number')) {
+      throw new TypeError(`${opts.region} is not a number`);
+    }
+    this._appId = opts.appId;
+    this._appKey = opts.appKey;
+    this._region = opts.region;
     this._masterServer = null;
     this._msgId = 0;
     this._requestMsg = {};
@@ -33,7 +45,7 @@ export default class Play extends EventEmitter {
   }
 
   // 建立连接
-  connect(gameVersion = '0.0.1', autoJoinLobby = true) {
+  connect({ gameVersion = '0.0.1', autoJoinLobby = true } = {}) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
@@ -42,18 +54,26 @@ export default class Play extends EventEmitter {
     }
     this._gameVersion = gameVersion;
     this._autoJoinLobby = autoJoinLobby;
-    const self = this;
+    let masterURL = EastCNServerURL;
+    if (this._region === Region.NORTH_CN) {
+      masterURL = NorthCNServerURL;
+    } else if (this._region === Region.EAST_CN) {
+      masterURL = EastCNServerURL;
+    } else if (this._region === Region.US) {
+      masterURL = USServerURL;
+    }
     const params = `appId=${this._appId}&secure=true&ua=${this._getUA()}`;
+    const url = `${masterURL}v1/router?${params}`;
     axios
-      .get(MasterServerURL + params)
+      .get(url)
       .then(response => {
-        console.warn(response.data);
-        self._masterServer = response.data.server;
-        self._connectToMaster();
+        debug(response.data);
+        this._masterServer = response.data.server;
+        this._connectToMaster();
       })
       .catch(error => {
-        console.warn(error);
-        self.emit(Event.OnConnectFailed, error.data);
+        console.error(error);
+        this.emit(Event.CONNECT_FAILED, error.data);
       });
   }
 
@@ -81,7 +101,7 @@ export default class Play extends EventEmitter {
       this._websocket.close();
       this._websocket = null;
     }
-    console.warn(`${this.userId} disconnect.`);
+    debug(`${this.userId} disconnect.`);
   }
 
   // 加入大厅
@@ -105,12 +125,13 @@ export default class Play extends EventEmitter {
   }
 
   // 创建房间
-  createRoom(roomName, options = null, expectedUserIds = null) {
+  createRoom(roomName, { roomOptions = null, expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a String`);
     }
-    if (options !== null && !(options instanceof RoomOptions)) {
-      throw new TypeError(`${options} is not a RoomOptions`);
+
+    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
+      throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with String`);
@@ -123,8 +144,8 @@ export default class Play extends EventEmitter {
       cid: roomName,
     };
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
-    if (options) {
-      const opts = options.toMsg();
+    if (roomOptions) {
+      const opts = roomOptions.toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -137,7 +158,7 @@ export default class Play extends EventEmitter {
 
   // 指定房间名加入房间
   // 可选：期望好友 IDs
-  joinRoom(roomName, expectedUserIds = null) {
+  joinRoom(roomName, { expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -172,12 +193,15 @@ export default class Play extends EventEmitter {
   }
 
   // 随机加入或创建房间
-  joinOrCreateRoom(roomName, options = null, expectedUserIds = null) {
+  joinOrCreateRoom(
+    roomName,
+    { roomOptions = null, expectedUserIds = null } = {}
+  ) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (options !== null && !(options instanceof RoomOptions)) {
-      throw new TypeError(`${options} is not a RoomOptions`);
+    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
+      throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
@@ -189,8 +213,8 @@ export default class Play extends EventEmitter {
       cid: roomName,
     };
     // 拷贝房间参数
-    if (options != null) {
-      const opts = options.toMsg();
+    if (roomOptions != null) {
+      const opts = roomOptions.toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -210,7 +234,7 @@ export default class Play extends EventEmitter {
   }
 
   // 随机加入房间
-  joinRandomRoom(matchProperties = null, expectedUserIds = null) {
+  joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
@@ -295,8 +319,40 @@ export default class Play extends EventEmitter {
     this._send(msg);
   }
 
+  // 发送自定义消息
+  sendEvent(eventId, eventData, options) {
+    if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
+      throw new TypeError(`${eventId} is not a string or number`);
+    }
+    if (!(typeof eventData === 'object')) {
+      throw new TypeError(`${eventData} is not an object`);
+    }
+    if (!(options instanceof SendEventOptions)) {
+      throw new TypeError(`${options} is not a SendEventOptions`);
+    }
+    const msg = {
+      cmd: 'direct',
+      i: this._getMsgId(),
+      eventId,
+      msg: eventData,
+      receiverGroup: options.receiverGroup,
+      toActorIds: options.targetActorIds,
+      cachingOption: options.cachingOption,
+    };
+    this._send(msg);
+  }
+
+  // Getter
+  get room() {
+    return this._room;
+  }
+
+  get player() {
+    return this._player;
+  }
+
   // 设置房间属性
-  setRoomCustomProperties(properties, expectedValues = null) {
+  _setRoomCustomProperties(properties, expectedValues) {
     if (!(typeof properties === 'object')) {
       throw new TypeError(`${properties} is not an object`);
     }
@@ -316,7 +372,7 @@ export default class Play extends EventEmitter {
   }
 
   // 设置玩家属性
-  setPlayerCustomProperties(actorId, properties, expectedValues = null) {
+  _setPlayerCustomProperties(actorId, properties, expectedValues) {
     if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
@@ -339,26 +395,6 @@ export default class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 发送自定义消息
-  sendEvent(eventId, eventData, options = new SendEventOptions()) {
-    if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
-      throw new TypeError(`${eventId} is not a string or number`);
-    }
-    if (!(typeof eventData === 'object')) {
-      throw new TypeError(`${eventData} is not an object`);
-    }
-    const msg = {
-      cmd: 'direct',
-      i: this._getMsgId(),
-      eventId,
-      msg: eventData,
-      receiverGroup: options.receiverGroup,
-      toActorIds: options.targetActorIds,
-      cachingOption: options.cachingOption,
-    };
-    this._send(msg);
-  }
-
   // 开始会话，建立连接后第一条消息
   _sessionOpen() {
     const msg = {
@@ -378,14 +414,13 @@ export default class Play extends EventEmitter {
       throw new TypeError(`${msg} is not an object`);
     }
     const msgData = JSON.stringify(msg);
-    console.warn(`${this.userId} msg: ${msg.op} -> ${msgData}`);
+    debug(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
     // 心跳包
     this._stopKeepAlive();
-    const self = this;
     this._keepAlive = setTimeout(() => {
       const keepAliveMsg = {};
-      self._send(keepAliveMsg);
+      this._send(keepAliveMsg);
     }, 10000);
   }
 
@@ -393,25 +428,24 @@ export default class Play extends EventEmitter {
   _connectToMaster() {
     this._cleanup();
     this._switchingServer = true;
-    const self = this;
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
-      console.warn('Lobby websocket opened');
-      self._switchingServer = false;
-      self._sessionOpen();
+      debug('Lobby websocket opened');
+      this._switchingServer = false;
+      this._sessionOpen();
     };
     this._websocket.onmessage = msg => {
-      handleMasterMsg(self, msg);
+      handleMasterMsg(this, msg);
     };
     this._websocket.onclose = () => {
-      console.warn('Lobby websocket closed');
-      if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
+      debug('Lobby websocket closed');
+      if (!this._switchingServer) {
+        this.emit(Event.DISCONNECTED);
       }
     };
     this._websocket.onerror = error => {
       console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
+      this.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 
@@ -419,26 +453,25 @@ export default class Play extends EventEmitter {
   _connectToGame() {
     this._cleanup();
     this._switchingServer = true;
-    const self = this;
     this._websocket = new WebSocket(this._secureGameAddr);
     this._websocket.onopen = () => {
-      console.warn('Game websocket opened');
-      self._switchingServer = false;
-      self._sessionOpen();
+      debug('Game websocket opened');
+      this._switchingServer = false;
+      this._sessionOpen();
     };
     this._websocket.onmessage = msg => {
-      handleGameMsg(self, msg);
+      handleGameMsg(this, msg);
     };
     this._websocket.onclose = () => {
-      console.warn('Game websocket closed');
-      if (!self._switchingServer) {
-        self.emit(Event.OnDisconnected);
+      debug('Game websocket closed');
+      if (!this._switchingServer) {
+        this.emit(Event.DISCONNECTED);
       }
-      self._stopKeepAlive();
+      this._stopKeepAlive();
     };
     this._websocket.onerror = error => {
       console.error(error);
-      self.emit(Event.OnConnectFailed, error.data);
+      this.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 
@@ -470,4 +503,4 @@ export default class Play extends EventEmitter {
   }
 }
 
-instance = new Play();
+export { Region, Play };

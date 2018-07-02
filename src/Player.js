@@ -5,13 +5,13 @@ export default class Player {
     this.actorId = -1;
   }
 
-  static newFromJSONObject(play, playerJSONObject) {
+  static _newFromJSONObject(play, playerJSONObject) {
     const player = new Player(play);
-    player.initWithJSONObject(playerJSONObject);
+    player._initWithJSONObject(playerJSONObject);
     return player;
   }
 
-  initWithJSONObject(playerJSONObject) {
+  _initWithJSONObject(playerJSONObject) {
     this.userId = playerJSONObject.pid;
     this.actorId = playerJSONObject.actorId;
     if (playerJSONObject.properties) {
@@ -23,13 +23,13 @@ export default class Player {
 
   // 判断是不是当前客户端玩家
   isLocal() {
-    return this.actorId !== -1 && this._play.player.actorId === this.actorId;
+    return this.actorId !== -1 && this._play._player.actorId === this.actorId;
   }
 
   // 判断是不是主机玩家
   isMaster() {
     return (
-      this.actorId !== -1 && this._play.room.masterActorId === this.actorId
+      this.actorId !== -1 && this._play._room.masterActorId === this.actorId
     );
   }
 
@@ -44,8 +44,8 @@ export default class Player {
   }
 
   // 设置自定义属性接口
-  setCustomProperties(properties, expectedValues = null) {
-    this._play.setPlayerCustomProperties(
+  setCustomProperties(properties, { expectedValues = null } = {}) {
+    this._play._setPlayerCustomProperties(
       this.actorId,
       properties,
       expectedValues

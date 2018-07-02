@@ -3,13 +3,15 @@ import LobbyRoom from '../LobbyRoom';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 
+const debug = require('debug')('handler');
+
 // 连接建立
 function handleMasterServerSessionOpen(play, msg) {
   play._sessionToken = msg.st;
   const player = new Player(play);
   player.userId = play.userId;
-  play.player = player;
-  play.emit(Event.OnConnected);
+  play._player = player;
+  play.emit(Event.CONNECTED);
   if (play._autoJoinLobby) {
     play.joinLobby();
   }
@@ -17,12 +19,12 @@ function handleMasterServerSessionOpen(play, msg) {
 
 // 加入大厅
 function handleJoinedLobby(play) {
-  play.emit(Event.OnJoinedLobby);
+  play.emit(Event.JOINED_LOBBY);
 }
 
 // 离开大厅
 function handleLeftLobby(play) {
-  play.emit(Event.OnLeftLobby);
+  play.emit(Event.LEFT_LOBBY);
 }
 
 // 处理统计信息
@@ -35,7 +37,7 @@ function handleRoomList(play, msg) {
     const lobbyRoomDTO = msg.list[i];
     play.lobbyRoomList[i] = new LobbyRoom(lobbyRoomDTO);
   }
-  play.emit(Event.OnLobbyRoomListUpdate);
+  play.emit(Event.LOBBY_ROOM_LIST_UPDATE);
 }
 
 function handleGameServer(play, msg) {
@@ -48,8 +50,10 @@ function handleGameServer(play, msg) {
 // 创建房间
 function handleCreateGameServer(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.OnCreateRoomFailed, code, failedDetail);
+    play.emit(Event.CREATE_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._cachedRoomMsg.op = 'start';
     handleGameServer(play, msg);
@@ -60,8 +64,10 @@ function handleCreateGameServer(play, msg) {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 function handleJoinGameServer(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.OnJoinRoomFailed, code, failedDetail);
+    play.emit(Event.JOIN_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._cachedRoomMsg.op = 'add';
     handleGameServer(play, msg);
@@ -71,7 +77,7 @@ function handleJoinGameServer(play, msg) {
 // 大厅消息处理
 export default function handleMasterMsg(play, message) {
   const msg = JSON.parse(message.data);
-  console.warn(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {

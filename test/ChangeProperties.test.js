@@ -11,15 +11,15 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnRoomCustomPropertiesChanged, () => {
+    play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play1.room.getCustomProperties();
       expect(props.title).to.be.equal('room311');
       expect(props.gold).to.be.equal(1000);
@@ -31,10 +31,10 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const props = {
         title: 'room311',
@@ -42,7 +42,7 @@ describe('test change properties', () => {
       };
       play2.room.setCustomProperties(props);
     });
-    play2.on(Event.OnRoomCustomPropertiesChanged, () => {
+    play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play2.room.getCustomProperties();
       expect(props.title).to.be.equal('room311');
       expect(props.gold).to.be.equal(1000);
@@ -65,15 +65,15 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnRoomCustomPropertiesChanged, () => {
+    play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play1.room.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.title).to.be.equal('room312');
@@ -86,10 +86,10 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const props = {
         id: 1,
@@ -105,9 +105,11 @@ describe('test change properties', () => {
       const ep = {
         id: 2,
       };
-      play2.room.setCustomProperties(p, ep);
+      play2.room.setCustomProperties(p, {
+        expectedValues: ep,
+      });
     });
-    play2.on(Event.OnRoomCustomPropertiesChanged, () => {
+    play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play2.room.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.title).to.be.equal('room312');
@@ -131,15 +133,16 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnPlayerCustomPropertiesChanged, player => {
+    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
@@ -159,10 +162,10 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const props = {
         nickname: 'Li Lei',
@@ -177,7 +180,8 @@ describe('test change properties', () => {
       props.arr = arr;
       play2.player.setCustomProperties(props);
     });
-    play2.on(Event.OnPlayerCustomPropertiesChanged, player => {
+    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
@@ -207,15 +211,16 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.OnJoinedLobby, () => {
+    play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom(roomName);
     });
-    play1.on(Event.OnCreatedRoom, () => {
+    play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.OnPlayerCustomPropertiesChanged, player => {
+    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');
@@ -228,10 +233,10 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.OnJoinedLobby, () => {
+    play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.OnJoinedRoom, () => {
+    play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const props = {
         id: 1,
@@ -246,9 +251,12 @@ describe('test change properties', () => {
       const ep = {
         id: 0,
       };
-      play2.player.setCustomProperties(p, ep);
+      play2.player.setCustomProperties(p, {
+        expectedValues: ep,
+      });
     });
-    play2.on(Event.OnPlayerCustomPropertiesChanged, player => {
+    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');

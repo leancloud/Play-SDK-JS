@@ -1,4 +1,4 @@
-import Play from './Play';
+import { Region, Play } from './Play';
 import Room from './Room';
 import Player from './Player';
 import Event from './Event';
@@ -10,6 +10,7 @@ const play = new Play();
 
 export {
   play,
+  Region,
   Room,
   Player,
   Event,
