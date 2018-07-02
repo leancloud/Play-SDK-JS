@@ -7,21 +7,36 @@ import SendEventOptions from './SendEventOptions';
 import RoomOptions from './RoomOptions';
 import handleMasterMsg from './handler/MasterHandler';
 import handleGameMsg from './handler/GameHandler';
-import { PlayVersion, MasterServerURL } from './Config';
+import {
+  PlayVersion,
+  NorthCNServerURL,
+  EastCNServerURL,
+  USServerURL,
+} from './Config';
 
 const debug = require('debug')('Play');
 
-export default class Play extends EventEmitter {
+const Region = {
+  NORTH_CN: 0,
+  EAST_CN: 1,
+  US: 2,
+};
+
+class Play extends EventEmitter {
   // 初始化
-  init(appId, appKey) {
-    if (!(typeof appId === 'string')) {
-      throw new TypeError(`${appId} is not a string`);
+  init(opts) {
+    if (!(typeof opts.appId === 'string')) {
+      throw new TypeError(`${opts.appId} is not a string`);
     }
-    if (!(typeof appKey === 'string')) {
-      throw new TypeError(`${appKey} is not a string`);
+    if (!(typeof opts.appKey === 'string')) {
+      throw new TypeError(`${opts.appKey} is not a string`);
     }
-    this._appId = appId;
-    this._appKey = appKey;
+    if (!(typeof opts.region === 'number')) {
+      throw new TypeError(`${opts.region} is not a number`);
+    }
+    this._appId = opts.appId;
+    this._appKey = opts.appKey;
+    this._region = opts.region;
     this._masterServer = null;
     this._msgId = 0;
     this._requestMsg = {};
@@ -39,9 +54,18 @@ export default class Play extends EventEmitter {
     }
     this._gameVersion = gameVersion;
     this._autoJoinLobby = autoJoinLobby;
+    let masterURL = EastCNServerURL;
+    if (this._region === Region.NORTH_CN) {
+      masterURL = NorthCNServerURL;
+    } else if (this._region === Region.EAST_CN) {
+      masterURL = EastCNServerURL;
+    } else if (this._region === Region.US) {
+      masterURL = USServerURL;
+    }
     const params = `appId=${this._appId}&secure=true&ua=${this._getUA()}`;
+    const url = `${masterURL}v1/router?${params}`;
     axios
-      .get(MasterServerURL + params)
+      .get(url)
       .then(response => {
         debug(response.data);
         this._masterServer = response.data.server;
@@ -101,12 +125,13 @@ export default class Play extends EventEmitter {
   }
 
   // 创建房间
-  createRoom(roomName, options = null, expectedUserIds = null) {
+  createRoom(roomName, { roomOptions = null, expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a String`);
     }
-    if (options !== null && !(options instanceof RoomOptions)) {
-      throw new TypeError(`${options} is not a RoomOptions`);
+
+    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
+      throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with String`);
@@ -119,8 +144,8 @@ export default class Play extends EventEmitter {
       cid: roomName,
     };
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
-    if (options) {
-      const opts = options.toMsg();
+    if (roomOptions) {
+      const opts = roomOptions.toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -133,7 +158,7 @@ export default class Play extends EventEmitter {
 
   // 指定房间名加入房间
   // 可选：期望好友 IDs
-  joinRoom(roomName, expectedUserIds = null) {
+  joinRoom(roomName, { expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -168,12 +193,15 @@ export default class Play extends EventEmitter {
   }
 
   // 随机加入或创建房间
-  joinOrCreateRoom(roomName, options = null, expectedUserIds = null) {
+  joinOrCreateRoom(
+    roomName,
+    { roomOptions = null, expectedUserIds = null } = {}
+  ) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (options !== null && !(options instanceof RoomOptions)) {
-      throw new TypeError(`${options} is not a RoomOptions`);
+    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
+      throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
@@ -185,8 +213,8 @@ export default class Play extends EventEmitter {
       cid: roomName,
     };
     // 拷贝房间参数
-    if (options != null) {
-      const opts = options.toMsg();
+    if (roomOptions != null) {
+      const opts = roomOptions.toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -206,7 +234,7 @@ export default class Play extends EventEmitter {
   }
 
   // 随机加入房间
-  joinRandomRoom(matchProperties = null, expectedUserIds = null) {
+  joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
@@ -291,57 +319,16 @@ export default class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 设置房间属性
-  setRoomCustomProperties(properties, expectedValues = null) {
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'update',
-      i: this._getMsgId(),
-      attr: properties,
-    };
-    if (expectedValues) {
-      msg.expectAttr = expectedValues;
-    }
-    this._send(msg);
-  }
-
-  // 设置玩家属性
-  setPlayerCustomProperties(actorId, properties, expectedValues = null) {
-    if (!(typeof actorId === 'number')) {
-      throw new TypeError(`${actorId} is not a number`);
-    }
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'update-player-prop',
-      i: this._getMsgId(),
-      targetActorId: actorId,
-      playerProperty: properties,
-    };
-    if (expectedValues) {
-      msg.expectAttr = expectedValues;
-    }
-    this._send(msg);
-  }
-
   // 发送自定义消息
-  sendEvent(eventId, eventData, options = new SendEventOptions()) {
+  sendEvent(eventId, eventData, options) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a string or number`);
     }
     if (!(typeof eventData === 'object')) {
       throw new TypeError(`${eventData} is not an object`);
+    }
+    if (!(options instanceof SendEventOptions)) {
+      throw new TypeError(`${options} is not a SendEventOptions`);
     }
     const msg = {
       cmd: 'direct',
@@ -362,6 +349,50 @@ export default class Play extends EventEmitter {
 
   get player() {
     return this._player;
+  }
+
+  // 设置房间属性
+  _setRoomCustomProperties(properties, expectedValues) {
+    if (!(typeof properties === 'object')) {
+      throw new TypeError(`${properties} is not an object`);
+    }
+    if (expectedValues && !(typeof expectedValues === 'object')) {
+      throw new TypeError(`${expectedValues} is not an object`);
+    }
+    const msg = {
+      cmd: 'conv',
+      op: 'update',
+      i: this._getMsgId(),
+      attr: properties,
+    };
+    if (expectedValues) {
+      msg.expectAttr = expectedValues;
+    }
+    this._send(msg);
+  }
+
+  // 设置玩家属性
+  _setPlayerCustomProperties(actorId, properties, expectedValues) {
+    if (!(typeof actorId === 'number')) {
+      throw new TypeError(`${actorId} is not a number`);
+    }
+    if (!(typeof properties === 'object')) {
+      throw new TypeError(`${properties} is not an object`);
+    }
+    if (expectedValues && !(typeof expectedValues === 'object')) {
+      throw new TypeError(`${expectedValues} is not an object`);
+    }
+    const msg = {
+      cmd: 'conv',
+      op: 'update-player-prop',
+      i: this._getMsgId(),
+      targetActorId: actorId,
+      playerProperty: properties,
+    };
+    if (expectedValues) {
+      msg.expectAttr = expectedValues;
+    }
+    this._send(msg);
   }
 
   // 开始会话，建立连接后第一条消息
@@ -471,3 +502,5 @@ export default class Play extends EventEmitter {
     return `${PlayVersion}_${this._gameVersion}`;
   }
 }
+
+export { Region, Play };

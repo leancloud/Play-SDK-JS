@@ -74,7 +74,10 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.maxPlayerCount = 3;
-      play1.createRoom(roomName, options, ['world3', 'code']);
+      play1.createRoom(roomName, {
+        roomOptions: options,
+        expectedUserIds: ['world3', 'code'],
+      });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -156,7 +159,9 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.playerTtl = 600;
-      play1.createRoom(roomName, options);
+      play1.createRoom(roomName, {
+        roomOptions: options,
+      });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -208,7 +213,9 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.playerTtl = 600;
-      play1.createRoom(roomName, options);
+      play1.createRoom(roomName, {
+        roomOptions: options,
+      });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -290,7 +297,9 @@ describe('test join room', () => {
       };
       options.customRoomProperties = matchProps;
       options.customRoomPropertiesForLobby = ['lv'];
-      play1.createRoom(roomName, options);
+      play1.createRoom(roomName, {
+        roomOptions: options,
+      });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -305,7 +314,9 @@ describe('test join room', () => {
       const matchProps = {
         lv: 2,
       };
-      play2.joinRandomRoom(matchProps);
+      play2.joinRandomRoom({
+        matchProperties: matchProps,
+      });
     });
     play2.on(Event.JOINED_ROOM, () => {
       play3.connect();
@@ -317,7 +328,9 @@ describe('test join room', () => {
       const matchProps = {
         lv: 3,
       };
-      play3.joinRandomRoom(matchProps);
+      play3.joinRandomRoom({
+        matchProperties: matchProps,
+      });
     });
     play3.on(Event.JOIN_ROOM_FAILED, () => {
       play1.disconnect();

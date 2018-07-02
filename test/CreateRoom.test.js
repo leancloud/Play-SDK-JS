@@ -40,7 +40,10 @@ describe('test create room', () => {
       options.customRoomProperties = props;
       options.customRoomPropertiesForLobby = ['level'];
       const expectedUserIds = ['world'];
-      play.joinOrCreateRoom(roomName, options, expectedUserIds);
+      play.joinOrCreateRoom(roomName, {
+        roomOptions: options,
+        expectedUserIds,
+      });
     });
     play.on(Event.CREATED_ROOM, () => {
       expect(play.room.name).to.be.equal(roomName);

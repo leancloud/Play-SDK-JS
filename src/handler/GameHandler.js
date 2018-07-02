@@ -20,7 +20,7 @@ function handleCreatedRoom(play, msg) {
       detail: msg.detail,
     });
   } else {
-    play._room = Room.newFromJSONObject(play, msg);
+    play._room = Room._newFromJSONObject(play, msg);
     play.emit(Event.CREATED_ROOM);
     play.emit(Event.JOINED_ROOM);
   }
@@ -34,14 +34,14 @@ function handleJoinedRoom(play, msg) {
       detail: msg.detail,
     });
   } else {
-    play._room = Room.newFromJSONObject(play, msg);
+    play._room = Room._newFromJSONObject(play, msg);
     play.emit(Event.JOINED_ROOM);
   }
 }
 
 // 有新玩家加入房间
 function handleNewPlayerJoinedRoom(play, msg) {
-  const newPlayer = Player.newFromJSONObject(play, msg.member);
+  const newPlayer = Player._newFromJSONObject(play, msg.member);
   play._room.addPlayer(newPlayer);
   play.emit(Event.NEW_PLAYER_JOINED_ROOM, newPlayer);
 }
@@ -100,7 +100,7 @@ function handlePlayerOffline(play, msg) {
 // 玩家上线
 function handlePlayerOnline(play, msg) {
   const player = play._room.getPlayer(msg.member.actorId);
-  player.initWithJSONObject(msg.member);
+  player._initWithJSONObject(msg.member);
   player._setActive(true);
   play.emit(Event.PLAYER_ACTIVITY_CHANGED, player);
 }

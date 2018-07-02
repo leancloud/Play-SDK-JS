@@ -105,7 +105,9 @@ describe('test change properties', () => {
       const ep = {
         id: 2,
       };
-      play2.room.setCustomProperties(p, ep);
+      play2.room.setCustomProperties(p, {
+        expectedValues: ep,
+      });
     });
     play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play2.room.getCustomProperties();
@@ -249,7 +251,9 @@ describe('test change properties', () => {
       const ep = {
         id: 0,
       };
-      play2.player.setCustomProperties(p, ep);
+      play2.player.setCustomProperties(p, {
+        expectedValues: ep,
+      });
     });
     play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
       const { player } = data;
