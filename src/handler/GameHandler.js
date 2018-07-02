@@ -42,7 +42,7 @@ function handleJoinedRoom(play, msg) {
 // 有新玩家加入房间
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player._newFromJSONObject(play, msg.member);
-  play._room.addPlayer(newPlayer);
+  play._room._addPlayer(newPlayer);
   play.emit(Event.NEW_PLAYER_JOINED_ROOM, newPlayer);
 }
 
@@ -50,27 +50,25 @@ function handleNewPlayerJoinedRoom(play, msg) {
 function handlePlayerLeftRoom(play, msg) {
   const actorId = msg.initByActor;
   const leftPlayer = play._room.getPlayer(actorId);
-  play._room.removePlayer(actorId);
+  play._room._removePlayer(actorId);
   play.emit(Event.PLAYER_LEFT_ROOM, leftPlayer);
 }
 
 // 主机切换
 function handleMasterChanged(play, msg) {
-  play._room._setMasterId(msg.masterActorId);
+  play._room._masterActorId = msg.masterActorId;
   const newMaster = play._room.getPlayer(msg.masterActorId);
   play.emit(Event.MASTER_SWITCHED, newMaster);
 }
 
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
-  const opened = msg.toggle;
-  play._room._setOpened(opened);
+  play._room._opened = msg.toggle;
 }
 
 // 房间是否可见
 function handleRoomVisibleChanged(play, msg) {
-  const visible = msg.toggle;
-  play._room._setVisible(visible);
+  play._room._visible = msg.toggle;
 }
 
 // 房间属性变更

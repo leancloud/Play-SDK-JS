@@ -9,7 +9,7 @@ const debug = require('debug')('handler');
 function handleMasterServerSessionOpen(play, msg) {
   play._sessionToken = msg.st;
   const player = new Player(play);
-  player.userId = play.userId;
+  player._userId = play.userId;
   play._player = player;
   play.emit(Event.CONNECTED);
   if (play._autoJoinLobby) {

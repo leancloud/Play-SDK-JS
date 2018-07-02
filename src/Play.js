@@ -22,8 +22,24 @@ const Region = {
   US: 2,
 };
 
+/** Play 客户端类 */
 class Play extends EventEmitter {
-  // 初始化
+  constructor() {
+    super();
+    /**
+     * 玩家 ID
+     * @type {string}
+     */
+    this.userId = null;
+  }
+
+  /**
+   * 初始化客户端
+   * @param {Object} opts
+   * @param {string} opts.appId App ID
+   * @param {string} opts.appKey App Key
+   * @param {Region} opts.region App 地区节点
+   */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
@@ -44,7 +60,11 @@ class Play extends EventEmitter {
     this._switchingServer = false;
   }
 
-  // 建立连接
+  /**
+   * 建立连接
+   * @param {string} gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
+   * @param {Boolean} autoJoinLobby （可选）是否自动加入大厅，默认值为 true
+   */
   connect({ gameVersion = '0.0.1', autoJoinLobby = true } = {}) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
@@ -77,12 +97,16 @@ class Play extends EventEmitter {
       });
   }
 
-  // 重连
+  /**
+   * 重新连接
+   */
   reconnect() {
     this._connectToMaster();
   }
 
-  // 重连并重新加入房间
+  /**
+   * 重新连接并自动加入房间
+   */
   reconnectAndRejoin() {
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -94,7 +118,9 @@ class Play extends EventEmitter {
     this._connectToGame();
   }
 
-  // 断开连接
+  /**
+   * 断开连接
+   */
   disconnect() {
     this._stopKeepAlive();
     if (this._websocket) {
@@ -104,7 +130,9 @@ class Play extends EventEmitter {
     debug(`${this.userId} disconnect.`);
   }
 
-  // 加入大厅
+  /**
+   * 加入大厅，只有在 autoJoinLobby = false 时才需要调用
+   */
   joinLobby() {
     const msg = {
       cmd: 'lobby',
@@ -114,7 +142,9 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 离开大厅
+  /**
+   * 离开大厅
+   */
   leaveLobby() {
     const msg = {
       cmd: 'lobby',
@@ -124,17 +154,22 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 创建房间
+  /**
+   * 创建房间
+   * @param {string} roomName 房间名称，在整个游戏中保证唯一
+   * @param {RoomOptions} roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   */
   createRoom(roomName, { roomOptions = null, expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a String`);
+      throw new TypeError(`${roomName} is not a string`);
     }
 
     if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
       throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an Array with String`);
+      throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
     // 缓存 GameServer 创建房间的消息体
     this._cachedRoomMsg = {
@@ -145,7 +180,7 @@ class Play extends EventEmitter {
     };
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
     if (roomOptions) {
-      const opts = roomOptions.toMsg();
+      const opts = roomOptions._toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -156,8 +191,11 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 指定房间名加入房间
-  // 可选：期望好友 IDs
+  /**
+   * 加入房间
+   * @param {string} roomName 房间名称
+   * @param {*} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   */
   joinRoom(roomName, { expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
@@ -179,7 +217,10 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 重新加入房间
+  /**
+   * 重新加入房间
+   * @param {string} roomName 房间名称
+   */
   rejoinRoom(roomName) {
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -192,7 +233,12 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 随机加入或创建房间
+  /**
+   * 随机加入或创建房间
+   * @param {string} roomName 房间名称
+   * @param {RoomOptions} roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   */
   joinOrCreateRoom(
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
@@ -214,7 +260,7 @@ class Play extends EventEmitter {
     };
     // 拷贝房间参数
     if (roomOptions != null) {
-      const opts = roomOptions.toMsg();
+      const opts = roomOptions._toMsg();
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -233,7 +279,11 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 随机加入房间
+  /**
+   * 随机加入房间
+   * @param {Object} matchProperties （可选）匹配属性，默认值为 null
+   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   */
   joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
@@ -266,7 +316,10 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 设置房间开启 / 关闭
+  /**
+   * 设置房间开启 / 关闭
+   * @param {Boolean} opened 是否开启
+   */
   setRoomOpened(opened) {
     if (!(typeof opened === 'boolean')) {
       throw new TypeError(`${opened} is not a boolean value`);
@@ -280,7 +333,10 @@ class Play extends EventEmitter {
     this.this._send(msg);
   }
 
-  // 设置房间可见 / 不可见
+  /**
+   * 设置房间可见 / 不可见
+   * @param {Boolean} visible 是否可见
+   */
   setRoomVisible(visible) {
     if (!(typeof visible === 'boolean')) {
       throw new TypeError(`${visible} is not a boolean value`);
@@ -294,32 +350,29 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // 离开房间
-  leaveRoom() {
-    const msg = {
-      cmd: 'conv',
-      op: 'remove',
-      i: this._getMsgId(),
-      cid: this.room.name,
-    };
-    this._send(msg);
-  }
-
-  // 设置房主
-  setMaster(nextMasterActorId) {
-    if (!(typeof nextMasterActorId === 'number')) {
-      throw new TypeError(`${nextMasterActorId} is not a number`);
+  /**
+   * 设置房主
+   * @param {number} newMasterActorId 新房主 ID
+   */
+  setMaster(newMasterActorId) {
+    if (!(typeof newMasterActorId === 'number')) {
+      throw new TypeError(`${newMasterActorId} is not a number`);
     }
     const msg = {
       cmd: 'conv',
       op: 'update-master-client',
       i: this._getMsgId(),
-      masterActorId: nextMasterActorId,
+      masterActorId: newMasterActorId,
     };
     this._send(msg);
   }
 
-  // 发送自定义消息
+  /**
+   * 发送自定义消息
+   * @param {number|string} eventId 事件 ID
+   * @param {Object} eventData 事件参数
+   * @param {SendEventOptions} options 发送事件选项
+   */
   sendEvent(eventId, eventData, options) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a string or number`);
@@ -342,11 +395,31 @@ class Play extends EventEmitter {
     this._send(msg);
   }
 
-  // Getter
+  /**
+   * 离开房间
+   */
+  leaveRoom() {
+    const msg = {
+      cmd: 'conv',
+      op: 'remove',
+      i: this._getMsgId(),
+      cid: this.room.name,
+    };
+    this._send(msg);
+  }
+
+  /**
+   * 获取当前所在房间
+   * @return {Room}
+   */
   get room() {
     return this._room;
   }
 
+  /**
+   * 获取当前玩家
+   * @return {Player}
+   */
   get player() {
     return this._player;
   }

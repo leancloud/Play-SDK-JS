@@ -296,7 +296,7 @@ describe('test join room', () => {
         lv: 2,
       };
       options.customRoomProperties = matchProps;
-      options.customRoomPropertiesForLobby = ['lv'];
+      options.customRoomPropertiesKeysForLobby = ['lv'];
       play1.createRoom(roomName, {
         roomOptions: options,
       });
