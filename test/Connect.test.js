@@ -21,17 +21,17 @@ describe('test connection', () => {
   });
 
   it('test connect with same id', done => {
-    const play1 = newPlay('hello');
-    const play2 = newPlay('hello');
+    const play1 = newPlay('hello1');
+    const play2 = newPlay('hello1');
     play1.on(Event.CONNECTED, () => {
       play2.connect();
     });
     play2.on(Event.CONNECTED, () => {
       debug('play2 connected');
     });
-    play2.on(Event.ERROR, code => {
-      debug(`error code: ${code}`);
-      if (code === 4104) {
+    play2.on(Event.ERROR, error => {
+      debug(`error code: ${error.code}`);
+      if (error.code === 4104) {
         play1.disconnect();
         play2.disconnect();
         done();
@@ -41,7 +41,7 @@ describe('test connection', () => {
   });
 
   it('test disconnect from master', done => {
-    const play = newPlay('hello1');
+    const play = newPlay('hello2');
     play.on(Event.JOINED_LOBBY, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
@@ -54,7 +54,7 @@ describe('test connection', () => {
   });
 
   it('test disconnect from game', done => {
-    const play = newPlay('hello2');
+    const play = newPlay('hello3');
     const roomName = 'roomname';
     play.on(Event.JOINED_LOBBY, () => {
       expect(play._sessionToken).to.be.not.equal(null);

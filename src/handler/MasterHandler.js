@@ -50,8 +50,10 @@ function handleGameServer(play, msg) {
 // 创建房间
 function handleCreateGameServer(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.CREATE_ROOM_FAILED, code, failedDetail);
+    play.emit(Event.CREATE_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._cachedRoomMsg.op = 'start';
     handleGameServer(play, msg);
@@ -62,8 +64,10 @@ function handleCreateGameServer(play, msg) {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 function handleJoinGameServer(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.JOIN_ROOM_FAILED, code, failedDetail);
+    play.emit(Event.JOIN_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._cachedRoomMsg.op = 'add';
     handleGameServer(play, msg);

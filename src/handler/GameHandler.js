@@ -15,8 +15,10 @@ function handleGameServerSessionOpen(play) {
 // 创建房间
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode: code, detail: failedDetail } = msg;
-    play.emit(Event.CREATE_ROOM_FAILED, code, failedDetail);
+    play.emit(Event.CREATE_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._room = Room.newFromJSONObject(play, msg);
     play.emit(Event.CREATED_ROOM);
@@ -27,7 +29,10 @@ function handleCreatedRoom(play, msg) {
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.JOIN_ROOM_FAILED, msg.reasonCode, msg.detail);
+    play.emit(Event.JOIN_ROOM_FAILED, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
   } else {
     play._room = Room.newFromJSONObject(play, msg);
     play.emit(Event.JOINED_ROOM);
@@ -79,7 +84,10 @@ function handleRoomCustomPropertiesChanged(play, msg) {
 function handlePlayerCustomPropertiesChanged(play, msg) {
   const player = play._room.getPlayer(msg.initByActor);
   player._mergeProperties(msg.attr);
-  play.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player, msg.attr);
+  play.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
+    player,
+    changedProps: msg.attr,
+  });
 }
 
 // 玩家下线
@@ -109,8 +117,11 @@ function handleLeaveRoom(play) {
 
 // 自定义事件
 function handleEvent(play, msg) {
-  const { eventId: evtId, msg: param, fromActorId: senderId } = msg;
-  play.emit(Event.CUSTOM_EVENT, evtId, param, senderId);
+  play.emit(Event.CUSTOM_EVENT, {
+    eventId: msg.eventId,
+    eventData: msg.msg,
+    senderId: msg.fromActorId,
+  });
 }
 
 export default function handleGameMsg(play, message) {

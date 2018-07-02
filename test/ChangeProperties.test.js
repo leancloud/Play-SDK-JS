@@ -139,7 +139,8 @@ describe('test change properties', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player => {
+    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
@@ -177,7 +178,8 @@ describe('test change properties', () => {
       props.arr = arr;
       play2.player.setCustomProperties(props);
     });
-    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player => {
+    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.nickname).to.be.equal('Li Lei');
       expect(props.gold).to.be.equal(1000);
@@ -215,7 +217,8 @@ describe('test change properties', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player => {
+    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');
@@ -248,7 +251,8 @@ describe('test change properties', () => {
       };
       play2.player.setCustomProperties(p, ep);
     });
-    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, player => {
+    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+      const { player } = data;
       const props = player.getCustomProperties();
       expect(props.id).to.be.equal(1);
       expect(props.nickname).to.be.equal('Li Lei');

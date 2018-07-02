@@ -20,10 +20,11 @@ describe('test custom event', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.CUSTOM_EVENT, (eventId, param) => {
+    play1.on(Event.CUSTOM_EVENT, event => {
+      const { eventId, eventData } = event;
       expect(eventId).to.be.equal('hi');
-      expect(param.name).to.be.equal('aaaa');
-      expect(param.body).to.be.equal('bbbb');
+      expect(eventData.name).to.be.equal('aaaa');
+      expect(eventData.body).to.be.equal('bbbb');
       play1.disconnect();
       play2.disconnect();
       done();
@@ -43,7 +44,8 @@ describe('test custom event', () => {
       };
       play2.sendEvent('hi', eventData, options);
     });
-    play2.on(Event.CUSTOM_EVENT, (eventId, eventData) => {
+    play2.on(Event.CUSTOM_EVENT, event => {
+      const { eventId, eventData } = event;
       expect(eventId).to.be.equal('hi');
       expect(eventData.name).to.be.equal('aaaa');
       expect(eventData.body).to.be.equal('bbbb');
@@ -67,7 +69,8 @@ describe('test custom event', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
-    play1.on(Event.CUSTOM_EVENT, (eventId, eventData) => {
+    play1.on(Event.CUSTOM_EVENT, event => {
+      const { eventId, eventData } = event;
       expect(eventId).to.be.equal('hello');
       expect(eventData.name).to.be.equal('aaaa');
       expect(eventData.body).to.be.equal('bbbb');
@@ -92,7 +95,8 @@ describe('test custom event', () => {
       };
       play2.sendEvent('hello', eventData, options);
     });
-    play2.on(Event.CUSTOM_EVENT, (eventId, eventData) => {
+    play2.on(Event.CUSTOM_EVENT, event => {
+      const { eventId, eventData } = event;
       expect(eventId).to.be.equal('hello');
       expect(eventData.name).to.be.equal('aaaa');
       expect(eventData.body).to.be.equal('bbbb');
