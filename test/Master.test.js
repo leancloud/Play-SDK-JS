@@ -2,6 +2,7 @@ import Event from '../src/Event';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
+const debug = require('debug')('MasterTest');
 
 describe('test master', () => {
   it('test set new master', done => {
@@ -81,6 +82,10 @@ describe('test master', () => {
     });
     play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.name).to.be.equal(roomName);
+    });
+    play2.on(Event.PLAYER_LEFT_ROOM, leftPlayer => {
+      debug(`${leftPlayer.userId} left room`);
+      expect(leftPlayer.actorId).to.be.equal(1);
     });
     play2.on(Event.MASTER_SWITCHED, newMaster => {
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
