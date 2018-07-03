@@ -5,10 +5,6 @@ import ReceiverGroup from './ReceiverGroup';
  */
 export default class SendEventOptions {
   constructor() {
-    /**
-     * 缓存参数
-     * @type {number}
-     */
     this.cachingOption = 0;
     /**
      * 接收组
