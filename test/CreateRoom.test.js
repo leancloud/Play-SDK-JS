@@ -38,7 +38,7 @@ describe('test create room', () => {
         level: 2,
       };
       options.customRoomProperties = props;
-      options.customRoomPropertiesForLobby = ['level'];
+      options.customRoomPropertiesKeysForLobby = ['level'];
       const expectedUserIds = ['world'];
       play.joinOrCreateRoom(roomName, {
         roomOptions: options,
@@ -101,14 +101,16 @@ describe('test create room', () => {
       expect(play1.player.isLocal()).to.be.equal(true);
       expect(newPlayer.isLocal()).to.be.equal(false);
       expect(play1.room.playerList.length).to.be.equal(2);
-      expect(play2.room.playerList.length).to.be.equal(2);
       play1.disconnect();
-      play2.disconnect();
       done();
     });
 
     play2.on(Event.JOINED_LOBBY, () => {
       play2.joinRoom(roomName);
+    });
+    play2.on(Event.JOINED_ROOM, () => {
+      expect(play2.room.playerList.length).to.be.equal(2);
+      play2.disconnect();
     });
 
     play1.connect();

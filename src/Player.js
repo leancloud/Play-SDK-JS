@@ -1,8 +1,11 @@
+/**
+ * 玩家类
+ */
 export default class Player {
   constructor(play) {
     this._play = play;
-    this.userId = '';
-    this.actorId = -1;
+    this._userId = '';
+    this._actorId = -1;
   }
 
   static _newFromJSONObject(play, playerJSONObject) {
@@ -12,8 +15,8 @@ export default class Player {
   }
 
   _initWithJSONObject(playerJSONObject) {
-    this.userId = playerJSONObject.pid;
-    this.actorId = playerJSONObject.actorId;
+    this._userId = playerJSONObject.pid;
+    this._actorId = playerJSONObject.actorId;
     if (playerJSONObject.properties) {
       this.properties = playerJSONObject.properties;
     } else {
@@ -21,39 +24,75 @@ export default class Player {
     }
   }
 
-  // 判断是不是当前客户端玩家
-  isLocal() {
-    return this.actorId !== -1 && this._play._player.actorId === this.actorId;
+  /**
+   * 玩家 ID
+   * @type {string}
+   * @readonly
+   */
+  get userId() {
+    return this._userId;
   }
 
-  // 判断是不是主机玩家
-  isMaster() {
+  /**
+   * 房间玩家 ID
+   * @type {number}
+   * @readonly
+   */
+  get actorId() {
+    return this._actorId;
+  }
+
+  /**
+   * 判断是不是当前客户端玩家
+   * @return {Boolean}
+   */
+  isLocal() {
     return (
-      this.actorId !== -1 && this._play._room.masterActorId === this.actorId
+      this._actorId !== -1 && this._play._player._actorId === this._actorId
     );
   }
 
-  // 判断是不是活跃状态
+  /**
+   * 判断是不是主机玩家
+   * @return {Boolean}
+   */
+  isMaster() {
+    return this._actorId !== -1 && this._play._room.masterId === this._actorId;
+  }
+
+  /**
+   * 判断是不是活跃状态
+   * @return {Boolean}
+   */
   isInActive() {
     return this.inActive;
   }
 
-  // 设置活跃状态
-  _setActive(active) {
-    this.inActive = !active;
-  }
-
-  // 设置自定义属性接口
+  /**
+   * 设置自定义属性
+   * @param {Object} properties 自定义属性
+   * @param {Object} opts 设置选项
+   * @param {Object} opts.expectedValues 期望属性，用于 CAS 检测
+   */
   setCustomProperties(properties, { expectedValues = null } = {}) {
     this._play._setPlayerCustomProperties(
-      this.actorId,
+      this._actorId,
       properties,
       expectedValues
     );
   }
 
+  /**
+   * 获取自定义属性
+   * @return {Object}
+   */
   getCustomProperties() {
     return this.properties;
+  }
+
+  // 设置活跃状态
+  _setActive(active) {
+    this.inActive = !active;
   }
 
   _mergeProperties(changedProperties) {

@@ -23,7 +23,7 @@ describe('test master', () => {
       play1.setMaster(newPlayer.actorId);
     });
     play1.on(Event.MASTER_SWITCHED, newMaster => {
-      expect(play1.room.masterActorId).to.be.equal(newMaster.actorId);
+      expect(play1.room.masterId).to.be.equal(newMaster.actorId);
       p1Flag = true;
       if (p1Flag && p2Flag) {
         play1.disconnect();
@@ -40,7 +40,7 @@ describe('test master', () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
     play2.on(Event.MASTER_SWITCHED, newMaster => {
-      expect(play2.room.masterActorId).to.be.equal(newMaster.actorId);
+      expect(play2.room.masterId).to.be.equal(newMaster.actorId);
       p2Flag = true;
       if (p1Flag && p2Flag) {
         play1.disconnect();
@@ -83,7 +83,7 @@ describe('test master', () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
     play2.on(Event.MASTER_SWITCHED, newMaster => {
-      expect(play2.room.masterActorId).to.be.equal(newMaster.actorId);
+      expect(play2.room.masterId).to.be.equal(newMaster.actorId);
       setTimeout(() => {
         play1.disconnect();
         play2.disconnect();
