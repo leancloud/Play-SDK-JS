@@ -2,14 +2,7 @@
  * 大厅房间数据类
  */
 export default class LobbyRoom {
-  /**
-   * @param {Object} lobbyRoomDTO 大厅房间数据对象
-   */
   constructor(lobbyRoomDTO) {
-    /**
-     * 房间名称
-     * @type {string}
-     */
     this._roomName = lobbyRoomDTO.cid;
     this._maxPlayerCount = lobbyRoomDTO.maxMembers;
     this._expectedUserIds = lobbyRoomDTO.expectMembers;
@@ -23,6 +16,8 @@ export default class LobbyRoom {
 
   /**
    * 房间名称
+   * @type {string}
+   * @readonly
    */
   get roomName() {
     return this._roomName;
@@ -30,6 +25,8 @@ export default class LobbyRoom {
 
   /**
    * 房间最大玩家数
+   * @type {number}
+   * @readonly
    */
   get maxPlayerCount() {
     return this._maxPlayerCount;
@@ -37,6 +34,8 @@ export default class LobbyRoom {
 
   /**
    * 邀请好友 ID 数组
+   * @type {Array.<string>}
+   * @readonly
    */
   get expectedUserIds() {
     return this._expectedUserIds;
@@ -44,6 +43,8 @@ export default class LobbyRoom {
 
   /**
    * 房间置空后销毁时间（秒）
+   * @type {number}
+   * @readonly
    */
   get emptyRoomTtl() {
     return this._emptyRoomTtl;
@@ -51,6 +52,8 @@ export default class LobbyRoom {
 
   /**
    * 玩家离线后踢出房间时间（秒）
+   * @type {number}
+   * @readonly
    */
   get playerTtl() {
     return this._playerTtl;
@@ -58,6 +61,8 @@ export default class LobbyRoom {
 
   /**
    * 当前房间玩家数量
+   * @type {number}
+   * @readonly
    */
   get playerCount() {
     return this._playerCount;
@@ -65,6 +70,8 @@ export default class LobbyRoom {
 
   /**
    * 房间匹配属性
+   * @type {Object}
+   * @readonly
    */
   get customRoomPropertiesForLobby() {
     return this._customRoomPropertiesForLobby;

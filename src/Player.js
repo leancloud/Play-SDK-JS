@@ -1,4 +1,6 @@
-/** 玩家类 */
+/**
+ * 玩家类
+ */
 export default class Player {
   constructor(play) {
     this._play = play;
@@ -24,7 +26,8 @@ export default class Player {
 
   /**
    * 玩家 ID
-   * type {string}
+   * @type {string}
+   * @readonly
    */
   get userId() {
     return this._userId;
@@ -32,7 +35,8 @@ export default class Player {
 
   /**
    * 房间玩家 ID
-   * type {number}
+   * @type {number}
+   * @readonly
    */
   get actorId() {
     return this._actorId;

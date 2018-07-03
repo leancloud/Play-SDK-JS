@@ -16,13 +16,23 @@ import {
 
 const debug = require('debug')('Play');
 
+/**
+ * 节点地区
+ * @readonly
+ * @enum {number}
+ */
 const Region = {
+  /** 华北节点 */
   NORTH_CN: 0,
+  /** 华东节点 */
   EAST_CN: 1,
+  /** 美国节点 */
   US: 2,
 };
 
-/** Play 客户端类 */
+/**
+ * Play 客户端类
+ */
 class Play extends EventEmitter {
   constructor() {
     super();
@@ -31,6 +41,8 @@ class Play extends EventEmitter {
      * @type {string}
      */
     this.userId = null;
+    this._room = null;
+    this._player = null;
   }
 
   /**
@@ -62,8 +74,9 @@ class Play extends EventEmitter {
 
   /**
    * 建立连接
-   * @param {string} gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
-   * @param {Boolean} autoJoinLobby （可选）是否自动加入大厅，默认值为 true
+   * @param {Object} opts （可选）连接选项
+   * @param {string} opts.gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
+   * @param {boolean} opts.autoJoinLobby （可选）是否自动加入大厅，默认值为 true
    */
   connect({ gameVersion = '0.0.1', autoJoinLobby = true } = {}) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
@@ -157,8 +170,9 @@ class Play extends EventEmitter {
   /**
    * 创建房间
    * @param {string} roomName 房间名称，在整个游戏中保证唯一
-   * @param {RoomOptions} roomOptions （可选）创建房间选项，默认值为 null
-   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   * @param {Object} opts （可选）创建房间选项
+   * @param {RoomOptions} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   createRoom(roomName, { roomOptions = null, expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
@@ -236,8 +250,9 @@ class Play extends EventEmitter {
   /**
    * 随机加入或创建房间
    * @param {string} roomName 房间名称
-   * @param {RoomOptions} roomOptions （可选）创建房间选项，默认值为 null
-   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   * @param {Object} opts （可选）创建房间选项
+   * @param {RoomOptions} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   joinOrCreateRoom(
     roomName,
@@ -281,8 +296,9 @@ class Play extends EventEmitter {
 
   /**
    * 随机加入房间
-   * @param {Object} matchProperties （可选）匹配属性，默认值为 null
-   * @param {Array.<string>} expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
+   * @param {Object} opts （可选）随机加入房间选项
+   * @param {Object} opts.matchProperties （可选）匹配属性，默认值为 null
+   * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
@@ -352,17 +368,17 @@ class Play extends EventEmitter {
 
   /**
    * 设置房主
-   * @param {number} newMasterActorId 新房主 ID
+   * @param {number} newMasterId 新房主 ID
    */
-  setMaster(newMasterActorId) {
-    if (!(typeof newMasterActorId === 'number')) {
-      throw new TypeError(`${newMasterActorId} is not a number`);
+  setMaster(newMasterId) {
+    if (!(typeof newMasterId === 'number')) {
+      throw new TypeError(`${newMasterId} is not a number`);
     }
     const msg = {
       cmd: 'conv',
       op: 'update-master-client',
       i: this._getMsgId(),
-      masterActorId: newMasterActorId,
+      masterActorId: newMasterId,
     };
     this._send(msg);
   }
@@ -411,6 +427,7 @@ class Play extends EventEmitter {
   /**
    * 获取当前所在房间
    * @return {Room}
+   * @readonly
    */
   get room() {
     return this._room;
@@ -419,6 +436,7 @@ class Play extends EventEmitter {
   /**
    * 获取当前玩家
    * @return {Player}
+   * @readonly
    */
   get player() {
     return this._player;

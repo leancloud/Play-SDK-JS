@@ -1,6 +1,8 @@
 import Player from './Player';
 
-/** 房间类 */
+/**
+ * 房间类
+ */
 export default class Room {
   constructor(play) {
     this._play = play;
@@ -35,6 +37,7 @@ export default class Room {
   /**
    * 房间名称
    * @type {string}
+   * @readonly
    */
   get name() {
     return this._name;
@@ -43,6 +46,7 @@ export default class Room {
   /**
    * 房间是否开启
    * @type {boolean}
+   * @readonly
    */
   get opened() {
     return this._opened;
@@ -51,6 +55,7 @@ export default class Room {
   /**
    * 房间是否可见
    * @type {boolean}
+   * @readonly
    */
   get visible() {
     return this._visible;
@@ -59,6 +64,7 @@ export default class Room {
   /**
    * 房间允许的最大玩家数量
    * @type {number}
+   * @readonly
    */
   get maxPlayerCount() {
     return this._maxPlayerCount;
@@ -67,6 +73,7 @@ export default class Room {
   /**
    * 房间主机玩家 ID
    * @type {number}
+   * @readonly
    */
   get masterId() {
     return this._masterActorId;
@@ -75,6 +82,7 @@ export default class Room {
   /**
    * 邀请的好友 ID 列表
    * @type {Array.<string>}
+   * @readonly
    */
   get expectedUserIds() {
     return this._expectedUserIds;
@@ -98,7 +106,8 @@ export default class Room {
 
   /**
    * 获取房间内的玩家列表
-   * @return {Player[]}
+   * @return {Array.<Player>}
+   * @readonly
    */
   get playerList() {
     return Object.values(this._players);
