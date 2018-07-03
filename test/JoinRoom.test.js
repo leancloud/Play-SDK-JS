@@ -167,6 +167,9 @@ describe('test join room', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
+    play1.on(Event.PLAYER_ACTIVITY_CHANGED, player => {
+      debug(`${player.userId}'s inActivity is ${player.isInActive()}`);
+    });
 
     play2.on(Event.JOINED_LOBBY, () => {
       expect(play2._sessionToken).to.be.not.equal(null);

@@ -2,6 +2,7 @@ import WebSocket from 'isomorphic-ws';
 import axios from 'axios';
 import EventEmitter from 'eventemitter3';
 
+import Region from './Region';
 import Event from './Event';
 import SendEventOptions from './SendEventOptions';
 import RoomOptions from './RoomOptions';
@@ -17,23 +18,9 @@ import {
 const debug = require('debug')('Play');
 
 /**
- * 节点地区
- * @readonly
- * @enum {number}
- */
-const Region = {
-  /** 华北节点 */
-  NORTH_CN: 0,
-  /** 华东节点 */
-  EAST_CN: 1,
-  /** 美国节点 */
-  US: 2,
-};
-
-/**
  * Play 客户端类
  */
-class Play extends EventEmitter {
+export default class Play extends EventEmitter {
   constructor() {
     super();
     /**
@@ -47,10 +34,7 @@ class Play extends EventEmitter {
 
   /**
    * 初始化客户端
-   * @param {Object} opts
-   * @param {string} opts.appId App ID
-   * @param {string} opts.appKey App Key
-   * @param {Region} opts.region App 地区节点
+   * @param {PlayOptions} opts
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -593,5 +577,3 @@ class Play extends EventEmitter {
     return `${PlayVersion}_${this._gameVersion}`;
   }
 }
-
-export { Region, Play };
