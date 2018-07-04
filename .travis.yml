@@ -5,7 +5,8 @@ script:
   - rollup -c
   - npm run doc
 after_success:
-  sh ./script/deploy.sh
+  - echo 'after success'
+  - ./script/deploy.sh
 deploy:
   provider: releases
   api_key:
