@@ -1,11 +1,22 @@
 import Event from '../src/Event';
 import newPlay from './Utils';
+import Play from '../src/Play';
+import Region from '../src/Region';
+import PlayOptions from '../src/PlayOptions';
+import { APP_ID, APP_KEY } from './Config';
 
 const { expect } = require('chai');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
-    const play = newPlay('play');
+    const opts = new PlayOptions();
+    opts.appId = APP_ID;
+    opts.appKey = APP_KEY;
+    opts.region = Region.EAST_CN;
+    opts.autoJoinLobby = false;
+    const play = new Play();
+    play.init(opts);
+    play.userId = 'play';
     play.on(Event.CONNECTED, () => {
       play.joinLobby();
     });
@@ -13,9 +24,7 @@ describe('test lobby', () => {
       play.disconnect();
       done();
     });
-    play.connect({
-      autoJoinLobby: false,
-    });
+    play.connect();
   });
 
   it('test room list update', done => {

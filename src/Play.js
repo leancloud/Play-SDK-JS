@@ -3,6 +3,7 @@ import axios from 'axios';
 import EventEmitter from 'eventemitter3';
 
 import Region from './Region';
+import PlayOptions from './PlayOptions';
 import Event from './Event';
 import SendEventOptions from './SendEventOptions';
 import RoomOptions from './RoomOptions';
@@ -37,6 +38,9 @@ export default class Play extends EventEmitter {
    * @param {PlayOptions} opts
    */
   init(opts) {
+    if (!(opts instanceof PlayOptions)) {
+      throw new TypeError(`${opts} is not a PlayOptions`);
+    }
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
     }
@@ -46,9 +50,13 @@ export default class Play extends EventEmitter {
     if (!(typeof opts.region === 'number')) {
       throw new TypeError(`${opts.region} is not a number`);
     }
+    if (!(typeof opts.autoJoinLobby === 'boolean')) {
+      throw new TypeError(`${opts.autoJoinLobby} is not a boolean`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
+    this._autoJoinLobby = opts.autoJoinLobby;
     this._masterServer = null;
     this._msgId = 0;
     this._requestMsg = {};
@@ -60,17 +68,12 @@ export default class Play extends EventEmitter {
    * 建立连接
    * @param {Object} opts （可选）连接选项
    * @param {string} opts.gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
-   * @param {boolean} opts.autoJoinLobby （可选）是否自动加入大厅，默认值为 true
    */
-  connect({ gameVersion = '0.0.1', autoJoinLobby = true } = {}) {
+  connect({ gameVersion = '0.0.1' } = {}) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
-    if (autoJoinLobby !== null && !(typeof autoJoinLobby === 'boolean')) {
-      throw new TypeError(`${autoJoinLobby} is not a boolean value`);
-    }
     this._gameVersion = gameVersion;
-    this._autoJoinLobby = autoJoinLobby;
     let masterURL = EastCNServerURL;
     if (this._region === Region.NORTH_CN) {
       masterURL = NorthCNServerURL;
