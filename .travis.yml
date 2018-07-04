@@ -5,7 +5,9 @@ script:
   - rollup -c
   - npm run doc
 after_success:
-  - sh ./script/deploy.sh
+  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "${TRAVIS_PULL_REQUEST}" = "false" ]]; then
+      - sh ./script/deploy.sh
+    fi
 deploy:
   provider: releases
   api_key:
