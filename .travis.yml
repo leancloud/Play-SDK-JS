@@ -1,7 +1,11 @@
 language: node_js
 node_js:
 - '10'
-script: rollup -c
+script: 
+  - rollup -c
+  - npm run doc
+after_success:
+  - sh ./script/deploy.sh
 deploy:
   provider: releases
   api_key:

@@ -8,7 +8,8 @@
     "lint": "eslint --ignore-path .gitignore src test",
     "build": "rollup -c",
     "test:node": "NODE_ENV=test nyc mocha test/**.js --exit",
-    "test": "npm run lint && npm run test:node"
+    "test": "npm run lint && npm run test:node",
+    "doc": "jsdoc -c .jsdocrc.json -d ./doc/"
   },
   "license": "MIT",
   "dependencies": {
@@ -19,6 +20,7 @@
     "ws": "^5.2.1"
   },
   "devDependencies": {
+    "@leeyeh/jsdoc-rtd": "^1.0.14",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
