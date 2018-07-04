@@ -88,7 +88,7 @@ function handlePlayerCustomPropertiesChangedResponse() {
 
 // 玩家属性变更
 function handlePlayerCustomPropertiesChanged(play, msg) {
-  const player = play._room.getPlayer(msg.initByActor);
+  const player = play._room.getPlayer(msg.actorId);
   player._mergeProperties(msg.attr);
   play.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
     player,
