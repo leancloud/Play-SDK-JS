@@ -4,6 +4,8 @@ node_js:
 script: 
   - rollup -c
   - npm run doc
+after_success:
+  sh ./script/deploy.sh
 deploy:
   provider: releases
   api_key:
@@ -12,5 +14,3 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-after_success:
-  sh ./script/deploy.sh
