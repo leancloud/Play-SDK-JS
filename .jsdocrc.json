@@ -1,4 +1,8 @@
 {
+  "opts": {
+    "template": "node_modules/@leeyeh/jsdoc-rtd",
+    "recurse": true
+  },
   "tags": {
     "allowUnknownTags": true,
     "dictionaries": ["jsdoc", "closure"]
@@ -8,9 +12,5 @@
     "includePattern": ".+\\.js(doc)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
-  "plugins": ["./node_modules/jsdoc-export-default-interop/dist/index"],
-  "templates": {
-    "cleverLinks": false,
-    "monospaceLinks": false
-  }
+  "plugins": ["./node_modules/jsdoc-export-default-interop/dist/index"]
 }
