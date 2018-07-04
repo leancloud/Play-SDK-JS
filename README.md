@@ -4,6 +4,10 @@
 
 从 Release 下载 play.js 并拖拽至 Cocos Creator 中作为源码引用（无需做插件配置）
 
+## 文档
+
+- [API 文档](https://leancloud.github.io/Play-SDK-JS/doc/)
+
 ## 编译
 
 在工程目录下，执行
