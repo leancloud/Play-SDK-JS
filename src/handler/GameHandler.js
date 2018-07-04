@@ -71,11 +71,19 @@ function handleRoomVisibleChanged(play, msg) {
   play._room._visible = msg.toggle;
 }
 
+// 房间属性变更应答
+function handleRoomCustomPropertiesChangedResponse() {}
+
 // 房间属性变更
 function handleRoomCustomPropertiesChanged(play, msg) {
   const changedProperties = msg.attr;
   play._room._mergeProperties(changedProperties);
   play.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, changedProperties);
+}
+
+// 玩家属性变更应答
+function handlePlayerCustomPropertiesChangedResponse() {
+  // nothing
 }
 
 // 玩家属性变更
@@ -150,9 +158,6 @@ export default function handleGameMsg(play, message) {
         case 'members-left':
           handlePlayerLeftRoom(play, msg);
           break;
-        // case 'master-client-updated':
-        //   handleMasterUpdate(play, msg);
-        //   break;
         case 'master-client-changed':
           handleMasterChanged(play, msg);
           break;
@@ -162,8 +167,14 @@ export default function handleGameMsg(play, message) {
         case 'visible':
           handleRoomVisibleChanged(play, msg);
           break;
+        case 'updated':
+          handleRoomCustomPropertiesChangedResponse();
+          break;
         case 'updated-notify':
           handleRoomCustomPropertiesChanged(play, msg);
+          break;
+        case 'player-prop-updated':
+          handlePlayerCustomPropertiesChangedResponse();
           break;
         case 'player-props':
           handlePlayerCustomPropertiesChanged(play, msg);
