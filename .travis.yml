@@ -4,6 +4,7 @@ node_js:
 script: 
   - rollup -c
   - npm run doc
+  - echo 'run script'
 after_success:
   - echo 'after success'
   - ./script/deploy.sh
