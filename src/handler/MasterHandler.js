@@ -3,7 +3,7 @@ import LobbyRoom from '../LobbyRoom';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 
-const debug = require('debug')('Handler');
+const debug = require('debug')('Play:MasterHandler');
 
 // 连接建立
 function handleMasterServerSessionOpen(play, msg) {
