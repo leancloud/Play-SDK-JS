@@ -1,4 +1,5 @@
-import { play, PlayOptions, Region, Event, SendEventOptions } from '../play';
+const Play = require('../play');
+const { play, PlayOptions, Region, Event, SendEventOptions } = Play;
 
 cc.Class({
   extends: cc.Component,
