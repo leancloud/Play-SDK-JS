@@ -1,12 +1,4 @@
-import {
-  play,
-  PlayOptions,
-  Region,
-  Event,
-  RoomOptions,
-  PlayObject,
-  SendEventOptions,
-} from '../play';
+import { play, PlayOptions, Region, Event, SendEventOptions } from '../play';
 
 cc.Class({
   extends: cc.Component,
@@ -24,16 +16,14 @@ cc.Class({
       type: cc.Label,
       default: null,
     },
-    // defaults, set visually when attaching this script to the Canvas
-    text: 'Hello, World!',
   },
 
   // use this for initialization
-  onLoad: function() {
+  onLoad() {
     const roomName = 'cocos_creator_room';
 
-    const randId = parseInt(Math.random() * 1000000);
-    this.idLabel.string = 'ID: ' + randId;
+    const randId = parseInt(Math.random() * 1000000, 10);
+    this.idLabel.string = `ID: ${randId}`;
 
     const opts = new PlayOptions();
     // 设置 APP ID
@@ -60,7 +50,7 @@ cc.Class({
       console.log('on joined room');
     });
     play.on(Event.NEW_PLAYER_JOINED_ROOM, newPlayer => {
-      console.log('new player: ' + newPlayer.userId);
+      console.log(`new player: ${newPlayer.userId}`);
       if (play.player.isMaster()) {
         // 获取房间玩家列表
         const playerList = play.room.playerList;
@@ -77,12 +67,12 @@ cc.Class({
             });
           }
         }
-        var options = new SendEventOptions();
+        const options = new SendEventOptions();
         play.sendEvent('win', { winnerId: play.room.masterId }, options);
       }
     });
     play.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
-      const { player, changedProps } = data;
+      const { player } = data;
       const { point } = player.getCustomProperties();
       console.log(`${player.userId}: ${point}`);
       if (player.isLocal()) {
@@ -91,10 +81,10 @@ cc.Class({
     });
     play.on(Event.CUSTOM_EVENT, event => {
       // 解构事件参数
-      const { eventId, eventData, sender } = event;
+      const { eventId, eventData } = event;
       if (eventId === 'win') {
         const { winnerId } = eventData;
-        console.log('winnerId: ' + winnerId);
+        console.log(`winnerId: ${winnerId}`);
         // 如果胜利者是自己，则显示胜利 UI；否则显示失败 UI
         if (play.player.actorId === winnerId) {
           this.resultLabel.string = 'win';
