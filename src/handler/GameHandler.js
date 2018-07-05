@@ -3,7 +3,7 @@ import Player from '../Player';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 
-const debug = require('debug')('Handler');
+const debug = require('debug')('Play:GameHandler');
 
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {

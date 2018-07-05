@@ -16,7 +16,7 @@ import {
   USServerURL,
 } from './Config';
 
-const debug = require('debug')('Play');
+const debug = require('debug')('Play:Play');
 
 /**
  * Play 客户端类
