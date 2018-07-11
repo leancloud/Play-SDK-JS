@@ -62,6 +62,10 @@ export default class Play extends EventEmitter {
     this._requestMsg = {};
     // 切换服务器状态
     this._switchingServer = false;
+    // 是否处于大厅
+    this._inLobby = false;
+    // 大厅房间列表
+    this._lobbyRoomList = null;
   }
 
   /**
@@ -427,6 +431,15 @@ export default class Play extends EventEmitter {
    */
   get player() {
     return this._player;
+  }
+
+  /**
+   * 获取房间列表
+   * @return {Array.<LobbyRoom>}
+   * @readonly
+   */
+  get lobbyRoomList() {
+    return this._lobbyRoomList;
   }
 
   // 设置房间属性

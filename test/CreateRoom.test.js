@@ -3,6 +3,7 @@ import RoomOptions from '../src/RoomOptions';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
+const debug = require('debug')('CreateRoomTest');
 
 describe('test create room', () => {
   it('test create simple room', done => {
@@ -91,6 +92,9 @@ describe('test create room', () => {
     play1.on(Event.JOINED_LOBBY, () => {
       play1.createRoom(roomName);
     });
+    play1.on(Event.LEFT_LOBBY, () => {
+      debug('play1 left lobby');
+    });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
@@ -107,6 +111,9 @@ describe('test create room', () => {
 
     play2.on(Event.JOINED_LOBBY, () => {
       play2.joinRoom(roomName);
+    });
+    play2.on(Event.LEFT_LOBBY, () => {
+      debug('play1 left lobby');
     });
     play2.on(Event.JOINED_ROOM, () => {
       expect(play2.room.playerList.length).to.be.equal(2);
