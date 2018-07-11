@@ -13,7 +13,7 @@ export default class SendEventOptions {
     this.receiverGroup = ReceiverGroup.All;
     /**
      * 接收者 ID 数组。如果设置，将会覆盖 receiverGroup
-     * @type {Array.<string>}
+     * @type {Array.<number>}
      */
     this.targetActorIds = null;
   }

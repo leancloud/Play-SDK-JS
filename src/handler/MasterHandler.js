@@ -19,11 +19,13 @@ function handleMasterServerSessionOpen(play, msg) {
 
 // 加入大厅
 function handleJoinedLobby(play) {
+  play._inLobby = true;
   play.emit(Event.JOINED_LOBBY);
 }
 
 // 离开大厅
 function handleLeftLobby(play) {
+  play._inLobby = false;
   play.emit(Event.LEFT_LOBBY);
 }
 
@@ -32,18 +34,24 @@ function handleStatistic() {}
 
 // 房间列表更新
 function handleRoomList(play, msg) {
-  play.lobbyRoomList = [];
+  play._lobbyRoomList = [];
   for (let i = 0; i < msg.list.length; i += 1) {
     const lobbyRoomDTO = msg.list[i];
-    play.lobbyRoomList[i] = new LobbyRoom(lobbyRoomDTO);
+    play._lobbyRoomList[i] = new LobbyRoom(lobbyRoomDTO);
   }
   play.emit(Event.LOBBY_ROOM_LIST_UPDATE);
 }
 
 function handleGameServer(play, msg) {
+  if (play._inLobby) {
+    play._inLobby = false;
+    play.emit(Event.LEFT_LOBBY);
+  }
   play._gameAddr = msg.addr;
   play._secureGameAddr = msg.secureAddr;
-  if (msg.cid) play._cachedRoomMsg.cid = msg.cid;
+  if (msg.cid) {
+    play._cachedRoomMsg.cid = msg.cid;
+  }
   play._connectToGame();
 }
 

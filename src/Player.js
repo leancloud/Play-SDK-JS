@@ -69,7 +69,7 @@ export default class Player {
   }
 
   /**
-   * 设置自定义属性
+   * 设置玩家的自定义属性
    * @param {Object} properties 自定义属性
    * @param {Object} opts 设置选项
    * @param {Object} opts.expectedValues 期望属性，用于 CAS 检测
