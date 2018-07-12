@@ -6,13 +6,28 @@ const { expect } = require('chai');
 const debug = require('debug')('CreateRoomTest');
 
 describe('test create room', () => {
+  it('test null room name', done => {
+    const play = newPlay('hello');
+    play.on(Event.JOINED_LOBBY, () => {
+      expect(play._sessionToken).to.be.not.equal(null);
+      expect(play._masterServer).to.be.not.equal(null);
+      play.createRoom();
+    });
+    play.on(Event.CREATED_ROOM, () => {
+      debug(play.room.name);
+      play.disconnect();
+      done();
+    });
+    play.connect();
+  });
+
   it('test create simple room', done => {
     const roomName = '110';
     const play = newPlay('hello1');
     play.on(Event.JOINED_LOBBY, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
-      play.createRoom(roomName);
+      play.createRoom({ roomName });
     });
     play.on(Event.CREATED_ROOM, () => {
       expect(play.room.name).to.be.equal(roomName);
@@ -65,7 +80,7 @@ describe('test create room', () => {
     const play1 = newPlay('hello3');
     const play2 = newPlay('world3');
     play1.on(Event.JOINED_LOBBY, () => {
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -73,7 +88,7 @@ describe('test create room', () => {
     });
 
     play2.on(Event.JOINED_LOBBY, () => {
-      play2.createRoom(roomName);
+      play2.createRoom({ roomName });
     });
     play2.on(Event.CREATE_ROOM_FAILED, () => {
       play1.disconnect();
@@ -90,7 +105,7 @@ describe('test create room', () => {
     const play2 = newPlay('world6');
 
     play1.on(Event.JOINED_LOBBY, () => {
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.LEFT_LOBBY, () => {
       debug('play1 left lobby');

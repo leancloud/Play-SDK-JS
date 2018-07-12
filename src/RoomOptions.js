@@ -16,12 +16,12 @@ export default class RoomOptions {
      */
     this.visible = true;
     /**
-     * 房间没人后延迟销毁时间（秒）
+     * 房间没人后延迟销毁时间（单位：秒），最大值 1800 秒，即 30 分钟
      * @type {number}
      */
     this.emptyRoomTtl = 0;
     /**
-     * 玩家离线后踢出房间时间（秒）
+     * 玩家离线后踢出房间时间（单位：秒），最大值 300 秒，即 5 分钟
      * @type {number}
      */
     this.playerTtl = 0;

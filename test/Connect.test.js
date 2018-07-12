@@ -59,7 +59,7 @@ describe('test connection', () => {
     play.on(Event.JOINED_LOBBY, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
-      play.createRoom(roomName);
+      play.createRoom({ roomName });
     });
     play.on(Event.CREATED_ROOM, () => {
       expect(play._room.name).to.be.equal(roomName);

@@ -160,16 +160,19 @@ export default class Play extends EventEmitter {
 
   /**
    * 创建房间
-   * @param {string} roomName 房间名称，在整个游戏中保证唯一
    * @param {Object} opts （可选）创建房间选项
+   * @param {string} opts.roomName 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
    * @param {RoomOptions} opts.roomOptions （可选）创建房间选项，默认值为 null
    * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
-  createRoom(roomName, { roomOptions = null, expectedUserIds = null } = {}) {
-    if (!(typeof roomName === 'string')) {
+  createRoom({
+    roomName = null,
+    roomOptions = null,
+    expectedUserIds = null,
+  } = {}) {
+    if (roomName !== null && !(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-
     if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
       throw new TypeError(`${roomOptions} is not a RoomOptions`);
     }
@@ -181,8 +184,10 @@ export default class Play extends EventEmitter {
       cmd: 'conv',
       op: 'start',
       i: this._getMsgId(),
-      cid: roomName,
     };
+    if (roomName) {
+      this._cachedRoomMsg.cid = roomName;
+    }
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
     if (roomOptions) {
       const opts = roomOptions._toMsg();

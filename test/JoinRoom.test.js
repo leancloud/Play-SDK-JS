@@ -14,7 +14,7 @@ describe('test join room', () => {
 
     play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -42,7 +42,7 @@ describe('test join room', () => {
 
     play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -74,7 +74,8 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.maxPlayerCount = 3;
-      play1.createRoom(roomName, {
+      play1.createRoom({
+        roomName,
         roomOptions: options,
         expectedUserIds: ['world3', 'code'],
       });
@@ -116,7 +117,7 @@ describe('test join room', () => {
 
     play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -159,7 +160,8 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.playerTtl = 600;
-      play1.createRoom(roomName, {
+      play1.createRoom({
+        roomName,
         roomOptions: options,
       });
     });
@@ -216,7 +218,8 @@ describe('test join room', () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = new RoomOptions();
       options.playerTtl = 600;
-      play1.createRoom(roomName, {
+      play1.createRoom({
+        roomName,
         roomOptions: options,
       });
     });
@@ -266,7 +269,7 @@ describe('test join room', () => {
 
     play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -300,7 +303,8 @@ describe('test join room', () => {
       };
       options.customRoomProperties = matchProps;
       options.customRoomPropertiesKeysForLobby = ['lv'];
-      play1.createRoom(roomName, {
+      play1.createRoom({
+        roomName,
         roomOptions: options,
       });
     });
