@@ -34,7 +34,7 @@ describe('test lobby', () => {
     const play4 = newPlay('play4');
     let roomCount = 0;
     play1.on(Event.JOINED_LOBBY, () => {
-      play1.createRoom(play1.userId);
+      play1.createRoom({ roomName: play1.userId });
     });
     play1.on(Event.CREATED_ROOM, () => {
       roomCount += 1;
@@ -43,7 +43,7 @@ describe('test lobby', () => {
       }
     });
     play2.on(Event.JOINED_LOBBY, () => {
-      play2.createRoom(play2.userId);
+      play2.createRoom({ roomName: play2.userId });
     });
     play2.on(Event.CREATED_ROOM, () => {
       roomCount += 1;
@@ -52,7 +52,7 @@ describe('test lobby', () => {
       }
     });
     play3.on(Event.JOINED_LOBBY, () => {
-      play3.createRoom(play3.userId);
+      play3.createRoom({ roomName: play3.userId });
     });
     play3.on(Event.CREATED_ROOM, () => {
       roomCount += 1;

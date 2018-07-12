@@ -14,7 +14,7 @@ describe('test master', () => {
 
     play1.on(Event.JOINED_LOBBY, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
@@ -64,7 +64,7 @@ describe('test master', () => {
         return;
       }
       expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom(roomName);
+      play1.createRoom({ roomName });
     });
     play1.on(Event.CREATED_ROOM, () => {
       expect(play1.room.name).to.be.equal(roomName);
