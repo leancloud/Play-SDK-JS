@@ -10,7 +10,7 @@ export default class LobbyRoom {
     this._playerTtl = lobbyRoomDTO.playerTtl;
     this._playerCount = lobbyRoomDTO.playerCount;
     if (lobbyRoomDTO.attr) {
-      this._customRoomPropertiesForLobby = lobbyRoomDTO.attr;
+      this._customRoomProperties = lobbyRoomDTO.attr;
     }
   }
 
@@ -69,11 +69,11 @@ export default class LobbyRoom {
   }
 
   /**
-   * 房间匹配属性
+   * 房间属性
    * @type {Object}
    * @readonly
    */
-  get customRoomPropertiesForLobby() {
-    return this._customRoomPropertiesForLobby;
+  get customRoomProperties() {
+    return this._customRoomProperties;
   }
 }
