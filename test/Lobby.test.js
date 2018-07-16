@@ -76,7 +76,7 @@ describe('test lobby', () => {
       if (play4.lobbyRoomList.length > 0) {
         for (let i = 0; i < play4.lobbyRoomList.length; i += 1) {
           const lobbyRoom = play4.lobbyRoomList[i];
-          debug(lobbyRoom.customRoomPropertiesForLobby);
+          debug(lobbyRoom.customRoomProperties);
         }
         expect(play4.lobbyRoomList.length >= 3).to.be.equal(true);
         play1.disconnect();
