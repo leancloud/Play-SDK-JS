@@ -36,7 +36,7 @@ export default class RoomOptions {
      */
     this.customRoomProperties = null;
     /**
-     * 匹配属性键
+     * 大厅中房间属性「键」数组，这些属性将会大厅的房间属性中查看，并在匹配房间时用到。
      * @type {Array.<string>}
      */
     this.customRoomPropertiesKeysForLobby = null;

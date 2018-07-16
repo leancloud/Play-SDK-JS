@@ -3,9 +3,11 @@ import newPlay from './Utils';
 import Play from '../src/Play';
 import Region from '../src/Region';
 import PlayOptions from '../src/PlayOptions';
+import RoomOptions from '../src/RoomOptions';
 import { APP_ID, APP_KEY } from './Config';
 
 const { expect } = require('chai');
+const debug = require('debug')('LobbyTest');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
@@ -34,7 +36,17 @@ describe('test lobby', () => {
     const play4 = newPlay('play4');
     let roomCount = 0;
     play1.on(Event.JOINED_LOBBY, () => {
-      play1.createRoom({ roomName: play1.userId });
+      const options = new RoomOptions();
+      const props = {
+        title: 'room title',
+        level: 2,
+      };
+      options.customRoomProperties = props;
+      options.customRoomPropertiesKeysForLobby = ['level'];
+      play1.createRoom({
+        roomName: play1.userId,
+        roomOptions: options,
+      });
     });
     play1.on(Event.CREATED_ROOM, () => {
       roomCount += 1;
@@ -62,6 +74,10 @@ describe('test lobby', () => {
     });
     play4.on(Event.LOBBY_ROOM_LIST_UPDATE, () => {
       if (play4.lobbyRoomList.length > 0) {
+        for (let i = 0; i < play4.lobbyRoomList.length; i += 1) {
+          const lobbyRoom = play4.lobbyRoomList[i];
+          debug(lobbyRoom.customRoomPropertiesForLobby);
+        }
         expect(play4.lobbyRoomList.length >= 3).to.be.equal(true);
         play1.disconnect();
         play2.disconnect();
