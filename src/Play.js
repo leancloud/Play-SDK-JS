@@ -66,6 +66,12 @@ export default class Play extends EventEmitter {
     this._inLobby = false;
     // 大厅房间列表
     this._lobbyRoomList = null;
+    // 连接失败次数
+    this._connectFailedCount = 0;
+    // 下次允许的连接时间戳
+    this._nextConnectTimestamp = 0;
+    // 连接计时器
+    this._connectTimer = null;
   }
 
   /**
@@ -74,6 +80,28 @@ export default class Play extends EventEmitter {
    * @param {string} opts.gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
    */
   connect({ gameVersion = '0.0.1' } = {}) {
+    // 判断是否已经在等待连接
+    if (this._connectTimer) {
+      console.warn('waiting for connect');
+      return;
+    }
+
+    // 判断连接时间
+    const now = new Date().getTime();
+    if (now < this._nextConnectTimestamp) {
+      const waitTime = this._nextConnectTimestamp - now;
+      debug(`wait time: ${waitTime}`);
+      this._connectTimer = setTimeout(() => {
+        this._connect(gameVersion);
+        clearTimeout(this._connectTimer);
+        this._connectTimer = null;
+      }, waitTime);
+    } else {
+      this._connect(gameVersion);
+    }
+  }
+
+  _connect(gameVersion) {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
@@ -92,11 +120,20 @@ export default class Play extends EventEmitter {
       .get(url)
       .then(response => {
         debug(response.data);
+        // 重置下次允许的连接时间
+        this._connectFailedCount = 0;
+        this._nextConnectTimestamp = 0;
+        clearTimeout(this._connectTimer);
+        this._connectTimer = null;
         this._masterServer = response.data.server;
         this._connectToMaster();
       })
       .catch(error => {
         console.error(error);
+        // 连接失败，则增加下次连接时间间隔
+        this._connectFailedCount += 1;
+        this._nextConnectTimestamp =
+          Date.now() + 2 ** this._connectFailedCount * 1000;
         this.emit(Event.CONNECT_FAILED, error.data);
       });
   }
