@@ -70,4 +70,19 @@ describe('test connection', () => {
     });
     play.connect();
   });
+
+  it('test connect failed', done => {
+    let connectCount = 0;
+    const play = newPlay('hello4');
+    play.on(Event.CONNECTED, () => {});
+    play.on(Event.CONNECT_FAILED, () => {
+      connectCount += 1;
+      if (connectCount >= 5) {
+        done();
+      } else {
+        play.connect();
+      }
+    });
+    play.connect();
+  });
 });
