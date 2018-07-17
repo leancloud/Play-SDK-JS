@@ -74,10 +74,14 @@ describe('test connection', () => {
   it('test connect failed', done => {
     let connectCount = 0;
     const play = newPlay('hello4');
-    play.on(Event.CONNECTED, () => {});
+    play.on(Event.CONNECTED, () => {
+      play.disconnect();
+      done();
+    });
     play.on(Event.CONNECT_FAILED, () => {
       connectCount += 1;
       if (connectCount >= 5) {
+        play.disconnect();
         done();
       } else {
         play.connect();

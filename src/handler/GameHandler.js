@@ -54,6 +54,9 @@ function handlePlayerLeftRoom(play, msg) {
   play.emit(Event.PLAYER_LEFT_ROOM, leftPlayer);
 }
 
+// 主机切换应答
+function handleMasterUpdated() {}
+
 // 主机切换
 function handleMasterChanged(play, msg) {
   play._room._masterActorId = msg.masterActorId;
@@ -157,6 +160,9 @@ export default function handleGameMsg(play, message) {
           break;
         case 'members-left':
           handlePlayerLeftRoom(play, msg);
+          break;
+        case 'master-client-updated':
+          handleMasterUpdated();
           break;
         case 'master-client-changed':
           handleMasterChanged(play, msg);

@@ -11,10 +11,10 @@ function handleMasterServerSessionOpen(play, msg) {
   const player = new Player(play);
   player._userId = play.userId;
   play._player = player;
-  play.emit(Event.CONNECTED);
   if (play._autoJoinLobby) {
     play.joinLobby();
   }
+  play.emit(Event.CONNECTED);
 }
 
 // 加入大厅
