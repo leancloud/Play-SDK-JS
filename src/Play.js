@@ -108,11 +108,11 @@ export default class Play extends EventEmitter {
     }
     this._gameVersion = gameVersion;
     let masterURL = EastCNServerURL;
-    if (this._region === Region.NORTH_CN) {
+    if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
-    } else if (this._region === Region.EAST_CN) {
+    } else if (this._region === Region.EastChina) {
       masterURL = EastCNServerURL;
-    } else if (this._region === Region.US) {
+    } else if (this._region === Region.NorthAmerica) {
       masterURL = USServerURL;
     }
     const params = `appId=${this._appId}&secure=true&ua=${this._getUA()}`;

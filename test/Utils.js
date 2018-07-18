@@ -7,7 +7,7 @@ export default function newPlay(userId) {
   const opts = new PlayOptions();
   opts.appId = APP_ID;
   opts.appKey = APP_KEY;
-  opts.region = Region.EAST_CN;
+  opts.region = Region.EastChina;
   const play = new Play();
   play.init(opts);
   play.userId = userId;

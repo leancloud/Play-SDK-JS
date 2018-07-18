@@ -12,11 +12,11 @@ describe('test custom event', () => {
     const play1 = newPlay('hello');
     const play2 = newPlay('world');
 
-    play1.on(Event.JOINED_LOBBY, () => {
+    play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
-    play1.on(Event.CREATED_ROOM, () => {
+    play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
@@ -30,11 +30,11 @@ describe('test custom event', () => {
       done();
     });
 
-    play2.on(Event.JOINED_LOBBY, () => {
+    play2.on(Event.LOBBY_JOINED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
     });
-    play2.on(Event.JOINED_ROOM, () => {
+    play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const options = new SendEventOptions();
       options.receiverGroup = ReceiverGroup.MasterClient;
@@ -61,11 +61,11 @@ describe('test custom event', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.JOINED_LOBBY, () => {
+    play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
-    play1.on(Event.CREATED_ROOM, () => {
+    play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.joinRoom(roomName);
     });
@@ -82,10 +82,10 @@ describe('test custom event', () => {
       }
     });
 
-    play2.on(Event.JOINED_LOBBY, () => {
+    play2.on(Event.LOBBY_JOINED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
-    play2.on(Event.JOINED_ROOM, () => {
+    play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
       const options = new SendEventOptions();
       options.targetActorIds = [1, 2];

@@ -18,29 +18,29 @@ declare namespace LeanCloudPlay {
     /** 断开连接 */
     DISCONNECTED,
     /** 加入到大厅 */
-    JOINED_LOBBY,
+    LOBBY_JOINED,
     /** 离开大厅 */
-    LEFT_LOBBY,
+    LOBBY_LEFT,
     /** 大厅房间列表变化 */
     LOBBY_ROOM_LIST_UPDATE,
     /** 创建房间成功 */
-    CREATED_ROOM,
+    ROOM_CREATED,
     /** 创建房间失败 */
-    CREATE_ROOM_FAILED,
+    ROOM_CREATE_FAILED,
     /** 加入房间成功 */
-    JOINED_ROOM,
+    ROOM_JOINED,
     /** 加入房间失败 */
-    JOIN_ROOM_FAILED,
+    ROOM_JOIN_FAILED,
     /** 有新玩家加入房间 */
-    NEW_PLAYER_JOINED_ROOM,
+    NEW_PLAYER_ROOM_JOINED,
     /** 有玩家离开房间 */
-    PLAYER_LEFT_ROOM,
+    PLAYER_ROOM_LEFT,
     /** 玩家活跃属性变化 */
     PLAYER_ACTIVITY_CHANGED,
     /** 主机变更 */
     MASTER_SWITCHED,
     /** 离开房间 */
-    LEFT_ROOM,
+    ROOM_LEFT,
     /** 房间自定义属性变化 */
     ROOM_CUSTOM_PROPERTIES_CHANGED,
     /** 玩家自定义属性变化 */

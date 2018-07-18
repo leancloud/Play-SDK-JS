@@ -15,27 +15,27 @@ function handleGameServerSessionOpen(play) {
 // 创建房间
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.CREATE_ROOM_FAILED, {
+    play.emit(Event.ROOM_CREATE_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });
   } else {
     play._room = Room._newFromJSONObject(play, msg);
-    play.emit(Event.CREATED_ROOM);
-    play.emit(Event.JOINED_ROOM);
+    play.emit(Event.ROOM_CREATED);
+    play.emit(Event.ROOM_JOINED);
   }
 }
 
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.JOIN_ROOM_FAILED, {
+    play.emit(Event.ROOM_JOIN_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });
   } else {
     play._room = Room._newFromJSONObject(play, msg);
-    play.emit(Event.JOINED_ROOM);
+    play.emit(Event.ROOM_JOINED);
   }
 }
 
@@ -43,7 +43,7 @@ function handleJoinedRoom(play, msg) {
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player._newFromJSONObject(play, msg.member);
   play._room._addPlayer(newPlayer);
-  play.emit(Event.NEW_PLAYER_JOINED_ROOM, newPlayer);
+  play.emit(Event.NEW_PLAYER_ROOM_JOINED, newPlayer);
 }
 
 // 有玩家离开房间
@@ -51,7 +51,7 @@ function handlePlayerLeftRoom(play, msg) {
   const actorId = msg.initByActor;
   const leftPlayer = play._room.getPlayer(actorId);
   play._room._removePlayer(actorId);
-  play.emit(Event.PLAYER_LEFT_ROOM, leftPlayer);
+  play.emit(Event.PLAYER_ROOM_LEFT, leftPlayer);
 }
 
 // 主机切换应答
@@ -120,7 +120,7 @@ function handleLeaveRoom(play) {
   // 清理工作
   play._room = null;
   play._player = null;
-  play.emit(Event.LEFT_ROOM);
+  play.emit(Event.ROOM_LEFT);
   play._connectToMaster();
 }
 

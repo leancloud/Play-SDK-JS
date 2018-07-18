@@ -11,29 +11,29 @@ const Event = {
   /** 断开连接 */
   DISCONNECTED: 'disconnected',
   /** 加入到大厅 */
-  JOINED_LOBBY: 'joinedLobby',
+  LOBBY_JOINED: 'lobbyJoined',
   /** 离开大厅 */
-  LEFT_LOBBY: 'leftLobby',
+  LOBBY_LEFT: 'lobbyLeft',
   /** 大厅房间列表变化 */
   LOBBY_ROOM_LIST_UPDATE: 'lobbyRoomListUpdate',
   /** 创建房间成功 */
-  CREATED_ROOM: 'createdRoom',
+  ROOM_CREATED: 'roomCreated',
   /** 创建房间失败 */
-  CREATE_ROOM_FAILED: 'createRoomFailed',
+  ROOM_CREATE_FAILED: 'roomCreateFailed',
   /** 加入房间成功 */
-  JOINED_ROOM: 'joinedRoom',
+  ROOM_JOINED: 'roomJoined',
   /** 加入房间失败 */
-  JOIN_ROOM_FAILED: 'joinRoomFailed',
+  ROOM_JOIN_FAILED: 'roomJoinFailed',
   /** 有新玩家加入房间 */
-  NEW_PLAYER_JOINED_ROOM: 'newPlayerJoinedRoom',
+  NEW_PLAYER_ROOM_JOINED: 'newPlayerJoinedRoom',
   /** 有玩家离开房间 */
-  PLAYER_LEFT_ROOM: 'playerLeftRoom',
+  PLAYER_ROOM_LEFT: 'playerLeftRoom',
   /** 玩家活跃属性变化 */
   PLAYER_ACTIVITY_CHANGED: 'playerActivityChanged',
   /** 主机变更 */
   MASTER_SWITCHED: 'masterSwitched',
   /** 离开房间 */
-  LEFT_ROOM: 'leftRoom',
+  ROOM_LEFT: 'roomLeft',
   /** 房间自定义属性变化 */
   ROOM_CUSTOM_PROPERTIES_CHANGED: 'roomCustomPropertiesChanged',
   /** 玩家自定义属性变化 */
