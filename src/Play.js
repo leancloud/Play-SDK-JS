@@ -58,6 +58,7 @@ export default class Play extends EventEmitter {
     this._region = opts.region;
     this._autoJoinLobby = opts.autoJoinLobby;
     this._masterServer = null;
+    this._gameServer = null;
     this._msgId = 0;
     this._requestMsg = {};
     // 切换服务器状态
@@ -125,7 +126,14 @@ export default class Play extends EventEmitter {
         this._nextConnectTimestamp = 0;
         clearTimeout(this._connectTimer);
         this._connectTimer = null;
-        this._masterServer = response.data.server;
+        // 主大厅服务器
+        this._primaryServer = response.data.server;
+        // 备用大厅服务器
+        this._secondaryServer = response.data.secondary;
+        // 默认服务器是 master server
+        this._masterServer = this._primaryServer;
+        // ttl
+        this._serverValidTimeStamp = Date.now() + response.data.ttl * 1000;
         this._connectToMaster();
       })
       .catch(error => {
@@ -142,7 +150,14 @@ export default class Play extends EventEmitter {
    * 重新连接
    */
   reconnect() {
-    this._connectToMaster();
+    const now = Date.now();
+    if (now > this._serverValidTimeStamp) {
+      console.error('re connect');
+      // 超出 ttl 后将重新请求 router 连接
+      this.connect(this._gameVersion);
+    } else {
+      this._connectToMaster();
+    }
   }
 
   /**
@@ -570,15 +585,26 @@ export default class Play extends EventEmitter {
     this._websocket.onmessage = msg => {
       handleMasterMsg(this, msg);
     };
-    this._websocket.onclose = () => {
-      debug('Lobby websocket closed');
-      if (!this._switchingServer) {
+    this._websocket.onclose = evt => {
+      debug(`Lobby websocket closed: ${evt.code}`);
+      if (evt.code === 1006) {
+        // 连接失败
+        if (this._masterServer === this._secondaryServer) {
+          this.emit(Event.CONNECT_FAILED, evt);
+        } else {
+          // 内部重连
+          this._masterServer = this._secondaryServer;
+          this._connectToMaster();
+        }
+      } else if (this._switchingServer) {
+        debug('swiching server');
+      } else {
+        // 断开连接
         this.emit(Event.DISCONNECTED);
       }
     };
     this._websocket.onerror = error => {
       console.error(error);
-      this.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 
@@ -586,7 +612,7 @@ export default class Play extends EventEmitter {
   _connectToGame() {
     this._cleanup();
     this._switchingServer = true;
-    this._websocket = new WebSocket(this._secureGameAddr);
+    this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
       debug('Game websocket opened');
       this._switchingServer = false;
@@ -595,16 +621,21 @@ export default class Play extends EventEmitter {
     this._websocket.onmessage = msg => {
       handleGameMsg(this, msg);
     };
-    this._websocket.onclose = () => {
+    this._websocket.onclose = evt => {
       debug('Game websocket closed');
-      if (!this._switchingServer) {
+      if (evt.code === 1006) {
+        // 连接失败
+        this.emit(Event.CONNECT_FAILED, evt);
+      } else if (this._switchingServer) {
+        debug('swiching server');
+      } else {
+        // 断开连接
         this.emit(Event.DISCONNECTED);
       }
       this._stopKeepAlive();
     };
     this._websocket.onerror = error => {
       console.error(error);
-      this.emit(Event.CONNECT_FAILED, error.data);
     };
   }
 

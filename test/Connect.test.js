@@ -42,13 +42,22 @@ describe('test connection', () => {
 
   it('test disconnect from master', done => {
     const play = newPlay('hello2');
+    let reconnectFlag = false;
     play.on(Event.JOINED_LOBBY, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
-      play.disconnect();
+      if (reconnectFlag) {
+        play.disconnect();
+        done();
+      } else {
+        play.disconnect();
+      }
     });
     play.on(Event.DISCONNECTED, () => {
-      done();
+      if (!reconnectFlag) {
+        play.reconnect();
+        reconnectFlag = true;
+      }
     });
     play.connect();
   });
