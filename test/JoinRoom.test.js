@@ -302,7 +302,7 @@ describe('test join room', () => {
         lv: 2,
       };
       options.customRoomProperties = matchProps;
-      options.customRoomPropertiesKeysForLobby = ['lv'];
+      options.customRoomPropertyKeysForLobby = ['lv'];
       play1.createRoom({
         roomName,
         roomOptions: options,
