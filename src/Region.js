@@ -5,11 +5,11 @@
  */
 const Region = {
   /** 华北节点 */
-  NORTH_CN: 0,
+  NorthChina: 0,
   /** 华东节点 */
-  EAST_CN: 1,
+  EastChina: 1,
   /** 美国节点 */
-  US: 2,
+  NorthAmerica: 2,
 };
 
 export default Region;

@@ -20,13 +20,13 @@ function handleMasterServerSessionOpen(play, msg) {
 // 加入大厅
 function handleJoinedLobby(play) {
   play._inLobby = true;
-  play.emit(Event.JOINED_LOBBY);
+  play.emit(Event.LOBBY_JOINED);
 }
 
 // 离开大厅
 function handleLeftLobby(play) {
   play._inLobby = false;
-  play.emit(Event.LEFT_LOBBY);
+  play.emit(Event.LOBBY_LEFT);
 }
 
 // 处理统计信息
@@ -45,7 +45,7 @@ function handleRoomList(play, msg) {
 function handleGameServer(play, msg) {
   if (play._inLobby) {
     play._inLobby = false;
-    play.emit(Event.LEFT_LOBBY);
+    play.emit(Event.LOBBY_LEFT);
   }
   play._gameServer = msg.secureAddr;
   if (msg.cid) {
@@ -57,7 +57,7 @@ function handleGameServer(play, msg) {
 // 创建房间
 function handleCreateGameServer(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.CREATE_ROOM_FAILED, {
+    play.emit(Event.ROOM_CREATE_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });
@@ -71,7 +71,7 @@ function handleCreateGameServer(play, msg) {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 function handleJoinGameServer(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.JOIN_ROOM_FAILED, {
+    play.emit(Event.ROOM_JOIN_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });

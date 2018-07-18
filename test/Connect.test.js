@@ -13,7 +13,7 @@ describe('test connection', () => {
     play.on(Event.CONNECT_FAILED, error => {
       debug(`OnConnectFailed: ${error}`);
     });
-    play.on(Event.JOINED_LOBBY, () => {
+    play.on(Event.LOBBY_JOINED, () => {
       play.disconnect();
       done();
     });
@@ -43,7 +43,7 @@ describe('test connection', () => {
   it('test disconnect from master', done => {
     const play = newPlay('hello2');
     let reconnectFlag = false;
-    play.on(Event.JOINED_LOBBY, () => {
+    play.on(Event.LOBBY_JOINED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
       if (reconnectFlag) {
@@ -65,12 +65,12 @@ describe('test connection', () => {
   it('test disconnect from game', done => {
     const play = newPlay('hello3');
     const roomName = 'roomname';
-    play.on(Event.JOINED_LOBBY, () => {
+    play.on(Event.LOBBY_JOINED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
       play.createRoom({ roomName });
     });
-    play.on(Event.CREATED_ROOM, () => {
+    play.on(Event.ROOM_CREATED, () => {
       expect(play._room.name).to.be.equal(roomName);
       play.disconnect();
     });
