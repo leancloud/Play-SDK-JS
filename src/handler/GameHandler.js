@@ -43,7 +43,7 @@ function handleJoinedRoom(play, msg) {
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player._newFromJSONObject(play, msg.member);
   play._room._addPlayer(newPlayer);
-  play.emit(Event.NEW_PLAYER_ROOM_JOINED, newPlayer);
+  play.emit(Event.PLAYER_ROOM_JOINED, newPlayer);
 }
 
 // 有玩家离开房间

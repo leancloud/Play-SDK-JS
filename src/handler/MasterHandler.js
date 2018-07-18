@@ -39,7 +39,7 @@ function handleRoomList(play, msg) {
     const lobbyRoomDTO = msg.list[i];
     play._lobbyRoomList[i] = new LobbyRoom(lobbyRoomDTO);
   }
-  play.emit(Event.LOBBY_ROOM_LIST_UPDATE);
+  play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
 }
 
 function handleGameServer(play, msg) {
