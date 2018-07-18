@@ -114,7 +114,7 @@ describe('test create room', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.NEW_PLAYER_ROOM_JOINED, newPlayer => {
+    play1.on(Event.PLAYER_ROOM_JOINED, newPlayer => {
       expect(play1.player.isMaster()).to.be.equal(true);
       expect(newPlayer.isMaster()).to.be.equal(false);
       expect(play1.player.isLocal()).to.be.equal(true);

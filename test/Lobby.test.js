@@ -72,7 +72,7 @@ describe('test lobby', () => {
         play4.connect();
       }
     });
-    play4.on(Event.LOBBY_ROOM_LIST_UPDATE, () => {
+    play4.on(Event.LOBBY_ROOM_LIST_UPDATED, () => {
       if (play4.lobbyRoomList.length > 0) {
         for (let i = 0; i < play4.lobbyRoomList.length; i += 1) {
           const lobbyRoom = play4.lobbyRoomList[i];

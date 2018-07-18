@@ -22,7 +22,7 @@ declare namespace LeanCloudPlay {
     /** 离开大厅 */
     LOBBY_LEFT,
     /** 大厅房间列表变化 */
-    LOBBY_ROOM_LIST_UPDATE,
+    LOBBY_ROOM_LIST_UPDATED,
     /** 创建房间成功 */
     ROOM_CREATED,
     /** 创建房间失败 */
@@ -32,7 +32,7 @@ declare namespace LeanCloudPlay {
     /** 加入房间失败 */
     ROOM_JOIN_FAILED,
     /** 有新玩家加入房间 */
-    NEW_PLAYER_ROOM_JOINED,
+    PLAYER_ROOM_JOINED,
     /** 有玩家离开房间 */
     PLAYER_ROOM_LEFT,
     /** 玩家活跃属性变化 */
