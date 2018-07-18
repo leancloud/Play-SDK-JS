@@ -39,7 +39,7 @@ export default class RoomOptions {
      * 大厅中房间属性「键」数组，这些属性将会大厅的房间属性中查看，并在匹配房间时用到。
      * @type {Array.<string>}
      */
-    this.customRoomPropertiesKeysForLobby = null;
+    this.customRoomPropertyKeysForLobby = null;
   }
 
   _toMsg() {
@@ -51,8 +51,8 @@ export default class RoomOptions {
     if (this.maxPlayerCount > 0 && this.maxPlayerCount < MAX_PLAYER_COUNT)
       options.maxMembers = this.maxPlayerCount;
     if (this.customRoomProperties) options.attr = this.customRoomProperties;
-    if (this.customRoomPropertiesKeysForLobby)
-      options.lobbyAttrKeys = this.customRoomPropertiesKeysForLobby;
+    if (this.customRoomPropertyKeysForLobby)
+      options.lobbyAttrKeys = this.customRoomPropertyKeysForLobby;
     return options;
   }
 }
