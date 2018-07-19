@@ -152,7 +152,6 @@ export default class Play extends EventEmitter {
   reconnect() {
     const now = Date.now();
     if (now > this._serverValidTimeStamp) {
-      console.error('re connect');
       // 超出 ttl 后将重新请求 router 连接
       this.connect(this._gameVersion);
     } else {
