@@ -3,10 +3,7 @@ import axios from 'axios';
 import EventEmitter from 'eventemitter3';
 
 import Region from './Region';
-import PlayOptions from './PlayOptions';
 import Event from './Event';
-import SendEventOptions from './SendEventOptions';
-import RoomOptions from './RoomOptions';
 import handleMasterMsg from './handler/MasterHandler';
 import handleGameMsg from './handler/GameHandler';
 import {
@@ -17,6 +14,27 @@ import {
 } from './Config';
 
 const debug = require('debug')('Play:Play');
+
+const MAX_PLAYER_COUNT = 10;
+
+function convertRoomOptions(roomOptions) {
+  const options = {};
+  if (!roomOptions.opened) options.open = roomOptions.opened;
+  if (!roomOptions.visible) options.visible = roomOptions.visible;
+  if (roomOptions.emptyRoomTtl > 0)
+    options.emptyRoomTtl = roomOptions.emptyRoomTtl;
+  if (roomOptions.playerTtl > 0) options.playerTtl = roomOptions.playerTtl;
+  if (
+    roomOptions.maxPlayerCount > 0 &&
+    roomOptions.maxPlayerCount < MAX_PLAYER_COUNT
+  )
+    options.maxMembers = roomOptions.maxPlayerCount;
+  if (roomOptions.customRoomProperties)
+    options.attr = roomOptions.customRoomProperties;
+  if (roomOptions.customRoomPropertyKeysForLobby)
+    options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
+  return options;
+}
 
 /**
  * Play 客户端类
@@ -35,12 +53,12 @@ export default class Play extends EventEmitter {
 
   /**
    * 初始化客户端
-   * @param {PlayOptions} opts
+   * @param {Object} opts
+   * @param {string} opts.appId APP ID
+   * @param {string} opts.appKey APP KEY
+   * @param {number} opts.region 节点地区
    */
   init(opts) {
-    if (!(opts instanceof PlayOptions)) {
-      throw new TypeError(`${opts} is not a PlayOptions`);
-    }
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
     }
@@ -50,13 +68,14 @@ export default class Play extends EventEmitter {
     if (!(typeof opts.region === 'number')) {
       throw new TypeError(`${opts.region} is not a number`);
     }
-    if (!(typeof opts.autoJoinLobby === 'boolean')) {
-      throw new TypeError(`${opts.autoJoinLobby} is not a boolean`);
-    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
-    this._autoJoinLobby = opts.autoJoinLobby;
+    if (opts.autoJoinLobby === undefined) {
+      this._autoJoinLobby = true;
+    } else {
+      this._autoJoinLobby = opts.autoJoinLobby;
+    }
     this._masterServer = null;
     this._gameServer = null;
     this._msgId = 0;
@@ -213,7 +232,7 @@ export default class Play extends EventEmitter {
    * 创建房间
    * @param {Object} opts （可选）创建房间选项
    * @param {string} opts.roomName 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
-   * @param {RoomOptions} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Object} opts.roomOptions （可选）创建房间选项，默认值为 null
    * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   createRoom({
@@ -224,8 +243,8 @@ export default class Play extends EventEmitter {
     if (roomName !== null && !(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
-      throw new TypeError(`${roomOptions} is not a RoomOptions`);
+    if (roomOptions !== null && !(roomOptions instanceof Object)) {
+      throw new TypeError(`${roomOptions} is not a Object`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
@@ -241,7 +260,7 @@ export default class Play extends EventEmitter {
     }
     // 拷贝房间属性（包括 系统属性和玩家定义属性）
     if (roomOptions) {
-      const opts = roomOptions._toMsg();
+      const opts = convertRoomOptions(roomOptions);
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -298,7 +317,7 @@ export default class Play extends EventEmitter {
    * 随机加入或创建房间
    * @param {string} roomName 房间名称
    * @param {Object} opts （可选）创建房间选项
-   * @param {RoomOptions} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Object} opts.roomOptions （可选）创建房间选项，默认值为 null
    * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   joinOrCreateRoom(
@@ -308,8 +327,8 @@ export default class Play extends EventEmitter {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (roomOptions !== null && !(roomOptions instanceof RoomOptions)) {
-      throw new TypeError(`${roomOptions} is not a RoomOptions`);
+    if (roomOptions !== null && !(roomOptions instanceof Object)) {
+      throw new TypeError(`${roomOptions} is not a Object`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
@@ -322,7 +341,7 @@ export default class Play extends EventEmitter {
     };
     // 拷贝房间参数
     if (roomOptions != null) {
-      const opts = roomOptions._toMsg();
+      const opts = convertRoomOptions(roomOptions);
       this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
     }
     if (expectedUserIds) {
@@ -434,7 +453,9 @@ export default class Play extends EventEmitter {
    * 发送自定义消息
    * @param {number|string} eventId 事件 ID
    * @param {Object} eventData 事件参数
-   * @param {SendEventOptions} options 发送事件选项
+   * @param {Object} options 发送事件选项
+   * @param {ReceiverGroup} options.receiverGroup 接收组
+   * @param {Array.<number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
   sendEvent(eventId, eventData, options) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
@@ -443,8 +464,8 @@ export default class Play extends EventEmitter {
     if (!(typeof eventData === 'object')) {
       throw new TypeError(`${eventData} is not an object`);
     }
-    if (!(options instanceof SendEventOptions)) {
-      throw new TypeError(`${options} is not a SendEventOptions`);
+    if (!(options instanceof Object)) {
+      throw new TypeError(`${options} is not a Object`);
     }
     const msg = {
       cmd: 'direct',
@@ -453,7 +474,6 @@ export default class Play extends EventEmitter {
       msg: eventData,
       receiverGroup: options.receiverGroup,
       toActorIds: options.targetActorIds,
-      cachingOption: options.cachingOption,
     };
     this._send(msg);
   }
