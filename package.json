@@ -9,7 +9,7 @@
     "build": "rollup -c",
     "test:node": "nyc mocha test/**.js --exit",
     "test": "npm run lint && npm run test:node",
-    "doc": "jsdoc -c .jsdocrc.json -d ./doc/"
+    "doc": "jsdoc src README.md package.json -c .jsdocrc.json -d ./doc/"
   },
   "license": "MIT",
   "dependencies": {
