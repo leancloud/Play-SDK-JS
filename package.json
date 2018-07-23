@@ -62,5 +62,8 @@
     ],
     "sourceMap": false,
     "instrument": false
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
