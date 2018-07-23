@@ -4,11 +4,11 @@ export as namespace Play;
 
 export enum Region {
   /** 华北节点 */
-  NORTH_CN,
+  NorthChina,
   /** 华东节点 */
-  EAST_CN,
+  EastChina,
   /** 美国节点 */
-  US,
+  NorthAmerica,
 }
 
 export enum Event {
@@ -61,11 +61,6 @@ export enum ReceiverGroup {
   MasterClient,
 }
 
-export class SendEventOptions {
-  receiverGroup: ReceiverGroup;
-  targetActorIds: string[];
-}
-
 export class LobbyRoom {
   readonly roomName: string;
   readonly maxPlayerCount: number;
@@ -109,31 +104,24 @@ export class Room {
   getCustomProperties(): Object;
 }
 
-export class RoomOptions {
-  opened: boolean;
-  visible: boolean;
-  emptyRoomTtl: number;
-  playerTtl: number;
-  maxPlayerCount: number;
-  customRoomProperties: Object;
-  customRoomPropertiesKeysForLobby: string[];
-}
-
 export class Play extends EventEmitter {
-  init(opts: { appId: string; appKey: string; region: Region }): void;
-  connect(opts: { gameVersion?: string; autoJoinLobby?: boolean }): void;
+  init(opts: {
+    appId: string;
+    appKey: string;
+    region: Region;
+    autoJoinLobby?: boolean;
+  }): void;
+  connect(opts: { gameVersion?: string }): void;
   reconnect(): void;
   reconnectAndRejoin(): void;
   disconnect(): void;
   joinLobby(): void;
   leaveLobby(): void;
-  createRoom(
-    roomName: string,
-    opts?: {
-      roomOptions?: RoomOptions;
-      expectedUserIds?: string[];
-    }
-  ): void;
+  createRoom(opts?: {
+    roomName?: string;
+    roomOptions?: RoomOptions;
+    expectedUserIds?: string[];
+  }): void;
   joinRoom(
     roomName: string,
     opts?: {
@@ -158,7 +146,10 @@ export class Play extends EventEmitter {
   sendEvent(
     eventId: number | string,
     eventData: Object,
-    options: SendEventOptions
+    options: {
+      receiverGroup?: ReceiverGroup;
+      targetActorIds?: string[];
+    }
   ): void;
   leaveRoom(): void;
   readonly room: Room;
