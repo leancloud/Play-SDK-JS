@@ -1,5 +1,4 @@
 import Event from '../src/Event';
-import SendEventOptions from '../src/SendEventOptions';
 import ReceiverGroup from '../src/ReceiverGroup';
 
 import newPlay from './Utils';
@@ -36,11 +35,12 @@ describe('test custom event', () => {
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      const options = new SendEventOptions();
-      options.receiverGroup = ReceiverGroup.MasterClient;
       const eventData = {
         name: 'aaaa',
         body: 'bbbb',
+      };
+      const options = {
+        receiverGroup: ReceiverGroup.MasterClient,
       };
       play2.sendEvent('hi', eventData, options);
     });
@@ -87,11 +87,12 @@ describe('test custom event', () => {
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
-      const options = new SendEventOptions();
-      options.targetActorIds = [1, 2];
       const eventData = {
         name: 'aaaa',
         body: 'bbbb',
+      };
+      const options = {
+        targetActorIds: [1, 2],
       };
       play2.sendEvent('hello', eventData, options);
     });

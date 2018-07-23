@@ -2,8 +2,6 @@ import Event from '../src/Event';
 import newPlay from './Utils';
 import Play from '../src/Play';
 import Region from '../src/Region';
-import PlayOptions from '../src/PlayOptions';
-import RoomOptions from '../src/RoomOptions';
 import { APP_ID, APP_KEY } from './Config';
 
 const { expect } = require('chai');
@@ -11,13 +9,13 @@ const debug = require('debug')('LobbyTest');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
-    const opts = new PlayOptions();
-    opts.appId = APP_ID;
-    opts.appKey = APP_KEY;
-    opts.region = Region.EastChina;
-    opts.autoJoinLobby = false;
     const play = new Play();
-    play.init(opts);
+    play.init({
+      appId: APP_ID,
+      appKey: APP_KEY,
+      region: Region.EastChina,
+      autoJoinLobby: false,
+    });
     play.userId = 'play';
     play.on(Event.CONNECTED, () => {
       play.joinLobby();
@@ -36,13 +34,14 @@ describe('test lobby', () => {
     const play4 = newPlay('play4');
     let roomCount = 0;
     play1.on(Event.LOBBY_JOINED, () => {
-      const options = new RoomOptions();
       const props = {
         title: 'room title',
         level: 2,
       };
-      options.customRoomProperties = props;
-      options.customRoomPropertiesKeysForLobby = ['level'];
+      const options = {
+        customRoomProperties: props,
+        customRoomPropertiesKeysForLobby: ['level'],
+      };
       play1.createRoom({
         roomName: play1.userId,
         roomOptions: options,

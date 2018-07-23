@@ -1,5 +1,4 @@
 import Event from '../src/Event';
-import RoomOptions from '../src/RoomOptions';
 
 import newPlay from './Utils';
 
@@ -72,8 +71,9 @@ describe('test join room', () => {
 
     play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      const options = new RoomOptions();
-      options.maxPlayerCount = 3;
+      const options = {
+        maxPlayerCount: 3,
+      };
       play1.createRoom({
         roomName,
         roomOptions: options,
@@ -158,8 +158,9 @@ describe('test join room', () => {
 
     play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      const options = new RoomOptions();
-      options.playerTtl = 600;
+      const options = {
+        playerTtl: 600,
+      };
       play1.createRoom({
         roomName,
         roomOptions: options,
@@ -216,8 +217,9 @@ describe('test join room', () => {
 
     play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      const options = new RoomOptions();
-      options.playerTtl = 600;
+      const options = {
+        playerTtl: 600,
+      };
       play1.createRoom({
         roomName,
         roomOptions: options,
@@ -297,12 +299,14 @@ describe('test join room', () => {
 
     play1.on(Event.LOBBY_JOINED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
-      const options = new RoomOptions();
+
       const matchProps = {
         lv: 2,
       };
-      options.customRoomProperties = matchProps;
-      options.customRoomPropertyKeysForLobby = ['lv'];
+      const options = {
+        customRoomProperties: matchProps,
+        customRoomPropertyKeysForLobby: ['lv'],
+      };
       play1.createRoom({
         roomName,
         roomOptions: options,

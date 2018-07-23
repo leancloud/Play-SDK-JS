@@ -1,5 +1,4 @@
 import Event from '../src/Event';
-import RoomOptions from '../src/RoomOptions';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
@@ -44,17 +43,19 @@ describe('test create room', () => {
     play.on(Event.LOBBY_JOINED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
-      const options = new RoomOptions();
-      options.visible = false;
-      options.emptyRoomTtl = 10000;
-      options.maxPlayerCount = 2;
-      options.playerTtl = 600;
+
       const props = {
         title: 'room title',
         level: 2,
       };
-      options.customRoomProperties = props;
-      options.customRoomPropertiesKeysForLobby = ['level'];
+      const options = {
+        visible: false,
+        emptyRoomTtl: 10000,
+        maxPlayerCount: 2,
+        playerTtl: 600,
+        customRoomProperties: props,
+        customRoomPropertiesKeysForLobby: ['level'],
+      };
       const expectedUserIds = ['world'];
       play.joinOrCreateRoom(roomName, {
         roomOptions: options,
