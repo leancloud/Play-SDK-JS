@@ -106,7 +106,7 @@ export default function handleMasterMsg(play, message) {
     case 'lobby':
       switch (msg.op) {
         case 'added':
-          handleJoinedLobby(play);
+          handleJoinedLobby(play, msg);
           break;
         case 'room-list':
           handleRoomList(play, msg);
