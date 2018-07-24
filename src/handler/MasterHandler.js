@@ -20,9 +20,14 @@ function handleMasterServerSessionOpen(play, msg) {
 }
 
 // 加入大厅
-function handleJoinedLobby(play) {
-  play._inLobby = true;
-  play.emit(Event.LOBBY_JOINED);
+function handleJoinedLobby(play, msg) {
+  if (msg.reasonCode) {
+    const { reasonCode, detail } = msg;
+    console.error(`join lobby failed: ${reasonCode} - ${detail}`);
+  } else {
+    play._inLobby = true;
+    play.emit(Event.LOBBY_JOINED);
+  }
 }
 
 // 离开大厅
