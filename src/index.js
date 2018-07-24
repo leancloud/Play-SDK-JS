@@ -8,4 +8,13 @@ import CreateRoomFlag from './CreateRoomFlag';
 
 const play = new Play();
 
-export { play, Region, Room, Player, Event, ReceiverGroup, CreateRoomFlag };
+export {
+  play,
+  Play,
+  Region,
+  Room,
+  Player,
+  Event,
+  ReceiverGroup,
+  CreateRoomFlag,
+};
