@@ -171,7 +171,7 @@ describe('test join room', () => {
       play2.connect();
     });
     play1.on(Event.PLAYER_ACTIVITY_CHANGED, player => {
-      debug(`${player.userId}'s inActivity is ${player.isInActive()}`);
+      debug(`${player.userId}'s inActivity is ${player.isActive()}`);
     });
 
     play2.on(Event.LOBBY_JOINED, () => {
