@@ -55,7 +55,11 @@ function handlePlayerLeftRoom(play, msg) {
 }
 
 // 主机切换应答
-function handleMasterUpdated() {}
+function handleMasterUpdated(msg) {
+  if (msg.reasonCode) {
+    console.error(`set master error: ${msg.reasonCode}, ${msg.detail}`);
+  }
+}
 
 // 主机切换
 function handleMasterChanged(play, msg) {
@@ -75,7 +79,13 @@ function handleRoomVisibleChanged(play, msg) {
 }
 
 // 房间属性变更应答
-function handleRoomCustomPropertiesChangedResponse() {}
+function handleRoomCustomPropertiesChangedResponse(msg) {
+  if (msg.reasonCode) {
+    console.error(
+      `set room properties error: ${msg.reasonCode}, ${msg.detail}`
+    );
+  }
+}
 
 // 房间属性变更
 function handleRoomCustomPropertiesChanged(play, msg) {
@@ -162,7 +172,7 @@ export default function handleGameMsg(play, message) {
           handlePlayerLeftRoom(play, msg);
           break;
         case 'master-client-updated':
-          handleMasterUpdated();
+          handleMasterUpdated(msg);
           break;
         case 'master-client-changed':
           handleMasterChanged(play, msg);
@@ -174,7 +184,7 @@ export default function handleGameMsg(play, message) {
           handleRoomVisibleChanged(play, msg);
           break;
         case 'updated':
-          handleRoomCustomPropertiesChangedResponse();
+          handleRoomCustomPropertiesChangedResponse(msg);
           break;
         case 'updated-notify':
           handleRoomCustomPropertiesChanged(play, msg);

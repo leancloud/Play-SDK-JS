@@ -33,6 +33,7 @@ function convertRoomOptions(roomOptions) {
     options.attr = roomOptions.customRoomProperties;
   if (roomOptions.customRoomPropertyKeysForLobby)
     options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
+  if (roomOptions.flag) options.flag = roomOptions.flag;
   return options;
 }
 
