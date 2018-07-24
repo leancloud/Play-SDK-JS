@@ -1,4 +1,5 @@
 import Event from '../src/Event';
+import CreateRoomFlag from '../src/CreateRoomFlag';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
@@ -272,4 +273,62 @@ describe('test change properties', () => {
     play1.connect();
     play2.connect();
   });
+
+  // it('test change room properties failed', done => {
+  //   const roomName = '311';
+  //   const play1 = newPlay('hello3170');
+  //   const play2 = newPlay('world3170');
+  //   let p1Flag = false;
+  //   let p2Flag = false;
+
+  //   play1.on(Event.LOBBY_JOINED, () => {
+  //     expect(play1._sessionToken).to.be.not.equal(null);
+  //     play1.createRoom({ roomName,
+  //       roomOptions: {
+  //         flag: CreateRoomFlag.MasterUpdateRoomProperties,
+  //       }
+  //     });
+  //   });
+  //   play1.on(Event.ROOM_CREATED, () => {
+  //     expect(play1.room.name).to.be.equal(roomName);
+  //     play2.joinRoom(roomName);
+  //   });
+  //   play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
+  //     const props = play1.room.getCustomProperties();
+  //     expect(props.title).to.be.equal('room311');
+  //     expect(props.gold).to.be.equal(1000);
+  //     p1Flag = true;
+  //     if (p1Flag && p2Flag) {
+  //       play1.disconnect();
+  //       play2.disconnect();
+  //       done();
+  //     }
+  //   });
+
+  //   play2.on(Event.LOBBY_JOINED, () => {
+  //     expect(play2._sessionToken).to.be.not.equal(null);
+  //   });
+  //   play2.on(Event.ROOM_JOINED, () => {
+  //     expect(play2.room.name).to.be.equal(roomName);
+  //     const props = {
+  //       title: 'room311',
+  //       gold: 1000,
+  //     };
+  //     play2.room.setCustomProperties(props);
+  //   });
+  //   play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
+  //     const props = play2.room.getCustomProperties();
+  //     expect(props.title).to.be.equal('room311');
+  //     expect(props.gold).to.be.equal(1000);
+  //     p2Flag = true;
+  //     if (p1Flag && p2Flag) {
+  //       play1.disconnect();
+  //       play2.disconnect();
+  //       done();
+  //     }
+  //   });
+
+  //   play1.connect();
+  //   play2.connect();
+  // });
 });
