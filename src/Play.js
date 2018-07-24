@@ -102,6 +102,10 @@ export default class Play extends EventEmitter {
    * @param {string} opts.gameVersion （可选）游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
    */
   connect({ gameVersion = '0.0.1' } = {}) {
+    // 判断是否有 userId
+    if (this.userId === null) {
+      throw new Error('userId is null');
+    }
     // 判断是否已经在等待连接
     if (this._connectTimer) {
       console.warn('waiting for connect');
