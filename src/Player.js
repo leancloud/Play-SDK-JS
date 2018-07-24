@@ -64,8 +64,8 @@ export default class Player {
    * 判断是不是活跃状态
    * @return {Boolean}
    */
-  isInActive() {
-    return this.inActive;
+  isActive() {
+    return this.active;
   }
 
   /**
@@ -92,7 +92,7 @@ export default class Player {
 
   // 设置活跃状态
   _setActive(active) {
-    this.inActive = !active;
+    this.active = active;
   }
 
   _mergeProperties(changedProperties) {
