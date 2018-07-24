@@ -1,9 +1,11 @@
+import d from 'debug';
+
 import Player from '../Player';
 import LobbyRoom from '../LobbyRoom';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 
-const debug = require('debug')('Play:MasterHandler');
+const debug = d('Play:MasterHandler');
 
 // 连接建立
 function handleMasterServerSessionOpen(play, msg) {
