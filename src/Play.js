@@ -1,6 +1,7 @@
 import WebSocket from 'isomorphic-ws';
 import axios from 'axios';
 import EventEmitter from 'eventemitter3';
+import d from 'debug';
 
 import Region from './Region';
 import Event from './Event';
@@ -13,7 +14,7 @@ import {
   USServerURL,
 } from './Config';
 
-const debug = require('debug')('Play:Play');
+const debug = d('Play:Play');
 
 const MAX_PLAYER_COUNT = 10;
 

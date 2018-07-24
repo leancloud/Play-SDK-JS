@@ -156,4 +156,10 @@ export class Play extends EventEmitter {
   readonly player: Player;
 }
 
+export enum CreateRoomFlag {
+  MasterAutoSwitch = 1,
+  MasterUpdateRoomProperties = 2,
+  MasterSetMaster = 4,
+}
+
 export const play: Play;
