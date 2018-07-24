@@ -308,6 +308,9 @@ export default class Play extends EventEmitter {
    * @param {string} roomName 房间名称
    */
   rejoinRoom(roomName) {
+    if (!(typeof roomName === 'string')) {
+      throw new TypeError(`${roomName} is not a string`);
+    }
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
