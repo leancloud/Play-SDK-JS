@@ -1,8 +1,12 @@
 export as namespace Play;
 
-declare class EventEmitter {
+declare class EventEmitter<T> {
+  on<K extends keyof T>(event: K, listener: (payload?: T[K]) => any): this;
   on(evt: string, listener: Function): this;
+  once<K extends keyof T>(event: K, listener: (payload?: T[K]) => any): this;
   once(evt: string, listener: Function): this;
+  off<K extends keyof T>(evt: T | string, listener?: Function): this;
+  emit<K extends keyof T>(evt: T | string, ...args: any[]): boolean;
 }
 
 export enum Region {
