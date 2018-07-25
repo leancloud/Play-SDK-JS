@@ -100,8 +100,8 @@ export class Room {
   readonly maxPlayerCount: number;
   readonly masterId: number;
   readonly expectedUserIds: string[];
+  readonly playerList: Player[];
   getPlayer(actorId: number): Player;
-  playerList(): Player[];
   setCustomProperties(
     properties: Object,
     opts?: {
@@ -155,7 +155,7 @@ export class Play extends EventEmitter<string> {
     eventData: Object,
     options: {
       receiverGroup?: ReceiverGroup;
-      targetActorIds?: string[];
+      targetActorIds?: number[];
     }
   ): void;
   leaveRoom(): void;
