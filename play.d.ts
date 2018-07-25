@@ -1,6 +1,9 @@
-import RoomOptions from './src/RoomOptions';
-
 export as namespace Play;
+
+declare class EventEmitter {
+  on(evt: string, listener: Function): this;
+  once(evt: string, listener: Function): this;
+}
 
 export enum Region {
   /** 华北节点 */
@@ -111,7 +114,7 @@ export class Play extends EventEmitter {
     region: Region;
     autoJoinLobby?: boolean;
   }): void;
-  connect(opts: { gameVersion?: string }): void;
+  connect(opts?: { gameVersion?: string }): void;
   reconnect(): void;
   reconnectAndRejoin(): void;
   disconnect(): void;
@@ -154,6 +157,7 @@ export class Play extends EventEmitter {
   leaveRoom(): void;
   readonly room: Room;
   readonly player: Player;
+  userId: string;
 }
 
 export enum CreateRoomFlag {
