@@ -1,11 +1,11 @@
 {
   "name": "@leancloud/play",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "LeanCloud Play SDK",
   "main": "dist/play-node.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
-    "lint": "eslint --ignore-path .gitignore src test",
+    "lint": "eslint --ignore-path .gitignore src test && tsc play.d.ts",
     "build": "rollup -c",
     "test:node": "nyc mocha test/**.js --exit",
     "test": "npm run lint && npm run test:node",
@@ -40,7 +40,8 @@
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-json": "^3.0.0",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "typescript": "^2.9.2"
   },
   "types": "./play.d.ts",
   "browser": "dist/play.js",

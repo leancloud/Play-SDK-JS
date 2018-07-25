@@ -20,43 +20,43 @@ export enum Region {
 
 export enum Event {
   /** 连接成功 */
-  CONNECTED,
+  CONNECTED = 'connected',
   /** 连接失败 */
-  CONNECT_FAILED,
+  CONNECT_FAILED = 'connectFailed',
   /** 断开连接 */
-  DISCONNECTED,
+  DISCONNECTED = 'disconnected',
   /** 加入到大厅 */
-  LOBBY_JOINED,
+  LOBBY_JOINED = 'lobbyJoined',
   /** 离开大厅 */
-  LOBBY_LEFT,
+  LOBBY_LEFT = 'lobbyLeft',
   /** 大厅房间列表变化 */
-  LOBBY_ROOM_LIST_UPDATED,
+  LOBBY_ROOM_LIST_UPDATED = 'lobbyRoomListUpdate',
   /** 创建房间成功 */
-  ROOM_CREATED,
+  ROOM_CREATED = 'roomCreated',
   /** 创建房间失败 */
-  ROOM_CREATE_FAILED,
+  ROOM_CREATE_FAILED = 'roomCreateFailed',
   /** 加入房间成功 */
-  ROOM_JOINED,
+  ROOM_JOINED = 'roomJoined',
   /** 加入房间失败 */
-  ROOM_JOIN_FAILED,
+  ROOM_JOIN_FAILED = 'roomJoinFailed',
   /** 有新玩家加入房间 */
-  PLAYER_ROOM_JOINED,
+  PLAYER_ROOM_JOINED = 'newPlayerJoinedRoom',
   /** 有玩家离开房间 */
-  PLAYER_ROOM_LEFT,
+  PLAYER_ROOM_LEFT = 'playerLeftRoom',
   /** 玩家活跃属性变化 */
-  PLAYER_ACTIVITY_CHANGED,
+  PLAYER_ACTIVITY_CHANGED = 'playerActivityChanged',
   /** 主机变更 */
-  MASTER_SWITCHED,
+  MASTER_SWITCHED = 'masterSwitched',
   /** 离开房间 */
-  ROOM_LEFT,
+  ROOM_LEFT = 'roomLeft',
   /** 房间自定义属性变化 */
-  ROOM_CUSTOM_PROPERTIES_CHANGED,
+  ROOM_CUSTOM_PROPERTIES_CHANGED = 'roomCustomPropertiesChanged',
   /** 玩家自定义属性变化 */
-  PLAYER_CUSTOM_PROPERTIES_CHANGED,
+  PLAYER_CUSTOM_PROPERTIES_CHANGED = 'playerCustomPropertiesChanged',
   /** 自定义事件 */
-  CUSTOM_EVENT,
+  CUSTOM_EVENT = 'customEvent',
   /** 错误事件 */
-  ERROR,
+  ERROR = 'error',
 }
 
 export enum ReceiverGroup {
@@ -111,7 +111,7 @@ export class Room {
   getCustomProperties(): Object;
 }
 
-export class Play extends EventEmitter {
+export class Play extends EventEmitter<string> {
   init(opts: {
     appId: string;
     appKey: string;
@@ -126,7 +126,7 @@ export class Play extends EventEmitter {
   leaveLobby(): void;
   createRoom(opts?: {
     roomName?: string;
-    roomOptions?: RoomOptions;
+    roomOptions?: Object;
     expectedUserIds?: string[];
   }): void;
   joinRoom(
@@ -139,7 +139,7 @@ export class Play extends EventEmitter {
   joinOrCreateRoom(
     roomName: string,
     opts?: {
-      roomOptions?: RoomOptions;
+      roomOptions?: Object;
       expectedUserIds: string[];
     }
   ): void;
