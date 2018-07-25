@@ -151,7 +151,10 @@ export default class Play extends EventEmitter {
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
             Date.now() + 2 ** this._connectFailedCount * 1000;
-          this.emit(Event.CONNECT_FAILED, error.data);
+          this.emit(Event.CONNECT_FAILED, {
+            code: -1,
+            detail: 'Game router connect failed',
+          });
         } else {
           const body = JSON.parse(response.text);
           debug(body);
@@ -620,7 +623,10 @@ export default class Play extends EventEmitter {
       if (evt.code === 1006) {
         // 连接失败
         if (this._masterServer === this._secondaryServer) {
-          this.emit(Event.CONNECT_FAILED, evt);
+          this.emit(Event.CONNECT_FAILED, {
+            code: -2,
+            detail: 'Websocket connect failed',
+          });
         } else {
           // 内部重连
           this._masterServer = this._secondaryServer;
@@ -655,7 +661,10 @@ export default class Play extends EventEmitter {
       debug('Game websocket closed');
       if (evt.code === 1006) {
         // 连接失败
-        this.emit(Event.CONNECT_FAILED, evt);
+        this.emit(Event.CONNECT_FAILED, {
+          code: -2,
+          detail: 'Websocket connect failed',
+        });
       } else if (this._switchingServer) {
         debug('swiching server');
       } else {
