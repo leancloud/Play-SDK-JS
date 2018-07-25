@@ -2,7 +2,8 @@ language: node_js
 node_js:
 - '10'
 script: 
-  - rollup -c
+  - npm run lint
+  - npm run build
   - npm run doc
 deploy:
   - provider: releases
