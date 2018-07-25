@@ -1,5 +1,5 @@
 import WebSocket from 'isomorphic-ws';
-import axios from 'axios';
+import request from 'superagent';
 import EventEmitter from 'eventemitter3';
 import d from 'debug';
 
@@ -140,34 +140,36 @@ export default class Play extends EventEmitter {
     } else if (this._region === Region.NorthAmerica) {
       masterURL = USServerURL;
     }
-    const params = `appId=${this._appId}&secure=true&ua=${this._getUA()}`;
-    const url = `${masterURL}v1/router?${params}`;
-    axios
-      .get(url)
-      .then(response => {
-        debug(response.data);
-        // 重置下次允许的连接时间
-        this._connectFailedCount = 0;
-        this._nextConnectTimestamp = 0;
-        clearTimeout(this._connectTimer);
-        this._connectTimer = null;
-        // 主大厅服务器
-        this._primaryServer = response.data.server;
-        // 备用大厅服务器
-        this._secondaryServer = response.data.secondary;
-        // 默认服务器是 master server
-        this._masterServer = this._primaryServer;
-        // ttl
-        this._serverValidTimeStamp = Date.now() + response.data.ttl * 1000;
-        this._connectToMaster();
-      })
-      .catch(error => {
-        console.error(error);
-        // 连接失败，则增加下次连接时间间隔
-        this._connectFailedCount += 1;
-        this._nextConnectTimestamp =
-          Date.now() + 2 ** this._connectFailedCount * 1000;
-        this.emit(Event.CONNECT_FAILED, error.data);
+
+    request
+      .get(masterURL)
+      .query({ appId: this._appId, secure: true, ua: this._getUA() })
+      .end((error, response) => {
+        if (error) {
+          console.error(error);
+          // 连接失败，则增加下次连接时间间隔
+          this._connectFailedCount += 1;
+          this._nextConnectTimestamp =
+            Date.now() + 2 ** this._connectFailedCount * 1000;
+          this.emit(Event.CONNECT_FAILED, error.data);
+        } else {
+          const body = JSON.parse(response.text);
+          debug(body);
+          // 重置下次允许的连接时间
+          this._connectFailedCount = 0;
+          this._nextConnectTimestamp = 0;
+          clearTimeout(this._connectTimer);
+          this._connectTimer = null;
+          // 主大厅服务器
+          this._primaryServer = body.server;
+          // 备用大厅服务器
+          this._secondaryServer = body.secondary;
+          // 默认服务器是 master server
+          this._masterServer = this._primaryServer;
+          // ttl
+          this._serverValidTimeStamp = Date.now() + body.ttl * 1000;
+          this._connectToMaster();
+        }
       });
   }
 
