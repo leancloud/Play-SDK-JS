@@ -68,6 +68,57 @@ export enum ReceiverGroup {
   MasterClient,
 }
 
+declare interface PlayEvent {
+  [Event.CONNECTED]: void;
+  [Event.CONNECT_FAILED]: {
+    code: number;
+    detail: string;
+  };
+  [Event.DISCONNECTED]: void;
+  [Event.LOBBY_JOINED]: void;
+  [Event.LOBBY_LEFT]: void;
+  [Event.LOBBY_ROOM_LIST_UPDATED]: void;
+  [Event.ROOM_CREATED]: void;
+  [Event.ROOM_CREATE_FAILED]: {
+    code: Number;
+    detail: String;
+  };
+  [Event.ROOM_JOINED]: void;
+  [Event.ROOM_JOIN_FAILED]: {
+    code: Number;
+    detail: String;
+  };
+  [Event.PLAYER_ROOM_JOINED]: {
+    newPlayer: Player;
+  };
+  [Event.PLAYER_ROOM_LEFT]: {
+    leftPlayer: Player;
+  };
+  [Event.PLAYER_ACTIVITY_CHANGED]: {
+    player: Player;
+  };
+  [Event.MASTER_SWITCHED]: {
+    newMaster: Player;
+  };
+  [Event.ROOM_LEFT]: void;
+  [Event.ROOM_CUSTOM_PROPERTIES_CHANGED]: {
+    changedProps: Object;
+  };
+  [Event.PLAYER_CUSTOM_PROPERTIES_CHANGED]: {
+    player: Player;
+    changedProps: Object;
+  };
+  [Event.CUSTOM_EVENT]: {
+    eventId: Number | String;
+    eventData: Object;
+    senderId: Number;
+  };
+  [Event.ERROR]: {
+    code: Number;
+    detail: String;
+  };
+}
+
 export class LobbyRoom {
   readonly roomName: string;
   readonly maxPlayerCount: number;
@@ -111,7 +162,7 @@ export class Room {
   getCustomProperties(): Object;
 }
 
-export class Play extends EventEmitter<string> {
+export class Play extends EventEmitter<PlayEvent> {
   init(opts: {
     appId: string;
     appKey: string;
