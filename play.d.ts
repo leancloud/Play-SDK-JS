@@ -80,13 +80,13 @@ declare interface PlayEvent {
   [Event.LOBBY_ROOM_LIST_UPDATED]: void;
   [Event.ROOM_CREATED]: void;
   [Event.ROOM_CREATE_FAILED]: {
-    code: Number;
-    detail: String;
+    code: number;
+    detail: string;
   };
   [Event.ROOM_JOINED]: void;
   [Event.ROOM_JOIN_FAILED]: {
-    code: Number;
-    detail: String;
+    code: number;
+    detail: string;
   };
   [Event.PLAYER_ROOM_JOINED]: {
     newPlayer: Player;
@@ -109,13 +109,13 @@ declare interface PlayEvent {
     changedProps: Object;
   };
   [Event.CUSTOM_EVENT]: {
-    eventId: Number | String;
+    eventId: number | string;
     eventData: Object;
-    senderId: Number;
+    senderId: number;
   };
   [Event.ERROR]: {
-    code: Number;
-    detail: String;
+    code: number;
+    detail: string;
   };
 }
 
