@@ -21,10 +21,12 @@ describe('test master', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.PLAYER_ROOM_JOINED, newPlayer => {
+    play1.on(Event.PLAYER_ROOM_JOINED, data => {
+      const { newPlayer } = data;
       play1.setMaster(newPlayer.actorId);
     });
-    play1.on(Event.MASTER_SWITCHED, newMaster => {
+    play1.on(Event.MASTER_SWITCHED, data => {
+      const { newMaster } = data;
       expect(play1.room.masterId).to.be.equal(newMaster.actorId);
       p1Flag = true;
       if (p1Flag && p2Flag) {
@@ -41,7 +43,8 @@ describe('test master', () => {
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
-    play2.on(Event.MASTER_SWITCHED, newMaster => {
+    play2.on(Event.MASTER_SWITCHED, data => {
+      const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
       p2Flag = true;
       if (p1Flag && p2Flag) {
@@ -84,11 +87,13 @@ describe('test master', () => {
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
     });
-    play2.on(Event.PLAYER_ROOM_LEFT, leftPlayer => {
+    play2.on(Event.PLAYER_ROOM_LEFT, data => {
+      const { leftPlayer } = data;
       debug(`${leftPlayer.userId} left room`);
       expect(leftPlayer.actorId).to.be.equal(1);
     });
-    play2.on(Event.MASTER_SWITCHED, newMaster => {
+    play2.on(Event.MASTER_SWITCHED, data => {
+      const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
       setTimeout(() => {
         play1.disconnect();
@@ -119,7 +124,8 @@ describe('test master', () => {
   //     expect(play1.room.name).to.be.equal(roomName);
   //     play2.connect();
   //   });
-  //   play1.on(Event.MASTER_SWITCHED, newMaster => {
+  //   play1.on(Event.MASTER_SWITCHED, (data) => {
+  //     const { newMaster } = data;
   //     expect(play1.room.masterId).to.be.equal(newMaster.actorId);
   //     p1Flag = true;
   //     if (p1Flag && p2Flag) {
@@ -137,7 +143,8 @@ describe('test master', () => {
   //     expect(play2.room.name).to.be.equal(roomName);
   //     play2.setMaster(play2.player.actorId);
   //   });
-  //   play2.on(Event.MASTER_SWITCHED, newMaster => {
+  //   play2.on(Event.MASTER_SWITCHED, (data) => {
+  //     const { newMaster } = data;
   //     expect(play2.room.masterId).to.be.equal(newMaster.actorId);
   //     p2Flag = true;
   //     if (p1Flag && p2Flag) {

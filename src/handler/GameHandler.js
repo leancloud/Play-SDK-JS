@@ -45,7 +45,9 @@ function handleJoinedRoom(play, msg) {
 function handleNewPlayerJoinedRoom(play, msg) {
   const newPlayer = Player._newFromJSONObject(play, msg.member);
   play._room._addPlayer(newPlayer);
-  play.emit(Event.PLAYER_ROOM_JOINED, newPlayer);
+  play.emit(Event.PLAYER_ROOM_JOINED, {
+    newPlayer,
+  });
 }
 
 // 有玩家离开房间
@@ -53,7 +55,9 @@ function handlePlayerLeftRoom(play, msg) {
   const actorId = msg.initByActor;
   const leftPlayer = play._room.getPlayer(actorId);
   play._room._removePlayer(actorId);
-  play.emit(Event.PLAYER_ROOM_LEFT, leftPlayer);
+  play.emit(Event.PLAYER_ROOM_LEFT, {
+    leftPlayer,
+  });
 }
 
 // 主机切换应答
@@ -67,7 +71,9 @@ function handleMasterUpdated(msg) {
 function handleMasterChanged(play, msg) {
   play._room._masterActorId = msg.masterActorId;
   const newMaster = play._room.getPlayer(msg.masterActorId);
-  play.emit(Event.MASTER_SWITCHED, newMaster);
+  play.emit(Event.MASTER_SWITCHED, {
+    newMaster,
+  });
 }
 
 // 房间开启 / 关闭
@@ -91,9 +97,11 @@ function handleRoomCustomPropertiesChangedResponse(msg) {
 
 // 房间属性变更
 function handleRoomCustomPropertiesChanged(play, msg) {
-  const changedProperties = msg.attr;
-  play._room._mergeProperties(changedProperties);
-  play.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, changedProperties);
+  const changedProps = msg.attr;
+  play._room._mergeProperties(changedProps);
+  play.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, {
+    changedProps,
+  });
 }
 
 // 玩家属性变更应答
@@ -115,7 +123,9 @@ function handlePlayerCustomPropertiesChanged(play, msg) {
 function handlePlayerOffline(play, msg) {
   const player = play._room.getPlayer(msg.initByActor);
   player._setActive(false);
-  play.emit(Event.PLAYER_ACTIVITY_CHANGED, player);
+  play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+    player,
+  });
 }
 
 // 玩家上线
@@ -123,7 +133,9 @@ function handlePlayerOnline(play, msg) {
   const player = play._room.getPlayer(msg.member.actorId);
   player._initWithJSONObject(msg.member);
   player._setActive(true);
-  play.emit(Event.PLAYER_ACTIVITY_CHANGED, player);
+  play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+    player,
+  });
 }
 
 // 离开房间

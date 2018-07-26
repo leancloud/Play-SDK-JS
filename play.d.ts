@@ -88,12 +88,22 @@ declare interface PlayEvent {
     code: Number;
     detail: String;
   };
-  [Event.PLAYER_ROOM_JOINED]: Player;
-  [Event.PLAYER_ROOM_LEFT]: Player;
-  [Event.PLAYER_ACTIVITY_CHANGED]: Player;
-  [Event.MASTER_SWITCHED]: Player;
+  [Event.PLAYER_ROOM_JOINED]: {
+    newPlayer: Player;
+  };
+  [Event.PLAYER_ROOM_LEFT]: {
+    leftPlayer: Player;
+  };
+  [Event.PLAYER_ACTIVITY_CHANGED]: {
+    player: Player;
+  };
+  [Event.MASTER_SWITCHED]: {
+    newMaster: Player;
+  };
   [Event.ROOM_LEFT]: void;
-  [Event.ROOM_CUSTOM_PROPERTIES_CHANGED]: Object;
+  [Event.ROOM_CUSTOM_PROPERTIES_CHANGED]: {
+    changedProps: Object;
+  };
   [Event.PLAYER_CUSTOM_PROPERTIES_CHANGED]: {
     player: Player;
     changedProps: Object;

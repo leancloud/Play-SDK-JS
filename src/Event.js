@@ -52,22 +52,26 @@ const Event = {
   ROOM_JOIN_FAILED: 'roomJoinFailed',
   /**
    * 有新玩家加入房间
-   * @param {Player} newPlayer
+   * @param {Object} payload
+   * @param {Player} payload.newPlayer
    */
   PLAYER_ROOM_JOINED: 'newPlayerJoinedRoom',
   /**
    * 有玩家离开房间
-   * @param {Player} leftPlayer
+   * @param {Object} payload
+   * @param {Player} payload.leftPlayer
    */
   PLAYER_ROOM_LEFT: 'playerLeftRoom',
   /**
    * 玩家活跃属性变化
-   * @param {Player} player
+   * @param {Object} payload
+   * @param {Player} payload.player
    */
   PLAYER_ACTIVITY_CHANGED: 'playerActivityChanged',
   /**
    * 主机变更
-   * @param {Player} newMaster
+   * @param {Object} payload
+   * @param {Player} payload.newMaster
    */
   MASTER_SWITCHED: 'masterSwitched',
   /**
@@ -76,7 +80,8 @@ const Event = {
   ROOM_LEFT: 'roomLeft',
   /**
    * 房间自定义属性变化
-   * @param {Object} changedProps
+   * @param {Object} payload
+   * @param {Object} payload.changedProps
    */
   ROOM_CUSTOM_PROPERTIES_CHANGED: 'roomCustomPropertiesChanged',
   /**

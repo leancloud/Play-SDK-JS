@@ -170,7 +170,8 @@ describe('test join room', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.PLAYER_ACTIVITY_CHANGED, player => {
+    play1.on(Event.PLAYER_ACTIVITY_CHANGED, data => {
+      const { player } = data;
       debug(`${player.userId}'s inActivity is ${player.isActive()}`);
     });
 
