@@ -203,7 +203,9 @@ export class Play extends EventEmitter<PlayEvent> {
   setMaster(newMasterId: number): void;
   sendEvent(
     eventId: number | string,
-    eventData: Object,
+    eventData: {
+      [key: string]: any;
+    },
     options: {
       receiverGroup?: ReceiverGroup;
       targetActorIds?: number[];
