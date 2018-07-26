@@ -68,26 +68,30 @@ export enum ReceiverGroup {
   MasterClient,
 }
 
+interface CustomProperties {
+  [key: string]: any;
+}
+
+interface CustomEventData {
+  [key: string]: any;
+}
+
+interface ErrorEvent {
+  code: number;
+  detail: string;
+}
+
 declare interface PlayEvent {
   [Event.CONNECTED]: void;
-  [Event.CONNECT_FAILED]: {
-    code: number;
-    detail: string;
-  };
+  [Event.CONNECT_FAILED]: ErrorEvent;
   [Event.DISCONNECTED]: void;
   [Event.LOBBY_JOINED]: void;
   [Event.LOBBY_LEFT]: void;
   [Event.LOBBY_ROOM_LIST_UPDATED]: void;
   [Event.ROOM_CREATED]: void;
-  [Event.ROOM_CREATE_FAILED]: {
-    code: number;
-    detail: string;
-  };
+  [Event.ROOM_CREATE_FAILED]: ErrorEvent;
   [Event.ROOM_JOINED]: void;
-  [Event.ROOM_JOIN_FAILED]: {
-    code: number;
-    detail: string;
-  };
+  [Event.ROOM_JOIN_FAILED]: ErrorEvent;
   [Event.PLAYER_ROOM_JOINED]: {
     newPlayer: Player;
   };
@@ -102,21 +106,18 @@ declare interface PlayEvent {
   };
   [Event.ROOM_LEFT]: void;
   [Event.ROOM_CUSTOM_PROPERTIES_CHANGED]: {
-    changedProps: Object;
+    changedProps: CustomProperties;
   };
   [Event.PLAYER_CUSTOM_PROPERTIES_CHANGED]: {
     player: Player;
-    changedProps: Object;
+    changedProps: CustomProperties;
   };
   [Event.CUSTOM_EVENT]: {
     eventId: number | string;
-    eventData: Object;
+    eventData: CustomEventData;
     senderId: number;
   };
-  [Event.ERROR]: {
-    code: number;
-    detail: string;
-  };
+  [Event.ERROR]: ErrorEvent;
 }
 
 export class LobbyRoom {
@@ -126,7 +127,7 @@ export class LobbyRoom {
   readonly emptyRoomTtl: number;
   readonly playerTtl: number;
   readonly playerCount: number;
-  readonly customRoomPropertiesForLobby: Object;
+  readonly customRoomPropertiesForLobby: CustomProperties;
 }
 
 export class Player {
@@ -136,12 +137,12 @@ export class Player {
   isMaster(): boolean;
   isInActive(): boolean;
   setCustomProperties(
-    properties: Object,
+    properties: CustomProperties,
     opts?: {
-      expectedValues?: Object;
+      expectedValues?: CustomProperties;
     }
   ): void;
-  getCustomProperties(): Object;
+  getCustomProperties(): CustomProperties;
 }
 
 export class Room {
@@ -154,15 +155,18 @@ export class Room {
   readonly playerList: Player[];
   getPlayer(actorId: number): Player;
   setCustomProperties(
-    properties: Object,
+    properties: CustomProperties,
     opts?: {
-      expectedValues?: Object;
+      expectedValues?: CustomProperties;
     }
   ): void;
-  getCustomProperties(): Object;
+  getCustomProperties(): CustomProperties;
 }
 
 export class Play extends EventEmitter<PlayEvent> {
+  readonly room: Room;
+  readonly player: Player;
+  userId: string;
   init(opts: {
     appId: string;
     appKey: string;
@@ -203,18 +207,13 @@ export class Play extends EventEmitter<PlayEvent> {
   setMaster(newMasterId: number): void;
   sendEvent(
     eventId: number | string,
-    eventData: {
-      [key: string]: any;
-    },
+    eventData: CustomEventData,
     options: {
       receiverGroup?: ReceiverGroup;
       targetActorIds?: number[];
     }
   ): void;
   leaveRoom(): void;
-  readonly room: Room;
-  readonly player: Player;
-  userId: string;
 }
 
 export enum CreateRoomFlag {
