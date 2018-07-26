@@ -1,6 +1,6 @@
 {
   "name": "@leancloud/play",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "LeanCloud Play SDK",
   "main": "dist/play-node.js",
   "scripts": {
