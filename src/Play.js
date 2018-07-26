@@ -420,6 +420,9 @@ export default class Play extends EventEmitter {
     if (!(typeof opened === 'boolean')) {
       throw new TypeError(`${opened} is not a boolean value`);
     }
+    if (this._room === null) {
+      throw new Error('room is null');
+    }
     const msg = {
       cmd: 'conv',
       op: 'open',
@@ -437,6 +440,9 @@ export default class Play extends EventEmitter {
     if (!(typeof visible === 'boolean')) {
       throw new TypeError(`${visible} is not a boolean value`);
     }
+    if (this._room === null) {
+      throw new Error('room is null');
+    }
     const msg = {
       cmd: 'conv',
       op: 'visible',
@@ -453,6 +459,9 @@ export default class Play extends EventEmitter {
   setMaster(newMasterId) {
     if (!(typeof newMasterId === 'number')) {
       throw new TypeError(`${newMasterId} is not a number`);
+    }
+    if (this._room === null) {
+      throw new Error('room is null');
     }
     const msg = {
       cmd: 'conv',
@@ -480,6 +489,12 @@ export default class Play extends EventEmitter {
     }
     if (!(options instanceof Object)) {
       throw new TypeError(`${options} is not a Object`);
+    }
+    if (this._room === null) {
+      throw new Error('room is null');
+    }
+    if (this._player === null) {
+      throw new Error('player is null');
     }
     const msg = {
       cmd: 'direct',
