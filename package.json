@@ -46,6 +46,7 @@
   },
   "types": "./play.d.ts",
   "browser": "dist/play.js",
+  "weapp": "dist/play-weapp.js",
   "prettier": {
     "singleQuote": true,
     "trailingComma": "es5"

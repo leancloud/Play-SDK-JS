@@ -32,7 +32,7 @@ export default [
     input: 'src/index-weapp.js',
     output: {
       name: 'play',
-      file: 'dist/play.weapp.js',
+      file: 'dist/play-weapp.js',
       format: 'umd',
       sourcemap: true,
     },

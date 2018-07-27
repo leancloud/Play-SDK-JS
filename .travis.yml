@@ -11,7 +11,7 @@ deploy:
       secure: RsxEJkYH3VkOwYVleRLd5QjjIJxt7iM80L1TJwpGB7vhBVRynzjiZpMRYABWuzijkDAtMUtEzZb1hSN+vN+tNVoJvIxe//kyymcxg0U6GAwK/BZVpdAM4omcUqEwCbRHVMp1mRO9Z96bWlCasFBMKDF3BiPBQY6IvXZgu6iWYXkoU24O9SmttNqSU9KC9UjJIGmFgOoldoEZaulWrxiWApFOa4aYC+OMMD/sIAbP12mqGehaMESGWG9LkGQEqoeg6yjdJtWAP2/nv6UG0glSzZkJPoEJw0MRZMmjrTKPMVSQsve04L9bv3uVKRFD6dlNAkPmw+hJwlo+sxWpFy3VqK1hrUm32zsokOXjIXHrQgKbpT/VMGTWZ9KU6lEXD0k1z0N+dXT5CwAYAzqE/b5BcRx0Kk/kksHvQq/xFKWNFxVrxBuG1kggavBODxtVtW3xPb07dpdpo0wVQGKpNg5XLGHCpZ8CbXRoMxrNsQvT3z7NJ25NFr9ORFNK2MiS8ZqvrMnV5yaR2FrioCYS/FtzqBcxxqaSYtLdQMwqDxPmt7gJwTwXxc1mG7M/CxqQ5VN2qz8NJ33biodmARSxdGa0CfHNLsYluXQJ0pxEVmpDxxAWeVKQfxnupHNDAUAgIC9OHUJqG7jP2LksljY3LaA/jiRfAYr3yLo7zDtjOwZpm4I=
     file: 
       - "./dist/play.js"
-      - "./dist/play.weapp.js"
+      - "./dist/play-weapp.js"
     skip_cleanup: true
     on:
       tags: true
