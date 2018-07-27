@@ -6,6 +6,7 @@
   },
   "rules": {
     "no-console": [2, { "allow": ["warn", "error"] }],
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   }
 }

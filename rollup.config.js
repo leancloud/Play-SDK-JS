@@ -28,4 +28,20 @@ export default [
     },
     plugins: [commonjs(), json()],
   },
+  {
+    input: 'src/index-weapp.js',
+    output: {
+      name: 'play',
+      file: 'dist/play.weapp.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    plugins: [
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+      json(),
+    ],
+  },
 ];
