@@ -5,9 +5,9 @@
  */
 const CreateRoomFlag = {
   /**
-   * Master 掉线后自动切换 Master
+   * Master 掉线后固定 Master
    */
-  MasterAutoSwitch: 1,
+  FixedMaster: 1,
   /**
    * 只允许 Master 设置房间属性
    */
