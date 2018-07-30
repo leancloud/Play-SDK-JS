@@ -1,4 +1,3 @@
-import WebSocket from 'isomorphic-ws';
 import request from 'superagent';
 import EventEmitter from 'eventemitter3';
 import d from 'debug';
@@ -13,6 +12,7 @@ import {
   EastCNServerURL,
   USServerURL,
 } from './Config';
+import { getAdapater } from './PlayAdapter';
 
 const debug = d('Play:Play');
 
@@ -625,6 +625,7 @@ export default class Play extends EventEmitter {
   _connectToMaster() {
     this._cleanup();
     this._switchingServer = true;
+    const { WebSocket } = getAdapater();
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
       debug('Lobby websocket opened');
@@ -664,6 +665,7 @@ export default class Play extends EventEmitter {
   _connectToGame() {
     this._cleanup();
     this._switchingServer = true;
+    const { WebSocket } = getAdapater();
     this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
       debug('Game websocket opened');

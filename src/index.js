@@ -5,6 +5,7 @@ import Player from './Player';
 import Event from './Event';
 import ReceiverGroup from './ReceiverGroup';
 import CreateRoomFlag from './CreateRoomFlag';
+import { setAdapter } from './PlayAdapter';
 
 const play = new Play();
 
@@ -17,4 +18,5 @@ export {
   Event,
   ReceiverGroup,
   CreateRoomFlag,
+  setAdapter,
 };
