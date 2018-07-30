@@ -143,7 +143,7 @@ export default class Play extends EventEmitter {
 
     request
       .get(masterURL)
-      .query({ appId: this._appId, secure: true, ua: this._getUA() })
+      .query({ appId: this._appId, sdkVersion: PlayVersion })
       .end((error, response) => {
         if (error) {
           console.error(error);
@@ -599,7 +599,8 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       appId: this._appId,
       peerId: this.userId,
-      ua: this._getUA(),
+      sdkVersion: PlayVersion,
+      gameVersion: this._gameVersion,
     };
     this._send(msg);
   }
@@ -714,9 +715,5 @@ export default class Play extends EventEmitter {
       this._websocket.close();
       this._websocket = null;
     }
-  }
-
-  _getUA() {
-    return `${PlayVersion}_${this._gameVersion}`;
   }
 }
