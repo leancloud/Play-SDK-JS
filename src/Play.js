@@ -12,7 +12,7 @@ import {
   EastCNServerURL,
   USServerURL,
 } from './Config';
-import { getAdapater } from './PlayAdapter';
+import { adapters } from './PlayAdapter';
 
 const debug = d('Play:Play');
 
@@ -625,7 +625,7 @@ export default class Play extends EventEmitter {
   _connectToMaster() {
     this._cleanup();
     this._switchingServer = true;
-    const { WebSocket } = getAdapater();
+    const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
       debug('Lobby websocket opened');
@@ -665,7 +665,7 @@ export default class Play extends EventEmitter {
   _connectToGame() {
     this._cleanup();
     this._switchingServer = true;
-    const { WebSocket } = getAdapater();
+    const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
       debug('Game websocket opened');
