@@ -217,7 +217,7 @@ export class Play extends EventEmitter<PlayEvent> {
 }
 
 export enum CreateRoomFlag {
-  MasterAutoSwitch = 1,
+  FixedMaster = 1,
   MasterUpdateRoomProperties = 2,
   MasterSetMaster = 4,
 }
