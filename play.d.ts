@@ -222,4 +222,8 @@ export enum CreateRoomFlag {
   MasterSetMaster = 4,
 }
 
+export function setAdapter(newAdapters: {
+  WebSocketAdapter: Function;
+}): Function;
+
 export const play: Play;
