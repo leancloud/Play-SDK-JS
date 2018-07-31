@@ -244,6 +244,15 @@ export default class Play extends EventEmitter {
    * @param {Object} opts （可选）创建房间选项
    * @param {string} opts.roomName 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
    * @param {Object} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Boolean} opts.roomOptions.opened 房间是否打开
+   * @param {Boolean} opts.roomOptions.visible 房间是否可见，只有「可见」的房间会出现在房间列表里
+   * @param {Number} opts.roomOptions.emptyRoomTtl 房间为空后，延迟销毁的时间
+   * @param {Number} opts.roomOptions.playerTtl 玩家掉线后，延迟销毁的时间
+   * @param {Number} opts.roomOptions.maxPlayerCount 最大玩家数量
+   * @param {Object} opts.roomOptions.customRoomProperties 自定义房间属性
+   * @param {Array.<string>} opts.roomOptions.customRoomPropertyKeysForLobby 在大厅中可获得的房间属性「键」数组
+   * @param {CreateRoomFlag} opts.roomOptions.flag 创建房间标记，可多选
+   *
    * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   createRoom({
@@ -332,6 +341,14 @@ export default class Play extends EventEmitter {
    * @param {string} roomName 房间名称
    * @param {Object} opts （可选）创建房间选项
    * @param {Object} opts.roomOptions （可选）创建房间选项，默认值为 null
+   * @param {Boolean} opts.roomOptions.opened 房间是否打开
+   * @param {Boolean} opts.roomOptions.visible 房间是否可见，只有「可见」的房间会出现在房间列表里
+   * @param {Number} opts.roomOptions.emptyRoomTtl 房间为空后，延迟销毁的时间
+   * @param {Number} opts.roomOptions.playerTtl 玩家掉线后，延迟销毁的时间
+   * @param {Number} opts.roomOptions.maxPlayerCount 最大玩家数量
+   * @param {Object} opts.roomOptions.customRoomProperties 自定义房间属性
+   * @param {Array.<string>} opts.roomOptions.customRoomPropertyKeysForLobby 在大厅中可获得的房间属性「键」数组
+   * @param {CreateRoomFlag} opts.roomOptions.flag 创建房间标记，可多选
    * @param {Array.<string>} opts.expectedUserIds （可选）邀请好友 ID 数组，默认值为 null
    */
   joinOrCreateRoom(
