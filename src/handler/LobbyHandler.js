@@ -8,7 +8,7 @@ import Event from '../Event';
 const debug = d('Play:MasterHandler');
 
 // 连接建立
-function handleMasterServerSessionOpen(play, msg) {
+function handleSessionOpen(play, msg) {
   play._sessionToken = msg.st;
   const player = new Player(play);
   player._userId = play.userId;
@@ -89,14 +89,14 @@ function handleJoinGameServer(play, msg) {
 }
 
 // 大厅消息处理
-export default function handleMasterMsg(play, message) {
+export default function handleLobbyMsg(play, message) {
   const msg = JSON.parse(message.data);
   debug(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
         case 'opened':
-          handleMasterServerSessionOpen(play, msg);
+          handleSessionOpen(play, msg);
           break;
         default:
           console.error(`no handler for lobby msg: ${msg.op}`);
