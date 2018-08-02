@@ -31,7 +31,7 @@ describe('test connection', () => {
     });
     play2.on(Event.ERROR, error => {
       debug(`error code: ${error.code}`);
-      if (error.code === 4104) {
+      if (error.code === 4102) {
         play1.disconnect();
         play2.disconnect();
         done();

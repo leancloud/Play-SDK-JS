@@ -4,7 +4,7 @@ import d from 'debug';
 
 import Region from './Region';
 import Event from './Event';
-import handleMasterMsg from './handler/MasterHandler';
+import handleLobbyMsg from './handler/LobbyHandler';
 import handleGameMsg from './handler/GameHandler';
 import {
   PlayVersion,
@@ -650,7 +650,7 @@ export default class Play extends EventEmitter {
       this._sessionOpen();
     };
     this._websocket.onmessage = msg => {
-      handleMasterMsg(this, msg);
+      handleLobbyMsg(this, msg);
     };
     this._websocket.onclose = evt => {
       debug(`Lobby websocket closed: ${evt.code}`);
