@@ -6,13 +6,13 @@ const { expect } = require('chai');
 
 describe('test change properties', () => {
   it('test change room properties', done => {
-    const roomName = '311';
+    const roomName = 'cp311';
     const play1 = newPlay('hello3110');
     const play2 = newPlay('world3110');
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -32,7 +32,7 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -66,7 +66,7 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -87,7 +87,7 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -134,7 +134,7 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -163,7 +163,7 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -212,7 +212,7 @@ describe('test change properties', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -234,7 +234,7 @@ describe('test change properties', () => {
       }
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
     });
     play2.on(Event.ROOM_JOINED, () => {
