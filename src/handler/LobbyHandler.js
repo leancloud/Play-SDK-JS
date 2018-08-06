@@ -13,7 +13,7 @@ function handleSessionOpen(play, msg) {
   const player = new Player(play);
   player._userId = play.userId;
   play._player = player;
-  if (play._autoJoinLobby) {
+  if (play.autoJoinLobby) {
     play.joinLobby();
   }
   play.emit(Event.CONNECTED);

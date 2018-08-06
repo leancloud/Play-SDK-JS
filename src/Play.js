@@ -73,11 +73,6 @@ export default class Play extends EventEmitter {
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
-    if (opts.autoJoinLobby === undefined) {
-      this._autoJoinLobby = false;
-    } else {
-      this._autoJoinLobby = opts.autoJoinLobby;
-    }
     this._masterServer = null;
     this._gameServer = null;
     this._msgId = 0;
