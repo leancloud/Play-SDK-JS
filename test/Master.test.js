@@ -13,7 +13,7 @@ describe('test master', () => {
     let p1Flag = false;
     let p2Flag = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -36,7 +36,7 @@ describe('test master', () => {
       }
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
     });
@@ -63,7 +63,7 @@ describe('test master', () => {
     const play2 = newPlay('world2');
     let newConnect = false;
 
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       if (newConnect) {
         return;
       }
@@ -81,7 +81,7 @@ describe('test master', () => {
       newConnect = true;
     });
 
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -112,7 +112,7 @@ describe('test master', () => {
   //   let p1Flag = false;
   //   let p2Flag = false;
 
-  //   play1.on(Event.LOBBY_JOINED, () => {
+  //   play1.on(Event.CONNECTED, () => {
   //     expect(play1._sessionToken).to.be.not.equal(null);
   //     play1.createRoom({ roomName,
   //      roomOptions: {
@@ -135,7 +135,7 @@ describe('test master', () => {
   //     }
   //   });
 
-  //   play2.on(Event.LOBBY_JOINED, () => {
+  //   play2.on(Event.CONNECTED, () => {
   //     expect(play2._sessionToken).to.be.not.equal(null);
   //     play2.joinRoom(roomName);
   //   });

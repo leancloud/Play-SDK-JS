@@ -14,7 +14,6 @@ describe('test lobby', () => {
       appId: APP_ID,
       appKey: APP_KEY,
       region: Region.EastChina,
-      autoJoinLobby: false,
     });
     play.userId = 'play';
     play.on(Event.CONNECTED, () => {
@@ -33,7 +32,7 @@ describe('test lobby', () => {
     const play3 = newPlay('play3');
     const play4 = newPlay('play4');
     let roomCount = 0;
-    play1.on(Event.LOBBY_JOINED, () => {
+    play1.on(Event.CONNECTED, () => {
       const props = {
         title: 'room title',
         level: 2,
@@ -53,7 +52,7 @@ describe('test lobby', () => {
         play4.connect();
       }
     });
-    play2.on(Event.LOBBY_JOINED, () => {
+    play2.on(Event.CONNECTED, () => {
       play2.createRoom({ roomName: play2.userId });
     });
     play2.on(Event.ROOM_CREATED, () => {
@@ -62,7 +61,7 @@ describe('test lobby', () => {
         play4.connect();
       }
     });
-    play3.on(Event.LOBBY_JOINED, () => {
+    play3.on(Event.CONNECTED, () => {
       play3.createRoom({ roomName: play3.userId });
     });
     play3.on(Event.ROOM_CREATED, () => {
@@ -70,6 +69,9 @@ describe('test lobby', () => {
       if (roomCount === 3) {
         play4.connect();
       }
+    });
+    play4.on(Event.CONNECTED, () => {
+      play4.joinLobby();
     });
     play4.on(Event.LOBBY_ROOM_LIST_UPDATED, () => {
       if (play4.lobbyRoomList.length > 0) {
