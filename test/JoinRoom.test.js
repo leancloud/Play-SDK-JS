@@ -17,11 +17,12 @@ describe('test join room', () => {
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
 
     play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -31,7 +32,6 @@ describe('test join room', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test join random room', done => {
@@ -72,29 +72,30 @@ describe('test join room', () => {
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       const options = {
-        maxPlayerCount: 3,
+        maxPlayerCount: 2,
       };
       play1.createRoom({
         roomName,
         roomOptions: options,
-        expectedUserIds: ['world3', 'code'],
+        expectedUserIds: ['code'],
       });
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
 
     play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      play3.joinRoom(roomName);
+    play2.on(Event.ROOM_JOIN_FAILED, () => {
+      play3.connect();
     });
 
     play3.on(Event.CONNECTED, () => {
       expect(play3._sessionToken).to.be.not.equal(null);
+      play3.joinRoom(roomName);
     });
     play3.on(Event.ROOM_JOINED, () => {
       expect(play3.room.name).to.be.equal(roomName);
@@ -105,8 +106,6 @@ describe('test join room', () => {
     });
 
     play1.connect();
-    play2.connect();
-    play3.connect();
   });
 
   it('test leave room', done => {
