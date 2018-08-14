@@ -38,8 +38,8 @@ describe('test create room', () => {
 
   it('test create custom room', done => {
     const randId = parseInt(Math.random() * 1000000, 10);
-    const roomName = `id${randId}`;
-    const play = newPlay('hello2');
+    const roomName = `room_${randId}`;
+    const play = newPlay('cr2');
     play.on(Event.CONNECTED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
@@ -151,6 +151,14 @@ describe('test create room', () => {
       debug(play.room.name);
       play.setRoomOpened(false);
       play.setRoomVisible(false);
+    });
+    play.on(Event.ROOM_OPEN_CHANGED, data => {
+      const { opened } = data;
+      expect(opened).to.be.equal(false);
+    });
+    play.on(Event.ROOM_VISIBLE_CHANGED, data => {
+      const { visible } = data;
+      expect(visible).to.be.equal(false);
       play.disconnect();
       done();
     });

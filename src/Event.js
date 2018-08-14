@@ -90,6 +90,20 @@ const Event = {
    */
   MASTER_SWITCHED: 'masterSwitched',
   /**
+   * 房间「开启 / 关闭」
+   * @event Play#ROOM_OPEN_CHANGED
+   * @param {Object} payload
+   * @param {Boolean} payload.opened
+   */
+  ROOM_OPEN_CHANGED: 'roomOpenChanged',
+  /**
+   * 房间「可见 / 不可见」
+   * @event Play#ROOM_VISIBLE_CHANGED
+   * @param {Object} payload
+   * @param {Boolean} payload.visible
+   */
+  ROOM_VISIBLE_CHANGED: 'roomVisibleChanged',
+  /**
    * 离开房间
    * @event Play#ROOM_LEFT
    */

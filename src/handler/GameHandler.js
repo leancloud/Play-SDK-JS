@@ -78,12 +78,20 @@ function handleMasterChanged(play, msg) {
 
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
-  play._room._opened = msg.toggle;
+  const opened = msg.toggle;
+  play._room._opened = opened;
+  play.emit(Event.ROOM_OPEN_CHANGED, {
+    opened,
+  });
 }
 
 // 房间是否可见
 function handleRoomVisibleChanged(play, msg) {
-  play._room._visible = msg.toggle;
+  const visible = msg.toggle;
+  play._room._visible = visible;
+  play.emit(Event.ROOM_VISIBLE_CHANGED, {
+    visible,
+  });
 }
 
 // 房间属性变更应答
@@ -191,10 +199,14 @@ export default function handleGameMsg(play, message) {
         case 'master-client-changed':
           handleMasterChanged(play, msg);
           break;
-        case 'open':
+        case 'opened':
+          break;
+        case 'opened-notify':
           handleRoomOpenedChanged(play, msg);
           break;
         case 'visible':
+          break;
+        case 'visible-notify':
           handleRoomVisibleChanged(play, msg);
           break;
         case 'updated':
