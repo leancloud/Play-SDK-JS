@@ -439,7 +439,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       toggle: opened,
     };
-    this.this._send(msg);
+    this._send(msg);
   }
 
   /**
