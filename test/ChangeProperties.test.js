@@ -1,8 +1,12 @@
+import d from 'debug';
 import Event from '../src/Event';
+
 // import CreateRoomFlag from '../src/CreateRoomFlag';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
+
+const debug = d('Play:ChangeProperties');
 
 describe('test change properties', () => {
   it('test change room properties', done => {
@@ -272,6 +276,44 @@ describe('test change properties', () => {
 
     play1.connect();
     play2.connect();
+  });
+
+  it('test get player properties when join room', done => {
+    const roomName = '315';
+    const play1 = newPlay('hello3150');
+    const play2 = newPlay('world3150');
+
+    play1.on(Event.CONNECTED, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
+      play1.createRoom({ roomName });
+    });
+    play1.on(Event.ROOM_CREATED, () => {
+      expect(play1.room.name).to.be.equal(roomName);
+      const props = {
+        ready: true,
+      };
+      play1.player.setCustomProperties(props);
+    });
+    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, () => {
+      play2.connect();
+    });
+
+    play2.on(Event.CONNECTED, () => {
+      play2.joinRoom(roomName);
+    });
+    play2.on(Event.ROOM_JOINED, () => {
+      expect(play2.room.name).to.be.equal(roomName);
+      const { master } = play2.room;
+      debug(master);
+      const me = play2.room.getPlayer(play2.player.actorId);
+      debug(me);
+      expect(master.getCustomProperties().ready).to.be.equal(true);
+      play1.disconnect();
+      play2.disconnect();
+      done();
+    });
+
+    play1.connect();
   });
 
   // it('test change room properties failed', done => {

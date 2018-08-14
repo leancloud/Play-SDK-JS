@@ -218,9 +218,6 @@ export default function handleGameMsg(play, message) {
         case 'removed':
           handleLeaveRoom(play);
           break;
-        case 'direct':
-          handleEvent(play, msg);
-          break;
         default:
           console.error(`no handler for game msg: ${msg.op}`);
           break;

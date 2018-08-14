@@ -44,11 +44,9 @@ describe('test connection', () => {
     play.on(Event.CONNECTED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
+      play.disconnect();
       if (reconnectFlag) {
-        play.disconnect();
         done();
-      } else {
-        play.disconnect();
       }
     });
     play.on(Event.DISCONNECTED, () => {

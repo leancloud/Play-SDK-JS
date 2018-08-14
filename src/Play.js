@@ -76,7 +76,6 @@ export default class Play extends EventEmitter {
     this._masterServer = null;
     this._gameServer = null;
     this._msgId = 0;
-    this._requestMsg = {};
     // 切换服务器状态
     this._switchingServer = false;
     // 是否处于大厅
@@ -247,7 +246,6 @@ export default class Play extends EventEmitter {
    * @param {Object} [opts.roomOptions.customRoomProperties] 自定义房间属性
    * @param {Array.<string>} [opts.roomOptions.customRoomPropertyKeysForLobby] 在大厅中可获得的房间属性「键」数组
    * @param {CreateRoomFlag} [opts.roomOptions.flag] 创建房间标记，可多选
-   *
    * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   createRoom({

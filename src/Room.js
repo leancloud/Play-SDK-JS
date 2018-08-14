@@ -71,6 +71,14 @@ export default class Room {
   }
 
   /**
+   * 获取房主
+   * @readonly
+   */
+  get master() {
+    return this.getPlayer(this.masterId);
+  }
+
+  /**
    * 房间主机玩家 ID
    * @type {number}
    * @readonly

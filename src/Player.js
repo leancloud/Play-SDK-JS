@@ -17,8 +17,8 @@ export default class Player {
   _initWithJSONObject(playerJSONObject) {
     this._userId = playerJSONObject.pid;
     this._actorId = playerJSONObject.actorId;
-    if (playerJSONObject.properties) {
-      this.properties = playerJSONObject.properties;
+    if (playerJSONObject.attr) {
+      this.properties = playerJSONObject.attr;
     } else {
       this.properties = {};
     }
