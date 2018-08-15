@@ -17,6 +17,8 @@ import { adapters } from './PlayAdapter';
 const debug = d('Play:Play');
 
 const MAX_PLAYER_COUNT = 10;
+const LOBBY_KEEPALIVE_DURATION = 120000;
+const GAME_KEEPALIVE_DURATION = 10000;
 
 function convertRoomOptions(roomOptions) {
   const options = {};
@@ -218,7 +220,7 @@ export default class Play extends EventEmitter {
       op: 'add',
       i: this._getMsgId(),
     };
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -230,7 +232,7 @@ export default class Play extends EventEmitter {
       op: 'remove',
       i: this._getMsgId(),
     };
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -281,7 +283,7 @@ export default class Play extends EventEmitter {
     }
     // Router 创建房间的消息体
     const msg = this._cachedRoomMsg;
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -307,7 +309,7 @@ export default class Play extends EventEmitter {
       this._cachedRoomMsg.expectMembers = expectedUserIds;
     }
     const msg = this._cachedRoomMsg;
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -326,7 +328,7 @@ export default class Play extends EventEmitter {
       rejoin: true,
     };
     const msg = this._cachedRoomMsg;
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -381,7 +383,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -419,7 +421,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    this._send(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -439,7 +441,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       toggle: opened,
     };
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -459,7 +461,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       toggle: visible,
     };
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -479,7 +481,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       masterActorId: newMasterId,
     };
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -514,7 +516,7 @@ export default class Play extends EventEmitter {
       receiverGroup: options.receiverGroup,
       toActorIds: options.targetActorIds,
     };
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -527,7 +529,7 @@ export default class Play extends EventEmitter {
       i: this._getMsgId(),
       cid: this.room.name,
     };
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   /**
@@ -574,7 +576,7 @@ export default class Play extends EventEmitter {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
   // 设置玩家属性
@@ -598,11 +600,11 @@ export default class Play extends EventEmitter {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    this._send(msg);
+    this._sendGameMessage(msg);
   }
 
-  // 开始会话，建立连接后第一条消息
-  _sessionOpen() {
+  // 开始大厅会话
+  _lobbySessionOpen() {
     const msg = {
       cmd: 'session',
       op: 'open',
@@ -612,11 +614,35 @@ export default class Play extends EventEmitter {
       sdkVersion: PlayVersion,
       gameVersion: this._gameVersion,
     };
-    this._send(msg);
+    this._sendLobbyMessage(msg);
+  }
+
+  // 开始房间会话
+  _gameSessionOpen() {
+    const msg = {
+      cmd: 'session',
+      op: 'open',
+      i: this._getMsgId(),
+      appId: this._appId,
+      peerId: this.userId,
+      sdkVersion: PlayVersion,
+      gameVersion: this._gameVersion,
+    };
+    this._sendGameMessage(msg);
+  }
+
+  // 发送大厅消息
+  _sendLobbyMessage(msg) {
+    this._send(msg, LOBBY_KEEPALIVE_DURATION);
+  }
+
+  // 发送房间消息
+  _sendGameMessage(msg) {
+    this._send(msg, GAME_KEEPALIVE_DURATION);
   }
 
   // 发送消息
-  _send(msg) {
+  _send(msg, duration) {
     if (!(typeof msg === 'object')) {
       throw new TypeError(`${msg} is not an object`);
     }
@@ -628,7 +654,7 @@ export default class Play extends EventEmitter {
     this._keepAlive = setTimeout(() => {
       const keepAliveMsg = {};
       this._send(keepAliveMsg);
-    }, 10000);
+    }, duration);
   }
 
   // 连接至大厅服务器
@@ -640,7 +666,7 @@ export default class Play extends EventEmitter {
     this._websocket.onopen = () => {
       debug('Lobby websocket opened');
       this._switchingServer = false;
-      this._sessionOpen();
+      this._lobbySessionOpen();
     };
     this._websocket.onmessage = msg => {
       handleLobbyMsg(this, msg);
@@ -665,6 +691,7 @@ export default class Play extends EventEmitter {
         // 断开连接
         this.emit(Event.DISCONNECTED);
       }
+      this._stopKeepAlive();
     };
     this._websocket.onerror = error => {
       console.error(error);
@@ -680,7 +707,7 @@ export default class Play extends EventEmitter {
     this._websocket.onopen = () => {
       debug('Game websocket opened');
       this._switchingServer = false;
-      this._sessionOpen();
+      this._gameSessionOpen();
     };
     this._websocket.onmessage = msg => {
       handleGameMsg(this, msg);

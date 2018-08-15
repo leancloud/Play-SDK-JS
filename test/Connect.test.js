@@ -94,4 +94,21 @@ describe('test connection', () => {
     });
     play.connect();
   });
+
+  it('test keep alive', done => {
+    const roomName = 'tc5_room';
+    const play = newPlay('tc5');
+    play.on(Event.CONNECTED, () => {
+      play.createRoom(roomName);
+    });
+    play.on(Event.ROOM_JOINED, () => {
+      debug('joined');
+    });
+
+    setTimeout(() => {
+      done();
+    }, 30000);
+
+    play.connect();
+  });
 });

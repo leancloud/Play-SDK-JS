@@ -11,7 +11,7 @@ const debug = d('Play:GameHandler');
 function handleGameServerSessionOpen(play) {
   // 根据缓存加入房间的规则
   play._cachedRoomMsg.i = play._getMsgId();
-  play._send(play._cachedRoomMsg);
+  play._sendGameMessage(play._cachedRoomMsg);
 }
 
 // 创建房间
