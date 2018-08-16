@@ -98,7 +98,7 @@ export default class Room {
 
   /**
    * 根据 actorId 获取 Player 对象
-   * @param {number} actorId
+   * @param {number} actorId 玩家在房间中的 Id
    * @return {Player}
    */
   getPlayer(actorId) {

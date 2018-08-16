@@ -112,6 +112,7 @@ describe('test lobby', () => {
     });
     play.on(Event.ROOM_JOINED, () => {
       debug('room joined');
+      play.disconnect();
       done();
     });
     play.on(Event.ROOM_JOIN_FAILED, err => {
