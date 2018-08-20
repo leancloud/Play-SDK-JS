@@ -502,6 +502,12 @@ export default class Play extends EventEmitter {
     if (!(options instanceof Object)) {
       throw new TypeError(`${options} is not a Object`);
     }
+    if (
+      options.receiverGroup === undefined &&
+      options.targetActorIds === undefined
+    ) {
+      throw new TypeError(`receiverGroup and targetActorIds are null`);
+    }
     if (this._room === null) {
       throw new Error('room is null');
     }
