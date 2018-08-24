@@ -12,6 +12,7 @@ babelrc.plugins.splice(0, 0, 'external-helpers');
 const BABEL_CONFIG = {
   babelrc: false,
   ...babelrc,
+  runtimeHelpers: true,
   exclude: 'node_modules/**',
 };
 
@@ -52,6 +53,7 @@ export default [
     },
     plugins: [
       json(),
+      babel(BABEL_CONFIG),
       resolve({
         browser: true,
       }),

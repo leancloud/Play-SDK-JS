@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "debug": "^3.1.0",
     "eventemitter3": "^3.1.0",
     "isomorphic-ws": "^4.0.1",
@@ -23,6 +24,7 @@
     "@leeyeh/jsdoc-rtd": "^1.0.14",
     "babel-cli": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
