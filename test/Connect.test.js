@@ -106,6 +106,7 @@ describe('test connection', () => {
     });
 
     setTimeout(() => {
+      play.disconnect();
       done();
     }, 30000);
 

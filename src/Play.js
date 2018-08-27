@@ -79,7 +79,7 @@ export default class Play extends EventEmitter {
     this._gameServer = null;
     this._msgId = 0;
     // 切换服务器状态
-    this._switchingServer = false;
+    this._gameToLobby = false;
     // 是否处于大厅
     this._inLobby = false;
     // 大厅房间列表
@@ -601,7 +601,7 @@ export default class Play extends EventEmitter {
       op: 'update-player-prop',
       i: this._getMsgId(),
       targetActorId: actorId,
-      playerProperty: properties,
+      attr: properties,
     };
     if (expectedValues) {
       msg.expectAttr = expectedValues;
@@ -659,19 +659,18 @@ export default class Play extends EventEmitter {
     this._stopKeepAlive();
     this._keepAlive = setTimeout(() => {
       const keepAliveMsg = {};
-      this._send(keepAliveMsg);
+      this._send(keepAliveMsg, duration);
     }, duration);
   }
 
   // 连接至大厅服务器
-  _connectToMaster() {
+  _connectToMaster(fromGame = false) {
     this._cleanup();
-    this._switchingServer = true;
+    this._gameToLobby = fromGame;
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
       debug('Lobby websocket opened');
-      this._switchingServer = false;
       this._lobbySessionOpen();
     };
     this._websocket.onmessage = msg => {
@@ -691,8 +690,6 @@ export default class Play extends EventEmitter {
           this._masterServer = this._secondaryServer;
           this._connectToMaster();
         }
-      } else if (this._switchingServer) {
-        debug('swiching server');
       } else {
         // 断开连接
         this.emit(Event.DISCONNECTED);
@@ -707,12 +704,10 @@ export default class Play extends EventEmitter {
   // 连接至游戏服务器
   _connectToGame() {
     this._cleanup();
-    this._switchingServer = true;
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
       debug('Game websocket opened');
-      this._switchingServer = false;
       this._gameSessionOpen();
     };
     this._websocket.onmessage = msg => {
@@ -726,8 +721,6 @@ export default class Play extends EventEmitter {
           code: -2,
           detail: 'Websocket connect failed',
         });
-      } else if (this._switchingServer) {
-        debug('swiching server');
       } else {
         // 断开连接
         this.emit(Event.DISCONNECTED);

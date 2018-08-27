@@ -152,8 +152,7 @@ function handleLeaveRoom(play) {
   // 清理工作
   play._room = null;
   play._player = null;
-  play.emit(Event.ROOM_LEFT);
-  play._connectToMaster();
+  play._connectToMaster(true);
 }
 
 // 自定义事件

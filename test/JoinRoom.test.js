@@ -3,7 +3,7 @@ import Event from '../src/Event';
 import newPlay from './Utils';
 
 const { expect } = require('chai');
-const debug = require('debug')('JoinRoomTest');
+const debug = require('debug')('Play:JoinRoomTest');
 
 describe('test join room', () => {
   it('test join name room', done => {
@@ -112,38 +112,32 @@ describe('test join room', () => {
     const roomName = '214';
     const play1 = newPlay('hello4');
     const play2 = newPlay('world4');
-    let joinCount = 0;
+    let flag = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
+      debug('CONNECTED');
     });
-    play2.on(Event.CONNECTED, () => {
-      if (joinCount === 2) {
+    play2.on(Event.ROOM_JOINED, () => {
+      play2.leaveRoom();
+    });
+    play2.on(Event.ROOM_LEFT, () => {
+      debug('OnLeftRoom');
+      if (flag) {
         play1.disconnect();
         play2.disconnect();
         done();
       } else {
-        joinCount += 1;
         play2.joinRoom(roomName);
+        flag = true;
       }
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      setTimeout(() => {
-        play2.leaveRoom();
-      }, 1000);
-    });
-    play2.on(Event.ROOM_LEFT, () => {
-      debug('OnLeftRoom');
     });
 
     play1.connect();
