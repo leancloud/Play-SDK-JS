@@ -83,10 +83,19 @@ export default class Player {
   }
 
   /**
+   * @deprecated
    * 获取自定义属性
    * @return {Object}
    */
   getCustomProperties() {
+    return this.properties;
+  }
+
+  /**
+   * 获取自定义属性
+   * @return {Object}
+   */
+  get CustomProperties() {
     return this.properties;
   }
 

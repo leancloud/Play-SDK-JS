@@ -16,7 +16,12 @@ function handleSessionOpen(play, msg) {
   if (play.autoJoinLobby) {
     play.joinLobby();
   }
-  play.emit(Event.CONNECTED);
+  if (play._gameToLobby) {
+    play.emit(Event.ROOM_LEFT);
+    play._gameToLobby = false;
+  } else {
+    play.emit(Event.CONNECTED);
+  }
 }
 
 // 加入大厅
