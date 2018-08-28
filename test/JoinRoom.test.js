@@ -125,6 +125,9 @@ describe('test join room', () => {
       play2.joinRoom(roomName);
       debug('CONNECTED');
     });
+    play2.on(Event.DISCONNECTED, () => {
+      debug('play2 disconnected');
+    });
     play2.on(Event.ROOM_JOINED, () => {
       play2.leaveRoom();
     });
