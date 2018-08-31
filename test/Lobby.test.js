@@ -1,5 +1,5 @@
 import Event from '../src/Event';
-import newPlay from './Utils';
+import { newPlay } from './Utils';
 import Play from '../src/Play';
 import Region from '../src/Region';
 import { APP_ID, APP_KEY } from './Config';

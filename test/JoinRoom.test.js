@@ -1,6 +1,6 @@
 import Event from '../src/Event';
 
-import newPlay from './Utils';
+import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 const debug = require('debug')('Play:JoinRoomTest');
@@ -124,6 +124,9 @@ describe('test join room', () => {
     play2.on(Event.CONNECTED, () => {
       play2.joinRoom(roomName);
       debug('CONNECTED');
+    });
+    play2.on(Event.DISCONNECTED, () => {
+      debug('play2 disconnected');
     });
     play2.on(Event.ROOM_JOINED, () => {
       play2.leaveRoom();

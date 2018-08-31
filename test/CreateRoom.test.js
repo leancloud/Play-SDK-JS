@@ -1,5 +1,5 @@
 import Event from '../src/Event';
-import newPlay from './Utils';
+import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 const debug = require('debug')('CreateRoomTest');
