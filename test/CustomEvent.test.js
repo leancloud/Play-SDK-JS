@@ -1,7 +1,7 @@
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
 
-import newPlay from './Utils';
+import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 

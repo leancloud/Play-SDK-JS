@@ -90,6 +90,8 @@ export default class Play extends EventEmitter {
     this._nextConnectTimestamp = 0;
     // 连接计时器
     this._connectTimer = null;
+    // feature: 标记平台
+    this.feature = null;
   }
 
   /**
@@ -137,9 +139,13 @@ export default class Play extends EventEmitter {
       masterURL = USServerURL;
     }
 
+    const query = { appId: this._appId, sdkVersion: PlayVersion };
+    if (this.feature != null) {
+      query.feature = this.feature;
+    }
     request
       .get(masterURL)
-      .query({ appId: this._appId, sdkVersion: PlayVersion })
+      .query(query)
       .end((error, response) => {
         if (error) {
           console.error(error);

@@ -2,7 +2,7 @@ import d from 'debug';
 import Event from '../src/Event';
 
 // import CreateRoomFlag from '../src/CreateRoomFlag';
-import newPlay from './Utils';
+import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 

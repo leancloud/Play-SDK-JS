@@ -1,5 +1,5 @@
 import Event from '../src/Event';
-import newPlay from './Utils';
+import { newPlay, newNorthChinaPlay } from './Utils';
 
 const { expect } = require('chai');
 const debug = require('debug')('ConnectTest');
@@ -110,6 +110,20 @@ describe('test connection', () => {
       done();
     }, 30000);
 
+    play.connect();
+  });
+
+  it('test wechat', done => {
+    const play = newNorthChinaPlay('ct6');
+    play.feature = 'wechat';
+    play.on(Event.CONNECTED, () => {
+      debug('OnConnected');
+      play.disconnect();
+      done();
+    });
+    play.on(Event.CONNECT_FAILED, error => {
+      debug(`OnConnectFailed: ${error}`);
+    });
     play.connect();
   });
 });
