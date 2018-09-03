@@ -4,11 +4,13 @@ import Player from '../Player';
 import LobbyRoom from '../LobbyRoom';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
+import PlayState from '../PlayState';
 
 const debug = d('Play:MasterHandler');
 
 // 连接建立
 function handleSessionOpen(play, msg) {
+  play._playState = PlayState.LOBBY_OPEN;
   play._sessionToken = msg.st;
   const player = new Player(play);
   player._userId = play.userId;

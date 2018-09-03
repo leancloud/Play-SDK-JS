@@ -6,7 +6,7 @@ const debug = require('debug')('ConnectTest');
 
 describe('test connection', () => {
   it('test connect', done => {
-    const play = newPlay('hello0');
+    const play = newPlay('tc0');
     play.on(Event.CONNECTED, () => {
       debug('OnConnected');
       play.disconnect();
@@ -19,8 +19,8 @@ describe('test connection', () => {
   });
 
   it('test connect with same id', done => {
-    const play1 = newPlay('hello1');
-    const play2 = newPlay('hello1');
+    const play1 = newPlay('tc1');
+    const play2 = newPlay('tc1');
     play1.on(Event.CONNECTED, () => {
       play2.connect();
     });
@@ -31,7 +31,7 @@ describe('test connection', () => {
       debug(`error code: ${error.code}`);
       if (error.code === 4102) {
         play1.disconnect();
-        play2.disconnect();
+        // play2.disconnect();
         done();
       }
     });
@@ -39,7 +39,7 @@ describe('test connection', () => {
   });
 
   it('test disconnect from master', done => {
-    const play = newPlay('hello2');
+    const play = newPlay('tc2');
     let reconnectFlag = false;
     play.on(Event.CONNECTED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
@@ -59,7 +59,7 @@ describe('test connection', () => {
   });
 
   it('test disconnect from game', done => {
-    const play = newPlay('hello3');
+    const play = newPlay('tc3');
     const roomName = 'roomname';
     play.on(Event.CONNECTED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
@@ -78,7 +78,7 @@ describe('test connection', () => {
 
   it('test connect failed', done => {
     let connectCount = 0;
-    const play = newPlay('hello4');
+    const play = newPlay('tc4');
     play.on(Event.CONNECTED, () => {
       play.disconnect();
       done();

@@ -14,6 +14,7 @@ import {
 } from './Config';
 import { adapters } from './PlayAdapter';
 import isWeapp from './Utils';
+import PlayState from './PlayState';
 
 const debug = d('Play:Play');
 
@@ -54,6 +55,9 @@ export default class Play extends EventEmitter {
     this.userId = null;
     this._room = null;
     this._player = null;
+    this._cachedRoomMsg = null;
+    // 设置连接状态
+    this._playState = PlayState.CLOSED;
   }
 
   /**
@@ -103,6 +107,10 @@ export default class Play extends EventEmitter {
     if (this.userId === null) {
       throw new Error('userId is null');
     }
+    // 判断是否是「断开」状态
+    if (this._playState !== PlayState.CLOSED) {
+      throw new Error(`play state error: ${this._playState}`);
+    }
     // 判断是否已经在等待连接
     if (this._connectTimer) {
       console.warn('waiting for connect');
@@ -138,6 +146,7 @@ export default class Play extends EventEmitter {
       masterURL = USServerURL;
     }
 
+    this._playState = PlayState.CONNECTING;
     const query = { appId: this._appId, sdkVersion: PlayVersion };
     if (isWeapp) {
       query.feature = 'wechat';
@@ -194,6 +203,12 @@ export default class Play extends EventEmitter {
    * 重新连接并自动加入房间
    */
   reconnectAndRejoin() {
+    if (this._cachedRoomMsg === null) {
+      throw new Error('no cache room info');
+    }
+    if (this._cachedRoomMsg.cid === undefined) {
+      throw new Error('not cache room name');
+    }
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
@@ -208,6 +223,13 @@ export default class Play extends EventEmitter {
    * 断开连接
    */
   disconnect() {
+    if (
+      this._playState !== PlayState.LOBBY_OPEN &&
+      this._playState !== PlayState.GAME_OPEN
+    ) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    this._playState = PlayState.CLOSING;
     this._stopKeepAlive();
     if (this._websocket) {
       this._websocket.close();
@@ -220,6 +242,9 @@ export default class Play extends EventEmitter {
    * 加入大厅，只有在 autoJoinLobby = false 时才需要调用
    */
   joinLobby() {
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'lobby',
       op: 'add',
@@ -232,6 +257,9 @@ export default class Play extends EventEmitter {
    * 离开大厅
    */
   leaveLobby() {
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'lobby',
       op: 'remove',
@@ -269,6 +297,9 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     // 缓存 GameServer 创建房间的消息体
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -303,6 +334,9 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     // 加入房间的消息体
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -324,6 +358,9 @@ export default class Play extends EventEmitter {
   rejoinRoom(roomName) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
+    }
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
     }
     this._cachedRoomMsg = {
       cmd: 'conv',
@@ -355,6 +392,9 @@ export default class Play extends EventEmitter {
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -404,6 +444,9 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     this._cachedRoomMsg = {
       cmd: 'conv',
       op: 'add',
@@ -440,6 +483,9 @@ export default class Play extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'open',
@@ -460,6 +506,9 @@ export default class Play extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'visible',
@@ -479,6 +528,9 @@ export default class Play extends EventEmitter {
     }
     if (this._room === null) {
       throw new Error('room is null');
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
     }
     const msg = {
       cmd: 'conv',
@@ -519,6 +571,9 @@ export default class Play extends EventEmitter {
     if (this._player === null) {
       throw new Error('player is null');
     }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'direct',
       i: this._getMsgId(),
@@ -534,6 +589,9 @@ export default class Play extends EventEmitter {
    * 离开房间
    */
   leaveRoom() {
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'remove',
@@ -578,6 +636,9 @@ export default class Play extends EventEmitter {
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
     }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
     const msg = {
       cmd: 'conv',
       op: 'update',
@@ -600,6 +661,9 @@ export default class Play extends EventEmitter {
     }
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
     }
     const msg = {
       cmd: 'conv',
@@ -670,6 +734,7 @@ export default class Play extends EventEmitter {
 
   // 连接至大厅服务器
   _connectToMaster(fromGame = false) {
+    this._playState = PlayState.CONNECTING;
     this._cleanup();
     this._gameToLobby = fromGame;
     const { WebSocket } = adapters;
@@ -682,6 +747,7 @@ export default class Play extends EventEmitter {
       handleLobbyMsg(this, msg);
     };
     this._websocket.onclose = evt => {
+      this._playState = PlayState.CLOSED;
       debug(`Lobby websocket closed: ${evt.code}`);
       if (evt.code === 1006) {
         // 连接失败
@@ -708,6 +774,7 @@ export default class Play extends EventEmitter {
 
   // 连接至游戏服务器
   _connectToGame() {
+    this._playState = PlayState.CONNECTING;
     this._cleanup();
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._gameServer);
@@ -719,6 +786,7 @@ export default class Play extends EventEmitter {
       handleGameMsg(this, msg);
     };
     this._websocket.onclose = evt => {
+      this._playState = PlayState.CLOSED;
       debug('Game websocket closed');
       if (evt.code === 1006) {
         // 连接失败

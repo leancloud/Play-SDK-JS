@@ -4,11 +4,13 @@ import Room from '../Room';
 import Player from '../Player';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
+import PlayState from '../PlayState';
 
 const debug = d('Play:GameHandler');
 
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {
+  play._playState = PlayState.GAME_OPEN;
   // 根据缓存加入房间的规则
   play._cachedRoomMsg.i = play._getMsgId();
   play._sendGameMessage(play._cachedRoomMsg);
