@@ -392,11 +392,11 @@ export default class Play extends EventEmitter {
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
+    }
+    if (this._playState !== PlayState.LOBBY_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
     }
     if (roomOptions !== null && !(roomOptions instanceof Object)) {
       throw new TypeError(`${roomOptions} is not a Object`);
