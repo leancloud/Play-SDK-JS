@@ -150,6 +150,7 @@ export class Room {
   readonly opened: boolean;
   readonly visible: boolean;
   readonly maxPlayerCount: number;
+  readonly master: Player;
   readonly masterId: number;
   readonly expectedUserIds: string[];
   readonly playerList: Player[];
