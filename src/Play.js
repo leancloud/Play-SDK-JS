@@ -152,9 +152,9 @@ export default class Play extends EventEmitter {
     request
       .get(masterURL)
       .query(query)
-      .end((error, response) => {
-        if (error) {
-          error(error);
+      .end((err, response) => {
+        if (err) {
+          error(err);
           // 连接失败，则增加下次连接时间间隔
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
@@ -765,8 +765,8 @@ export default class Play extends EventEmitter {
       }
       this._stopKeepAlive();
     };
-    this._websocket.onerror = error => {
-      error(error);
+    this._websocket.onerror = err => {
+      error(err);
     };
   }
 
@@ -798,8 +798,8 @@ export default class Play extends EventEmitter {
       }
       this._stopKeepAlive();
     };
-    this._websocket.onerror = error => {
-      error(error);
+    this._websocket.onerror = err => {
+      error(err);
     };
   }
 
