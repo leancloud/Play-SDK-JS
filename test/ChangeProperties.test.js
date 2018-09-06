@@ -6,7 +6,7 @@ import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 
-const debug = d('Play:ChangeProperties');
+const debug = d('Test:ChangeProperties');
 
 describe('test change properties', () => {
   it('test change room properties', done => {

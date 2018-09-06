@@ -3,7 +3,7 @@ import Event from '../src/Event';
 import { newPlay } from './Utils';
 
 const { expect } = require('chai');
-const debug = require('debug')('Play:JoinRoomTest');
+const debug = require('debug')('Test:JoinRoom');
 
 describe('test join room', () => {
   it('test join name room', done => {

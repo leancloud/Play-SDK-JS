@@ -2,7 +2,7 @@ import Event from '../src/Event';
 import { newPlay } from './Utils';
 
 const { expect } = require('chai');
-const debug = require('debug')('CreateRoomTest');
+const debug = require('debug')('Test:CreateRoom');
 
 describe('test create room', () => {
   it('test null room name', done => {

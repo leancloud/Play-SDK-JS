@@ -3,7 +3,7 @@ import Player from '../Player';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 import PlayState from '../PlayState';
-import { _debug, _error } from '../Logger';
+import { debug, error } from '../Logger';
 
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {
@@ -62,7 +62,7 @@ function handlePlayerLeftRoom(play, msg) {
 // 主机切换应答
 function handleMasterUpdated(msg) {
   if (msg.reasonCode) {
-    _error(`set master error: ${msg.reasonCode}, ${msg.detail}`);
+    error(`set master error: ${msg.reasonCode}, ${msg.detail}`);
   }
 }
 
@@ -96,7 +96,7 @@ function handleRoomVisibleChanged(play, msg) {
 // 房间属性变更应答
 function handleRoomCustomPropertiesChangedResponse(msg) {
   if (msg.reasonCode) {
-    _error(`set room properties error: ${msg.reasonCode}, ${msg.detail}`);
+    error(`set room properties error: ${msg.reasonCode}, ${msg.detail}`);
   }
 }
 
@@ -163,7 +163,7 @@ function handleEvent(play, msg) {
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  _debug(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
@@ -171,7 +171,7 @@ export default function handleGameMsg(play, message) {
           handleGameServerSessionOpen(play);
           break;
         default:
-          _error(`no handler for op: ${msg.op}`);
+          error(`no handler for op: ${msg.op}`);
           break;
       }
       break;
@@ -227,7 +227,7 @@ export default function handleGameMsg(play, message) {
           handleLeaveRoom(play);
           break;
         default:
-          _error(`no handler for game msg: ${msg.op}`);
+          error(`no handler for game msg: ${msg.op}`);
           break;
       }
       break;
@@ -246,7 +246,7 @@ export default function handleGameMsg(play, message) {
       break;
     default:
       if (msg.cmd) {
-        _error(`no handler for cmd: ${message.data}`);
+        error(`no handler for cmd: ${message.data}`);
       }
       break;
   }

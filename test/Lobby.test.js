@@ -5,7 +5,7 @@ import Region from '../src/Region';
 import { APP_ID, APP_KEY } from './Config';
 
 const { expect } = require('chai');
-const debug = require('debug')('LobbyTest');
+const debug = require('debug')('Test:Lobby');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
