@@ -1,9 +1,9 @@
 export as namespace Play;
 
 declare class EventEmitter<T> {
-  on<K extends keyof T>(event: K, listener: (payload?: T[K]) => any): this;
+  on<K extends keyof T>(event: K, listener: (payload: T[K]) => any): this;
   on(evt: string, listener: Function): this;
-  once<K extends keyof T>(event: K, listener: (payload?: T[K]) => any): this;
+  once<K extends keyof T>(event: K, listener: (payload: T[K]) => any): this;
   once(evt: string, listener: Function): this;
   off<K extends keyof T>(evt: T | string, listener?: Function): this;
   emit<K extends keyof T>(evt: T | string, ...args: any[]): boolean;
@@ -223,9 +223,7 @@ export enum CreateRoomFlag {
   MasterSetMaster = 4,
 }
 
-export function setAdapter(newAdapters: {
-  WebSocketAdapter: Function;
-}): Function;
+export function setAdapter(newAdapters: { WebSocketAdapter: Function }): void;
 
 export enum LogLevel {
   Debug = 'Debug',
@@ -234,9 +232,9 @@ export enum LogLevel {
 }
 
 export function setLogger(logger: {
-  [LogLevel.Debug]: (...any) => any;
-  [LogLevel.Warn]: (...any) => any;
-  [LogLevel.Error]: (...any) => any;
-}): Function;
+  [LogLevel.Debug]: (...args: any[]) => any;
+  [LogLevel.Warn]: (...args: any[]) => any;
+  [LogLevel.Error]: (...args: any[]) => any;
+}): void;
 
 export const play: Play;
