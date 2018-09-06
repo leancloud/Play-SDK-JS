@@ -2,7 +2,7 @@ import Event from '../src/Event';
 import { newPlay, newNorthChinaPlay } from './Utils';
 
 const { expect } = require('chai');
-const debug = require('debug')('ConnectTest');
+const debug = require('debug')('Test:Connect');
 
 describe('test connection', () => {
   it('test connect', done => {

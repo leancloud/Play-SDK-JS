@@ -226,4 +226,16 @@ export function setAdapter(newAdapters: {
   WebSocketAdapter: Function;
 }): Function;
 
+export enum LogLevel {
+  Debug = 'Debug',
+  Warn = 'Warn',
+  Error = 'Error',
+}
+
+export function setLogger(logger: {
+  [LogLevel.Debug]: (...any) => any;
+  [LogLevel.Warn]: (...any) => any;
+  [LogLevel.Error]: (...any) => any;
+}): Function;
+
 export const play: Play;

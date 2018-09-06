@@ -14,7 +14,7 @@ import {
 import { adapters } from './PlayAdapter';
 import isWeapp from './Utils';
 import PlayState from './PlayState';
-import { _debug, _warn, _error } from './Logger';
+import { debug, warn, error } from './Logger';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -111,7 +111,7 @@ export default class Play extends EventEmitter {
     }
     // 判断是否已经在等待连接
     if (this._connectTimer) {
-      _warn('waiting for connect');
+      warn('waiting for connect');
       return;
     }
 
@@ -119,7 +119,7 @@ export default class Play extends EventEmitter {
     const now = new Date().getTime();
     if (now < this._nextConnectTimestamp) {
       const waitTime = this._nextConnectTimestamp - now;
-      _debug(`wait time: ${waitTime}`);
+      debug(`wait time: ${waitTime}`);
       this._connectTimer = setTimeout(() => {
         this._connect(gameVersion);
         clearTimeout(this._connectTimer);
@@ -154,7 +154,7 @@ export default class Play extends EventEmitter {
       .query(query)
       .end((error, response) => {
         if (error) {
-          _error(error);
+          error(error);
           // 连接失败，则增加下次连接时间间隔
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
@@ -165,7 +165,7 @@ export default class Play extends EventEmitter {
           });
         } else {
           const body = JSON.parse(response.text);
-          _debug(body);
+          debug(body);
           // 重置下次允许的连接时间
           this._connectFailedCount = 0;
           this._nextConnectTimestamp = 0;
@@ -233,7 +233,7 @@ export default class Play extends EventEmitter {
       this._websocket.close();
       this._websocket = null;
     }
-    _debug(`${this.userId} disconnect.`);
+    debug(`${this.userId} disconnect.`);
   }
 
   /**
@@ -720,7 +720,7 @@ export default class Play extends EventEmitter {
       throw new TypeError(`${msg} is not an object`);
     }
     const msgData = JSON.stringify(msg);
-    _debug(`${this.userId} msg: ${msg.op} -> ${msgData}`);
+    debug(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
     // 心跳包
     this._stopKeepAlive();
@@ -738,7 +738,7 @@ export default class Play extends EventEmitter {
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._masterServer);
     this._websocket.onopen = () => {
-      _debug('Lobby websocket opened');
+      debug('Lobby websocket opened');
       this._lobbySessionOpen();
     };
     this._websocket.onmessage = msg => {
@@ -746,7 +746,7 @@ export default class Play extends EventEmitter {
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
-      _debug(`Lobby websocket closed: ${evt.code}`);
+      debug(`Lobby websocket closed: ${evt.code}`);
       if (evt.code === 1006) {
         // 连接失败
         if (this._masterServer === this._secondaryServer) {
@@ -766,7 +766,7 @@ export default class Play extends EventEmitter {
       this._stopKeepAlive();
     };
     this._websocket.onerror = error => {
-      _error(error);
+      error(error);
     };
   }
 
@@ -777,7 +777,7 @@ export default class Play extends EventEmitter {
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
-      _debug('Game websocket opened');
+      debug('Game websocket opened');
       this._gameSessionOpen();
     };
     this._websocket.onmessage = msg => {
@@ -785,7 +785,7 @@ export default class Play extends EventEmitter {
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
-      _debug('Game websocket closed');
+      debug('Game websocket closed');
       if (evt.code === 1006) {
         // 连接失败
         this.emit(Event.CONNECT_FAILED, {
@@ -799,7 +799,7 @@ export default class Play extends EventEmitter {
       this._stopKeepAlive();
     };
     this._websocket.onerror = error => {
-      _error(error);
+      error(error);
     };
   }
 

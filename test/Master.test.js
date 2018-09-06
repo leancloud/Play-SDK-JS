@@ -3,7 +3,7 @@ import Event from '../src/Event';
 import { newPlay } from './Utils';
 
 const { expect } = require('chai');
-const debug = require('debug')('MasterTest');
+const debug = require('debug')('Test:Master');
 
 describe('test master', () => {
   it('test set new master', done => {
