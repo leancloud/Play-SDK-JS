@@ -7,9 +7,9 @@ const debug = require('debug')('MasterTest');
 
 describe('test master', () => {
   it('test set new master', done => {
-    const roomName = '611';
-    const play1 = newPlay('hello1');
-    const play2 = newPlay('world1');
+    const roomName = 'tm1';
+    const play1 = newPlay('tm1_1');
+    const play2 = newPlay('tm1_2');
     let p1Flag = false;
     let p2Flag = false;
 
@@ -58,9 +58,9 @@ describe('test master', () => {
   });
 
   it('test master leave', done => {
-    const roomName = '622';
-    const play1 = newPlay('hello2');
-    const play2 = newPlay('world2');
+    const roomName = 'tm2';
+    const play1 = newPlay('tm2_1');
+    const play2 = newPlay('tm2_2');
     let newConnect = false;
 
     play1.on(Event.CONNECTED, () => {

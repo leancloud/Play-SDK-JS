@@ -1,12 +1,9 @@
-import d from 'debug';
-
 import Player from '../Player';
 import LobbyRoom from '../LobbyRoom';
 import handleErrorMsg from './ErrorHandler';
 import Event from '../Event';
 import PlayState from '../PlayState';
-
-const debug = d('Play:MasterHandler');
+import { _debug, _error } from '../Logger';
 
 // 连接建立
 function handleSessionOpen(play, msg) {
@@ -30,7 +27,7 @@ function handleSessionOpen(play, msg) {
 function handleJoinedLobby(play, msg) {
   if (msg.reasonCode) {
     const { reasonCode, detail } = msg;
-    console.error(`join lobby failed: ${reasonCode} - ${detail}`);
+    _error(`join lobby failed: ${reasonCode} - ${detail}`);
   } else {
     play._inLobby = true;
     play.emit(Event.LOBBY_JOINED);
@@ -98,7 +95,7 @@ function handleJoinGameServer(play, msg) {
 // 大厅消息处理
 export default function handleLobbyMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
+  _debug(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
@@ -106,7 +103,7 @@ export default function handleLobbyMsg(play, message) {
           handleSessionOpen(play, msg);
           break;
         default:
-          console.error(`no handler for lobby msg: ${msg.op}`);
+          _error(`no handler for lobby msg: ${msg.op}`);
           break;
       }
       break;
@@ -122,7 +119,7 @@ export default function handleLobbyMsg(play, message) {
           handleLeftLobby(play);
           break;
         default:
-          console.error(`no handler for lobby msg: ${msg.op}`);
+          _error(`no handler for lobby msg: ${msg.op}`);
           break;
       }
       break;
@@ -144,7 +141,7 @@ export default function handleLobbyMsg(play, message) {
           handleJoinGameServer(play, msg);
           break;
         default:
-          console.error(`no handler for lobby msg: ${msg.op}`);
+          _error(`no handler for lobby msg: ${msg.op}`);
           break;
       }
       break;
@@ -157,7 +154,7 @@ export default function handleLobbyMsg(play, message) {
       break;
     default:
       if (msg.cmd) {
-        console.error(`no handler for lobby msg: ${msg.cmd}`);
+        _error(`no handler for lobby msg: ${msg.cmd}`);
       }
       break;
   }
