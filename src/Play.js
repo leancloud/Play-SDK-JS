@@ -19,6 +19,7 @@ import { debug, warn, error } from './Logger';
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
 const GAME_KEEPALIVE_DURATION = 10000;
+const MAX_NO_PONG_COUNT = 3;
 
 function convertRoomOptions(roomOptions) {
   const options = {};
@@ -228,7 +229,7 @@ export default class Play extends EventEmitter {
       throw new Error(`error play state: ${this._playState}`);
     }
     this._playState = PlayState.CLOSING;
-    this._stopKeepAlive();
+    this._stopPing();
     if (this._websocket) {
       this._websocket.close();
       this._websocket = null;
@@ -723,10 +724,10 @@ export default class Play extends EventEmitter {
     debug(`${this.userId} msg: ${msg.op} -> ${msgData}`);
     this._websocket.send(msgData);
     // 心跳包
-    this._stopKeepAlive();
-    this._keepAlive = setTimeout(() => {
-      const keepAliveMsg = {};
-      this._send(keepAliveMsg, duration);
+    this._stopPing();
+    this._ping = setTimeout(() => {
+      const ping = {};
+      this._send(ping, duration);
     }, duration);
   }
 
@@ -743,6 +744,8 @@ export default class Play extends EventEmitter {
     };
     this._websocket.onmessage = msg => {
       handleLobbyMsg(this, msg);
+      this._stopPong();
+      this._startPongListener(LOBBY_KEEPALIVE_DURATION);
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
@@ -763,7 +766,8 @@ export default class Play extends EventEmitter {
         // 断开连接
         this.emit(Event.DISCONNECTED);
       }
-      this._stopKeepAlive();
+      this._stopPing();
+      this._stopPong();
     };
     this._websocket.onerror = err => {
       error(err);
@@ -782,6 +786,8 @@ export default class Play extends EventEmitter {
     };
     this._websocket.onmessage = msg => {
       handleGameMsg(this, msg);
+      this._stopPong();
+      this._startPongListener(GAME_KEEPALIVE_DURATION);
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
@@ -796,7 +802,8 @@ export default class Play extends EventEmitter {
         // 断开连接
         this.emit(Event.DISCONNECTED);
       }
-      this._stopKeepAlive();
+      this._stopPing();
+      this._stopPong();
     };
     this._websocket.onerror = err => {
       error(err);
@@ -808,11 +815,28 @@ export default class Play extends EventEmitter {
     return this._msgId;
   }
 
-  _stopKeepAlive() {
-    if (this._keepAlive) {
-      clearTimeout(this._keepAlive);
-      this._keepAlive = null;
+  _stopPing() {
+    if (this._ping) {
+      clearTimeout(this._ping);
+      this._ping = null;
     }
+  }
+
+  _stopPong() {
+    if (this._pong) {
+      clearTimeout(this._pong);
+      this._pong = null;
+    }
+  }
+
+  _startPongListener(duration) {
+    this._noPongCount = 0;
+    this._pong = setTimeout(() => {
+      this._noPongCount += 1;
+      if (this._noPongCount >= MAX_NO_PONG_COUNT) {
+        this._websocket.close();
+      }
+    }, duration);
   }
 
   _cleanup() {
