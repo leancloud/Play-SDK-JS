@@ -1,4 +1,6 @@
-const d = require('debug')('Play');
+import _debug from 'debug';
+
+const d = _debug('Play');
 
 /**
  * 日志级别
