@@ -19,7 +19,7 @@ import { debug, warn, error } from './Logger';
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
 const GAME_KEEPALIVE_DURATION = 10000;
-const MAX_NO_PONG_COUNT = 3;
+const MAX_NO_PONG_TIMES = 3;
 
 function convertRoomOptions(roomOptions) {
   const options = {};
@@ -830,13 +830,9 @@ export default class Play extends EventEmitter {
   }
 
   _startPongListener(duration) {
-    this._noPongCount = 0;
     this._pong = setTimeout(() => {
-      this._noPongCount += 1;
-      if (this._noPongCount >= MAX_NO_PONG_COUNT) {
-        this._websocket.close();
-      }
-    }, duration);
+      this._websocket.close();
+    }, duration * MAX_NO_PONG_TIMES);
   }
 
   _cleanup() {
