@@ -115,6 +115,7 @@ describe('test connection', () => {
 
   it('test wechat', done => {
     const play = newNorthChinaPlay('ct6');
+    play.feature = 'wechat';
     play.on(Event.CONNECTED, () => {
       debug('OnConnected');
       play.disconnect();

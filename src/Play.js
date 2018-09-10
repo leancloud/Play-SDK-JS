@@ -57,6 +57,8 @@ export default class Play extends EventEmitter {
     this._cachedRoomMsg = null;
     // 设置连接状态
     this._playState = PlayState.CLOSED;
+    // feature
+    this.feature = null;
   }
 
   /**
@@ -147,7 +149,10 @@ export default class Play extends EventEmitter {
 
     this._playState = PlayState.CONNECTING;
     const query = { appId: this._appId, sdkVersion: PlayVersion };
-    if (isWeapp) {
+    // 使用设置覆盖 SDK 判断的 feature
+    if (this.feature) {
+      query.feature = this.feature;
+    } else if (isWeapp) {
       query.feature = 'wechat';
     }
     request
