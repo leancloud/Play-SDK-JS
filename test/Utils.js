@@ -19,6 +19,7 @@ function newNorthChinaPlay(userId) {
     appId: 'vwDice44bmatVulkQvErSg5C-gzGzoHsz',
     appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
     region: Region.NorthChina,
+    feature: 'wechat',
   });
   play.userId = userId;
   return play;
