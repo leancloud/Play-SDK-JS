@@ -166,7 +166,7 @@ export default class Play extends EventEmitter {
           });
         } else {
           const body = JSON.parse(response.text);
-          debug(body);
+          debug(response.text);
           // 重置下次允许的连接时间
           this._connectFailedCount = 0;
           this._nextConnectTimestamp = 0;
