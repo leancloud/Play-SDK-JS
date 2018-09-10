@@ -76,9 +76,13 @@ export default class Play extends EventEmitter {
     if (!(typeof opts.region === 'number')) {
       throw new TypeError(`${opts.region} is not a number`);
     }
+    if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
+      throw new TypeError(`${opts.feature} is not a string`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
+    this._feature = opts.feature;
     this._masterServer = null;
     this._gameServer = null;
     this._msgId = 0;
@@ -147,7 +151,10 @@ export default class Play extends EventEmitter {
 
     this._playState = PlayState.CONNECTING;
     const query = { appId: this._appId, sdkVersion: PlayVersion };
-    if (isWeapp) {
+    // 使用设置覆盖 SDK 判断的 feature
+    if (this._feature) {
+      query.feature = this._feature;
+    } else if (isWeapp) {
       query.feature = 'wechat';
     }
     request
@@ -166,7 +173,7 @@ export default class Play extends EventEmitter {
           });
         } else {
           const body = JSON.parse(response.text);
-          debug(body);
+          debug(response.text);
           // 重置下次允许的连接时间
           this._connectFailedCount = 0;
           this._nextConnectTimestamp = 0;
