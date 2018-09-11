@@ -13,7 +13,7 @@ describe('test lobby', () => {
     play.init({
       appId: APP_ID,
       appKey: APP_KEY,
-      region: Region.EastChina,
+      region: Region.NorthChina,
     });
     play.userId = 'play';
     play.on(Event.CONNECTED, () => {
@@ -98,7 +98,7 @@ describe('test lobby', () => {
     play.init({
       appId: APP_ID,
       appKey: APP_KEY,
-      region: Region.EastChina,
+      region: Region.NorthChina,
     });
     play.userId = 'play';
     play.on(Event.LOBBY_JOINED, () => {

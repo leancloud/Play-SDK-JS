@@ -10,8 +10,6 @@ describe('test master', () => {
     const roomName = 'tm1';
     const play1 = newPlay('tm1_1');
     const play2 = newPlay('tm1_2');
-    let p1Flag = false;
-    let p2Flag = false;
 
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
@@ -28,12 +26,6 @@ describe('test master', () => {
     play1.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;
       expect(play1.room.masterId).to.be.equal(newMaster.actorId);
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
     });
 
     play2.on(Event.CONNECTED, () => {
@@ -46,12 +38,9 @@ describe('test master', () => {
     play2.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
+      play1.disconnect();
+      play2.disconnect();
+      done();
     });
 
     play1.connect();
@@ -61,12 +50,10 @@ describe('test master', () => {
     const roomName = 'tm2';
     const play1 = newPlay('tm2_1');
     const play2 = newPlay('tm2_2');
-    let newConnect = false;
+    let f1 = false;
+    let f2 = false;
 
     play1.on(Event.CONNECTED, () => {
-      if (newConnect) {
-        return;
-      }
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
@@ -78,7 +65,12 @@ describe('test master', () => {
       play1.leaveRoom();
     });
     play1.on(Event.ROOM_LEFT, () => {
-      newConnect = true;
+      f1 = true;
+      if (f1 && f2) {
+        play1.disconnect();
+        play2.disconnect();
+        done();
+      }
     });
 
     play2.on(Event.CONNECTED, () => {
@@ -95,11 +87,12 @@ describe('test master', () => {
     play2.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
-      setTimeout(() => {
+      f2 = true;
+      if (f1 && f2) {
         play1.disconnect();
         play2.disconnect();
         done();
-      }, 2000);
+      }
     });
 
     play1.connect();
