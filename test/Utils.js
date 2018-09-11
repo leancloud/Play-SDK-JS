@@ -7,13 +7,13 @@ function newPlay(userId) {
   play.init({
     appId: APP_ID,
     appKey: APP_KEY,
-    region: Region.EastChina,
+    region: Region.NorthChina,
   });
   play.userId = userId;
   return play;
 }
 
-function newNorthChinaPlay(userId) {
+function newWechatPlay(userId) {
   const play = new Play();
   play.init({
     appId: 'vwDice44bmatVulkQvErSg5C-gzGzoHsz',
@@ -25,4 +25,4 @@ function newNorthChinaPlay(userId) {
   return play;
 }
 
-export { newPlay, newNorthChinaPlay };
+export { newPlay, newWechatPlay };

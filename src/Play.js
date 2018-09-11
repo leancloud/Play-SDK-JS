@@ -45,20 +45,6 @@ function convertRoomOptions(roomOptions) {
  * Play 客户端类
  */
 export default class Play extends EventEmitter {
-  constructor() {
-    super();
-    /**
-     * 玩家 ID
-     * @type {string}
-     */
-    this.userId = null;
-    this._room = null;
-    this._player = null;
-    this._cachedRoomMsg = null;
-    // 设置连接状态
-    this._playState = PlayState.CLOSED;
-  }
-
   /**
    * 初始化客户端
    * @param {Object} opts
@@ -83,23 +69,12 @@ export default class Play extends EventEmitter {
     this._appKey = opts.appKey;
     this._region = opts.region;
     this._feature = opts.feature;
-    this._masterServer = null;
-    this._gameServer = null;
-    this._msgId = 0;
-    // 切换服务器状态
-    this._gameToLobby = false;
-    // 是否处于大厅
-    this._inLobby = false;
-    // 大厅房间列表
-    this._lobbyRoomList = null;
-    // 连接失败次数
-    this._connectFailedCount = 0;
-    // 下次允许的连接时间戳
-    this._nextConnectTimestamp = 0;
-    // 连接计时器
-    this._connectTimer = null;
-    // http 请求
-    this._httpReq = null;
+    /**
+     * 玩家 ID
+     * @type {string}
+     */
+    this.userId = null;
+    this.reset();
   }
 
   /**

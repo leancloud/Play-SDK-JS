@@ -1,5 +1,5 @@
 import Event from '../src/Event';
-import { newPlay, newNorthChinaPlay } from './Utils';
+import { newPlay, newWechatPlay } from './Utils';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -19,8 +19,8 @@ describe('test connection', () => {
   });
 
   it('test connect with same id', done => {
-    const play1 = newPlay('tc1');
-    const play2 = newPlay('tc1');
+    const play1 = newPlay('tc11');
+    const play2 = newPlay('tc11');
     play1.on(Event.CONNECTED, () => {
       play2.connect();
     });
@@ -114,7 +114,7 @@ describe('test connection', () => {
   });
 
   it('test wechat', done => {
-    const play = newNorthChinaPlay('ct6');
+    const play = newWechatPlay('ct6');
     play.on(Event.CONNECTED, () => {
       debug('OnConnected');
       play.disconnect();
