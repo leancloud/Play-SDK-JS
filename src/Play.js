@@ -98,6 +98,8 @@ export default class Play extends EventEmitter {
     this._nextConnectTimestamp = 0;
     // 连接计时器
     this._connectTimer = null;
+    // http 请求
+    this._httpReq = null;
   }
 
   /**
@@ -157,7 +159,7 @@ export default class Play extends EventEmitter {
     } else if (isWeapp) {
       query.feature = 'wechat';
     }
-    request
+    this._httpReq = request
       .get(masterURL)
       .query(query)
       .end((err, response) => {
@@ -242,6 +244,29 @@ export default class Play extends EventEmitter {
       this._websocket = null;
     }
     debug(`${this.userId} disconnect.`);
+  }
+
+  /**
+   * 重置
+   */
+  reset() {
+    this._room = null;
+    this._player = null;
+    this._cachedRoomMsg = null;
+    this._playState = PlayState.CLOSED;
+    this._masterServer = null;
+    this._gameServer = null;
+    this._msgId = 0;
+    this._gameToLobby = false;
+    this._inLobby = false;
+    this._lobbyRoomList = null;
+    this._connectFailedCount = 0;
+    this._nextConnectTimestamp = 0;
+    this._stopConnectTimer();
+    this._cancelHttp();
+    this._stopPing();
+    this._stopPong();
+    this._closeSocket();
   }
 
   /**
@@ -741,7 +766,7 @@ export default class Play extends EventEmitter {
   // 连接至大厅服务器
   _connectToMaster(fromGame = false) {
     this._playState = PlayState.CONNECTING;
-    this._cleanup();
+    this._closeSocket();
     this._gameToLobby = fromGame;
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._masterServer);
@@ -750,9 +775,9 @@ export default class Play extends EventEmitter {
       this._lobbySessionOpen();
     };
     this._websocket.onmessage = msg => {
-      handleLobbyMsg(this, msg);
       this._stopPong();
       this._startPongListener(LOBBY_KEEPALIVE_DURATION);
+      handleLobbyMsg(this, msg);
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
@@ -784,7 +809,7 @@ export default class Play extends EventEmitter {
   // 连接至游戏服务器
   _connectToGame() {
     this._playState = PlayState.CONNECTING;
-    this._cleanup();
+    this._closeSocket();
     const { WebSocket } = adapters;
     this._websocket = new WebSocket(this._gameServer);
     this._websocket.onopen = () => {
@@ -792,9 +817,9 @@ export default class Play extends EventEmitter {
       this._gameSessionOpen();
     };
     this._websocket.onmessage = msg => {
-      handleGameMsg(this, msg);
       this._stopPong();
       this._startPongListener(GAME_KEEPALIVE_DURATION);
+      handleGameMsg(this, msg);
     };
     this._websocket.onclose = evt => {
       this._playState = PlayState.CLOSED;
@@ -822,6 +847,13 @@ export default class Play extends EventEmitter {
     return this._msgId;
   }
 
+  _stopConnectTimer() {
+    if (this._connectTimer) {
+      clearTimeout(this._connectTimer);
+      this._connectTimer = null;
+    }
+  }
+
   _stopPing() {
     if (this._ping) {
       clearTimeout(this._ping);
@@ -842,14 +874,25 @@ export default class Play extends EventEmitter {
     }, duration * MAX_NO_PONG_TIMES);
   }
 
-  _cleanup() {
+  _cancelHttp() {
+    if (this._httpReq) {
+      this._httpReq.abort();
+    }
+  }
+
+  _closeSocket() {
     if (this._websocket) {
       this._websocket.onopen = null;
       this._websocket.onconnect = null;
       this._websocket.onmessage = null;
       this._websocket.onclose = null;
-      this._websocket.close();
-      this._websocket = null;
+      try {
+        this._websocket.close();
+      } catch (e) {
+        debug(`close socket exception: ${e}`);
+      } finally {
+        this._websocket = null;
+      }
     }
   }
 }
