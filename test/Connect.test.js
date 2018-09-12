@@ -42,15 +42,16 @@ describe('test connection', () => {
     const play = newPlay('tc2');
     let reconnectFlag = false;
     play.on(Event.CONNECTED, () => {
+      debug('play connected');
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
       play.disconnect();
-      if (reconnectFlag) {
-        done();
-      }
     });
     play.on(Event.DISCONNECTED, () => {
-      if (!reconnectFlag) {
+      debug('play disconnected');
+      if (reconnectFlag) {
+        done();
+      } else {
         play.reconnect();
         reconnectFlag = true;
       }
@@ -106,6 +107,7 @@ describe('test connection', () => {
     });
 
     setTimeout(() => {
+      debug('keep alive timeout');
       play.disconnect();
       done();
     }, 30000);

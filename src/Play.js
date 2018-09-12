@@ -15,10 +15,9 @@ import { adapters } from './PlayAdapter';
 import isWeapp from './Utils';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
-import { WSAEADDRINUSE } from 'constants';
 
 const MAX_PLAYER_COUNT = 10;
-const LOBBY_KEEPALIVE_DURATION = 120000;
+const LOBBY_KEEPALIVE_DURATION = 12000;
 const GAME_KEEPALIVE_DURATION = 10000;
 const MAX_NO_PONG_TIMES = 3;
 
@@ -119,6 +118,7 @@ export default class Play extends EventEmitter {
       const waitTime = this._nextConnectTimestamp - now;
       debug(`wait time: ${waitTime}`);
       this._connectTimer = setTimeout(() => {
+        debug('connect time out');
         this._connect(gameVersion);
         clearTimeout(this._connectTimer);
         this._connectTimer = null;
@@ -232,6 +232,8 @@ export default class Play extends EventEmitter {
     this._stopPing();
     this._closeLobbySocket();
     this._closeGameSocket();
+    this._playState = PlayState.CLOSED;
+    this.emit(Event.DISCONNECTED);
     debug(`${this.userId} disconnect.`);
   }
 
@@ -392,7 +394,7 @@ export default class Play extends EventEmitter {
       rejoin: true,
     };
     const msg = this._cachedRoomMsg;
-    this._sendGameMessage(msg);
+    this._sendLobbyMessage(msg);
   }
 
   /**
@@ -752,6 +754,7 @@ export default class Play extends EventEmitter {
     // 心跳包
     this._stopPing();
     this._ping = setTimeout(() => {
+      debug('connect time out');
       const ping = {};
       this._send(ws, ping, duration);
     }, duration);
@@ -862,6 +865,7 @@ export default class Play extends EventEmitter {
 
   _startPongListener(ws, duration) {
     this._pong = setTimeout(() => {
+      debug('connect time out');
       ws.close();
     }, duration * MAX_NO_PONG_TIMES);
   }

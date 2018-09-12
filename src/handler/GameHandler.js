@@ -6,15 +6,21 @@ import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
 
 // 连接建立后创建 / 加入房间
-function handleGameServerSessionOpen(play) {
+function handleSessionOpen(play) {
   // 根据缓存加入房间的规则
   play._cachedRoomMsg.i = play._getMsgId();
   play._sendGameMessage(play._cachedRoomMsg);
 }
 
+function handleSessionClose(play) {
+  // 收到 closed 协议后，客户端主动断开连接
+  play._closeGameSocket();
+}
+
 // 创建房间
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
+    play._playState = PlayState.LOBBY_OPEN;
     play._closeGameSocket();
     play.emit(Event.ROOM_CREATE_FAILED, {
       code: msg.reasonCode,
@@ -32,6 +38,7 @@ function handleCreatedRoom(play, msg) {
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
+    play._playState = PlayState.LOBBY_OPEN;
     play._closeGameSocket();
     play.emit(Event.ROOM_JOIN_FAILED, {
       code: msg.reasonCode,
@@ -173,7 +180,10 @@ export default function handleGameMsg(play, message) {
     case 'session':
       switch (msg.op) {
         case 'opened':
-          handleGameServerSessionOpen(play);
+          handleSessionOpen(play);
+          break;
+        case 'closed':
+          handleSessionClose(play);
           break;
         default:
           error(`no handler for op: ${msg.op}`);

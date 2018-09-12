@@ -46,6 +46,7 @@ describe('test join room', () => {
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
       setTimeout(() => {
+        debug('random timeout');
         play2.connect();
       }, 2000);
     });
@@ -168,7 +169,7 @@ describe('test join room', () => {
     });
     play1.on(Event.PLAYER_ACTIVITY_CHANGED, data => {
       const { player } = data;
-      debug(`${player.userId}'s inActivity is ${player.isActive()}`);
+      debug(`${player.userId}'s activity is ${player.isActive()}`);
     });
 
     play2.on(Event.CONNECTED, () => {
@@ -190,10 +191,12 @@ describe('test join room', () => {
         return;
       }
       setTimeout(() => {
+        debug('rejoin timeout');
         play2.disconnect();
       }, 1000);
     });
     play2.on(Event.DISCONNECTED, () => {
+      debug('play2 disconnected');
       if (!rejoin) {
         rejoin = true;
         play2.connect();
@@ -244,6 +247,7 @@ describe('test join room', () => {
         return;
       }
       setTimeout(() => {
+        debug('reconnectAndRejoin timeout');
         play2.disconnect();
       }, 1000);
     });
@@ -312,6 +316,7 @@ describe('test join room', () => {
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
       setTimeout(() => {
+        debug('random with props timeout');
         play2.connect();
       }, 2000);
     });
