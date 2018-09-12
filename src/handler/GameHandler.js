@@ -7,7 +7,6 @@ import { debug, error } from '../Logger';
 
 // 连接建立后创建 / 加入房间
 function handleGameServerSessionOpen(play) {
-  play._playState = PlayState.GAME_OPEN;
   // 根据缓存加入房间的规则
   play._cachedRoomMsg.i = play._getMsgId();
   play._sendGameMessage(play._cachedRoomMsg);
@@ -16,11 +15,14 @@ function handleGameServerSessionOpen(play) {
 // 创建房间
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
+    play._closeGameSocket();
     play.emit(Event.ROOM_CREATE_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });
   } else {
+    play._closeLobbySocket();
+    play._playState = PlayState.GAME_OPEN;
     play._room = Room._newFromJSONObject(play, msg);
     play.emit(Event.ROOM_CREATED);
     play.emit(Event.ROOM_JOINED);
@@ -30,11 +32,14 @@ function handleCreatedRoom(play, msg) {
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
+    play._closeGameSocket();
     play.emit(Event.ROOM_JOIN_FAILED, {
       code: msg.reasonCode,
       detail: msg.detail,
     });
   } else {
+    play._closeLobbySocket();
+    play._playState = PlayState.GAME_OPEN;
     play._room = Room._newFromJSONObject(play, msg);
     play.emit(Event.ROOM_JOINED);
   }
@@ -163,7 +168,7 @@ function handleEvent(play, msg) {
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Game  msg: ${msg.op} <- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
