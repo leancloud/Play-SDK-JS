@@ -17,7 +17,7 @@ import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
 
 const MAX_PLAYER_COUNT = 10;
-const LOBBY_KEEPALIVE_DURATION = 12000;
+const LOBBY_KEEPALIVE_DURATION = 120000;
 const GAME_KEEPALIVE_DURATION = 10000;
 const MAX_NO_PONG_TIMES = 3;
 
@@ -230,6 +230,7 @@ export default class Play extends EventEmitter {
     }
     this._playState = PlayState.CLOSING;
     this._stopPing();
+    this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
     this._playState = PlayState.CLOSED;
@@ -754,7 +755,7 @@ export default class Play extends EventEmitter {
     // 心跳包
     this._stopPing();
     this._ping = setTimeout(() => {
-      debug('connect time out');
+      debug('ping time out');
       const ping = {};
       this._send(ws, ping, duration);
     }, duration);
@@ -858,14 +859,16 @@ export default class Play extends EventEmitter {
 
   _stopPong() {
     if (this._pong) {
+      debug('stop pong');
       clearTimeout(this._pong);
       this._pong = null;
     }
   }
 
   _startPongListener(ws, duration) {
+    debug('start pong');
     this._pong = setTimeout(() => {
-      debug('connect time out');
+      debug('pong time out');
       ws.close();
     }, duration * MAX_NO_PONG_TIMES);
   }
