@@ -266,7 +266,6 @@ export default class Play extends EventEmitter {
     this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
-    // this._closeSocket();
   }
 
   /**
@@ -739,31 +738,28 @@ export default class Play extends EventEmitter {
 
   // 发送大厅消息
   _sendLobbyMessage(msg) {
-    const msgData = JSON.stringify(msg);
-    debug(`${this.userId} Lobby msg: ${msg.op} -> ${msgData}`);
-    this._send(this._lobbyWS, msg, LOBBY_KEEPALIVE_DURATION);
+    this._send(this._lobbyWS, msg, 'Lobby', LOBBY_KEEPALIVE_DURATION);
   }
 
   // 发送房间消息
   _sendGameMessage(msg) {
-    const msgData = JSON.stringify(msg);
-    debug(`${this.userId} Game  msg: ${msg.op} -> ${msgData}`);
-    this._send(this._gameWS, msg, GAME_KEEPALIVE_DURATION);
+    this._send(this._gameWS, msg, 'Game ', GAME_KEEPALIVE_DURATION);
   }
 
   // 发送消息
-  _send(ws, msg, duration) {
+  _send(ws, msg, flag, duration) {
     if (!(typeof msg === 'object')) {
       throw new TypeError(`${msg} is not an object`);
     }
     const msgData = JSON.stringify(msg);
+    debug(`${this.userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
     ws.send(msgData);
     // 心跳包
     this._stopPing();
     this._ping = setTimeout(() => {
       debug('ping time out');
       const ping = {};
-      this._send(ws, ping, duration);
+      this._send(ws, ping, flag, duration);
     }, duration);
   }
 

@@ -14,7 +14,7 @@ function handleSessionOpen(play) {
 
 function handleSessionClose(play) {
   // 收到 closed 协议后，客户端主动断开连接
-  // play._closeGameSocket(true);
+  play._closeGameSocket();
 }
 
 // 创建房间
@@ -188,7 +188,7 @@ function handleEvent(play, msg) {
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Game  msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Game  msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
