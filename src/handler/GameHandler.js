@@ -6,10 +6,20 @@ import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
 
 // 连接建立后创建 / 加入房间
-function handleSessionOpen(play) {
-  // 根据缓存加入房间的规则
-  play._cachedRoomMsg.i = play._getMsgId();
-  play._sendGameMessage(play._cachedRoomMsg);
+function handleSessionOpen(play, msg) {
+  if (msg.reasonCode) {
+    play._playState = PlayState.LOBBY_OPEN;
+    play._closeGameSocket(() => {
+      play.emit(Event.ERROR, {
+        code: msg.reasonCode,
+        detail: msg.detail,
+      });
+    });
+  } else {
+    // 根据缓存加入房间的规则
+    play._cachedRoomMsg.i = play._getMsgId();
+    play._sendGameMessage(play._cachedRoomMsg);
+  }
 }
 
 function handleSessionClose(play) {
@@ -193,7 +203,7 @@ export default function handleGameMsg(play, message) {
     case 'session':
       switch (msg.op) {
         case 'opened':
-          handleSessionOpen(play);
+          handleSessionOpen(play, msg);
           break;
         case 'closed':
           handleSessionClose(play);
