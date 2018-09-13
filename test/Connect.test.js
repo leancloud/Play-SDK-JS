@@ -21,17 +21,27 @@ describe('test connection', () => {
   it('test connect with same id', done => {
     const play1 = newPlay('tc11');
     const play2 = newPlay('tc11');
+    let f1 = false;
+    let f2 = false;
     play1.on(Event.CONNECTED, () => {
       play2.connect();
     });
+    play1.on(Event.ERROR, err => {
+      const { code, detail } = err;
+      debug(`${code}, ${detail}`);
+      if (code === 4102) {
+        f1 = true;
+        if (f1 && f2) {
+          play2.disconnect();
+          done();
+        }
+      }
+    });
     play2.on(Event.CONNECTED, () => {
       debug('play2 connected');
-    });
-    play2.on(Event.ERROR, error => {
-      debug(`error code: ${error.code}`);
-      if (error.code === 4102) {
-        play1.disconnect();
-        // play2.disconnect();
+      f2 = true;
+      if (f1 && f2) {
+        play2.disconnect();
         done();
       }
     });
@@ -42,15 +52,16 @@ describe('test connection', () => {
     const play = newPlay('tc2');
     let reconnectFlag = false;
     play.on(Event.CONNECTED, () => {
+      debug('play connected');
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);
       play.disconnect();
-      if (reconnectFlag) {
-        done();
-      }
     });
     play.on(Event.DISCONNECTED, () => {
-      if (!reconnectFlag) {
+      debug('play disconnected');
+      if (reconnectFlag) {
+        done();
+      } else {
         play.reconnect();
         reconnectFlag = true;
       }
@@ -106,6 +117,7 @@ describe('test connection', () => {
     });
 
     setTimeout(() => {
+      debug('keep alive timeout');
       play.disconnect();
       done();
     }, 30000);

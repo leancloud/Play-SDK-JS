@@ -6,37 +6,53 @@ import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
 
 // 连接建立后创建 / 加入房间
-function handleGameServerSessionOpen(play) {
-  play._playState = PlayState.GAME_OPEN;
+function handleSessionOpen(play) {
   // 根据缓存加入房间的规则
   play._cachedRoomMsg.i = play._getMsgId();
   play._sendGameMessage(play._cachedRoomMsg);
 }
 
+function handleSessionClose(play) {
+  // 收到 closed 协议后，客户端主动断开连接
+  play._closeGameSocket();
+}
+
 // 创建房间
 function handleCreatedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.ROOM_CREATE_FAILED, {
-      code: msg.reasonCode,
-      detail: msg.detail,
+    play._playState = PlayState.LOBBY_OPEN;
+    play._closeGameSocket(() => {
+      play.emit(Event.ROOM_CREATE_FAILED, {
+        code: msg.reasonCode,
+        detail: msg.detail,
+      });
     });
   } else {
-    play._room = Room._newFromJSONObject(play, msg);
-    play.emit(Event.ROOM_CREATED);
-    play.emit(Event.ROOM_JOINED);
+    play._closeLobbySocket(() => {
+      play._playState = PlayState.GAME_OPEN;
+      play._room = Room._newFromJSONObject(play, msg);
+      play.emit(Event.ROOM_CREATED);
+      play.emit(Event.ROOM_JOINED);
+    });
   }
 }
 
 // 加入房间
 function handleJoinedRoom(play, msg) {
   if (msg.reasonCode) {
-    play.emit(Event.ROOM_JOIN_FAILED, {
-      code: msg.reasonCode,
-      detail: msg.detail,
+    play._playState = PlayState.LOBBY_OPEN;
+    play._closeGameSocket(() => {
+      play.emit(Event.ROOM_JOIN_FAILED, {
+        code: msg.reasonCode,
+        detail: msg.detail,
+      });
     });
   } else {
-    play._room = Room._newFromJSONObject(play, msg);
-    play.emit(Event.ROOM_JOINED);
+    play._closeLobbySocket(() => {
+      play._playState = PlayState.GAME_OPEN;
+      play._room = Room._newFromJSONObject(play, msg);
+      play.emit(Event.ROOM_JOINED);
+    });
   }
 }
 
@@ -68,6 +84,12 @@ function handleMasterUpdated(msg) {
 
 // 主机切换
 function handleMasterChanged(play, msg) {
+  if (play === null) {
+    debug('play is null');
+  } else if (play._room === null) {
+    debug('play _room is null');
+    debug(play.userId);
+  }
   play._room._masterActorId = msg.masterActorId;
   const newMaster = play._room.getPlayer(msg.masterActorId);
   play.emit(Event.MASTER_SWITCHED, {
@@ -149,7 +171,10 @@ function handleLeaveRoom(play) {
   // 清理工作
   play._room = null;
   play._player = null;
-  play._connectToMaster(true);
+  // 离开房间时就主动断开连接
+  play._closeGameSocket(() => {
+    play._connectToMaster(true);
+  });
 }
 
 // 自定义事件
@@ -163,12 +188,15 @@ function handleEvent(play, msg) {
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Game msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Game  msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
         case 'opened':
-          handleGameServerSessionOpen(play);
+          handleSessionOpen(play);
+          break;
+        case 'closed':
+          handleSessionClose(play);
           break;
         default:
           error(`no handler for op: ${msg.op}`);

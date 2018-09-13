@@ -95,7 +95,7 @@ function handleJoinGameServer(play, msg) {
 // 大厅消息处理
 export default function handleLobbyMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Lobby msg: ${msg.op} <- ${message.data}`);
+  debug(`${play.userId} Lobby msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
