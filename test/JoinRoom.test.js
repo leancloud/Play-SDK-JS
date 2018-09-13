@@ -231,34 +231,30 @@ describe('test join room', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
-    });
-    play2.on(Event.CONNECTED, () => {
       if (!reconnect) {
         play2.joinRoom(roomName);
       }
     });
     play2.on(Event.ROOM_JOINED, () => {
+      debug('play2 room joined');
       expect(play2.room.name).to.be.equal(roomName);
       if (reconnect) {
         play1.disconnect();
         play2.disconnect();
         done();
-        return;
-      }
-      setTimeout(() => {
-        debug('reconnectAndRejoin timeout');
+      } else {
         play2.disconnect();
-      }, 1000);
+      }
     });
     play2.on(Event.DISCONNECTED, () => {
+      debug('play2 disconnected');
       if (!reconnect) {
         reconnect = true;
         play2.reconnectAndRejoin();
       }
     });
     play2.on(Event.ROOM_LEFT, () => {
-      debug('OnLeftRoom');
+      debug('on left room');
     });
 
     play1.connect();
@@ -276,11 +272,12 @@ describe('test join room', () => {
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName2);
+      play2.connect();
     });
 
     play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName2);
     });
     play2.on(Event.ROOM_JOIN_FAILED, () => {
       play1.disconnect();
@@ -289,7 +286,6 @@ describe('test join room', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test join random room with match properties', done => {

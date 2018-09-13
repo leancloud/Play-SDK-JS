@@ -19,10 +19,6 @@ describe('test master', () => {
       expect(play1.room.name).to.be.equal(roomName);
       play2.connect();
     });
-    play1.on(Event.PLAYER_ROOM_JOINED, data => {
-      const { newPlayer } = data;
-      play1.setMaster(newPlayer.actorId);
-    });
     play1.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;
       expect(play1.room.masterId).to.be.equal(newMaster.actorId);
@@ -34,6 +30,7 @@ describe('test master', () => {
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
+      play1.setMaster(play2.player.actorId);
     });
     play2.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;

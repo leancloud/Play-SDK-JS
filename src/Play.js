@@ -41,18 +41,20 @@ function convertRoomOptions(roomOptions) {
   return options;
 }
 
-function _closeSocket(websocket) {
+function _closeSocket(websocket, onClose) {
   const ws = websocket;
   if (ws) {
     ws.onopen = null;
     ws.onconnect = null;
     ws.onmessage = null;
-    ws.onclose = null;
+    ws.onclose = onClose;
     try {
       ws.close();
     } catch (e) {
       debug(`close socket exception: ${e}`);
     }
+  } else if (onClose) {
+    onClose();
   }
 }
 
@@ -231,11 +233,15 @@ export default class Play extends EventEmitter {
     this._playState = PlayState.CLOSING;
     this._stopPing();
     this._stopPong();
-    this._closeLobbySocket();
-    this._closeGameSocket();
-    this._playState = PlayState.CLOSED;
-    this.emit(Event.DISCONNECTED);
-    debug(`${this.userId} disconnect.`);
+    this._closeLobbySocket(() => {
+      debug('on close lobby socket');
+      this._closeGameSocket(() => {
+        debug('on close game socket');
+        this._playState = PlayState.CLOSED;
+        this.emit(Event.DISCONNECTED);
+        debug(`${this.userId} disconnect.`);
+      });
+    });
   }
 
   /**
@@ -859,16 +865,13 @@ export default class Play extends EventEmitter {
 
   _stopPong() {
     if (this._pong) {
-      debug('stop pong');
       clearTimeout(this._pong);
       this._pong = null;
     }
   }
 
   _startPongListener(ws, duration) {
-    debug('start pong');
     this._pong = setTimeout(() => {
-      debug('pong time out');
       ws.close();
     }, duration * MAX_NO_PONG_TIMES);
   }
@@ -879,11 +882,13 @@ export default class Play extends EventEmitter {
     }
   }
 
-  _closeLobbySocket() {
-    _closeSocket(this._lobbyWS);
+  _closeLobbySocket(onClose) {
+    _closeSocket(this._lobbyWS, onClose);
+    this._lobbyWS = null;
   }
 
-  _closeGameSocket() {
-    _closeSocket(this._gameWS);
+  _closeGameSocket(onClose) {
+    _closeSocket(this._gameWS, onClose);
+    this._gameWS = null;
   }
 }
