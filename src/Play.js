@@ -21,6 +21,8 @@ const LOBBY_KEEPALIVE_DURATION = 120000;
 const GAME_KEEPALIVE_DURATION = 10000;
 const MAX_NO_PONG_TIMES = 3;
 
+const { WebSocket } = adapters;
+
 function convertRoomOptions(roomOptions) {
   const options = {};
   if (!roomOptions.opened) options.open = roomOptions.opened;
@@ -753,21 +755,26 @@ export default class Play extends EventEmitter {
     }
     const msgData = JSON.stringify(msg);
     debug(`${this.userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
-    ws.send(msgData);
-    // 心跳包
-    this._stopPing();
-    this._ping = setTimeout(() => {
-      debug('ping time out');
-      const ping = {};
-      this._send(ws, ping, flag, duration);
-    }, duration);
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(msgData);
+      // 心跳包
+      this._stopPing();
+      this._ping = setTimeout(() => {
+        debug('ping time out');
+        const ping = {};
+        this._send(ws, ping, flag, duration);
+      }, duration);
+    } else {
+      this._stopPing();
+      this._stopPong();
+      this.emit(Event.DISCONNECTED);
+    }
   }
 
   // 连接至大厅服务器
   _connectToMaster(gameToLobby = false) {
     this._playState = PlayState.CONNECTING;
     this._gameToLobby = gameToLobby;
-    const { WebSocket } = adapters;
     this._lobbyWS = new WebSocket(this._masterServer);
     this._lobbyWS.onopen = () => {
       debug('Lobby websocket opened');
@@ -808,7 +815,6 @@ export default class Play extends EventEmitter {
   // 连接至游戏服务器
   _connectToGame() {
     this._playState = PlayState.CONNECTING;
-    const { WebSocket } = adapters;
     this._gameWS = new WebSocket(this._gameServer);
     this._gameWS.onopen = () => {
       debug('Game websocket opened');
