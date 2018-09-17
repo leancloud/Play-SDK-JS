@@ -753,14 +753,20 @@ export default class Play extends EventEmitter {
     }
     const msgData = JSON.stringify(msg);
     debug(`${this.userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
-    ws.send(msgData);
-    // 心跳包
-    this._stopPing();
-    this._ping = setTimeout(() => {
-      debug('ping time out');
-      const ping = {};
-      this._send(ws, ping, flag, duration);
-    }, duration);
+    const { WebSocket } = adapters;
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(msgData);
+      // 心跳包
+      this._stopPing();
+      this._ping = setTimeout(() => {
+        debug('ping time out');
+        const ping = {};
+        this._send(ws, ping, flag, duration);
+      }, duration);
+    } else {
+      this._stopPing();
+      this._stopPong();
+    }
   }
 
   // 连接至大厅服务器
