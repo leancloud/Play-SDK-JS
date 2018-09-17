@@ -766,7 +766,6 @@ export default class Play extends EventEmitter {
     } else {
       this._stopPing();
       this._stopPong();
-      this.emit(Event.DISCONNECTED);
     }
   }
 
