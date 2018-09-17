@@ -753,6 +753,7 @@ export default class Play extends EventEmitter {
     }
     const msgData = JSON.stringify(msg);
     debug(`${this.userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
+    const { WebSocket } = adapters;
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(msgData);
       // 心跳包
