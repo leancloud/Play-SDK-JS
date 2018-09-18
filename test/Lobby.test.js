@@ -1,7 +1,6 @@
 import Event from '../src/Event';
 import { newPlay } from './Utils';
 import Play from '../src/Play';
-import Region from '../src/Region';
 import { APP_ID, APP_KEY, APP_REGION } from './Config';
 
 const { expect } = require('chai');
