@@ -380,6 +380,10 @@ describe('test join room', () => {
         done();
       }
     });
+    p2.on(Event.PLAYER_ROOM_JOINED, data => {
+      const { newPlayer } = data;
+      debug(`new player ${newPlayer.userId} joined`);
+    });
 
     p3.on(Event.CONNECTED, () => {
       p3.joinRoom(roomName);
@@ -393,6 +397,10 @@ describe('test join room', () => {
         p3.disconnect();
         done();
       }
+    });
+    p3.on(Event.PLAYER_ROOM_JOINED, data => {
+      const { newPlayer } = data;
+      debug(`new player ${newPlayer.userId} joined`);
     });
 
     p1.connect();
