@@ -1,6 +1,6 @@
 {
   "name": "@leancloud/play",
-  "version": "0.13.22",
+  "version": "0.13.23",
   "description": "LeanCloud Play SDK",
   "main": "dist/play-node.js",
   "scripts": {
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@leeyeh/jsdoc-rtd": "^1.0.14",
+    "@types/node": "~10.9",
     "babel-cli": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-runtime": "^6.23.0",

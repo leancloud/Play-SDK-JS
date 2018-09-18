@@ -784,10 +784,9 @@ export default class Play extends EventEmitter {
       this._startPongListener(this._lobbyWS, LOBBY_KEEPALIVE_DURATION);
       handleLobbyMsg(this, msg);
     };
-    this._lobbyWS.onclose = evt => {
-      this._playState = PlayState.CLOSED;
-      debug(`Lobby websocket closed: ${evt.code}`);
-      if (evt.code === 1006) {
+    this._lobbyWS.onclose = () => {
+      debug('Lobby websocket closed');
+      if (this._playState === PlayState.CONNECTING) {
         // 连接失败
         if (this._masterServer === this._secondaryServer) {
           this.emit(Event.CONNECT_FAILED, {
@@ -801,6 +800,7 @@ export default class Play extends EventEmitter {
         }
       } else {
         // 断开连接
+        this._playState = PlayState.CLOSED;
         this.emit(Event.DISCONNECTED);
       }
       this._stopPing();
@@ -825,10 +825,9 @@ export default class Play extends EventEmitter {
       this._startPongListener(this._gameWS, GAME_KEEPALIVE_DURATION);
       handleGameMsg(this, msg);
     };
-    this._gameWS.onclose = evt => {
-      this._playState = PlayState.CLOSED;
+    this._gameWS.onclose = () => {
       debug('Game websocket closed');
-      if (evt.code === 1006) {
+      if (this._playState === PlayState.CONNECTING) {
         // 连接失败
         this.emit(Event.CONNECT_FAILED, {
           code: -2,
@@ -836,6 +835,7 @@ export default class Play extends EventEmitter {
         });
       } else {
         // 断开连接
+        this._playState = PlayState.CLOSED;
         this.emit(Event.DISCONNECTED);
       }
       this._stopPing();
