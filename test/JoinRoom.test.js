@@ -350,4 +350,51 @@ describe('test join room', () => {
 
     play1.connect();
   });
+
+  it('test join room concurrently', done => {
+    const roomName = 'tjr_room8';
+    const p1 = newPlay('p1');
+    const p2 = newPlay('p2');
+    const p3 = newPlay('p3');
+    let f2 = false;
+    let f3 = false;
+
+    p1.on(Event.CONNECTED, () => {
+      p1.createRoom({ roomName });
+    });
+    p1.on(Event.ROOM_JOINED, () => {
+      p2.connect();
+      p3.connect();
+    });
+
+    p2.on(Event.CONNECTED, () => {
+      p2.joinRoom(roomName);
+    });
+    p2.on(Event.ROOM_JOINED, () => {
+      debug('p2 joined');
+      f2 = true;
+      if (f2 && f3) {
+        p1.disconnect();
+        p2.disconnect();
+        p3.disconnect();
+        done();
+      }
+    });
+
+    p3.on(Event.CONNECTED, () => {
+      p3.joinRoom(roomName);
+    });
+    p3.on(Event.ROOM_JOINED, () => {
+      debug('p3 joined');
+      f3 = true;
+      if (f2 && f3) {
+        p1.disconnect();
+        p2.disconnect();
+        p3.disconnect();
+        done();
+      }
+    });
+
+    p1.connect();
+  });
 });

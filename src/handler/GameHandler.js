@@ -38,9 +38,9 @@ function handleCreatedRoom(play, msg) {
       });
     });
   } else {
+    play._playState = PlayState.GAME_OPEN;
+    play._room = Room._newFromJSONObject(play, msg);
     play._closeLobbySocket(() => {
-      play._playState = PlayState.GAME_OPEN;
-      play._room = Room._newFromJSONObject(play, msg);
       play.emit(Event.ROOM_CREATED);
       play.emit(Event.ROOM_JOINED);
     });
@@ -58,9 +58,9 @@ function handleJoinedRoom(play, msg) {
       });
     });
   } else {
+    play._playState = PlayState.GAME_OPEN;
+    play._room = Room._newFromJSONObject(play, msg);
     play._closeLobbySocket(() => {
-      play._playState = PlayState.GAME_OPEN;
-      play._room = Room._newFromJSONObject(play, msg);
       play.emit(Event.ROOM_JOINED);
     });
   }
