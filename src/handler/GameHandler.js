@@ -38,12 +38,11 @@ function handleCreatedRoom(play, msg) {
       });
     });
   } else {
-    play._closeLobbySocket(() => {
-      play._playState = PlayState.GAME_OPEN;
-      play._room = Room._newFromJSONObject(play, msg);
-      play.emit(Event.ROOM_CREATED);
-      play.emit(Event.ROOM_JOINED);
-    });
+    play._playState = PlayState.GAME_OPEN;
+    play._room = Room._newFromJSONObject(play, msg);
+    play.emit(Event.ROOM_CREATED);
+    play.emit(Event.ROOM_JOINED);
+    play._closeLobbySocket();
   }
 }
 
@@ -58,11 +57,10 @@ function handleJoinedRoom(play, msg) {
       });
     });
   } else {
-    play._closeLobbySocket(() => {
-      play._playState = PlayState.GAME_OPEN;
-      play._room = Room._newFromJSONObject(play, msg);
-      play.emit(Event.ROOM_JOINED);
-    });
+    play._playState = PlayState.GAME_OPEN;
+    play._room = Room._newFromJSONObject(play, msg);
+    play.emit(Event.ROOM_JOINED);
+    play._closeLobbySocket();
   }
 }
 
