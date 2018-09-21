@@ -16,6 +16,7 @@ import { adapters } from './PlayAdapter';
 import isWeapp from './Utils';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
+import SignatureUtils from './SignatureUtils';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -66,10 +67,11 @@ export default class Play extends EventEmitter {
   /**
    * 初始化客户端
    * @param {Object} opts
-   * @param {String} opts.appId APP ID
-   * @param {String} opts.appKey APP KEY
-   * @param {Number} opts.region 节点地区
+   * @param {string} opts.appId APP ID
+   * @param {string} opts.appKey APP KEY
+   * @param {number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl
+   * @param {Object} opts.signFactory 签名工厂
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -87,6 +89,12 @@ export default class Play extends EventEmitter {
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
       throw new TypeError(`${opts.feature} is not a boolean`);
     }
+    if (
+      opts.signFactory !== undefined &&
+      !(typeof opts.signFactory === 'object')
+    ) {
+      throw new TypeError(`${opts.signFactory} is not an object`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
@@ -94,6 +102,8 @@ export default class Play extends EventEmitter {
     if (opts.ssl === false) {
       this._insecure = true;
     }
+    // 初始化签名工具
+    SignatureUtils.init(opts.signFactory);
     /**
      * 玩家 ID
      * @type {string}
@@ -278,6 +288,7 @@ export default class Play extends EventEmitter {
     this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
+    SignatureUtils.abort();
   }
 
   /**
@@ -751,30 +762,61 @@ export default class Play extends EventEmitter {
 
   // 开始大厅会话
   _lobbySessionOpen() {
-    const msg = {
-      cmd: 'session',
-      op: 'open',
-      i: this._getMsgId(),
-      appId: this._appId,
-      peerId: this.userId,
-      sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
-    };
-    this._sendLobbyMessage(msg);
+    SignatureUtils.getSignature()
+      .then((nonce, timestamp, signature) => {
+        const msg = {
+          cmd: 'session',
+          op: 'open',
+          i: this._getMsgId(),
+          appId: this._appId,
+          peerId: this.userId,
+          sdkVersion: PlayVersion,
+          gameVersion: this._gameVersion,
+          n: nonce,
+          t: timestamp,
+          s: signature,
+        };
+        this._sendLobbyMessage(msg);
+      })
+      .catch(err => {
+        // 签名失败
+        this._closeLobbySocket(() => {
+          this.emit(Event.ERROR, {
+            code: err.code,
+            detail: err.message,
+          });
+        });
+      });
   }
 
   // 开始房间会话
   _gameSessionOpen() {
-    const msg = {
-      cmd: 'session',
-      op: 'open',
-      i: this._getMsgId(),
-      appId: this._appId,
-      peerId: this.userId,
-      sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
-    };
-    this._sendGameMessage(msg);
+    SignatureUtils.getSignature()
+      .then((nonce, timestamp, signature) => {
+        const msg = {
+          cmd: 'session',
+          op: 'open',
+          i: this._getMsgId(),
+          appId: this._appId,
+          peerId: this.userId,
+          sdkVersion: PlayVersion,
+          gameVersion: this._gameVersion,
+          n: nonce,
+          t: timestamp,
+          s: signature,
+        };
+        this._sendGameMessage(msg);
+      })
+      .catch(err => {
+        // 签名失败
+        this._playState = PlayState.LOBBY_OPEN;
+        this._closeGameSocket(() => {
+          this.emit(Event.ERROR, {
+            code: err.code,
+            detail: err.message,
+          });
+        });
+      });
   }
 
   // 发送大厅消息
