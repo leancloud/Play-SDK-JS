@@ -763,7 +763,7 @@ export default class Play extends EventEmitter {
   // 开始大厅会话
   _lobbySessionOpen() {
     SignatureUtils.getSignature()
-      .then((nonce, timestamp, signature) => {
+      .then(sign => {
         const msg = {
           cmd: 'session',
           op: 'open',
@@ -772,14 +772,20 @@ export default class Play extends EventEmitter {
           peerId: this.userId,
           sdkVersion: PlayVersion,
           gameVersion: this._gameVersion,
-          n: nonce,
-          t: timestamp,
-          s: signature,
         };
+        if (sign) {
+          const { nonce, timestamp, signature } = sign;
+          Object.assign(msg, {
+            n: nonce,
+            t: timestamp,
+            s: signature,
+          });
+        }
         this._sendLobbyMessage(msg);
       })
       .catch(err => {
         // 签名失败
+        this._playState = PlayState.CLOSED;
         this._closeLobbySocket(() => {
           this.emit(Event.ERROR, {
             code: err.code,
@@ -792,7 +798,7 @@ export default class Play extends EventEmitter {
   // 开始房间会话
   _gameSessionOpen() {
     SignatureUtils.getSignature()
-      .then((nonce, timestamp, signature) => {
+      .then(sign => {
         const msg = {
           cmd: 'session',
           op: 'open',
@@ -801,10 +807,15 @@ export default class Play extends EventEmitter {
           peerId: this.userId,
           sdkVersion: PlayVersion,
           gameVersion: this._gameVersion,
-          n: nonce,
-          t: timestamp,
-          s: signature,
         };
+        if (sign) {
+          const { nonce, timestamp, signature } = sign;
+          Object.assign(msg, {
+            n: nonce,
+            t: timestamp,
+            s: signature,
+          });
+        }
         this._sendGameMessage(msg);
       })
       .catch(err => {
