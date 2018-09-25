@@ -7,19 +7,29 @@ import { debug, error } from '../Logger';
 
 // 连接建立
 function handleSessionOpen(play, msg) {
-  play._playState = PlayState.LOBBY_OPEN;
-  play._sessionToken = msg.st;
-  const player = new Player(play);
-  player._userId = play.userId;
-  play._player = player;
-  if (play.autoJoinLobby) {
-    play.joinLobby();
-  }
-  if (play._gameToLobby) {
-    play.emit(Event.ROOM_LEFT);
-    play._gameToLobby = false;
+  if (msg.reasonCode) {
+    play._playState = PlayState.CLOSED;
+    play._closeLobbySocket(() => {
+      play.emit(Event.CONNECT_FAILED, {
+        code: msg.reasonCode,
+        detail: msg.detail,
+      });
+    });
   } else {
-    play.emit(Event.CONNECTED);
+    play._playState = PlayState.LOBBY_OPEN;
+    play._sessionToken = msg.st;
+    const player = new Player(play);
+    player._userId = play.userId;
+    play._player = player;
+    if (play.autoJoinLobby) {
+      play.joinLobby();
+    }
+    if (play._gameToLobby) {
+      play.emit(Event.ROOM_LEFT);
+      play._gameToLobby = false;
+    } else {
+      play.emit(Event.CONNECTED);
+    }
   }
 }
 

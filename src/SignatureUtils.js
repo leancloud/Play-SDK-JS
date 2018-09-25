@@ -30,13 +30,17 @@ const SignatureUtils = {
   getSignature: () =>
     new Promise((resolve, reject) => {
       if (_signFactory === null) {
-        resolve(null, 0, null);
+        resolve(null);
       } else {
         const now = new Date().getTime();
         const delta = now - this._signTimestamp;
         // 判断签名是否过期
         if (delta < SIGNATURE_TIMEOUT) {
-          resolve(_nonce, _timestamp, _signature);
+          resolve({
+            nonce: _nonce,
+            timestamp: _timestamp,
+            signature: _signature,
+          });
         } else {
           _signFactory
             .loginSignature()
@@ -45,7 +49,11 @@ const SignatureUtils = {
               _nonce = sign.nonce;
               _timestamp = sign.timestamp;
               _signature = sign.signature;
-              resolve(_nonce, _timestamp, _signature);
+              resolve({
+                nonce: _nonce,
+                timestamp: _timestamp,
+                signature: _signature,
+              });
             })
             .catch(e => {
               reject(e);
