@@ -10,61 +10,65 @@ let _signFactory = null;
 /**
  * 签名工具
  */
-const SignatureUtils = {
-  init: signFactory => {
-    if (signFactory.loginSignature === undefined) {
-      throw new Error('signFactory.loginSignature is undefined');
-    }
-    if (typeof signFactory.loginSignature !== 'function') {
-      throw new TypeError('signFactory.loginSignature is not a function');
-    }
-    if (signFactory.abort === undefined) {
-      throw new Error('signFactory.abort is undefined');
-    }
-    if (typeof signFactory.abort !== 'function') {
-      throw new TypeError('signFactory.abort is not a function');
-    }
-    _signFactory = signFactory;
-  },
 
-  getSignature: () =>
-    new Promise((resolve, reject) => {
-      if (_signFactory === null) {
-        resolve(null);
+function init(signFactory) {
+  if (signFactory.loginSignature === undefined) {
+    throw new Error('signFactory.loginSignature is undefined');
+  }
+  if (typeof signFactory.loginSignature !== 'function') {
+    throw new TypeError('signFactory.loginSignature is not a function');
+  }
+  if (signFactory.abort === undefined) {
+    throw new Error('signFactory.abort is undefined');
+  }
+  if (typeof signFactory.abort !== 'function') {
+    throw new TypeError('signFactory.abort is not a function');
+  }
+  _signFactory = signFactory;
+}
+
+function getSignature() {
+  return new Promise((resolve, reject) => {
+    if (_signFactory === null) {
+      resolve(null);
+    } else {
+      const now = new Date().getTime();
+      const delta = now - this._signTimestamp;
+      // 判断签名是否过期
+      if (delta < SIGNATURE_TIMEOUT) {
+        resolve({
+          nonce: _nonce,
+          timestamp: _timestamp,
+          signature: _signature,
+        });
       } else {
-        const now = new Date().getTime();
-        const delta = now - this._signTimestamp;
-        // 判断签名是否过期
-        if (delta < SIGNATURE_TIMEOUT) {
-          resolve({
-            nonce: _nonce,
-            timestamp: _timestamp,
-            signature: _signature,
-          });
-        } else {
-          _signFactory
-            .loginSignature()
-            .then(sign => {
-              // 缓存签名
-              _nonce = sign.nonce;
-              _timestamp = sign.timestamp;
-              _signature = sign.signature;
-              resolve({
-                nonce: _nonce,
-                timestamp: _timestamp,
-                signature: _signature,
-              });
-            })
-            .catch(e => {
-              reject(e);
+        _signFactory
+          .loginSignature()
+          .then(sign => {
+            // 缓存签名
+            _nonce = sign.nonce;
+            _timestamp = sign.timestamp;
+            _signature = sign.signature;
+            resolve({
+              nonce: _nonce,
+              timestamp: _timestamp,
+              signature: _signature,
             });
-        }
+          })
+          .catch(e => {
+            reject(e);
+          });
       }
-    }),
+    }
+  });
+}
 
-  abort: () => {
-    _signFactory.abort();
-  },
+function abort() {
+  _signFactory.abort();
+}
+
+export default {
+  init,
+  getSignature,
+  abort,
 };
-
-export default SignatureUtils;
