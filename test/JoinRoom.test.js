@@ -7,9 +7,9 @@ const debug = require('debug')('Test:JoinRoom');
 
 describe('test join room', () => {
   it('test join name room', done => {
-    const roomName = '211';
-    const play1 = newPlay('hello');
-    const play2 = newPlay('world');
+    const roomName = 'jr_1_r';
+    const play1 = newPlay('jr_1_1');
+    const play2 = newPlay('jr_1_2');
 
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
@@ -148,9 +148,9 @@ describe('test join room', () => {
   });
 
   it('test rejoin room', done => {
-    const roomName = '235';
-    const play1 = newPlay('hello5');
-    const play2 = newPlay('world5');
+    const roomName = 'jr_5_r';
+    const play1 = newPlay('jr_5_1');
+    const play2 = newPlay('jr_5_2');
     let rejoin = false;
 
     play1.on(Event.CONNECTED, () => {
@@ -210,9 +210,9 @@ describe('test join room', () => {
   });
 
   it('test reconnectAndRejoin room', done => {
-    const roomName = '216';
-    const play1 = newPlay('hello6');
-    const play2 = newPlay('world6');
+    const roomName = 'jr_6_r';
+    const play1 = newPlay('jr_6_1');
+    const play2 = newPlay('jr_6_2');
     let reconnect = false;
 
     play1.on(Event.CONNECTED, () => {

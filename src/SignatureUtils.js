@@ -64,7 +64,9 @@ function getSignature() {
 }
 
 function abort() {
-  _signFactory.abort();
+  if (_signFactory) {
+    _signFactory.abort();
+  }
 }
 
 export default {

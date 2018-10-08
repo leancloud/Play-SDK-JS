@@ -101,9 +101,9 @@ describe('test create room', () => {
   });
 
   it('test isMaster or isLocal', done => {
-    const roomName = '116';
-    const play1 = newPlay('hello6');
-    const play2 = newPlay('world6');
+    const roomName = 'cr_6_r';
+    const play1 = newPlay('cr_6_1');
+    const play2 = newPlay('cr_6_2');
 
     play1.on(Event.CONNECTED, () => {
       play1.createRoom({ roomName });
@@ -123,6 +123,7 @@ describe('test create room', () => {
       expect(newPlayer.isLocal()).to.be.equal(false);
       expect(play1.room.playerList.length).to.be.equal(2);
       play1.disconnect();
+      play2.disconnect();
       done();
     });
 
@@ -134,7 +135,6 @@ describe('test create room', () => {
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.playerList.length).to.be.equal(2);
-      play2.disconnect();
     });
 
     play1.connect();
