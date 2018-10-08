@@ -103,7 +103,9 @@ export default class Play extends EventEmitter {
       this._insecure = true;
     }
     // 初始化签名工具
-    SignatureUtils.init(opts.signFactory);
+    if (opts.signFactory) {
+      SignatureUtils.init(opts.signFactory);
+    }
     /**
      * 玩家 ID
      * @type {string}
@@ -253,12 +255,12 @@ export default class Play extends EventEmitter {
       throw new Error(`error play state: ${this._playState}`);
     }
     this._playState = PlayState.CLOSING;
-    this._stopPing();
-    this._stopPong();
     this._closeLobbySocket(() => {
-      debug('on close lobby socket');
+      debug(`${this.userId} closed lobby socket`);
       this._closeGameSocket(() => {
-        debug('on close game socket');
+        debug(`${this.userId} closed game socket`);
+        this._stopPing();
+        this._stopPong();
         this._playState = PlayState.CLOSED;
         this.emit(Event.DISCONNECTED);
         debug(`${this.userId} disconnect.`);
@@ -281,7 +283,7 @@ export default class Play extends EventEmitter {
     this._lobbyRoomList = null;
     this._connectFailedCount = 0;
     this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
+    this._connectCallback = null;
     this._stopConnectTimer();
     this._cancelHttp();
     this._stopPing();
@@ -684,6 +686,25 @@ export default class Play extends EventEmitter {
   }
 
   /**
+   * 将玩家踢出房间
+   * @param {Number} playerId
+   */
+  kickPlayer(playerId, { code = null, msg = null } = null) {
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const m = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: playerId,
+      appCode: code,
+      appMsg: msg,
+    };
+    this._sendGameMessage(m);
+  }
+
+  /**
    * 获取当前所在房间
    * @return {Room}
    * @readonly
@@ -864,9 +885,9 @@ export default class Play extends EventEmitter {
   }
 
   // 连接至大厅服务器
-  _connectToMaster(gameToLobby = false) {
+  _connectToMaster(callback = null) {
     this._playState = PlayState.CONNECTING;
-    this._gameToLobby = gameToLobby;
+    this._connectCallback = callback;
     const { WebSocket } = adapters;
     this._lobbyWS = new WebSocket(this._masterServer);
     this._lobbyWS.onopen = () => {
@@ -963,11 +984,16 @@ export default class Play extends EventEmitter {
     if (this._pong) {
       clearTimeout(this._pong);
       this._pong = null;
+      debug(`${this.userId} stop pong`);
+    } else {
+      debug(`${this.userId} no pong`);
     }
   }
 
   _startPongListener(ws, duration) {
+    debug(`${this.userId} start pong`);
     this._pong = setTimeout(() => {
+      debug(`${this.userId} pong close`);
       ws.close();
     }, duration * MAX_NO_PONG_TIMES);
   }

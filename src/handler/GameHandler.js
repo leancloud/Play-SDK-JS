@@ -187,7 +187,34 @@ function handleLeaveRoom(play) {
   play._player = null;
   // 离开房间时就主动断开连接
   play._closeGameSocket(() => {
-    play._connectToMaster(true);
+    play._connectToMaster(() => {
+      play.emit(Event.ROOM_LEFT);
+    });
+  });
+}
+
+function handleKickedPlayer(play, msg) {
+  if (msg.reasonCode) {
+    play.emit(Event.ERROR, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
+  }
+}
+
+function handleKickedNotice(play, msg) {
+  // 清理工作
+  play._room = null;
+  play._player = null;
+  // 离开房间时就主动断开连接
+  play._closeGameSocket(() => {
+    // 通过事件通知客户端
+    play._connectToMaster(() => {
+      play.emit(Event.ROOM_KICKED, {
+        code: msg.appCode,
+        msg: msg.appMsg,
+      });
+    });
   });
 }
 
@@ -294,6 +321,12 @@ export default function handleGameMsg(play, message) {
           break;
         case 'system-property-updated-notify':
           handleSystemPropsUpdateNotification(play, msg);
+          break;
+        case 'kicked':
+          handleKickedPlayer(play, msg);
+          break;
+        case 'kicked-notice':
+          handleKickedNotice(play, msg);
           break;
         default:
           error(`no handler for game msg: ${msg.op}`);
