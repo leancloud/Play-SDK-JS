@@ -146,7 +146,7 @@ describe('test connection', () => {
       appId: APP_ID,
       appKey: APP_KEY,
       region: APP_REGION,
-      insecure: true,
+      ssl: false,
     });
     play.userId = 'ct_8';
     play.on(Event.CONNECTED, () => {
