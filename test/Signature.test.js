@@ -31,7 +31,7 @@ describe('test signature', () => {
       region: Region.EastChina,
       signFactory: AVUserSignatureFactory,
     });
-    play.userId = 'ts_1';
+    play.userId = '5bbc68c902612d001ab28bfa';
     play.on(Event.CONNECTED, () => {
       debug('OnConnected');
       play.disconnect();
