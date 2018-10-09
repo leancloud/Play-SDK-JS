@@ -30,10 +30,14 @@ describe('test kick player', () => {
       p2.joinRoom(roomName);
     });
     p2.on(Event.ROOM_JOINED, () => {
-      p1.kickPlayer(p2.player.actorId);
+      p1.kickPlayer(p2.player.actorId, {
+        code: 121,
+        msg: 'get out',
+      });
     });
-    p2.on(Event.ROOM_KICKED, () => {
-      debug('kicked');
+    p2.on(Event.ROOM_KICKED, data => {
+      const { code, msg } = data;
+      debug(`kicked: ${code}, ${msg}`);
       f2 = true;
       if (f1 && f2) {
         p1.disconnect();
