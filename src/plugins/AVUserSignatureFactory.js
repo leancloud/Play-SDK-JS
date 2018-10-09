@@ -49,12 +49,13 @@ function loginSignature() {
   return new Promise((resolve, reject) => {
     const subAppId = _appId.slice(0, 8);
     _req = request
-      .post(`https://${subAppId}.api.lncld.net/1.1/rtm/sign`)
+      .post(`https://${subAppId}.api.lncld.net/1.1/play/sign`)
       .send({ session_token: _avUser.getSessionToken() })
       .set('X-LC-Id', _appId)
       .set('X-LC-Key', _appKey)
       .end((err, res) => {
         if (err) {
+          console.error(err);
           reject(err);
         } else {
           const body = JSON.parse(res.text);

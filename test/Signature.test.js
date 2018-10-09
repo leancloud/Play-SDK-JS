@@ -1,24 +1,45 @@
 import AVUserSignatureFactory from '../src/plugins/AVUserSignatureFactory';
+import Play from '../src/Play';
+import Region from '../src/Region';
+import Event from '../src/Event';
 
 const debug = require('debug')('Test:Signature');
 
 describe('test signature', () => {
   it('test AVUser signature', done => {
     const fakeAVUser = {
-      getSessionToken: () => 'tldi7txfc5fpgbjed9xh032tx',
+      getSessionToken: () => '3ldgk2s4ihabhi569hr9h5ssn',
     };
     AVUserSignatureFactory.init({
-      appId: '1yzaPvxYPs2DLQXIccBzb0k1-gzGzoHsz',
-      appKey: 'Nlt1SIVxxFrMPut6SvfEJiYT',
+      appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
+      appKey: 'FEttS9MjIXgmyvbslSp90aUI',
       avUser: fakeAVUser,
     });
-    AVUserSignatureFactory.loginSignature()
-      .then(sign => {
-        debug(sign);
-        done();
-      })
-      .catch(err => {
-        debug(err);
-      });
+    // AVUserSignatureFactory.loginSignature()
+    //   .then(sign => {
+    //     debug(sign);
+    //     done();
+    //   })
+    //   .catch(err => {
+    //     debug(err);
+    // });
+
+    const play = new Play();
+    play.init({
+      appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
+      appKey: 'FEttS9MjIXgmyvbslSp90aUI',
+      region: Region.EastChina,
+      signFactory: AVUserSignatureFactory,
+    });
+    play.userId = 'ts_1';
+    play.on(Event.CONNECTED, () => {
+      debug('OnConnected');
+      play.disconnect();
+      done();
+    });
+    play.on(Event.CONNECT_FAILED, error => {
+      debug(`OnConnectFailed: ${JSON.stringify(error)}`);
+    });
+    play.connect();
   });
 });

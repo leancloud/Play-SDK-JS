@@ -25,4 +25,15 @@ function newWechatPlay(userId) {
   return play;
 }
 
-export { newPlay, newWechatPlay };
+function newQCloudPlay(userId) {
+  const play = new Play();
+  play.init({
+    appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
+    appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
+    region: Region.EastChina,
+  });
+  play.userId = userId;
+  return play;
+}
+
+export { newPlay, newWechatPlay, newQCloudPlay };

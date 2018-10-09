@@ -785,6 +785,7 @@ export default class Play extends EventEmitter {
   _lobbySessionOpen() {
     SignatureUtils.getSignature()
       .then(sign => {
+        debug(`sign: ${JSON.stringify(sign)}`);
         const msg = {
           cmd: 'session',
           op: 'open',
