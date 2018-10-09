@@ -689,7 +689,7 @@ export default class Play extends EventEmitter {
    * 将玩家踢出房间
    * @param {Number} playerId
    */
-  kickPlayer(playerId, { code = null, msg = null } = null) {
+  kickPlayer(playerId, { code = null, msg = null } = {}) {
     if (this._playState !== PlayState.GAME_OPEN) {
       throw new Error(`error play state: ${this._playState}`);
     }
