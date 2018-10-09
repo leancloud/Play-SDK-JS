@@ -65,9 +65,10 @@ export default class Play extends EventEmitter {
   /**
    * 初始化客户端
    * @param {Object} opts
-   * @param {string} opts.appId APP ID
-   * @param {string} opts.appKey APP KEY
-   * @param {number} opts.region 节点地区
+   * @param {String} opts.appId APP ID
+   * @param {String} opts.appKey APP KEY
+   * @param {Number} opts.region 节点地区
+   * @param {Boolean} [opts.ssl] 是否使用 ssl
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -82,10 +83,16 @@ export default class Play extends EventEmitter {
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
+    if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
+      throw new TypeError(`${opts.feature} is not a boolean`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
     this._feature = opts.feature;
+    if (opts.ssl === false) {
+      this._insecure = true;
+    }
     /**
      * 玩家 ID
      * @type {string}
@@ -151,6 +158,10 @@ export default class Play extends EventEmitter {
       query.feature = this._feature;
     } else if (isWeapp) {
       query.feature = 'wechat';
+    }
+    // 使用 ws
+    if (this._insecure) {
+      query.insecure = this._insecure;
     }
     this._httpReq = request
       .get(masterURL)
