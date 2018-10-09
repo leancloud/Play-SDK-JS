@@ -28,8 +28,8 @@ function newWechatPlay(userId) {
 function newQCloudPlay(userId) {
   const play = new Play();
   play.init({
-    appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
-    appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
+    appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
+    appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
     region: Region.EastChina,
   });
   play.userId = userId;
