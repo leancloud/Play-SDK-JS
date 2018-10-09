@@ -69,7 +69,8 @@ export default class Play extends EventEmitter {
    * @param {string} opts.appId APP ID
    * @param {string} opts.appKey APP KEY
    * @param {number} opts.region 节点地区
-   * @param {Object} opts.signFactory 签名工厂
+   * @param {Object} [opts.signFactory] 签名工厂
+   * @param {Boolean} [opts.ssl] 是否使用 ssl
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -90,6 +91,9 @@ export default class Play extends EventEmitter {
     ) {
       throw new TypeError(`${opts.signFactory} is not an object`);
     }
+    if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
+      throw new TypeError(`${opts.feature} is not a boolean`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
@@ -97,6 +101,9 @@ export default class Play extends EventEmitter {
     // 初始化签名工具
     if (opts.signFactory) {
       SignatureUtils.init(opts.signFactory);
+    }
+    if (opts.ssl === false) {
+      this._insecure = true;
     }
     /**
      * 玩家 ID
@@ -163,6 +170,10 @@ export default class Play extends EventEmitter {
       query.feature = this._feature;
     } else if (isWeapp) {
       query.feature = 'wechat';
+    }
+    // 使用 ws
+    if (this._insecure) {
+      query.insecure = this._insecure;
     }
     this._httpReq = request
       .get(masterURL)
