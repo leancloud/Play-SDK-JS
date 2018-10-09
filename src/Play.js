@@ -68,7 +68,7 @@ export default class Play extends EventEmitter {
    * @param {String} opts.appId APP ID
    * @param {String} opts.appKey APP KEY
    * @param {Number} opts.region 节点地区
-   * @param {Boolean} opts.ssl 是否使用 ssl
+   * @param {Boolean} [opts.ssl] 是否使用 ssl
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
