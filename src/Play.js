@@ -82,10 +82,14 @@ export default class Play extends EventEmitter {
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
+    if (opts.insecure !== undefined && !(typeof opts.insecure === 'boolean')) {
+      throw new TypeError(`${opts.feature} is not a boolean`);
+    }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
     this._feature = opts.feature;
+    this._insecure = opts.insecure;
     /**
      * 玩家 ID
      * @type {string}
@@ -151,6 +155,10 @@ export default class Play extends EventEmitter {
       query.feature = this._feature;
     } else if (isWeapp) {
       query.feature = 'wechat';
+    }
+    // 使用 ws
+    if (this._insecure) {
+      query.insecure = this._insecure;
     }
     this._httpReq = request
       .get(masterURL)

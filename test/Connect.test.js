@@ -1,5 +1,7 @@
 import Event from '../src/Event';
 import { newPlay, newWechatPlay } from './Utils';
+import { APP_ID, APP_KEY, APP_REGION } from './Config';
+import Play from '../src/Play';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -134,6 +136,22 @@ describe('test connection', () => {
     });
     play.on(Event.CONNECT_FAILED, error => {
       debug(`OnConnectFailed: ${error}`);
+    });
+    play.connect();
+  });
+
+  it('test ws', done => {
+    const play = new Play();
+    play.init({
+      appId: APP_ID,
+      appKey: APP_KEY,
+      region: APP_REGION,
+      insecure: true,
+    });
+    play.userId = 'ct_8';
+    play.on(Event.CONNECTED, () => {
+      play.disconnect();
+      done();
     });
     play.connect();
   });
