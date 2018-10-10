@@ -100,7 +100,7 @@ export default class Play extends EventEmitter {
     this._feature = opts.feature;
     // 初始化签名工具
     if (opts.signFactory) {
-      SignatureUtils.init(opts.signFactory);
+      this._signUtils = new SignatureUtils(opts.signFactory);
     }
     if (opts.ssl === false) {
       this._insecure = true;
@@ -289,7 +289,9 @@ export default class Play extends EventEmitter {
     this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
-    SignatureUtils.abort();
+    if (this._signUtils) {
+      this._signUtils.abort();
+    }
   }
 
   /**
@@ -753,73 +755,80 @@ export default class Play extends EventEmitter {
 
   // 开始大厅会话
   _lobbySessionOpen() {
-    SignatureUtils.getSignature()
-      .then(sign => {
-        debug(`sign: ${JSON.stringify(sign)}`);
-        const msg = {
-          cmd: 'session',
-          op: 'open',
-          i: this._getMsgId(),
-          appId: this._appId,
-          peerId: this.userId,
-          sdkVersion: PlayVersion,
-          gameVersion: this._gameVersion,
-        };
-        if (sign) {
+    const msg = {
+      cmd: 'session',
+      op: 'open',
+      i: this._getMsgId(),
+      appId: this._appId,
+      peerId: this.userId,
+      sdkVersion: PlayVersion,
+      gameVersion: this._gameVersion,
+    };
+    if (this._signUtils) {
+      this._signUtils
+        .getSignature()
+        .then(sign => {
+          debug(`sign: ${JSON.stringify(sign)}`);
           const { nonce, timestamp, signature } = sign;
           Object.assign(msg, {
             n: nonce,
             t: timestamp,
             s: signature,
           });
-        }
-        this._sendLobbyMessage(msg);
-      })
-      .catch(err => {
-        // 签名失败
-        this._playState = PlayState.CLOSED;
-        this._closeLobbySocket(() => {
-          this.emit(Event.ERROR, {
-            code: err.code,
-            detail: err.message,
+          this._sendLobbyMessage(msg);
+        })
+        .catch(e => {
+          // 签名失败
+          this._playState = PlayState.CLOSED;
+          this._closeLobbySocket(() => {
+            this.emit(Event.ERROR, {
+              code: e.code,
+              detail: e.message,
+            });
           });
         });
-      });
+    } else {
+      this._sendLobbyMessage(msg);
+    }
   }
 
   // 开始房间会话
   _gameSessionOpen() {
-    SignatureUtils.getSignature()
-      .then(sign => {
-        const msg = {
-          cmd: 'session',
-          op: 'open',
-          i: this._getMsgId(),
-          appId: this._appId,
-          peerId: this.userId,
-          sdkVersion: PlayVersion,
-          gameVersion: this._gameVersion,
-        };
-        if (sign) {
+    const msg = {
+      cmd: 'session',
+      op: 'open',
+      i: this._getMsgId(),
+      appId: this._appId,
+      peerId: this.userId,
+      sdkVersion: PlayVersion,
+      gameVersion: this._gameVersion,
+    };
+    if (this._signUtils) {
+      this._signUtils
+        .getSignature()
+        .then(sign => {
+          debug(`sign: ${JSON.stringify(sign)}`);
           const { nonce, timestamp, signature } = sign;
           Object.assign(msg, {
             n: nonce,
             t: timestamp,
             s: signature,
           });
-        }
-        this._sendGameMessage(msg);
-      })
-      .catch(err => {
-        // 签名失败
-        this._playState = PlayState.LOBBY_OPEN;
-        this._closeGameSocket(() => {
-          this.emit(Event.ERROR, {
-            code: err.code,
-            detail: err.message,
+          this._sendGameMessage(msg);
+        })
+        .catch(e => {
+          // 签名失败
+          this._playState = PlayState.CLOSED;
+          this._closeLobbySocket(() => {
+            this.emit(Event.ERROR, {
+              code: e.code,
+              detail: e.message,
+            });
           });
         });
-      });
+    } else {
+      this._sendGameMessage(msg);
+    }
   }
 
   // 发送大厅消息
