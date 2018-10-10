@@ -139,29 +139,4 @@ describe('test create room', () => {
 
     play1.connect();
   });
-
-  it('test room opened', done => {
-    const play = newPlay('cr6');
-    play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
-      play.createRoom();
-    });
-    play.on(Event.ROOM_CREATED, () => {
-      debug(play.room.name);
-      play.setRoomOpened(false);
-      play.setRoomVisible(false);
-    });
-    play.on(Event.ROOM_OPEN_CHANGED, data => {
-      const { opened } = data;
-      expect(opened).to.be.equal(false);
-    });
-    play.on(Event.ROOM_VISIBLE_CHANGED, data => {
-      const { visible } = data;
-      expect(visible).to.be.equal(false);
-      play.disconnect();
-      done();
-    });
-    play.connect();
-  });
 });

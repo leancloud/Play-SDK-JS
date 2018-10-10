@@ -1,5 +1,6 @@
 import request from 'superagent';
 import EventEmitter from 'eventemitter3';
+import _ from 'lodash';
 
 import Region from './Region';
 import Event from './Event';
@@ -518,10 +519,10 @@ export default class Play extends EventEmitter {
    * @param {Boolean} opened 是否开启
    */
   setRoomOpened(opened) {
-    if (!(typeof opened === 'boolean')) {
+    if (!_.isBoolean(opened)) {
       throw new TypeError(`${opened} is not a boolean value`);
     }
-    if (this._room === null) {
+    if (_.isNull(this.room)) {
       throw new Error('room is null');
     }
     if (this._playState !== PlayState.GAME_OPEN) {
@@ -529,9 +530,11 @@ export default class Play extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'open',
+      op: 'update-system-property',
       i: this._getMsgId(),
-      toggle: opened,
+      sysAttr: {
+        open: opened,
+      },
     };
     this._sendGameMessage(msg);
   }
@@ -541,10 +544,10 @@ export default class Play extends EventEmitter {
    * @param {Boolean} visible 是否可见
    */
   setRoomVisible(visible) {
-    if (!(typeof visible === 'boolean')) {
+    if (!_.isBoolean(visible)) {
       throw new TypeError(`${visible} is not a boolean value`);
     }
-    if (this._room === null) {
+    if (_.isNull(this._room)) {
       throw new Error('room is null');
     }
     if (this._playState !== PlayState.GAME_OPEN) {
@@ -552,9 +555,36 @@ export default class Play extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'visible',
+      op: 'update-system-property',
       i: this._getMsgId(),
-      toggle: visible,
+      sysAttr: {
+        visible,
+      },
+    };
+    this._sendGameMessage(msg);
+  }
+
+  /**
+   * 设置房间邀请好友 ID 数组
+   * @param {Array.<string>} expectedUserIds 邀请好友 ID 数组
+   */
+  setRoomExpectedUserIds(expectedUserIds) {
+    if (!_.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array of userId`);
+    }
+    if (_.isNull(this._room)) {
+      throw new Error('room is null');
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      i: this._getMsgId(),
+      sysAttr: {
+        expectMembers: expectedUserIds,
+      },
     };
     this._sendGameMessage(msg);
   }

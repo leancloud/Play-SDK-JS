@@ -124,6 +124,13 @@ const Event = {
    */
   PLAYER_CUSTOM_PROPERTIES_CHANGED: 'playerCustomPropertiesChanged',
   /**
+   * 房间系统属性变化，包括 是否开启，是否可见，邀请的好友 ID 数组
+   * @event Play#ROOM_SYSTEM_PROPERTIES_CHANGED
+   * @param {Object} payload
+   * @param {Object} payload.changedProps
+   */
+  ROOM_SYSTEM_PROPERTIES_CHANGED: 'roomSystemPropertiesChanged',
+  /**
    * 自定义事件
    * @event Play#CUSTOM_EVENT
    * @param {Object} payload
