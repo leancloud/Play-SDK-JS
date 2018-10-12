@@ -2,9 +2,7 @@ import d from 'debug';
 import Event from '../src/Event';
 
 // import CreateRoomFlag from '../src/CreateRoomFlag';
-import { newPlay } from './Utils';
-import Play from '../src/Play';
-import Region from '../src/Region';
+import { newPlay, newQCloudPlay } from './Utils';
 
 const { expect } = require('chai');
 
@@ -319,13 +317,7 @@ describe('test change properties', () => {
   });
 
   it('test change room system props', done => {
-    const play = new Play();
-    play.init({
-      appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
-      appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
-      region: Region.EastChina,
-    });
-    play.userId = 'cp6_1';
+    const play = newQCloudPlay('cp6_1');
     play.on(Event.CONNECTED, () => {
       expect(play._sessionToken).to.be.not.equal(null);
       expect(play._masterServer).to.be.not.equal(null);

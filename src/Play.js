@@ -71,7 +71,7 @@ export default class Play extends EventEmitter {
    * @param {string} opts.appKey APP KEY
    * @param {number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl
-   * @param {Object} opts.signFactory 签名工厂
+   * @param {Object} [opts.signFactory] 签名工厂
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -86,6 +86,12 @@ export default class Play extends EventEmitter {
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
+    if (
+      opts.signFactory !== undefined &&
+      !(typeof opts.signFactory === 'object')
+    ) {
+      throw new TypeError(`${opts.signFactory} is not an object`);
+    }
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
       throw new TypeError(`${opts.feature} is not a boolean`);
     }
@@ -99,6 +105,10 @@ export default class Play extends EventEmitter {
     this._appKey = opts.appKey;
     this._region = opts.region;
     this._feature = opts.feature;
+    // 初始化签名工具
+    if (opts.signFactory) {
+      this._signUtils = new SignatureUtils(opts.signFactory);
+    }
     if (opts.ssl === false) {
       this._insecure = true;
     }
