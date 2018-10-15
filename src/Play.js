@@ -105,10 +105,6 @@ export default class Play extends EventEmitter {
     this._appKey = opts.appKey;
     this._region = opts.region;
     this._feature = opts.feature;
-    // 初始化签名工具
-    if (opts.signFactory) {
-      this._signUtils = new SignatureUtils(opts.signFactory);
-    }
     if (opts.ssl === false) {
       this._insecure = true;
     }

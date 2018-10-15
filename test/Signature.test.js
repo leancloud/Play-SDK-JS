@@ -10,26 +10,17 @@ describe('test signature', () => {
     const fakeAVUser = {
       getSessionToken: () => '3ldgk2s4ihabhi569hr9h5ssn',
     };
-    AVUserSignatureFactory.init({
+    const signFactory = new AVUserSignatureFactory({
       appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
       appKey: 'FEttS9MjIXgmyvbslSp90aUI',
       avUser: fakeAVUser,
     });
-    // AVUserSignatureFactory.loginSignature()
-    //   .then(sign => {
-    //     debug(sign);
-    //     done();
-    //   })
-    //   .catch(err => {
-    //     debug(err);
-    // });
-
     const play = new Play();
     play.init({
       appId: '2ke9qjLSGeamYyU7dT6eqvng-9Nh9j0Va',
       appKey: 'FEttS9MjIXgmyvbslSp90aUI',
       region: Region.EastChina,
-      signFactory: AVUserSignatureFactory,
+      signFactory,
     });
     play.userId = '5bbc68c902612d001ab28bfa';
     play.on(Event.CONNECTED, () => {
