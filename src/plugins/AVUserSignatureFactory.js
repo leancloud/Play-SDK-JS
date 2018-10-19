@@ -1,6 +1,6 @@
 import request from 'superagent';
 
-export default class AVUserSignatureFactory {
+export default class AVSignFactory {
   /**
    * 初始化签名工厂
    * @param {Object} opts

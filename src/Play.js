@@ -17,6 +17,7 @@ import isWeapp from './Utils';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
 import SignatureUtils from './SignatureUtils';
+import ErrorCode from './ErrorCode';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -818,7 +819,7 @@ export default class Play extends EventEmitter {
           this._playState = PlayState.CLOSED;
           this._closeLobbySocket(() => {
             this.emit(Event.ERROR, {
-              code: e.code,
+              code: ErrorCode.SIGN_ERROR_CODE,
               detail: e.message,
             });
           });
