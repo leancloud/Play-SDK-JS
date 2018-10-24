@@ -105,9 +105,10 @@ export default class Room {
     if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
+    if (actorId === -1) return null;
     const player = this._players[actorId];
     if (player === null) {
-      throw new TypeError(`player with id:${actorId} not found`);
+      throw new Error(`player with id:${actorId} not found`);
     }
     return player;
   }

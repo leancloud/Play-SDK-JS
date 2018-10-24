@@ -98,11 +98,18 @@ function handleMasterChanged(play, msg) {
     debug('play _room is null');
     debug(play.userId);
   }
-  play._room._masterActorId = msg.masterActorId;
-  const newMaster = play._room.getPlayer(msg.masterActorId);
-  play.emit(Event.MASTER_SWITCHED, {
-    newMaster,
-  });
+  if (msg.masterActorId === null) {
+    play._room._masterActorId = -1;
+    play.emit(Event.MASTER_SWITCHED, {
+      newMaster: null,
+    });
+  } else {
+    play._room._masterActorId = msg.masterActorId;
+    const newMaster = play._room.getPlayer(msg.masterActorId);
+    play.emit(Event.MASTER_SWITCHED, {
+      newMaster,
+    });
+  }
 }
 
 // 房间开启 / 关闭

@@ -1,5 +1,5 @@
 import Event from '../src/Event';
-// import CreateRoomFlag from '../src/CreateRoomFlag';
+import CreateRoomFlag from '../src/CreateRoomFlag';
 import { newPlay } from './Utils';
 
 const { expect } = require('chai');
@@ -84,6 +84,65 @@ describe('test master', () => {
     play2.on(Event.MASTER_SWITCHED, data => {
       const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
+      f2 = true;
+      if (f1 && f2) {
+        play1.disconnect();
+        play2.disconnect();
+        done();
+      }
+    });
+
+    play1.connect();
+  });
+
+  it('test fixed master', done => {
+    const roomName = 'tm3';
+    const play1 = newPlay('tm3_1');
+    const play2 = newPlay('tm3_2');
+    let f1 = false;
+    let f2 = false;
+
+    play1.on(Event.CONNECTED, () => {
+      expect(play1._sessionToken).to.be.not.equal(null);
+      play1.createRoom({
+        roomName,
+        roomOptions: {
+          flag: CreateRoomFlag.FixedMaster,
+        },
+      });
+    });
+    play1.on(Event.ROOM_CREATED, () => {
+      expect(play1.room.name).to.be.equal(roomName);
+      play2.connect();
+    });
+    play1.on(Event.PLAYER_ROOM_JOINED, () => {
+      play1.leaveRoom();
+    });
+    play1.on(Event.ROOM_LEFT, () => {
+      f1 = true;
+      if (f1 && f2) {
+        play1.disconnect();
+        play2.disconnect();
+        done();
+      }
+    });
+
+    play2.on(Event.CONNECTED, () => {
+      play2.joinRoom(roomName);
+    });
+    play2.on(Event.ROOM_JOINED, () => {
+      expect(play2.room.name).to.be.equal(roomName);
+    });
+    play2.on(Event.PLAYER_ROOM_LEFT, data => {
+      const { leftPlayer } = data;
+      debug(`${leftPlayer.userId} left room`);
+      expect(leftPlayer.actorId).to.be.equal(1);
+    });
+    play2.on(Event.MASTER_SWITCHED, data => {
+      const { newMaster } = data;
+      expect(newMaster).to.be.equal(null);
+      expect(play2.room.masterId).to.be.equal(-1);
+      expect(play2.room.master).to.be.equal(null);
       f2 = true;
       if (f1 && f2) {
         play1.disconnect();
