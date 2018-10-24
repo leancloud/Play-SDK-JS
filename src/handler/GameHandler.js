@@ -99,6 +99,7 @@ function handleMasterChanged(play, msg) {
     debug(play.userId);
   }
   if (msg.masterActorId === null) {
+    play._room._masterActorId = -1;
     play.emit(Event.MASTER_SWITCHED, {
       newMaster: null,
     });
