@@ -111,9 +111,13 @@ export default class Play extends EventEmitter {
     if (this.userId === null) {
       throw new Error('userId is null');
     }
-    // 判断是否是「断开」状态
-    if (this._playState !== PlayState.CLOSED) {
-      throw new Error(`play state error: ${this._playState}`);
+    if (
+      this._playState === PlayState.CONNECTING ||
+      this._playState === PlayState.LOBBY_OPEN ||
+      this._playState === PlayState.GAME_OPEN
+    ) {
+      warn(`Current play state: ${this._playState}, ignore`);
+      return;
     }
     // 判断是否已经在等待连接
     if (this._connectTimer) {
@@ -770,7 +774,7 @@ export default class Play extends EventEmitter {
       // 心跳包
       this._stopPing();
       this._ping = setTimeout(() => {
-        debug('ping time out');
+        debug('ping');
         const ping = {};
         this._send(ws, ping, flag, duration);
       }, duration);

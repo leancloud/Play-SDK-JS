@@ -155,4 +155,16 @@ describe('test connection', () => {
     });
     play.connect();
   });
+
+  it('test connect repeatedly', done => {
+    const play = newPlay('ct_9');
+    play.on(Event.CONNECTED, () => {
+      debug('OnConnected');
+      play.connect();
+      play.disconnect();
+      done();
+    });
+    play.connect();
+    play.connect();
+  });
 });
