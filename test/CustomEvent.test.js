@@ -7,9 +7,9 @@ const { expect } = require('chai');
 
 describe('test custom event', () => {
   it('test custom event with ReceiverGroup', done => {
-    const roomName = '511';
-    const play1 = newPlay('hello');
-    const play2 = newPlay('world');
+    const roomName = 'ce_r_1';
+    const play1 = newPlay('ce_1_1');
+    const play2 = newPlay('ce_1_2');
 
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
@@ -67,7 +67,7 @@ describe('test custom event', () => {
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
     play1.on(Event.CUSTOM_EVENT, event => {
       const { eventId, eventData } = event;
@@ -84,6 +84,7 @@ describe('test custom event', () => {
 
     play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -110,6 +111,5 @@ describe('test custom event', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 });

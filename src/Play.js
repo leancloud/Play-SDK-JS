@@ -1,5 +1,6 @@
 import request from 'superagent';
 import EventEmitter from 'eventemitter3';
+import _ from 'lodash';
 
 import Region from './Region';
 import Event from './Event';
@@ -15,6 +16,8 @@ import { adapters } from './PlayAdapter';
 import isWeapp from './Utils';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
+import SignatureUtils from './SignatureUtils';
+import ErrorCode from './ErrorCode';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -65,10 +68,11 @@ export default class Play extends EventEmitter {
   /**
    * 初始化客户端
    * @param {Object} opts
-   * @param {String} opts.appId APP ID
-   * @param {String} opts.appKey APP KEY
-   * @param {Number} opts.region 节点地区
+   * @param {string} opts.appId APP ID
+   * @param {string} opts.appKey APP KEY
+   * @param {number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl
+   * @param {Object} [opts.signFactory] 签名工厂
    */
   init(opts) {
     if (!(typeof opts.appId === 'string')) {
@@ -83,8 +87,20 @@ export default class Play extends EventEmitter {
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
+    if (
+      opts.signFactory !== undefined &&
+      !(typeof opts.signFactory === 'object')
+    ) {
+      throw new TypeError(`${opts.signFactory} is not an object`);
+    }
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
       throw new TypeError(`${opts.feature} is not a boolean`);
+    }
+    if (
+      opts.signFactory !== undefined &&
+      !(typeof opts.signFactory === 'object')
+    ) {
+      throw new TypeError(`${opts.signFactory} is not an object`);
     }
     this._appId = opts.appId;
     this._appKey = opts.appKey;
@@ -92,6 +108,10 @@ export default class Play extends EventEmitter {
     this._feature = opts.feature;
     if (opts.ssl === false) {
       this._insecure = true;
+    }
+    // 初始化签名工具
+    if (opts.signFactory) {
+      this._signUtils = new SignatureUtils(opts.signFactory);
     }
     /**
      * 玩家 ID
@@ -246,12 +266,12 @@ export default class Play extends EventEmitter {
       throw new Error(`error play state: ${this._playState}`);
     }
     this._playState = PlayState.CLOSING;
-    this._stopPing();
-    this._stopPong();
     this._closeLobbySocket(() => {
-      debug('on close lobby socket');
+      debug(`${this.userId} closed lobby socket`);
       this._closeGameSocket(() => {
-        debug('on close game socket');
+        debug(`${this.userId} closed game socket`);
+        this._stopPing();
+        this._stopPong();
         this._playState = PlayState.CLOSED;
         this.emit(Event.DISCONNECTED);
         debug(`${this.userId} disconnect.`);
@@ -274,13 +294,16 @@ export default class Play extends EventEmitter {
     this._lobbyRoomList = null;
     this._connectFailedCount = 0;
     this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
+    this._connectCallback = null;
     this._stopConnectTimer();
     this._cancelHttp();
     this._stopPing();
     this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
+    if (this._signUtils) {
+      this._signUtils.abort();
+    }
   }
 
   /**
@@ -522,10 +545,10 @@ export default class Play extends EventEmitter {
    * @param {Boolean} opened 是否开启
    */
   setRoomOpened(opened) {
-    if (!(typeof opened === 'boolean')) {
+    if (!_.isBoolean(opened)) {
       throw new TypeError(`${opened} is not a boolean value`);
     }
-    if (this._room === null) {
+    if (_.isNull(this.room)) {
       throw new Error('room is null');
     }
     if (this._playState !== PlayState.GAME_OPEN) {
@@ -533,9 +556,11 @@ export default class Play extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'open',
+      op: 'update-system-property',
       i: this._getMsgId(),
-      toggle: opened,
+      sysAttr: {
+        open: opened,
+      },
     };
     this._sendGameMessage(msg);
   }
@@ -545,10 +570,10 @@ export default class Play extends EventEmitter {
    * @param {Boolean} visible 是否可见
    */
   setRoomVisible(visible) {
-    if (!(typeof visible === 'boolean')) {
+    if (!_.isBoolean(visible)) {
       throw new TypeError(`${visible} is not a boolean value`);
     }
-    if (this._room === null) {
+    if (_.isNull(this._room)) {
       throw new Error('room is null');
     }
     if (this._playState !== PlayState.GAME_OPEN) {
@@ -556,9 +581,36 @@ export default class Play extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'visible',
+      op: 'update-system-property',
       i: this._getMsgId(),
-      toggle: visible,
+      sysAttr: {
+        visible,
+      },
+    };
+    this._sendGameMessage(msg);
+  }
+
+  /**
+   * 设置房间邀请好友 ID 数组
+   * @param {Array.<string>} expectedUserIds 邀请好友 ID 数组
+   */
+  setRoomExpectedUserIds(expectedUserIds) {
+    if (!_.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array of userId`);
+    }
+    if (_.isNull(this._room)) {
+      throw new Error('room is null');
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      i: this._getMsgId(),
+      sysAttr: {
+        expectMembers: expectedUserIds,
+      },
     };
     this._sendGameMessage(msg);
   }
@@ -644,6 +696,25 @@ export default class Play extends EventEmitter {
       cid: this.room.name,
     };
     this._sendGameMessage(msg);
+  }
+
+  /**
+   * 将玩家踢出房间
+   * @param {Number} playerId
+   */
+  kickPlayer(playerId, { code = null, msg = null } = {}) {
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const m = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: playerId,
+      appCode: code,
+      appMsg: msg,
+    };
+    this._sendGameMessage(m);
   }
 
   /**
@@ -734,7 +805,32 @@ export default class Play extends EventEmitter {
       sdkVersion: PlayVersion,
       gameVersion: this._gameVersion,
     };
-    this._sendLobbyMessage(msg);
+    if (this._signUtils) {
+      this._signUtils
+        .getSignature()
+        .then(sign => {
+          debug(`sign: ${JSON.stringify(sign)}`);
+          const { nonce, timestamp, signature } = sign;
+          Object.assign(msg, {
+            n: nonce,
+            t: timestamp,
+            s: signature,
+          });
+          this._sendLobbyMessage(msg);
+        })
+        .catch(e => {
+          // 签名失败
+          this._playState = PlayState.CLOSED;
+          this._closeLobbySocket(() => {
+            this.emit(Event.ERROR, {
+              code: ErrorCode.SIGN_ERROR_CODE,
+              detail: e.message,
+            });
+          });
+        });
+    } else {
+      this._sendLobbyMessage(msg);
+    }
   }
 
   // 开始房间会话
@@ -748,7 +844,32 @@ export default class Play extends EventEmitter {
       sdkVersion: PlayVersion,
       gameVersion: this._gameVersion,
     };
-    this._sendGameMessage(msg);
+    if (this._signUtils) {
+      this._signUtils
+        .getSignature()
+        .then(sign => {
+          debug(`sign: ${JSON.stringify(sign)}`);
+          const { nonce, timestamp, signature } = sign;
+          Object.assign(msg, {
+            n: nonce,
+            t: timestamp,
+            s: signature,
+          });
+          this._sendGameMessage(msg);
+        })
+        .catch(e => {
+          // 签名失败
+          this._playState = PlayState.CLOSED;
+          this._closeLobbySocket(() => {
+            this.emit(Event.ERROR, {
+              code: e.code,
+              detail: e.message,
+            });
+          });
+        });
+    } else {
+      this._sendGameMessage(msg);
+    }
   }
 
   // 发送大厅消息
@@ -785,9 +906,9 @@ export default class Play extends EventEmitter {
   }
 
   // 连接至大厅服务器
-  _connectToMaster(gameToLobby = false) {
+  _connectToMaster(callback = null) {
     this._playState = PlayState.CONNECTING;
-    this._gameToLobby = gameToLobby;
+    this._connectCallback = callback;
     const { WebSocket } = adapters;
     this._lobbyWS = new WebSocket(this._masterServer);
     this._lobbyWS.onopen = () => {
@@ -884,11 +1005,16 @@ export default class Play extends EventEmitter {
     if (this._pong) {
       clearTimeout(this._pong);
       this._pong = null;
+      debug(`${this.userId} stop pong`);
+    } else {
+      debug(`${this.userId} no pong`);
     }
   }
 
   _startPongListener(ws, duration) {
+    debug(`${this.userId} start pong`);
     this._pong = setTimeout(() => {
+      debug(`${this.userId} pong close`);
       ws.close();
     }, duration * MAX_NO_PONG_TIMES);
   }

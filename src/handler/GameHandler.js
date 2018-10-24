@@ -115,18 +115,24 @@ function handleMasterChanged(play, msg) {
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
   const opened = msg.toggle;
-  play._room._opened = opened;
-  play.emit(Event.ROOM_OPEN_CHANGED, {
+  const changedProps = {
     opened,
+  };
+  play._room._mergeSystemProperties(changedProps);
+  play.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+    changedProps,
   });
 }
 
 // 房间是否可见
 function handleRoomVisibleChanged(play, msg) {
   const visible = msg.toggle;
-  play._room._visible = visible;
-  play.emit(Event.ROOM_VISIBLE_CHANGED, {
+  const changedProps = {
     visible,
+  };
+  play._room._mergeSystemProperties(changedProps);
+  play.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+    changedProps,
   });
 }
 
@@ -188,7 +194,55 @@ function handleLeaveRoom(play) {
   play._player = null;
   // 离开房间时就主动断开连接
   play._closeGameSocket(() => {
-    play._connectToMaster(true);
+    play._connectToMaster(() => {
+      play.emit(Event.ROOM_LEFT);
+    });
+  });
+}
+
+function handleKickedPlayer(play, msg) {
+  if (msg.reasonCode) {
+    play.emit(Event.ERROR, {
+      code: msg.reasonCode,
+      detail: msg.detail,
+    });
+  }
+}
+
+function handleKickedNotice(play, msg) {
+  // 清理工作
+  play._room = null;
+  play._player = null;
+  // 离开房间时就主动断开连接
+  play._closeGameSocket(() => {
+    // 通过事件通知客户端
+    play._connectToMaster(() => {
+      play.emit(Event.ROOM_KICKED, {
+        code: msg.appCode,
+        msg: msg.appMsg,
+      });
+    });
+  });
+}
+
+// 更新房间系统属性应答
+function handleSystemPropsUpdated(play, msg) {
+  if (msg.reasonCode) {
+    error(`update system properties error: ${msg.reasonCode}, ${msg.detail}`);
+  }
+}
+
+// 更新房间系统属性通知
+function handleSystemPropsUpdateNotification(play, msg) {
+  const { open, visible, expectMembers } = msg.sysAttr;
+  const changedProps = {
+    opened: open,
+    visible,
+    expectedUserIds: expectMembers,
+  };
+  play._room._mergeSystemProperties(changedProps);
+  play.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+    changedProps,
   });
 }
 
@@ -268,6 +322,18 @@ export default function handleGameMsg(play, message) {
           break;
         case 'removed':
           handleLeaveRoom(play);
+          break;
+        case 'system-property-updated':
+          handleSystemPropsUpdated(play, msg);
+          break;
+        case 'system-property-updated-notify':
+          handleSystemPropsUpdateNotification(play, msg);
+          break;
+        case 'kicked':
+          handleKickedPlayer(play, msg);
+          break;
+        case 'kicked-notice':
+          handleKickedNotice(play, msg);
           break;
         default:
           error(`no handler for game msg: ${msg.op}`);
