@@ -5,23 +5,23 @@ const PlayState = {
   /**
    * 关闭
    */
-  CLOSED: 0,
+  CLOSED: 'CLOSED',
   /**
    * 连接中
    */
-  CONNECTING: 1,
+  CONNECTING: 'CONNECTING',
   /**
    * 大厅连接成功
    */
-  LOBBY_OPEN: 2,
+  LOBBY_OPEN: 'LOBBY_OPEN',
   /**
    * 房间连接成功
    */
-  GAME_OPEN: 3,
+  GAME_OPEN: 'GAME_OPEN',
   /**
    * 关闭中
    */
-  CLOSING: 4,
+  CLOSING: 'CLOSING',
 };
 
 export default PlayState;
