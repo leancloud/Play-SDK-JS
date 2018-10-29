@@ -173,6 +173,7 @@ export class Play extends EventEmitter<PlayEvent> {
     appKey: string;
     region: Region;
     autoJoinLobby?: boolean;
+    ssl?: boolean;
   }): void;
   connect(opts?: { gameVersion?: string }): void;
   reconnect(): void;
