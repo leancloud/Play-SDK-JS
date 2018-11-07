@@ -2,6 +2,7 @@ import Event from '../src/Event';
 import { newPlay, newWechatPlay } from './Utils';
 import { APP_ID, APP_KEY, APP_REGION } from './Config';
 import Play from '../src/Play';
+import ReceiverGroup from '../src/ReceiverGroup';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -165,6 +166,39 @@ describe('test connection', () => {
       done();
     });
     play.connect();
+    play.connect();
+  });
+
+  it('test only send', done => {
+    const play = newPlay('ct_10');
+    let timer = null;
+    play.on(Event.CONNECTED, () => {
+      play.createRoom();
+    });
+    play.on(Event.ROOM_CREATED, () => {
+      debug(play.room.name);
+      // 模拟每 5s 发送一次给「其他人」的自定义事件（没有应答消息），20s 后会触发主动 ping 服务器
+      timer = setInterval(() => {
+        debug('send custom event');
+        play.sendEvent(
+          'hello',
+          {},
+          {
+            receiverGroup: ReceiverGroup.Others,
+          }
+        );
+      }, 5000);
+      setTimeout(() => {
+        clearInterval(timer);
+        play.disconnect();
+        done();
+      }, 30000);
+    });
+    play.on(Event.CUSTOM_EVENT, event => {
+      const { eventId } = event;
+      debug(`recv: ${eventId}`);
+    });
+
     play.connect();
   });
 });
