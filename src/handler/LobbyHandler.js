@@ -10,7 +10,11 @@ function handleSessionOpen(play, msg) {
   if (msg.reasonCode) {
     play._closeLobbySocket(() => {
       play._playState = PlayState.CLOSED;
-      handleReasonMsg(play, msg);
+      const { reasonCode, detail } = msg;
+      this.emit(Event.CONNECT_FAILED, {
+        code: reasonCode,
+        detail,
+      });
     });
   } else {
     play._playState = PlayState.LOBBY_OPEN;
