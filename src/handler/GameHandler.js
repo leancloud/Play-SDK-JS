@@ -1,6 +1,6 @@
 import Room from '../Room';
 import Player from '../Player';
-import handleErrorMsg from './ErrorHandler';
+import { handleErrorMsg, handleReasonMsg } from './ErrorHandler';
 import Event from '../Event';
 import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
@@ -10,10 +10,7 @@ function handleSessionOpen(play, msg) {
   if (msg.reasonCode) {
     play._playState = PlayState.LOBBY_OPEN;
     play._closeGameSocket(() => {
-      play.emit(Event.ERROR, {
-        code: msg.reasonCode,
-        detail: msg.detail,
-      });
+      handleReasonMsg(play, msg);
     });
   } else {
     // 根据缓存加入房间的规则
@@ -75,30 +72,30 @@ function handleNewPlayerJoinedRoom(play, msg) {
 
 // 有玩家离开房间
 function handlePlayerLeftRoom(play, msg) {
-  const actorId = msg.initByActor;
-  const leftPlayer = play._room.getPlayer(actorId);
-  play._room._removePlayer(actorId);
-  play.emit(Event.PLAYER_ROOM_LEFT, {
-    leftPlayer,
-  });
+  if (msg.reasonCode) {
+    handleReasonMsg(play, msg);
+  } else {
+    const actorId = msg.initByActor;
+    const leftPlayer = play._room.getPlayer(actorId);
+    play._room._removePlayer(actorId);
+    play.emit(Event.PLAYER_ROOM_LEFT, {
+      leftPlayer,
+    });
+  }
 }
 
 // 主机切换应答
-function handleMasterUpdated(msg) {
+function handleMasterUpdated(play, msg) {
   if (msg.reasonCode) {
-    error(`set master error: ${msg.reasonCode}, ${msg.detail}`);
+    handleReasonMsg(play, msg);
   }
 }
 
 // 主机切换
 function handleMasterChanged(play, msg) {
-  if (play === null) {
-    debug('play is null');
-  } else if (play._room === null) {
-    debug('play _room is null');
-    debug(play.userId);
-  }
-  if (msg.masterActorId === null) {
+  if (msg.reasonCode) {
+    handleReasonMsg(play, msg);
+  } else if (msg.masterActorId === null) {
     play._room._masterActorId = -1;
     play.emit(Event.MASTER_SWITCHED, {
       newMaster: null,
@@ -112,6 +109,12 @@ function handleMasterChanged(play, msg) {
   }
 }
 
+function handleRoomOpened(play, msg) {
+  if (msg.reasonCode) {
+    handleReasonMsg(play, msg);
+  }
+}
+
 // 房间开启 / 关闭
 function handleRoomOpenedChanged(play, msg) {
   const opened = msg.toggle;
@@ -119,6 +122,12 @@ function handleRoomOpenedChanged(play, msg) {
   play.emit(Event.ROOM_OPEN_CHANGED, {
     opened,
   });
+}
+
+function handleRoomVisiable(play, msg) {
+  if (msg.reasonCode) {
+    handleReasonMsg(play, msg);
+  }
 }
 
 // 房间是否可见
@@ -131,9 +140,9 @@ function handleRoomVisibleChanged(play, msg) {
 }
 
 // 房间属性变更应答
-function handleRoomCustomPropertiesChangedResponse(msg) {
+function handleRoomCustomPropertiesChangedResponse(play, msg) {
   if (msg.reasonCode) {
-    error(`set room properties error: ${msg.reasonCode}, ${msg.detail}`);
+    handleReasonMsg(play, msg);
   }
 }
 
@@ -147,8 +156,10 @@ function handleRoomCustomPropertiesChanged(play, msg) {
 }
 
 // 玩家属性变更应答
-function handlePlayerCustomPropertiesChangedResponse() {
-  // nothing
+function handlePlayerCustomPropertiesChangedResponse(play, msg) {
+  if (msg.reasonCode) {
+    handleReasonMsg(play, msg);
+  }
 }
 
 // 玩家属性变更
@@ -233,29 +244,31 @@ export default function handleGameMsg(play, message) {
           handlePlayerLeftRoom(play, msg);
           break;
         case 'master-client-updated':
-          handleMasterUpdated(msg);
+          handleMasterUpdated(play, msg);
           break;
         case 'master-client-changed':
           handleMasterChanged(play, msg);
           break;
         case 'opened':
+          handleRoomOpened(play, msg);
           break;
         case 'opened-notify':
           handleRoomOpenedChanged(play, msg);
           break;
         case 'visible':
+          handleRoomVisiable(play, msg);
           break;
         case 'visible-notify':
           handleRoomVisibleChanged(play, msg);
           break;
         case 'updated':
-          handleRoomCustomPropertiesChangedResponse(msg);
+          handleRoomCustomPropertiesChangedResponse(play, msg);
           break;
         case 'updated-notify':
           handleRoomCustomPropertiesChanged(play, msg);
           break;
         case 'player-prop-updated':
-          handlePlayerCustomPropertiesChangedResponse();
+          handlePlayerCustomPropertiesChangedResponse(play, msg);
           break;
         case 'player-props':
           handlePlayerCustomPropertiesChanged(play, msg);

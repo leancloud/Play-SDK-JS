@@ -1,33 +1,43 @@
 import Player from '../Player';
 import LobbyRoom from '../LobbyRoom';
-import handleErrorMsg from './ErrorHandler';
+import { handleErrorMsg, handleReasonMsg } from './ErrorHandler';
 import Event from '../Event';
 import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
 
 // 连接建立
 function handleSessionOpen(play, msg) {
-  play._playState = PlayState.LOBBY_OPEN;
-  play._sessionToken = msg.st;
-  const player = new Player(play);
-  player._userId = play.userId;
-  play._player = player;
-  if (play.autoJoinLobby) {
-    play.joinLobby();
-  }
-  if (play._gameToLobby) {
-    play.emit(Event.ROOM_LEFT);
-    play._gameToLobby = false;
+  if (msg.reasonCode) {
+    play._closeLobbySocket(() => {
+      play._playState = PlayState.CLOSED;
+      const { reasonCode, detail } = msg;
+      this.emit(Event.CONNECT_FAILED, {
+        code: reasonCode,
+        detail,
+      });
+    });
   } else {
-    play.emit(Event.CONNECTED);
+    play._playState = PlayState.LOBBY_OPEN;
+    play._sessionToken = msg.st;
+    const player = new Player(play);
+    player._userId = play.userId;
+    play._player = player;
+    if (play.autoJoinLobby) {
+      play.joinLobby();
+    }
+    if (play._gameToLobby) {
+      play.emit(Event.ROOM_LEFT);
+      play._gameToLobby = false;
+    } else {
+      play.emit(Event.CONNECTED);
+    }
   }
 }
 
 // 加入大厅
 function handleJoinedLobby(play, msg) {
   if (msg.reasonCode) {
-    const { reasonCode, detail } = msg;
-    error(`join lobby failed: ${reasonCode} - ${detail}`);
+    handleReasonMsg(play, msg);
   } else {
     play._inLobby = true;
     play.emit(Event.LOBBY_JOINED);
