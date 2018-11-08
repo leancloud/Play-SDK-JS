@@ -68,7 +68,7 @@ function handleGameServer(play, msg) {
     play._inLobby = false;
     play.emit(Event.LOBBY_LEFT);
   }
-  play._gameServer = msg.secureAddr;
+  play._gameServer = msg.addr || msg.secureAddr; // secureAddr will be deprecated soon
   if (msg.cid) {
     play._cachedRoomMsg.cid = msg.cid;
   }
