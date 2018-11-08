@@ -5,8 +5,8 @@ declare class EventEmitter<T> {
   on(evt: string, listener: Function): this;
   once<K extends keyof T>(event: K, listener: (payload: T[K]) => any): this;
   once(evt: string, listener: Function): this;
-  off<K extends keyof T>(evt: T | string, listener?: Function): this;
-  emit<K extends keyof T>(evt: T | string, ...args: any[]): boolean;
+  off<K extends keyof T>(evt: K | string, listener?: Function): this;
+  emit<K extends keyof T>(evt: K | string, ...args: any[]): boolean;
 }
 
 export enum Region {
