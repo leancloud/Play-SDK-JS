@@ -60,4 +60,21 @@ export default [
       commonjs(),
     ],
   },
+  {
+    input: 'src/index.js',
+    output: {
+      name: 'play',
+      file: 'dist/play-laya.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    plugins: [
+      json(),
+      babel(BABEL_CONFIG),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+    ],
+  },
 ];

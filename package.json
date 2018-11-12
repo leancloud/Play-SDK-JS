@@ -6,7 +6,7 @@
   "scripts": {
     "precommit": "pretty-quick --staged",
     "lint": "eslint --ignore-path .gitignore src test && tsc play.d.ts",
-    "build": "rollup -c",
+    "build": "rollup -c && sh ./script/fix_laya.sh",
     "test:node": "nyc mocha test/**.js --exit",
     "test": "npm run lint && npm run test:node",
     "doc": "jsdoc src README.md package.json -c .jsdocrc.json -d ./doc/"
