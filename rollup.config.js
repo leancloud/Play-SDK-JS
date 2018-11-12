@@ -67,6 +67,8 @@ export default [
       file: 'dist/play-laya.js',
       format: 'umd',
       sourcemap: true,
+      banner: ';(function(exports) {',
+      footer: '})();',
     },
     plugins: [
       json(),
