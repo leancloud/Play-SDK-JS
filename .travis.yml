@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- '10'
-script: 
+  - '10'
+script:
   - npm run lint
   - npm run build
   - npm run doc
@@ -9,16 +9,17 @@ deploy:
   - provider: releases
     api_key:
       secure: RsxEJkYH3VkOwYVleRLd5QjjIJxt7iM80L1TJwpGB7vhBVRynzjiZpMRYABWuzijkDAtMUtEzZb1hSN+vN+tNVoJvIxe//kyymcxg0U6GAwK/BZVpdAM4omcUqEwCbRHVMp1mRO9Z96bWlCasFBMKDF3BiPBQY6IvXZgu6iWYXkoU24O9SmttNqSU9KC9UjJIGmFgOoldoEZaulWrxiWApFOa4aYC+OMMD/sIAbP12mqGehaMESGWG9LkGQEqoeg6yjdJtWAP2/nv6UG0glSzZkJPoEJw0MRZMmjrTKPMVSQsve04L9bv3uVKRFD6dlNAkPmw+hJwlo+sxWpFy3VqK1hrUm32zsokOXjIXHrQgKbpT/VMGTWZ9KU6lEXD0k1z0N+dXT5CwAYAzqE/b5BcRx0Kk/kksHvQq/xFKWNFxVrxBuG1kggavBODxtVtW3xPb07dpdpo0wVQGKpNg5XLGHCpZ8CbXRoMxrNsQvT3z7NJ25NFr9ORFNK2MiS8ZqvrMnV5yaR2FrioCYS/FtzqBcxxqaSYtLdQMwqDxPmt7gJwTwXxc1mG7M/CxqQ5VN2qz8NJ33biodmARSxdGa0CfHNLsYluXQJ0pxEVmpDxxAWeVKQfxnupHNDAUAgIC9OHUJqG7jP2LksljY3LaA/jiRfAYr3yLo7zDtjOwZpm4I=
-    file: 
-      - "./dist/play.js"
-      - "./dist/play-weapp.js"
+    file:
+      - './dist/play.js'
+      - './dist/play-weapp.js'
+      - './dist/play-laya.js'
     skip_cleanup: true
     on:
       tags: true
   - provider: npm
-    email: "lee55962698@gmail.com"
-    api_key: 
-      secure: "Ud3B+mnEtI4kkp+WOywl3Ifr0oQj2XW+dlBk86wzRSkRPyAm9K8gZ0WBs6R+iW/JjqH4ybZ1BdZtAzAi1L4NscKhCqxwFY+o1akCbqn2BB38FXGzNe8L5d+D11I6HNVxEVokJOKz7rbA2QYK5ODgQNFbvqdORFHpvaIlaLm5MVqEJZRhbO9HiYe0JXdZhZY9WclVwaR3zTX2LWAhNN8HzXs04P2JhUGbV/1i0tf9aNLWin4b0snQ8Q2iJsgpFPudo9XXlzfLym5Rjs1wPuiOKIyZQ0k+sR9pdeunu9ilyR3OLW0duskvje2mljCU3An2uJOPxejKuRtEe6TNJCzjhxTgAv6JPvpSy/PejZHLIJs/1UqTvxzBrBM2UICWuGHNda1Dnn40hsXL6AMdup35hm2KDCMEs9rErdBwVWMlIGv4uYiBpNSmRYJDnhpxHtYReqtB0uFXeOFVYUZiz+nxN+Ft/BvH5rMKFz8qDunmWbWa7gpELhuWVs4NgwKiayZlZN+P9sZo7sTaWPiVCN1x/6XEX5xO26GOqWMDnyBiSYhvTlVq2FBUSvKetq2m6/3x6MzPjtaD6Pezzz3Ccg8/TeaO2M6mGTJnt3Ifj5EnA3/rPPtswSN1p9rcFnCbqgJoPJTq93TyhGm33/fG6LutTbGjI2AQaQCGpxDtmuulKGs="
+    email: 'lee55962698@gmail.com'
+    api_key:
+      secure: 'Ud3B+mnEtI4kkp+WOywl3Ifr0oQj2XW+dlBk86wzRSkRPyAm9K8gZ0WBs6R+iW/JjqH4ybZ1BdZtAzAi1L4NscKhCqxwFY+o1akCbqn2BB38FXGzNe8L5d+D11I6HNVxEVokJOKz7rbA2QYK5ODgQNFbvqdORFHpvaIlaLm5MVqEJZRhbO9HiYe0JXdZhZY9WclVwaR3zTX2LWAhNN8HzXs04P2JhUGbV/1i0tf9aNLWin4b0snQ8Q2iJsgpFPudo9XXlzfLym5Rjs1wPuiOKIyZQ0k+sR9pdeunu9ilyR3OLW0duskvje2mljCU3An2uJOPxejKuRtEe6TNJCzjhxTgAv6JPvpSy/PejZHLIJs/1UqTvxzBrBM2UICWuGHNda1Dnn40hsXL6AMdup35hm2KDCMEs9rErdBwVWMlIGv4uYiBpNSmRYJDnhpxHtYReqtB0uFXeOFVYUZiz+nxN+Ft/BvH5rMKFz8qDunmWbWa7gpELhuWVs4NgwKiayZlZN+P9sZo7sTaWPiVCN1x/6XEX5xO26GOqWMDnyBiSYhvTlVq2FBUSvKetq2m6/3x6MzPjtaD6Pezzz3Ccg8/TeaO2M6mGTJnt3Ifj5EnA3/rPPtswSN1p9rcFnCbqgJoPJTq93TyhGm33/fG6LutTbGjI2AQaQCGpxDtmuulKGs='
     skip_cleanup: true
     on:
       tags: true
