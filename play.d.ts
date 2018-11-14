@@ -221,7 +221,6 @@ export class Play extends EventEmitter<PlayEvent> {
 export enum CreateRoomFlag {
   FixedMaster = 1,
   MasterUpdateRoomProperties = 2,
-  MasterSetMaster = 4,
 }
 
 export function setAdapter(newAdapters: { WebSocketAdapter: Function }): void;
