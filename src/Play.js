@@ -281,6 +281,7 @@ export default class Play extends EventEmitter {
     this._stopPong();
     this._closeLobbySocket();
     this._closeGameSocket();
+    this.removeAllListeners();
   }
 
   /**
