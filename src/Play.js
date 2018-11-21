@@ -1,20 +1,17 @@
-import request from 'superagent';
 import EventEmitter from 'eventemitter3';
+import machina from 'machina';
+import _ from 'lodash';
 
-import Region from './Region';
 import Event from './Event';
 import handleLobbyMsg from './handler/LobbyHandler';
 import handleGameMsg from './handler/GameHandler';
-import {
-  PlayVersion,
-  NorthCNServerURL,
-  EastCNServerURL,
-  USServerURL,
-} from './Config';
+import { PlayVersion } from './Config';
 import { adapters } from './PlayAdapter';
-import isWeapp from './Utils';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
+
+import AppRouter from './AppRouter';
+import LobbyConnect from './LobbyConnection';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -99,6 +96,51 @@ export default class Play extends EventEmitter {
      */
     this.userId = null;
     this.reset();
+
+    // fsm
+    this._fsm = new machina.Fsm({
+      initialize(play) {
+        this._play = play;
+      },
+
+      namespace: 'play',
+
+      initialState: 'init',
+
+      states: {
+        init: {
+          _onEnter() {
+            const { _appId, _insecure, _feature } = this._play;
+            this._router = new AppRouter({
+              appId: _appId,
+              insecure: _insecure,
+              feature: _feature,
+            });
+          },
+          connect() {
+            this._router
+              .connect(this._play._gameVersion)
+              .then(res => {
+                const { primaryServer, secondaryServer } = res;
+                this._primaryServer = primaryServer;
+                this._secondaryServer = secondaryServer;
+                // TODO 与大厅建立连接
+                this._lobbyConn = new LobbyConnect();
+                this._lobbyConn
+                  .connect(this._primaryServer)
+                  .then()
+                  .catch();
+              })
+              .catch(error => {
+                // TODO 处理 error
+              });
+            this.transition('connecting');
+          },
+        },
+        connecting: {},
+        connected: {},
+      },
+    });
   }
 
   /**
@@ -108,111 +150,21 @@ export default class Play extends EventEmitter {
    */
   connect({ gameVersion = '0.0.1' } = {}) {
     // 判断是否有 userId
-    if (this.userId === null) {
+    if (_.isNull(this.userId)) {
       throw new Error('userId is null');
     }
-    if (
-      this._playState === PlayState.CONNECTING ||
-      this._playState === PlayState.LOBBY_OPEN ||
-      this._playState === PlayState.GAME_OPEN
-    ) {
-      warn(`Current play state: ${this._playState}, ignore`);
-      return;
-    }
-    // 判断是否已经在等待连接
-    if (this._connectTimer) {
-      warn('waiting for connect');
-      return;
-    }
-
-    // 判断连接时间
-    const now = new Date().getTime();
-    if (now < this._nextConnectTimestamp) {
-      const waitTime = this._nextConnectTimestamp - now;
-      debug(`wait time: ${waitTime}`);
-      this._connectTimer = setTimeout(() => {
-        debug('connect time out');
-        this._connect(gameVersion);
-        clearTimeout(this._connectTimer);
-        this._connectTimer = null;
-      }, waitTime);
-    } else {
-      this._connect(gameVersion);
-    }
-  }
-
-  _connect(gameVersion) {
-    if (gameVersion && !(typeof gameVersion === 'string')) {
+    if (!_.isString(gameVersion)) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
     this._gameVersion = gameVersion;
-    let masterURL = EastCNServerURL;
-    if (this._region === Region.NorthChina) {
-      masterURL = NorthCNServerURL;
-    } else if (this._region === Region.EastChina) {
-      masterURL = EastCNServerURL;
-    } else if (this._region === Region.NorthAmerica) {
-      masterURL = USServerURL;
-    }
-
-    this._playState = PlayState.CONNECTING;
-    const query = { appId: this._appId, sdkVersion: PlayVersion };
-    // 使用设置覆盖 SDK 判断的 feature
-    if (this._feature) {
-      query.feature = this._feature;
-    } else if (isWeapp) {
-      query.feature = 'wechat';
-    }
-    // 使用 ws
-    if (this._insecure) {
-      query.insecure = this._insecure;
-    }
-    this._httpReq = request
-      .get(masterURL)
-      .query(query)
-      .end((err, response) => {
-        if (err) {
-          error(err);
-          // 连接失败，则增加下次连接时间间隔
-          this._connectFailedCount += 1;
-          this._nextConnectTimestamp =
-            Date.now() + 2 ** this._connectFailedCount * 1000;
-          this.emit(Event.CONNECT_FAILED, {
-            code: -1,
-            detail: 'Game router connect failed',
-          });
-        } else {
-          const body = JSON.parse(response.text);
-          debug(response.text);
-          // 重置下次允许的连接时间
-          this._connectFailedCount = 0;
-          this._nextConnectTimestamp = 0;
-          clearTimeout(this._connectTimer);
-          this._connectTimer = null;
-          // 主大厅服务器
-          this._primaryServer = body.server;
-          // 备用大厅服务器
-          this._secondaryServer = body.secondary;
-          // 默认服务器是 master server
-          this._masterServer = this._primaryServer;
-          // ttl
-          this._serverValidTimeStamp = Date.now() + body.ttl * 1000;
-          this._connectToMaster();
-        }
-      });
+    this._fsm.handle('connect');
   }
 
   /**
    * 重新连接
    */
   reconnect() {
-    const now = Date.now();
-    if (now > this._serverValidTimeStamp) {
-      // 超出 ttl 后将重新请求 router 连接
-      this.connect(this._gameVersion);
-    } else {
-      this._connectToMaster();
-    }
+    this._fsm.handle('connect');
   }
 
   /**
