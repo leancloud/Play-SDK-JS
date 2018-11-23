@@ -7,10 +7,10 @@ import { PlayVersion } from './Config';
 
 import Connection from './Connection';
 
-export default class LobbyConnection extends Connection {
+export default class GameConnection extends Connection {
   constructor(userId) {
     super(userId);
-    this._flag = 'lobby';
-    this._pingDuration = 120000;
+    this._flag = 'game';
+    this._pingDuration = 10000;
   }
 }

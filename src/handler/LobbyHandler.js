@@ -6,7 +6,8 @@ import PlayState from '../PlayState';
 import { debug, error } from '../Logger';
 
 // 连接建立
-function handleSessionOpen(play, msg) {
+function handleSessionOpen(play, msg, resolve, reject) {
+  debug(`handle lobby session open: ${msg}`);
   if (msg.reasonCode) {
     play._closeLobbySocket(() => {
       play._playState = PlayState.CLOSED;
@@ -15,22 +16,26 @@ function handleSessionOpen(play, msg) {
         code: reasonCode,
         detail,
       });
+      play._fsm.handle('sessionFailed');
+      reject(new Error(`${reasonCode}, ${detail}`));
     });
   } else {
-    play._playState = PlayState.LOBBY_OPEN;
-    play._sessionToken = msg.st;
-    const player = new Player(play);
-    player._userId = play.userId;
-    play._player = player;
-    if (play.autoJoinLobby) {
-      play.joinLobby();
-    }
-    if (play._gameToLobby) {
-      play.emit(Event.ROOM_LEFT);
-      play._gameToLobby = false;
-    } else {
-      play.emit(Event.CONNECTED);
-    }
+    // play._playState = PlayState.LOBBY_OPEN;
+    // play._sessionToken = msg.st;
+    // const player = new Player(play);
+    // player._userId = play.userId;
+    // play._player = player;
+    // if (play.autoJoinLobby) {
+    //   play.joinLobby();
+    // }
+    // if (play._gameToLobby) {
+    //   play.emit(Event.ROOM_LEFT);
+    //   play._gameToLobby = false;
+    // } else {
+    //   play.emit(Event.CONNECTED);
+    // }
+    play._fsm.handle();
+    resolve();
   }
 }
 
@@ -103,7 +108,7 @@ function handleJoinGameServer(play, msg) {
 }
 
 // 大厅消息处理
-export default function handleLobbyMsg(play, message) {
+function handleLobbyMsg(play, message) {
   const msg = JSON.parse(message.data);
   debug(`${play.userId} Lobby msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
@@ -169,3 +174,8 @@ export default function handleLobbyMsg(play, message) {
       break;
   }
 }
+
+module.exports = {
+  handleSessionOpen,
+  handleLobbyMsg,
+};

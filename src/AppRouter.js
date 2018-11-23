@@ -18,14 +18,17 @@ export default class AppRouter {
     this._feature = feature;
     this._nextConnectTimestamp = 0;
     this._connectFailedCount = 0;
+    this._serverValidTimeStamp = 0;
   }
 
   connect(gameVersion) {
+    debug(`AppRouter connect(${gameVersion})`);
     return new Promise((resolve, reject) => {
       if (!_.isString(gameVersion)) {
         throw new TypeError(`${gameVersion} is not a string`);
       }
       const now = Date.now();
+      debug(`${now}, ${this._serverValidTimeStamp}`);
       if (now < this._serverValidTimeStamp) {
         // 在有效期范围内，则不再请求，直接返回
         resolve({
@@ -36,6 +39,7 @@ export default class AppRouter {
       } else {
         this._resolve = resolve;
         this._reject = reject;
+        debug(`${now}, ${this._nextConnectTimestamp}`);
         if (now < this._nextConnectTimestamp) {
           // 判断连接间隔，如果在间隔内，则延迟连接
           const waitTime = this._nextConnectTimestamp - now;
@@ -54,6 +58,7 @@ export default class AppRouter {
   }
 
   _connect() {
+    debug('AppRouter _connect()');
     let masterURL = NorthCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;

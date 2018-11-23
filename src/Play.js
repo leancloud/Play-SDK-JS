@@ -3,15 +3,13 @@ import machina from 'machina';
 import _ from 'lodash';
 
 import Event from './Event';
-import handleLobbyMsg from './handler/LobbyHandler';
+import { handleSessionOpen, handleLobbyMsg } from './handler/LobbyHandler';
 import handleGameMsg from './handler/GameHandler';
 import { PlayVersion } from './Config';
 import { adapters } from './PlayAdapter';
 import PlayState from './PlayState';
 import { debug, warn, error } from './Logger';
-
-import AppRouter from './AppRouter';
-import LobbyConnect from './LobbyConnection';
+import PlayFSM from './PlayFSM';
 
 const MAX_PLAYER_COUNT = 10;
 const LOBBY_KEEPALIVE_DURATION = 120000;
@@ -98,48 +96,8 @@ export default class Play extends EventEmitter {
     this.reset();
 
     // fsm
-    this._fsm = new machina.Fsm({
-      initialize(play) {
-        this._play = play;
-      },
-
-      namespace: 'play',
-
-      initialState: 'init',
-
-      states: {
-        init: {
-          _onEnter() {
-            const { _appId, _insecure, _feature } = this._play;
-            this._router = new AppRouter({
-              appId: _appId,
-              insecure: _insecure,
-              feature: _feature,
-            });
-          },
-          connect() {
-            this._router
-              .connect(this._play._gameVersion)
-              .then(res => {
-                const { primaryServer, secondaryServer } = res;
-                this._primaryServer = primaryServer;
-                this._secondaryServer = secondaryServer;
-                // TODO 与大厅建立连接
-                this._lobbyConn = new LobbyConnect();
-                this._lobbyConn
-                  .connect(this._primaryServer)
-                  .then()
-                  .catch();
-              })
-              .catch(error => {
-                // TODO 处理 error
-              });
-            this.transition('connecting');
-          },
-        },
-        connecting: {},
-        connected: {},
-      },
+    this._fsm = new PlayFSM({
+      play: this,
     });
   }
 
@@ -149,6 +107,7 @@ export default class Play extends EventEmitter {
    * @param {string} [opts.gameVersion] 游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
    */
   connect({ gameVersion = '0.0.1' } = {}) {
+    debug(`call connect(${gameVersion})`);
     // 判断是否有 userId
     if (_.isNull(this.userId)) {
       throw new Error('userId is null');
@@ -157,14 +116,14 @@ export default class Play extends EventEmitter {
       throw new TypeError(`${gameVersion} is not a string`);
     }
     this._gameVersion = gameVersion;
-    this._fsm.handle('connect');
+    return this._fsm.handle('connect');
   }
 
   /**
    * 重新连接
    */
   reconnect() {
-    this._fsm.handle('connect');
+    return this._fsm.handle('connect');
   }
 
   /**
@@ -191,24 +150,7 @@ export default class Play extends EventEmitter {
    * 断开连接
    */
   disconnect() {
-    if (
-      this._playState !== PlayState.LOBBY_OPEN &&
-      this._playState !== PlayState.GAME_OPEN
-    ) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    this._playState = PlayState.CLOSING;
-    this._stopPing();
-    this._stopPong();
-    this._closeLobbySocket(() => {
-      debug('on close lobby socket');
-      this._closeGameSocket(() => {
-        debug('on close game socket');
-        this._playState = PlayState.CLOSED;
-        this.emit(Event.DISCONNECTED);
-        debug(`${this.userId} disconnect.`);
-      });
-    });
+    return this._fsm.handle('disconnect');
   }
 
   /**
@@ -239,30 +181,14 @@ export default class Play extends EventEmitter {
    * 加入大厅，只有在 autoJoinLobby = false 时才需要调用
    */
   joinLobby() {
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'lobby',
-      op: 'add',
-      i: this._getMsgId(),
-    };
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('joinLobby');
   }
 
   /**
    * 离开大厅
    */
   leaveLobby() {
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'lobby',
-      op: 'remove',
-      i: this._getMsgId(),
-    };
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('leaveLobby');
   }
 
   /**
@@ -294,29 +220,11 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    // 缓存 GameServer 创建房间的消息体
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'start',
-      i: this._getMsgId(),
-    };
-    if (roomName) {
-      this._cachedRoomMsg.cid = roomName;
-    }
-    // 拷贝房间属性（包括 系统属性和玩家定义属性）
-    if (roomOptions) {
-      const opts = convertRoomOptions(roomOptions);
-      this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
-    }
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-    // Router 创建房间的消息体
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('createRoom', {
+      roomName,
+      roomOptions,
+      expectedUserIds,
+    });
   }
 
   /**
@@ -331,21 +239,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    // 加入房间的消息体
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-    };
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('joinRoom', roomName, { expectedUserIds });
   }
 
   /**
