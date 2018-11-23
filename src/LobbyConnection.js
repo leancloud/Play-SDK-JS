@@ -7,10 +7,16 @@ import { PlayVersion } from './Config';
 
 import Connection from './Connection';
 
+const LOBBY_KEEPALIVE_DURATION = 120000;
+
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class LobbyConnection extends Connection {
   constructor(userId) {
     super(userId);
     this._flag = 'lobby';
-    this._pingDuration = 120000;
+  }
+
+  _getPingDuration() {
+    return LOBBY_KEEPALIVE_DURATION;
   }
 }

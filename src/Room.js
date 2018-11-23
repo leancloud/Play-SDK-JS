@@ -129,7 +129,7 @@ export default class Room {
    * @param {Object} [opts.expectedValues] 期望属性，用于 CAS 检测
    */
   setCustomProperties(properties, { expectedValues = null } = {}) {
-    this._play._setRoomCustomProperties(properties, expectedValues);
+    return this._play._setRoomCustomProperties(properties, expectedValues);
   }
 
   /**

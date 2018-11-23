@@ -209,6 +209,78 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
+      joinOrCreateRoom(
+        roomName,
+        { roomOptions = null, expectedUserIds = null } = {}
+      ) {
+        this.transition('lobbyToGame');
+        return new Promise(async (resolve, reject) => {
+          try {
+            const joinOrCreateRoomMsg = this._newJoinOrCreateRoomMsg(roomName, {
+              roomOptions,
+              expectedUserIds,
+            });
+            const joinOrCreateRoomResMsg = await this._lobbyConn.send(
+              joinOrCreateRoomMsg
+            );
+            if (joinOrCreateRoomResMsg.reasonCode) {
+              this._reject(joinOrCreateRoomResMsg, reject);
+            } else {
+              // TODO 区分创建还是加入
+            }
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
+        this.transition('lobbyToGame');
+        return new Promise(async (resolve, reject) => {
+          try {
+            const joinRandomRoomMsg = this._newJoinRandomRoomMsg({
+              matchProperties,
+              expectedUserIds,
+            });
+            const joinRandomRoomResMsg = await this._lobbyConn.send(
+              joinRandomRoomMsg
+            );
+            if (joinRandomRoomResMsg.reasonCode) {
+              this._reject(joinRandomRoomResMsg, reject);
+            } else {
+              // 连接游戏服务器
+              const gameServer =
+                joinRandomRoomResMsg.addr || joinRandomRoomResMsg.secureAddr;
+              await this._connectGameServer(gameServer);
+              const joinRoomMsgForGame = this._newJoinRoomMsgForGame(
+                joinRandomRoomResMsg.cid,
+                {
+                  matchProperties,
+                  expectedUserIds,
+                }
+              );
+              const joinRoomResMsg = await this._gameConn.send(
+                joinRoomMsgForGame
+              );
+              if (joinRoomResMsg.reasonCode) {
+                // 加入房间失败
+                await this._gameConn.close();
+                this._reject(joinRoomResMsg, reject);
+              } else {
+                // 加入房间成功
+                await this._lobbyConn.close();
+                // TODO 构建房间内存对象
+
+                this.transition('gameConnected');
+                resolve();
+              }
+            }
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
       disconnect() {
         return new Promise(async (resolve, reject) => {
           try {
@@ -231,6 +303,142 @@ const PlayFSM = machina.Fsm.extend({
     gameConnected: {
       _onEnter() {
         debug('gameConnected _onEnter()');
+      },
+
+      setRoomOpened(opened) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'open',
+              toggle: opened,
+            };
+            await this._gameConn.send(msg);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      setRoomVisible(visible) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'visible',
+              toggle: visible,
+            };
+            await this._gameConn.send(msg);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      setMaster(newMasterId) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'update-master-client',
+              masterActorId: newMasterId,
+            };
+            await this._gameConn.send(msg);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      sendEvent(eventId, eventData, options) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'direct',
+              i: this._getMsgId(),
+              eventId,
+              msg: eventData,
+              receiverGroup: options.receiverGroup,
+              toActorIds: options.targetActorIds,
+            };
+            await this._gameConn.send(msg);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      leaveRoom() {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'remove',
+              // TODO this.room
+              cid: this.room.name,
+            };
+            await this._gameConn.send(msg);
+            await this._gameConn.close();
+            await this._lobbyConn.connect();
+            const sessionMsg = this._newOpenLobbySessionMsg();
+            const sessionResMsg = await this._lobbyConn.send(sessionMsg);
+            if (sessionResMsg.reasonCode) {
+              // TODO 关闭 socket 连接
+
+              // TODO 抛出连接失败的事件
+
+              const { reasonCode, detail } = sessionResMsg;
+              reject(new Error(`${reasonCode}, ${detail}`));
+            } else {
+              this.transition('lobbyConnected');
+              resolve();
+            }
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      setRoomCustomProperties(properties, expectedValues) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'update',
+              attr: properties,
+            };
+            if (expectedValues) {
+              msg.expectAttr = expectedValues;
+            }
+            await this._gameConn.send(msg);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      setPlayerCustomProperties(actorId, properties, expectedValues) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const msg = {
+              cmd: 'conv',
+              op: 'update-player-prop',
+              targetActorId: actorId,
+              attr: properties,
+            };
+            if (expectedValues) {
+              msg.expectAttr = expectedValues;
+            }
+            await this._gameConn.send(msg);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
       },
 
       disconnect() {
@@ -336,6 +544,79 @@ const PlayFSM = machina.Fsm.extend({
     };
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
+    }
+    return msg;
+  },
+
+  _newJoinOrCreateRoomMsg(
+    roomName,
+    { roomOptions = null, expectedUserIds = null } = {}
+  ) {
+    const msg = {
+      cmd: 'conv',
+      op: 'add',
+      i: this._getMsgId(),
+      cid: roomName,
+      createOnNotFound: true,
+    };
+    if (expectedUserIds) {
+      msg.expectMembers = expectedUserIds;
+    }
+    return msg;
+  },
+
+  _newJoinOrCreateRoomMsgForGame(
+    roomName,
+    { roomOptions = null, expectedUserIds = null } = {}
+  ) {
+    let msg = {
+      cmd: 'conv',
+      op: 'add',
+      i: this._getMsgId(),
+      cid: roomName,
+    };
+    // 拷贝房间参数
+    if (roomOptions != null) {
+      const opts = convertRoomOptions(roomOptions);
+      msg = Object.assign(msg, opts);
+    }
+    if (expectedUserIds) {
+      msg.expectMembers = expectedUserIds;
+    }
+    return msg;
+  },
+
+  _newJoinRandomRoomMsg({
+    matchProperties = null,
+    expectedUserIds = null,
+  } = {}) {
+    const msg = {
+      cmd: 'conv',
+      op: 'add-random',
+    };
+    if (matchProperties) {
+      msg.expectAttr = matchProperties;
+    }
+    if (expectedUserIds) {
+      msg.expectMembers = expectedUserIds;
+    }
+    return msg;
+  },
+
+  _newJoinRoomMsgForGame(
+    roomName,
+    { matchProperties = null, expectedUserIds = null } = {}
+  ) {
+    const msg = {
+      cmd: 'conv',
+      op: 'add',
+      cid: roomName,
+    };
+    if (matchProperties) {
+      this._cachedRoomMsg.expectAttr = matchProperties;
+    }
+    if (expectedUserIds) {
+      this._cachedRoomMsg.expectMembers = expectedUserIds;
     }
     return msg;
   },

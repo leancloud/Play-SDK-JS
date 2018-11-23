@@ -75,7 +75,7 @@ export default class Player {
    * @param {Object} [opts.expectedValues] 期望属性，用于 CAS 检测
    */
   setCustomProperties(properties, { expectedValues = null } = {}) {
-    this._play._setPlayerCustomProperties(
+    return this._play._setPlayerCustomProperties(
       this._actorId,
       properties,
       expectedValues
