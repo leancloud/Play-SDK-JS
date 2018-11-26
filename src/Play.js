@@ -127,7 +127,6 @@ export default class Play extends EventEmitter {
     this._connectFailedCount = 0;
     this._nextConnectTimestamp = 0;
     this._gameToLobby = false;
-    this._stopConnectTimer();
   }
 
   /**
@@ -203,18 +202,7 @@ export default class Play extends EventEmitter {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-      rejoin: true,
-    };
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('rejoinRoom', roomName);
   }
 
   /**
@@ -245,7 +233,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.joinOrCreateRoom(roomName, {
+    return this._fsm.handle('joinOrCreateRoom', roomName, {
       roomOptions,
       expectedUserIds,
     });
@@ -264,7 +252,10 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.joinRandomRoom({ matchProperties, expectedUserIds });
+    return this._fsm.handle('joinRandomRoom', {
+      matchProperties,
+      expectedUserIds,
+    });
   }
 
   /**
@@ -408,36 +399,5 @@ export default class Play extends EventEmitter {
       properties,
       expectedValues
     );
-  }
-
-  _stopConnectTimer() {
-    if (this._connectTimer) {
-      clearTimeout(this._connectTimer);
-      this._connectTimer = null;
-    }
-  }
-
-  _stopPing() {
-    if (this._ping) {
-      clearTimeout(this._ping);
-      this._ping = null;
-    }
-  }
-
-  _stopPong() {
-    if (this._pong) {
-      clearTimeout(this._pong);
-      this._pong = null;
-    }
-  }
-
-  _startPongListener(ws, duration) {
-    this._pong = setTimeout(() => {
-      // ping
-      this._send(ws, {}, '', duration);
-      this._pong = setTimeout(() => {
-        ws.close();
-      }, duration);
-    }, duration * MAX_NO_PONG_TIMES);
   }
 }

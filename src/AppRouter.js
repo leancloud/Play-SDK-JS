@@ -10,6 +10,7 @@ import {
 } from './Config';
 import Region from './Region';
 import isWeapp from './Utils';
+import { PlayErrorCode, PlayError } from './PlayError';
 
 export default class AppRouter {
   constructor({ appId, insecure, feature }) {
@@ -87,7 +88,7 @@ export default class AppRouter {
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
             Date.now() + 2 ** this._connectFailedCount * 1000;
-          this._reject(err);
+          this._reject(new PlayError(PlayErrorCode.ROUTER_ERROR, err.message));
         } else {
           const body = JSON.parse(response.text);
           debug(response.text);
@@ -108,5 +109,11 @@ export default class AppRouter {
           });
         }
       });
+  }
+
+  abort() {
+    if (this._httpReq) {
+      this._httpReq.abort();
+    }
   }
 }

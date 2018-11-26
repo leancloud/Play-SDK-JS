@@ -6,19 +6,40 @@ import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 
 const MAX_NO_PONG_TIMES = 2;
+const MAX_PLAYER_COUNT = 10;
+
+function convertRoomOptions(roomOptions) {
+  const options = {};
+  if (!roomOptions.opened) options.open = roomOptions.opened;
+  if (!roomOptions.visible) options.visible = roomOptions.visible;
+  if (roomOptions.emptyRoomTtl > 0)
+    options.emptyRoomTtl = roomOptions.emptyRoomTtl;
+  if (roomOptions.playerTtl > 0) options.playerTtl = roomOptions.playerTtl;
+  if (
+    roomOptions.maxPlayerCount > 0 &&
+    roomOptions.maxPlayerCount < MAX_PLAYER_COUNT
+  )
+    options.maxMembers = roomOptions.maxPlayerCount;
+  if (roomOptions.customRoomProperties)
+    options.attr = roomOptions.customRoomProperties;
+  if (roomOptions.customRoomPropertyKeysForLobby)
+    options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
+  if (roomOptions.flag) options.flag = roomOptions.flag;
+  return options;
+}
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
-export default class Connection extends EventEmitter {
-  constructor(userId) {
+class Connection extends EventEmitter {
+  constructor() {
     super();
     this._requests = {};
     this._msgId = 0;
-    this._userId = userId;
     this._pingTimer = null;
     this._pongTimer = null;
   }
 
-  connect(server) {
+  connect(server, userId) {
+    this._userId = userId;
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
       this._ws = new WebSocket(server);
@@ -42,7 +63,11 @@ export default class Connection extends EventEmitter {
         if (!_.isNull(i) && this._requests[i]) {
           // 如果有对应 resolve，则返回
           const { resolve: res, reject: rej } = this._requests[i];
-          res(msg);
+          if (msg.cmd === 'error') {
+            rej(msg);
+          } else {
+            res(msg);
+          }
         } else {
           // TODO 否则抛出事件
           debug('emit');
@@ -128,3 +153,8 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 }
+
+module.exports = {
+  convertRoomOptions,
+  Connection,
+};
