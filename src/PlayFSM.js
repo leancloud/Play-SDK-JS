@@ -2,6 +2,7 @@ import machina from 'machina';
 import _ from 'lodash';
 import { debug } from './Logger';
 import AppRouter from './AppRouter';
+import { ERROR_EVENT } from './Connection';
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import GameConnection, {
   PLAYER_JOINED_EVENT,
@@ -64,7 +65,7 @@ const PlayFSM = machina.Fsm.extend({
       },
       async connectFailed() {
         // 判断连接状态并关闭
-        this._router.about();
+        this._router.abort();
         await this._lobbyConn.close();
         this.transition('init');
       },
@@ -76,6 +77,12 @@ const PlayFSM = machina.Fsm.extend({
         this._lobbyConn.on(ROOM_LIST_UPDATED_EVENT, roomList => {
           this._play._lobbyRoomList = roomList;
           this._play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
+        });
+        this._lobbyConn.on(ERROR_EVENT, (code, detail) => {
+          this._play.emit(Event.ERROR, {
+            code,
+            detail,
+          });
         });
       },
 
@@ -211,6 +218,12 @@ const PlayFSM = machina.Fsm.extend({
             senderId,
           });
         });
+        this._gameConn.on(ERROR_EVENT, (code, detail) => {
+          this._play.emit(Event.ERROR, {
+            code,
+            detail,
+          });
+        });
       },
 
       _onExit() {
@@ -284,7 +297,6 @@ const PlayFSM = machina.Fsm.extend({
       try {
         const serverInfo = await this._router.connect(this._play._gameVersion);
         const { primaryServer, secondaryServer } = serverInfo;
-        debug(`AppRouter connect resolve ${primaryServer}, ${secondaryServer}`);
         this._primaryServer = primaryServer;
         this._secondaryServer = secondaryServer;
         // 与大厅建立连接
@@ -301,7 +313,7 @@ const PlayFSM = machina.Fsm.extend({
         if (err instanceof PlayError) {
           reject(err);
         } else {
-          reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
+          reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.detail));
         }
         this.handle('connectFailed');
       }

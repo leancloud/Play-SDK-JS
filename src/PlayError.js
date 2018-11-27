@@ -1,6 +1,6 @@
 export default class PlayError {
-  constructor(code, message) {
+  constructor(code, detail) {
     this._code = code;
-    this._message = message;
+    this._detail = detail;
   }
 }

@@ -1,7 +1,7 @@
 import request from 'superagent';
 import _ from 'lodash';
 
-import { debug, warn, error } from './Logger';
+import { debug } from './Logger';
 import {
   PlayVersion,
   NorthCNServerURL,
@@ -40,7 +40,6 @@ export default class AppRouter {
       } else {
         this._resolve = resolve;
         this._reject = reject;
-        debug(`${now}, ${this._nextConnectTimestamp}`);
         if (now < this._nextConnectTimestamp) {
           // 判断连接间隔，如果在间隔内，则延迟连接
           const waitTime = this._nextConnectTimestamp - now;

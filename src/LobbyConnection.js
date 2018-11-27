@@ -1,5 +1,6 @@
 import { PlayVersion } from './Config';
-import { PlayErrorCode, PlayError } from './PlayError';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
 
@@ -36,7 +37,7 @@ export default class LobbyConnection extends Connection {
         }
       } catch (err) {
         reject(
-          new PlayError(PlayErrorCode.OPEN_LOBBY_SESSION_ERROR, err.message)
+          new PlayError(PlayErrorCode.OPEN_LOBBY_SESSION_ERROR, err.detail)
         );
       }
     });

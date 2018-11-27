@@ -8,7 +8,9 @@ import { debug, error } from './Logger';
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
 
-function convertRoomOptions(roomOptions) {
+export const ERROR_EVENT = 'ERROR_EVENT';
+
+export function convertRoomOptions(roomOptions) {
   const options = {};
   if (!roomOptions.opened) options.open = roomOptions.opened;
   if (!roomOptions.visible) options.visible = roomOptions.visible;
@@ -27,8 +29,6 @@ function convertRoomOptions(roomOptions) {
   if (roomOptions.flag) options.flag = roomOptions.flag;
   return options;
 }
-
-export { convertRoomOptions };
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleMessage", "_handleErrorMsg", "_handleUnknownMsg"] }] */
 export default class Connection extends EventEmitter {
@@ -77,7 +77,7 @@ export default class Connection extends EventEmitter {
       };
       this._ws.onclose = () => {};
       this._ws.onerror = err => {
-        error(err);
+        error(err.message);
         reject();
       };
     });
@@ -162,7 +162,8 @@ export default class Connection extends EventEmitter {
 
   _handleErrorMsg(msg) {
     error(JSON.stringify(msg));
-    // TODO 发送错误事件
+    const { reasonCode: code, detail } = msg;
+    this.emit(ERROR_EVENT, code, detail);
   }
 
   _handleUnknownMsg(msg) {
