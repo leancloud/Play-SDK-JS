@@ -1,23 +1,18 @@
-import EventEmitter from 'eventemitter3';
-import _ from 'lodash';
-
-import { adapters } from './PlayAdapter';
-import { debug, error } from './Logger';
 import { PlayVersion } from './Config';
 import { PlayErrorCode, PlayError } from './PlayError';
-import { convertRoomOptions, Connection } from './Connection';
+import Connection, { convertRoomOptions } from './Connection';
+import LobbyRoom from './LobbyRoom';
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
+
+// 大厅连接抛出的事件
+export const ROOM_LIST_UPDATED_EVENT = 'ROOM_LIST_UPDATED_EVENT';
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class LobbyConnection extends Connection {
   constructor() {
     super();
     this._flag = 'lobby';
-  }
-
-  _getPingDuration() {
-    return LOBBY_KEEPALIVE_DURATION;
   }
 
   openSession(appId, userId, gameVersion) {
@@ -214,5 +209,50 @@ export default class LobbyConnection extends Connection {
         reject(err);
       }
     });
+  }
+
+  _getPingDuration() {
+    return LOBBY_KEEPALIVE_DURATION;
+  }
+
+  // 处理被动通知消息
+  _handleMessage(msg) {
+    switch (msg.cmd) {
+      case 'lobby':
+        switch (msg.op) {
+          case 'room-list':
+            this._handleRoomListMsg(msg);
+            break;
+          default:
+            super._handleUnknownMsg(msg);
+            break;
+        }
+        break;
+      case 'conv':
+        switch (msg.op) {
+          case 'results':
+            this._handleRoomListMsg(msg);
+            break;
+          default:
+            super._handleUnknownMsg(msg);
+            break;
+        }
+        break;
+      case 'error':
+        super._handleErrorMsg(msg);
+        break;
+      default:
+        super._handleUnknownMsg(msg);
+        break;
+    }
+  }
+
+  _handleRoomListMsg(msg) {
+    const roomList = [];
+    for (let i = 0; i < msg.list.length; i += 1) {
+      const lobbyRoomDTO = msg.list[i];
+      roomList.push(new LobbyRoom(lobbyRoomDTO));
+    }
+    this.emit(ROOM_LIST_UPDATED_EVENT, roomList);
   }
 }

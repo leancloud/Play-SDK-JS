@@ -1,14 +1,8 @@
 import EventEmitter from 'eventemitter3';
-import machina from 'machina';
 import _ from 'lodash';
 
-import Event from './Event';
-import { handleSessionOpen, handleLobbyMsg } from './handler/LobbyHandler';
-import handleGameMsg from './handler/GameHandler';
-import { PlayVersion } from './Config';
-import { adapters } from './PlayAdapter';
 import PlayState from './PlayState';
-import { debug, warn, error } from './Logger';
+import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 
 /**
@@ -88,20 +82,10 @@ export default class Play extends EventEmitter {
    * 重新连接并自动加入房间
    */
   reconnectAndRejoin() {
-    if (this._cachedRoomMsg === null) {
-      throw new Error('no cache room info');
+    if (_.isNull(this._lastRoomId)) {
+      throw new Error('There is not room name for rejoin');
     }
-    if (this._cachedRoomMsg.cid === undefined) {
-      throw new Error('not cache room name');
-    }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: this._cachedRoomMsg.cid,
-      rejoin: true,
-    };
-    this._connectToGame();
+    return this._fsm.handle('reconnectAndRejoin');
   }
 
   /**
@@ -172,11 +156,12 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    return this._fsm.handle('createRoom', {
+    return this._fsm.handle(
+      'createRoom',
       roomName,
       roomOptions,
-      expectedUserIds,
-    });
+      expectedUserIds
+    );
   }
 
   /**
@@ -191,7 +176,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle('joinRoom', roomName, { expectedUserIds });
+    return this._fsm.handle('joinRoom', roomName, expectedUserIds);
   }
 
   /**
@@ -233,10 +218,12 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle('joinOrCreateRoom', roomName, {
+    return this._fsm.handle(
+      'joinOrCreateRoom',
+      roomName,
       roomOptions,
-      expectedUserIds,
-    });
+      expectedUserIds
+    );
   }
 
   /**
@@ -252,10 +239,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle('joinRandomRoom', {
-      matchProperties,
-      expectedUserIds,
-    });
+    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
   }
 
   /**

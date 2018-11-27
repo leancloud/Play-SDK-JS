@@ -2,26 +2,21 @@
  * 玩家类
  */
 export default class Player {
-  constructor(play) {
-    this._play = play;
+  constructor() {
     this._userId = '';
     this._actorId = -1;
   }
 
-  static _newFromJSONObject(play, playerJSONObject) {
-    const player = new Player(play);
-    player._initWithJSONObject(playerJSONObject);
-    return player;
-  }
-
-  _initWithJSONObject(playerJSONObject) {
-    this._userId = playerJSONObject.pid;
-    this._actorId = playerJSONObject.actorId;
+  static _newFromJSONObject(playerJSONObject) {
+    const player = new Player();
+    player._userId = playerJSONObject.pid;
+    player._actorId = playerJSONObject.actorId;
     if (playerJSONObject.attr) {
-      this.properties = playerJSONObject.attr;
+      player.properties = playerJSONObject.attr;
     } else {
-      this.properties = {};
+      player.properties = {};
     }
+    return player;
   }
 
   /**

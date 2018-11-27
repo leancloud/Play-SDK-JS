@@ -1,11 +1,9 @@
 import { newPlay } from '../Utils';
-import { error } from '../../src/Logger';
 
-const { expect } = require('chai');
 const debug = require('debug')('Test:JoinRoom');
 
 describe('test join room', () => {
-  it('test join room', async () => {
+  it('test join room xx', async () => {
     const roomName = 'jr1_r1';
     const p0 = newPlay('jr1_0');
     const p1 = newPlay('jr1_1');
@@ -18,7 +16,9 @@ describe('test join room', () => {
     await p1.joinRoom(roomName);
     debug('join room done');
     await p0.disconnect();
+    debug('p0 disconnected');
     await p1.disconnect();
+    debug('p1 disconnected');
   });
 
   it('test join or create room', async () => {

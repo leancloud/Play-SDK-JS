@@ -1,23 +1,29 @@
-import EventEmitter from 'eventemitter3';
-import _ from 'lodash';
-
-import { adapters } from './PlayAdapter';
-import { debug, error } from './Logger';
 import { PlayVersion } from './Config';
 import { PlayErrorCode, PlayError } from './PlayError';
-import { convertRoomOptions, Connection } from './Connection';
+import Connection, { convertRoomOptions } from './Connection';
+import Room from './Room';
+import Player from './Player';
 
 const GAME_KEEPALIVE_DURATION = 7000;
+
+// 游戏连接抛出的事件
+export const PLAYER_JOINED_EVENT = 'PLAYER_JOINED_EVENT';
+export const PLAYER_LEFT_EVENT = 'PLAYER_LEFT_EVENT';
+export const MASTER_CHANGED_EVENT = 'MASTER_CHANGED_EVENT';
+export const ROOM_OPEN_CHANGED_EVENT = 'ROOM_OPEN_CHANGED_EVENT';
+export const ROOM_VISIBLE_CHANGED_EVENT = 'ROOM_VISIBLE_CHANGED_EVENT';
+export const ROOM_PROPERTIES_CHANGED_EVENT = 'ROOM_PROPERTIES_CHANGED_EVENT';
+export const PLAYER_PROPERTIES_CHANGED_EVENT =
+  'PLAYER_PROPERTIES_CHANGED_EVENT';
+export const PLAYER_OFFLINE_EVENT = 'PLAYER_OFFLINE_EVENT';
+export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
+export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class GameConnection extends Connection {
   constructor() {
     super();
     this._flag = 'game';
-  }
-
-  _getPingDuration() {
-    return GAME_KEEPALIVE_DURATION;
   }
 
   openSession(appId, userId, gameVersion) {
@@ -35,7 +41,6 @@ export default class GameConnection extends Connection {
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
-          // TODO 抛出连接失败的事件
         } else {
           resolve();
         }
@@ -69,9 +74,8 @@ export default class GameConnection extends Connection {
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {
-          // TODO 解构房间对象
-
-          resolve(res);
+          const room = Room._newFromJSONObject(res);
+          resolve(room);
         }
       } catch (err) {
         reject(err);
@@ -98,9 +102,8 @@ export default class GameConnection extends Connection {
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {
-          // TODO 解构房间对象
-
-          resolve(res);
+          const room = Room._newFromJSONObject(res);
+          resolve(room);
         }
       } catch (err) {
         reject(err);
@@ -242,5 +245,109 @@ export default class GameConnection extends Connection {
         reject(err);
       }
     });
+  }
+
+  _getPingDuration() {
+    return GAME_KEEPALIVE_DURATION;
+  }
+
+  _handleMessage(msg) {
+    switch (msg.cmd) {
+      case 'conv':
+        switch (msg.op) {
+          case 'members-joined':
+            this._handlePlayerJoined(msg);
+            break;
+          case 'members-left':
+            this._handlePlayerLeftMsg(msg);
+            break;
+          case 'master-client-changed':
+            this._handleMasterChangedMsg(msg);
+            break;
+          case 'opened-notify':
+            this._handleRoomOpenChangedMsg(msg);
+            break;
+          case 'visible-notify':
+            this._handleRoomVisibleChangedMsg(msg);
+            break;
+          case 'updated-notify':
+            this._handleRoomPropertiesChangedMsg(msg);
+            break;
+          case 'player-props':
+            this._handlePlayerPropertiesChangedMsg(msg);
+            break;
+          case 'members-offline':
+            this._handlePlayerOfflineMsg(msg);
+            break;
+          case 'members-online':
+            this._handlePlayerOnlineMsg(msg);
+            break;
+          default:
+            super._handleUnknownMsg(msg);
+            break;
+        }
+        break;
+      case 'direct':
+        this._handleSendEventMsg(msg);
+        break;
+      case 'error':
+        super._handleErrorMsg(msg);
+        break;
+      default:
+        super._handleUnknownMsg(msg);
+        break;
+    }
+  }
+
+  _handlePlayerJoined(msg) {
+    // TODO 修改 Player 构造方法
+    const newPlayer = Player._newFromJSONObject(msg.member);
+    this.emit(PLAYER_JOINED_EVENT, newPlayer);
+  }
+
+  _handlePlayerLeftMsg(msg) {
+    const { initByActor: actorId } = msg;
+    this.emit(PLAYER_LEFT_EVENT, actorId);
+  }
+
+  _handleMasterChangedMsg(msg) {
+    let { masterActorId: newMasterActorId } = msg;
+    if (newMasterActorId === null) newMasterActorId = -1;
+    this.emit(MASTER_CHANGED_EVENT, newMasterActorId);
+  }
+
+  _handleRoomOpenChangedMsg(msg) {
+    const { toggle: open } = msg;
+    this.emit(ROOM_OPEN_CHANGED_EVENT, open);
+  }
+
+  _handleRoomVisibleChangedMsg(msg) {
+    const { toggle: visible } = msg;
+    this.emit(ROOM_VISIBLE_CHANGED_EVENT, visible);
+  }
+
+  _handleRoomPropertiesChangedMsg(msg) {
+    const { attr: changedProps } = msg;
+    this.emit(ROOM_PROPERTIES_CHANGED_EVENT, changedProps);
+  }
+
+  _handlePlayerPropertiesChangedMsg(msg) {
+    const { actorId, attr: changedProps } = msg;
+    this.emit(PLAYER_PROPERTIES_CHANGED_EVENT, actorId, changedProps);
+  }
+
+  _handlePlayerOfflineMsg(msg) {
+    const { initByActor: actorId } = msg;
+    this.emit(PLAYER_OFFLINE_EVENT, actorId);
+  }
+
+  _handlePlayerOnlineMsg(msg) {
+    const player = Player._newFromJSONObject(msg.member);
+    this.emit(PLAYER_ONLINE_EVENT, player);
+  }
+
+  _handleSendEventMsg(msg) {
+    const { eventId, msg: eventData, fromActorId: senderId } = msg;
+    this.emit(SEND_CUSTOM_EVENT, eventId, eventData, senderId);
   }
 }

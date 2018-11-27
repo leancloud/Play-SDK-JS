@@ -28,8 +28,10 @@ function convertRoomOptions(roomOptions) {
   return options;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
-class Connection extends EventEmitter {
+export { convertRoomOptions };
+
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleMessage", "_handleErrorMsg", "_handleUnknownMsg"] }] */
+export default class Connection extends EventEmitter {
   constructor() {
     super();
     this._requests = {};
@@ -44,7 +46,7 @@ class Connection extends EventEmitter {
       const { WebSocket } = adapters;
       this._ws = new WebSocket(server);
       this._ws.onopen = () => {
-        debug('lobby connection opened');
+        debug(`${this._userId} : ${this._flag} connection opened`);
         resolve();
       };
       this._ws.onmessage = message => {
@@ -69,8 +71,8 @@ class Connection extends EventEmitter {
             res(msg);
           }
         } else {
-          // TODO 否则抛出事件
-          debug('emit');
+          // 交由子类处理事件
+          this._handleMessage(msg);
         }
       };
       this._ws.onclose = () => {};
@@ -120,7 +122,7 @@ class Connection extends EventEmitter {
       this._ws.onopen = null;
       this._ws.onmessage = null;
       this._ws.onclose = () => {
-        debug(`${this._flag} closed`);
+        debug(`${this._userId} : ${this._flag} closed`);
         resolve();
       };
       this._ws.onerror = err => {
@@ -152,9 +154,18 @@ class Connection extends EventEmitter {
   _getPingDuration() {
     throw new Error('must implement the method');
   }
-}
 
-module.exports = {
-  convertRoomOptions,
-  Connection,
-};
+  /* eslint no-unused-vars: ["error", { "args": "none" }] */
+  _handleMessage(msg) {
+    throw new Error('must implement the method');
+  }
+
+  _handleErrorMsg(msg) {
+    error(JSON.stringify(msg));
+    // TODO 发送错误事件
+  }
+
+  _handleUnknownMsg(msg) {
+    error(`unknow msg: ${JSON.stringify(msg)}`);
+  }
+}

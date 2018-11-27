@@ -4,13 +4,9 @@ import Player from './Player';
  * 房间类
  */
 export default class Room {
-  constructor(play) {
-    this._play = play;
-  }
-
   /* eslint no-param-reassign: ["error", { "props": false }] */
-  static _newFromJSONObject(play, roomJSONObject) {
-    const room = new Room(play);
+  static _newFromJSONObject(roomJSONObject) {
+    const room = new Room();
     room._name = roomJSONObject.cid;
     room._opened = roomJSONObject.open;
     room._visible = roomJSONObject.visible;
@@ -20,10 +16,7 @@ export default class Room {
     room._players = {};
     for (let i = 0; i < roomJSONObject.members.length; i += 1) {
       const playerDTO = roomJSONObject.members[i];
-      const player = Player._newFromJSONObject(play, playerDTO);
-      if (player.userId === play.userId) {
-        play._player = player;
-      }
+      const player = Player._newFromJSONObject(playerDTO);
       room._players[player.actorId] = player;
     }
     if (roomJSONObject.attr) {
