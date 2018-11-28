@@ -147,6 +147,7 @@ export default class Room {
       throw new TypeError(`${newPlayer} is not a Player`);
     }
     this._players[newPlayer.actorId] = newPlayer;
+    newPlayer._play = this._play;
   }
 
   _removePlayer(actorId) {

@@ -72,7 +72,12 @@ export default class GameConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          reject(
+            new PlayError(
+              PlayErrorCode.GAME_CREATE_ROOM_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           const room = Room._newFromJSONObject(res);
           resolve(room);

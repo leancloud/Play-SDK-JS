@@ -3,6 +3,7 @@ import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
+import { debug } from './Logger';
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 
@@ -98,7 +99,12 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          reject(
+            new PlayError(
+              PlayErrorCode.LOBBY_CREATE_ROOM_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           const { cid, addr, secureAddr } = res;
           resolve({ cid, addr, secureAddr });
@@ -122,6 +128,7 @@ export default class LobbyConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
+          debug('create room failed........');
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {

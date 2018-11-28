@@ -3,4 +3,12 @@ export default class PlayError {
     this._code = code;
     this._detail = detail;
   }
+
+  get code() {
+    return this._code;
+  }
+
+  get detail() {
+    return this._detail;
+  }
 }

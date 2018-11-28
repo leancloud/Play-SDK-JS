@@ -347,10 +347,14 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('gameConnected');
         resolve();
       } catch (err) {
-        await this._gameConn.close();
         if (err instanceof PlayError) {
+          if (err.code === PlayErrorCode.GAME_CREATE_ROOM_ERROR) {
+            await this._gameConn.close();
+          }
+          this.transition('lobbyConnected');
           reject(err);
         } else {
+          // TODO 未知错误？
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
         }
       }
@@ -506,11 +510,12 @@ const PlayFSM = machina.Fsm.extend({
 
   _initGame(gameRoom) {
     this._play._room = gameRoom;
+    gameRoom._play = this._play;
     /* eslint no-param-reassign: ["error", { "props": false }] */
     _.forEach(gameRoom.playerList, player => {
+      player._play = this._play;
       if (player.userId === this._play.userId) {
         this._play._player = player;
-        player._play = this._play;
       }
     });
   },
