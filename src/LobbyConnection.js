@@ -128,9 +128,13 @@ export default class LobbyConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
-          debug('create room failed........');
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          reject(
+            new PlayError(
+              PlayErrorCode.LOBBY_JOIN_ROOM_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           const { cid, addr, secureAddr } = res;
           resolve({ cid, addr, secureAddr });
@@ -184,7 +188,12 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          reject(
+            new PlayError(
+              PlayErrorCode.LOBBY_JOIN_RANDOM_ROOM_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           const { op, cid, addr, secureAddr } = res;
           resolve({ op, cid, addr, secureAddr });

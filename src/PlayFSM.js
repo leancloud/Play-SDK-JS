@@ -52,6 +52,7 @@ const PlayFSM = machina.Fsm.extend({
           try {
             await this._connect();
             await this._joinRoom(this._play._lastRoomId);
+            resolve();
           } catch (err) {
             reject(err);
           }
@@ -207,6 +208,7 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(PLAYER_ONLINE_EVENT, player => {
           this._play._room._removePlayer(player.actorId);
           this._play._room._addPlayer(player);
+          player._setActive(true);
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
             player,
           });
@@ -389,8 +391,11 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('gameConnected');
         resolve();
       } catch (err) {
-        await this._gameConn.close();
         if (err instanceof PlayError) {
+          if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
+            await this._gameConn.close();
+          }
+          this.transition('lobbyConnected');
           reject(err);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
@@ -469,8 +474,11 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('gameConnected');
         resolve();
       } catch (err) {
-        await this._gameConn.close();
         if (err instanceof PlayError) {
+          if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
+            await this._gameConn.close();
+          }
+          this.transition('lobbyConnected');
           reject(err);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
