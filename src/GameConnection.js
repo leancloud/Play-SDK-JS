@@ -122,8 +122,6 @@ export default class GameConnection extends Connection {
         const msg = {
           cmd: 'conv',
           op: 'remove',
-          // TODO this.room
-          cid: this.room.name,
         };
         await super.send(msg);
       } catch (err) {
