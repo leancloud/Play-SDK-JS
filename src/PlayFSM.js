@@ -329,42 +329,22 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _connect() {
-    this.transition('connecting');
     return new Promise(async (resolve, reject) => {
       try {
-        const serverInfo = await this._router.connect(this._play._gameVersion);
-        const { primaryServer, secondaryServer } = serverInfo;
-        this._primaryServer = primaryServer;
-        this._secondaryServer = secondaryServer;
-        // 与大厅建立连接
-        await this._lobbyConn.connect(
-          this._primaryServer,
-          this._play.userId
-        );
-        // 打开会话
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._lobbyConn.openSession(appId, userId, gameVersion);
-        this.transition('lobbyConnected');
+        await this._connectLobby();
         resolve();
         this._play.emit(Event.CONNECTED);
       } catch (err) {
-        if (err instanceof PlayError) {
-          reject(err);
-          this._play.emit(Event.CONNECT_FAILED, {
-            code: err.code,
-            detail: err.detail,
-          });
-        } else {
-          // TODO 无法处理的 ERROR 应该交由谁实例化
-          reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.detail));
-        }
-        this.handle('connectFailed');
+        reject(err);
+        this._play.emit(Event.CONNECT_FAILED, {
+          code: err.code,
+          detail: err.detail,
+        });
       }
     });
   },
 
   _createRoom(roomName, roomOptions, expectedUserIds) {
-    this.transition('lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.createRoom(
@@ -373,21 +353,9 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         const { cid, addr, secureAddr } = roomInfo;
-        const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play.userId
-        );
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
-        const gameRoom = await this._gameConn.createRoom(
-          cid,
-          roomOptions,
-          expectedUserIds
-        );
-        this._initGame(gameRoom);
-        await this._lobbyConn.close();
-        this.transition('gameConnected');
+        await this._connectGame(addr, secureAddr);
+        debug('_connected game');
+        await this._createGameRoom(cid, roomOptions, expectedUserIds);
         resolve();
         this._play.emit(Event.ROOM_CREATED);
         this._play.emit(Event.ROOM_JOINED);
@@ -408,7 +376,6 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _joinRoom(roomName, expectedUserIds) {
-    this.transition('lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinRoom(
@@ -416,23 +383,8 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         const { cid, addr, secureAddr } = roomInfo;
-        const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play.userId
-        );
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
-        const gameRoom = await this._gameConn.joinRoom(
-          cid,
-          null,
-          expectedUserIds
-        );
-        debug('joining room...');
-        this._initGame(gameRoom);
-        debug('join room done');
-        await this._lobbyConn.close();
-        this.transition('gameConnected');
+        await this._connectGame(addr, secureAddr);
+        await this._joinGameRoom(cid, expectedUserIds);
         resolve();
         this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
@@ -451,7 +403,6 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
-    this.transition('lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinOrCreateRoom(
@@ -460,36 +411,15 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         const { op, cid, addr, secureAddr } = roomInfo;
-        debug(`op: ${op}`);
-        const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play.userId
-        );
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
-        let gameRoom = null;
+        await this._connectGame(addr, secureAddr);
         if (op === 'started') {
-          gameRoom = await this._gameConn.createRoom(
-            cid,
-            roomOptions,
-            expectedUserIds
-          );
-        } else if (op === 'added') {
-          gameRoom = await this._gameConn.joinRoom(cid, expectedUserIds);
-        } else {
-          throw new PlayError(
-            PlayErrorCode.UNKNOWN_ERROR,
-            `joinOrCreatrRoom error response: ${JSON.stringify(roomInfo)}`
-          );
-        }
-        this._initGame(gameRoom);
-        await this._lobbyConn.close();
-        this.transition('gameConnected');
-        resolve();
-        if (op === 'started') {
+          await this._createGameRoom(cid, roomOptions, expectedUserIds);
+          resolve();
           this._play.emit(Event.ROOM_CREATED);
-        } else if (op === 'added') {
+          this._play.emit(Event.ROOM_JOINED);
+        } else {
+          await this._joinGameRoom(cid, expectedUserIds);
+          resolve();
           this._play.emit(Event.ROOM_JOINED);
         }
       } catch (err) {
@@ -515,17 +445,8 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         const { cid, addr, secureAddr } = roomInfo;
-        const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play.userId
-        );
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
-        const gameRoom = await this._gameConn.joinRoom(cid, expectedUserIds);
-        this._initGame(gameRoom);
-        await this._lobbyConn.close();
-        this.transition('gameConnected');
+        await this._connectGame(addr, secureAddr);
+        await this._joinGameRoom(cid, expectedUserIds, matchProperties);
         resolve();
         this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
@@ -549,17 +470,8 @@ const PlayFSM = machina.Fsm.extend({
       try {
         const roomInfo = await this._lobbyConn.rejoinRoom(roomName);
         const { cid, addr, secureAddr } = roomInfo;
-        const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play.userId
-        );
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
-        const gameRoom = await this._gameConn.joinRoom(cid);
-        this._initGame(gameRoom);
-        await this._lobbyConn.close();
-        this.transition('gameConnected');
+        await this._connectGame(addr, secureAddr);
+        await this._joinGameRoom(cid);
         resolve();
         this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
@@ -576,9 +488,96 @@ const PlayFSM = machina.Fsm.extend({
     });
   },
 
-  _createGameRoom() {},
+  _connectLobby() {
+    this.transition('connecting');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const serverInfo = await this._router.connect(this._play._gameVersion);
+        const { primaryServer, secondaryServer } = serverInfo;
+        this._primaryServer = primaryServer;
+        this._secondaryServer = secondaryServer;
+        // 与大厅建立连接
+        await this._lobbyConn.connect(
+          this._primaryServer,
+          this._play.userId
+        );
+        // 打开会话
+        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
+        await this._lobbyConn.openSession(appId, userId, gameVersion);
+        this.transition('lobbyConnected');
+        resolve();
+      } catch (err) {
+        await this._lobbyConn.close();
+        this.transition('init');
+        if (err instanceof PlayError) {
+          reject(err);
+          this._play.emit(Event.CONNECT_FAILED, {
+            code: err.code,
+            detail: err.detail,
+          });
+        } else {
+          // TODO 无法处理的 ERROR 应该交由谁实例化
+          reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.detail));
+        }
+      }
+    });
+  },
 
-  _joinGameRoom() {},
+  _connectGame(addr, secureAddr) {
+    this.transition('lobbyToGame');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const gameServer = addr || secureAddr;
+        await this._gameConn.connect(
+          gameServer,
+          this._play.userId
+        );
+        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
+        await this._gameConn.openSession(appId, userId, gameVersion);
+        resolve();
+      } catch (err) {
+        await this._gameConn.close();
+        this.transition('lobbyConnected');
+        reject(err);
+      }
+    });
+  },
+
+  _createGameRoom(cid, roomOptions, expectedUserIds) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const gameRoom = await this._gameConn.createRoom(
+          cid,
+          roomOptions,
+          expectedUserIds
+        );
+        this._initGame(gameRoom);
+        await this._lobbyConn.close();
+        this.transition('gameConnected');
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    });
+  },
+
+  _joinGameRoom(cid, expectedUserIds, matchProperties) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const gameRoom = await this._gameConn.joinRoom(
+          cid,
+          matchProperties,
+          expectedUserIds
+        );
+        this._initGame(gameRoom);
+        await this._lobbyConn.close();
+        this.transition('gameConnected');
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    });
+  },
 
   _initGame(gameRoom) {
     this._play._room = gameRoom;

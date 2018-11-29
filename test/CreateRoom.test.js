@@ -56,6 +56,7 @@ describe('test create room', () => {
       });
     });
     play.on(Event.ROOM_CREATED, () => {
+      debug('room created');
       expect(play.room.name).to.be.equal(roomName);
       expect(play.room.visible).to.be.equal(false);
       expect(play.room.maxPlayerCount).to.be.equal(2);

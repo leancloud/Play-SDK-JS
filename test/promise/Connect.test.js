@@ -51,7 +51,6 @@ describe('test connect', () => {
       await p.connect();
     } catch (err) {
       console.error(err);
-      p.disconnect();
     }
   });
 

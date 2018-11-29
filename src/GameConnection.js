@@ -98,10 +98,10 @@ export default class GameConnection extends Connection {
           cid: roomName,
         };
         if (matchProperties) {
-          this._cachedRoomMsg.expectAttr = matchProperties;
+          msg.expectAttr = matchProperties;
         }
         if (expectedUserIds) {
-          this._cachedRoomMsg.expectMembers = expectedUserIds;
+          msg.expectMembers = expectedUserIds;
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
