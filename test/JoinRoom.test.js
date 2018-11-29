@@ -12,7 +12,6 @@ describe('test join room', () => {
     const play2 = newPlay('world');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
@@ -21,7 +20,6 @@ describe('test join room', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -40,7 +38,6 @@ describe('test join room', () => {
     const play2 = newPlay('world2');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
@@ -52,7 +49,6 @@ describe('test join room', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRandomRoom();
     });
     play2.on(Event.ROOM_JOINED, () => {
@@ -71,7 +67,6 @@ describe('test join room', () => {
     const play3 = newPlay('code');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       const options = {
         maxPlayerCount: 2,
       };
@@ -87,7 +82,6 @@ describe('test join room', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOIN_FAILED, () => {
@@ -95,7 +89,6 @@ describe('test join room', () => {
     });
 
     play3.on(Event.CONNECTED, () => {
-      expect(play3._sessionToken).to.be.not.equal(null);
       play3.joinRoom(roomName);
     });
     play3.on(Event.ROOM_JOINED, () => {
@@ -154,7 +147,6 @@ describe('test join room', () => {
     let rejoin = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       const options = {
         playerTtl: 600,
       };
@@ -172,9 +164,7 @@ describe('test join room', () => {
       debug(`${player.userId}'s activity is ${player.isActive()}`);
     });
 
-    play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
-    });
+    play2.on(Event.CONNECTED, () => {});
     play2.on(Event.CONNECTED, () => {
       if (rejoin) {
         play2.rejoinRoom(roomName);
@@ -216,7 +206,6 @@ describe('test join room', () => {
     let reconnect = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       const options = {
         playerTtl: 600,
       };
@@ -267,7 +256,6 @@ describe('test join room', () => {
     const play2 = newPlay('world8');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
@@ -276,7 +264,6 @@ describe('test join room', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName2);
     });
     play2.on(Event.ROOM_JOIN_FAILED, () => {
@@ -295,8 +282,6 @@ describe('test join room', () => {
     const play3 = newPlay('play0');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-
       const matchProps = {
         lv: 2,
       };
@@ -319,7 +304,6 @@ describe('test join room', () => {
 
     // play2 加入成功
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
       const matchProps = {
         lv: 2,
       };
@@ -333,7 +317,6 @@ describe('test join room', () => {
 
     // play3 加入失败
     play3.on(Event.CONNECTED, () => {
-      expect(play3._sessionToken).to.be.not.equal(null);
       const matchProps = {
         lv: 3,
       };

@@ -3,7 +3,6 @@ import { error } from '../../src/Logger';
 import Event from '../../src/Event';
 
 const { expect } = require('chai');
-const debug = require('debug')('Test:CreateRoom');
 
 describe('test create room', () => {
   it('test null name room', async () => {
@@ -25,8 +24,7 @@ describe('test create room', () => {
   });
 
   it('test create custom room', async () => {
-    const randId = parseInt(Math.random() * 1000000, 10);
-    const roomName = `cr3_r_${randId}`;
+    const roomName = 'cr3_r';
     const p = newPlay('cr3');
     await p.connect();
     const options = {
@@ -76,6 +74,8 @@ describe('test create room', () => {
     const roomName = 'cr5_r';
     const p0 = newPlay('cr5_0');
     const p1 = newPlay('cr5_1');
+    let f0 = false;
+    let f1 = false;
 
     return new Promise(async resolve => {
       await p0.connect();
@@ -83,18 +83,27 @@ describe('test create room', () => {
       p0.on(Event.PLAYER_ROOM_JOINED, async data => {
         const { newPlayer } = data;
         expect(p0.room.playerList.length).to.be.equal(2);
-        expect(p1.room.playerList.length).to.be.equal(2);
         expect(p0.player.isMaster()).to.be.equal(true);
         expect(newPlayer.isMaster()).to.be.equal(false);
         expect(p0.player.isLocal()).to.be.equal(true);
         expect(newPlayer.isLocal()).to.be.equal(false);
         expect(p0.room.playerList.length).to.be.equal(2);
-        await p0.disconnect();
-        await p1.disconnect();
-        resolve();
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
       });
       await p1.connect();
       await p1.joinRoom(roomName);
+      expect(p1.room.playerList.length).to.be.equal(2);
+      f1 = true;
+      if (f0 && f1) {
+        await p0.disconnect();
+        await p1.disconnect();
+        resolve();
+      }
     });
   });
 

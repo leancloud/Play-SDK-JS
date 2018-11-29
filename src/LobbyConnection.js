@@ -3,7 +3,6 @@ import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
-import { debug } from './Logger';
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 
@@ -31,8 +30,12 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-          // TODO 抛出连接失败的事件
+          reject(
+            new PlayError(
+              PlayErrorCode.OPEN_LOBBY_SESSION_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           resolve();
         }
@@ -54,7 +57,12 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          reject(
+            new PlayError(
+              PlayErrorCode.JOIN_LOBBY_ERROR,
+              `${reasonCode} : ${detail}`
+            )
+          );
         } else {
           resolve();
         }
@@ -160,8 +168,29 @@ export default class LobbyConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
+          const { op, reasonCode, detail } = res;
+          if (op === 'started') {
+            reject(
+              new PlayError(
+                PlayErrorCode.LOBBY_CREATE_ROOM_ERROR,
+                `${reasonCode} : ${detail}`
+              )
+            );
+          } else if (op === 'added') {
+            reject(
+              new PlayError(
+                PlayErrorCode.LOBBY_JOIN_ROOM_ERROR,
+                `${reasonCode} : ${detail}`
+              )
+            );
+          } else {
+            reject(
+              new PlayError(
+                PlayErrorCode.UNKNOWN_ERROR,
+                `${reasonCode} : ${detail}`
+              )
+            );
+          }
         } else {
           const { op, cid, addr, secureAddr } = res;
           resolve({ op, cid, addr, secureAddr });

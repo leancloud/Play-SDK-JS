@@ -1,4 +1,3 @@
-import Player from '../Player';
 import LobbyRoom from '../LobbyRoom';
 import { handleErrorMsg, handleReasonMsg } from './ErrorHandler';
 import Event from '../Event';

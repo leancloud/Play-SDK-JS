@@ -10,7 +10,8 @@ import {
 } from './Config';
 import Region from './Region';
 import isWeapp from './Utils';
-import { PlayErrorCode, PlayError } from './PlayError';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 export default class AppRouter {
   constructor({ appId, insecure, feature }) {
@@ -36,7 +37,6 @@ export default class AppRouter {
           primaryServer: this._primaryServer,
           secondaryServer: this._secondaryServer,
         });
-        this.connect(this._gameVersion);
       } else {
         this._resolve = resolve;
         this._reject = reject;

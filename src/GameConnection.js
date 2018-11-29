@@ -1,5 +1,6 @@
 import { PlayVersion } from './Config';
-import { PlayErrorCode, PlayError } from './PlayError';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
@@ -129,6 +130,7 @@ export default class GameConnection extends Connection {
           op: 'remove',
         };
         await super.send(msg);
+        resolve();
       } catch (err) {
         reject(err);
       }

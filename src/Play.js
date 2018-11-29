@@ -156,6 +156,7 @@ export default class Play extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
+    debug('create room');
     return this._fsm.handle(
       'createRoom',
       roomName,

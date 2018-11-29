@@ -1,8 +1,9 @@
+import _ from 'lodash';
 import Event from '../src/Event';
 import { newPlay, newWechatPlay } from './Utils';
-import { APP_ID, APP_KEY, APP_REGION } from './Config';
-import Play from '../src/Play';
+import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
+import AppRouter from '../src/AppRouter';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -35,6 +36,7 @@ describe('test connection', () => {
       if (code === 4102) {
         f1 = true;
         if (f1 && f2) {
+          play1.disconnect();
           play2.disconnect();
           done();
         }
@@ -44,6 +46,7 @@ describe('test connection', () => {
       debug('play2 connected');
       f2 = true;
       if (f1 && f2) {
+        play1.disconnect();
         play2.disconnect();
         done();
       }
@@ -56,8 +59,6 @@ describe('test connection', () => {
     let reconnectFlag = false;
     play.on(Event.CONNECTED, () => {
       debug('play connected');
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
       play.disconnect();
     });
     play.on(Event.DISCONNECTED, () => {
@@ -76,8 +77,6 @@ describe('test connection', () => {
     const play = newPlay('tc3');
     const roomName = 'roomname';
     play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
       play.createRoom({ roomName });
     });
     play.on(Event.ROOM_CREATED, () => {
@@ -142,19 +141,16 @@ describe('test connection', () => {
   });
 
   it('test ws', done => {
-    const play = new Play();
-    play.init({
+    const router = new AppRouter({
       appId: APP_ID,
-      appKey: APP_KEY,
-      region: APP_REGION,
-      ssl: false,
+      insecure: true,
     });
-    play.userId = 'ct_8';
-    play.on(Event.CONNECTED, () => {
-      play.disconnect();
+    router.connect('0.0.1').then(serverInfo => {
+      const { primaryServer, secondaryServer } = serverInfo;
+      expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
+      expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
       done();
     });
-    play.connect();
   });
 
   it('test connect repeatedly', done => {

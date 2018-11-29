@@ -17,12 +17,11 @@ describe('test change properties', () => {
     let p2Flag = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
     play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play1.room.getCustomProperties();
@@ -37,7 +36,7 @@ describe('test change properties', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -60,7 +59,6 @@ describe('test change properties', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test change room properties with cas', done => {
@@ -71,12 +69,11 @@ describe('test change properties', () => {
     let p2Flag = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
     play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
       const props = play1.room.getCustomProperties();
@@ -92,7 +89,7 @@ describe('test change properties', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -128,7 +125,6 @@ describe('test change properties', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test change player properties', done => {
@@ -139,12 +135,11 @@ describe('test change properties', () => {
     let p2Flag = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
     play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
       const { player } = data;
@@ -168,7 +163,7 @@ describe('test change properties', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -206,7 +201,6 @@ describe('test change properties', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test change player properties with cas', done => {
@@ -217,12 +211,11 @@ describe('test change properties', () => {
     let p2Flag = false;
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
       expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
+      play2.connect();
     });
     play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
       const { player } = data;
@@ -239,7 +232,7 @@ describe('test change properties', () => {
     });
 
     play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
+      play2.joinRoom(roomName);
     });
     play2.on(Event.ROOM_JOINED, () => {
       expect(play2.room.name).to.be.equal(roomName);
@@ -275,7 +268,6 @@ describe('test change properties', () => {
     });
 
     play1.connect();
-    play2.connect();
   });
 
   it('test get player properties when join room', done => {
@@ -284,7 +276,6 @@ describe('test change properties', () => {
     const play2 = newPlay('world3150');
 
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {

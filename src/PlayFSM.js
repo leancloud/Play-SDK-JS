@@ -62,7 +62,7 @@ const PlayFSM = machina.Fsm.extend({
 
     connecting: {
       _onEnter() {
-        debug('connecting _onEnter()');
+        debug(`${this._play.userId} connecting _onEnter()`);
       },
       async connectFailed() {
         // 判断连接状态并关闭
@@ -79,7 +79,7 @@ const PlayFSM = machina.Fsm.extend({
           this._play._lobbyRoomList = roomList;
           this._play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
         });
-        this._lobbyConn.on(ERROR_EVENT, (code, detail) => {
+        this._lobbyConn.on(ERROR_EVENT, ({ code, detail }) => {
           this._play.emit(Event.ERROR, {
             code,
             detail,
@@ -92,11 +92,27 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       joinLobby() {
-        return this._lobbyConn.joinLobby();
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._lobbyConn.joinLobby();
+            resolve();
+            this._play.emit(Event.LOBBY_JOINED);
+          } catch (err) {
+            reject(err);
+          }
+        });
       },
 
       leaveLobby() {
-        return this._lobbyConn.leaveLobby();
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._lobbyConn.leaveLobby();
+            resolve();
+            this._play.emit(Event.LOBBY_LEFT);
+          } catch (err) {
+            reject(err);
+          }
+        });
       },
 
       createRoom(roomName, roomOptions, expectedUserIds) {
@@ -126,6 +142,7 @@ const PlayFSM = machina.Fsm.extend({
             await this._lobbyConn.close();
             this.transition('init');
             resolve();
+            this._play.emit(Event.DISCONNECTED);
           } catch (err) {
             if (err instanceof PlayError) {
               reject(err);
@@ -206,11 +223,11 @@ const PlayFSM = machina.Fsm.extend({
           });
         });
         this._gameConn.on(PLAYER_ONLINE_EVENT, player => {
-          this._play._room._removePlayer(player.actorId);
-          this._play._room._addPlayer(player);
-          player._setActive(true);
+          const p = this._play._room.getPlayer(player.actorId);
+          Object.assign(p, player);
+          p._setActive(true);
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
-            player,
+            player: p,
           });
         });
         this._gameConn.on(SEND_CUSTOM_EVENT, (eventId, eventData, senderId) => {
@@ -220,7 +237,7 @@ const PlayFSM = machina.Fsm.extend({
             senderId,
           });
         });
-        this._gameConn.on(ERROR_EVENT, (code, detail) => {
+        this._gameConn.on(ERROR_EVENT, ({ code, detail }) => {
           this._play.emit(Event.ERROR, {
             code,
             detail,
@@ -237,10 +254,27 @@ const PlayFSM = machina.Fsm.extend({
           try {
             await this._gameConn.leaveRoom();
             await this._gameConn.close();
-            await this._lobbyConn.connect();
-            await this._lobbyConn.openSession();
+            const serverInfo = await this._router.connect(
+              this._play._gameVersion
+            );
+            const { primaryServer, secondaryServer } = serverInfo;
+            this._primaryServer = primaryServer;
+            this._secondaryServer = secondaryServer;
+            // 与大厅建立连接
+            await this._lobbyConn.connect(
+              this._primaryServer,
+              this._play.userId
+            );
+            // 打开会话
+            const {
+              _appId: appId,
+              userId,
+              _gameVersion: gameVersion,
+            } = this._play;
+            await this._lobbyConn.openSession(appId, userId, gameVersion);
             this.transition('lobbyConnected');
             resolve();
+            this._play.emit(Event.ROOM_LEFT);
           } catch (err) {
             reject(err);
           }
@@ -285,6 +319,7 @@ const PlayFSM = machina.Fsm.extend({
             await this._gameConn.close();
             this.transition('init');
             resolve();
+            this._play.emit(Event.DISCONNECTED);
           } catch (err) {
             reject(err);
           }
@@ -311,10 +346,16 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.openSession(appId, userId, gameVersion);
         this.transition('lobbyConnected');
         resolve();
+        this._play.emit(Event.CONNECTED);
       } catch (err) {
         if (err instanceof PlayError) {
           reject(err);
+          this._play.emit(Event.CONNECT_FAILED, {
+            code: err.code,
+            detail: err.detail,
+          });
         } else {
+          // TODO 无法处理的 ERROR 应该交由谁实例化
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.detail));
         }
         this.handle('connectFailed');
@@ -348,6 +389,8 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.close();
         this.transition('gameConnected');
         resolve();
+        this._play.emit(Event.ROOM_CREATED);
+        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
         if (err instanceof PlayError) {
           if (err.code === PlayErrorCode.GAME_CREATE_ROOM_ERROR) {
@@ -355,6 +398,7 @@ const PlayFSM = machina.Fsm.extend({
           }
           this.transition('lobbyConnected');
           reject(err);
+          this._play.emit(Event.ROOM_CREATE_FAILED);
         } else {
           // TODO 未知错误？
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
@@ -390,6 +434,7 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.close();
         this.transition('gameConnected');
         resolve();
+        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
         if (err instanceof PlayError) {
           if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
@@ -397,6 +442,7 @@ const PlayFSM = machina.Fsm.extend({
           }
           this.transition('lobbyConnected');
           reject(err);
+          this._play.emit(Event.ROOM_JOIN_FAILED);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
         }
@@ -441,9 +487,17 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.close();
         this.transition('gameConnected');
         resolve();
+        if (op === 'started') {
+          this._play.emit(Event.ROOM_CREATED);
+        } else if (op === 'added') {
+          this._play.emit(Event.ROOM_JOINED);
+        }
       } catch (err) {
-        await this._gameConn.close();
+        // TODO 处理分叉情况
         if (err instanceof PlayError) {
+          if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
+            await this._gameConn.close();
+          }
           reject(err);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
@@ -473,6 +527,7 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.close();
         this.transition('gameConnected');
         resolve();
+        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
         if (err instanceof PlayError) {
           if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
@@ -480,6 +535,7 @@ const PlayFSM = machina.Fsm.extend({
           }
           this.transition('lobbyConnected');
           reject(err);
+          this._play.emit(Event.ROOM_JOIN_FAILED);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
         }
@@ -505,16 +561,24 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.close();
         this.transition('gameConnected');
         resolve();
+        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
-        await this._gameConn.close();
         if (err instanceof PlayError) {
+          if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
+            await this._gameConn.close();
+          }
           reject(err);
+          this._play.emit(Event.ROOM_JOIN_FAILED);
         } else {
           reject(new PlayError(PlayErrorCode.UNKNOWN_ERROR, err.message));
         }
       }
     });
   },
+
+  _createGameRoom() {},
+
+  _joinGameRoom() {},
 
   _initGame(gameRoom) {
     this._play._room = gameRoom;

@@ -10,7 +10,6 @@ describe('test master', () => {
     const roomName = 'tm1';
     const play1 = newPlay('tm1_1');
     const play2 = newPlay('tm1_2');
-
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
@@ -23,7 +22,6 @@ describe('test master', () => {
       const { newMaster } = data;
       expect(play1.room.masterId).to.be.equal(newMaster.actorId);
     });
-
     play2.on(Event.CONNECTED, () => {
       expect(play2._sessionToken).to.be.not.equal(null);
       play2.joinRoom(roomName);
@@ -39,7 +37,6 @@ describe('test master', () => {
       play2.disconnect();
       done();
     });
-
     play1.connect();
   });
 
@@ -49,9 +46,7 @@ describe('test master', () => {
     const play2 = newPlay('tm2_2');
     let f1 = false;
     let f2 = false;
-
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({ roomName });
     });
     play1.on(Event.ROOM_CREATED, () => {
@@ -62,6 +57,7 @@ describe('test master', () => {
       play1.leaveRoom();
     });
     play1.on(Event.ROOM_LEFT, () => {
+      debug('room left');
       f1 = true;
       if (f1 && f2) {
         play1.disconnect();
@@ -69,7 +65,6 @@ describe('test master', () => {
         done();
       }
     });
-
     play2.on(Event.CONNECTED, () => {
       play2.joinRoom(roomName);
     });
@@ -82,6 +77,7 @@ describe('test master', () => {
       expect(leftPlayer.actorId).to.be.equal(1);
     });
     play2.on(Event.MASTER_SWITCHED, data => {
+      debug('master switched');
       const { newMaster } = data;
       expect(play2.room.masterId).to.be.equal(newMaster.actorId);
       f2 = true;
@@ -91,7 +87,6 @@ describe('test master', () => {
         done();
       }
     });
-
     play1.connect();
   });
 
@@ -101,9 +96,7 @@ describe('test master', () => {
     const play2 = newPlay('tm3_2');
     let f1 = false;
     let f2 = false;
-
     play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
       play1.createRoom({
         roomName,
         roomOptions: {
@@ -126,7 +119,6 @@ describe('test master', () => {
         done();
       }
     });
-
     play2.on(Event.CONNECTED, () => {
       play2.joinRoom(roomName);
     });
@@ -150,7 +142,6 @@ describe('test master', () => {
         done();
       }
     });
-
     play1.connect();
   });
 
@@ -160,7 +151,6 @@ describe('test master', () => {
   //   const play2 = newPlay('world4');
   //   let p1Flag = false;
   //   let p2Flag = false;
-
   //   play1.on(Event.CONNECTED, () => {
   //     expect(play1._sessionToken).to.be.not.equal(null);
   //     play1.createRoom({ roomName,
@@ -183,7 +173,6 @@ describe('test master', () => {
   //       done();
   //     }
   //   });
-
   //   play2.on(Event.CONNECTED, () => {
   //     expect(play2._sessionToken).to.be.not.equal(null);
   //     play2.joinRoom(roomName);
@@ -202,7 +191,6 @@ describe('test master', () => {
   //       done();
   //     }
   //   });
-
   //   play1.connect();
   // });
 });

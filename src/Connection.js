@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { clearTimeout, setTimeout } from 'timers';
 import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
+import PlayError from './PlayError';
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
@@ -66,7 +67,8 @@ export default class Connection extends EventEmitter {
           // 如果有对应 resolve，则返回
           const { resolve: res, reject: rej } = this._requests[i];
           if (msg.cmd === 'error') {
-            rej(msg);
+            const { reasonCode, detail } = msg;
+            rej(new PlayError(reasonCode, detail));
           } else {
             res(msg);
           }
@@ -78,14 +80,14 @@ export default class Connection extends EventEmitter {
       this._ws.onclose = () => {};
       this._ws.onerror = err => {
         error(err.message);
-        reject();
+        reject(err);
       };
     });
   }
 
-  send(msg, needIndex = true) {
+  send(msg, withIndex = true) {
     const msgId = this._getMsgId();
-    if (needIndex) {
+    if (withIndex) {
       Object.assign(msg, {
         i: msgId,
       });
@@ -163,7 +165,7 @@ export default class Connection extends EventEmitter {
   _handleErrorMsg(msg) {
     error(JSON.stringify(msg));
     const { reasonCode: code, detail } = msg;
-    this.emit(ERROR_EVENT, code, detail);
+    this.emit(ERROR_EVENT, { code, detail });
   }
 
   _handleUnknownMsg(msg) {

@@ -8,8 +8,6 @@ describe('test create room', () => {
   it('test null room name', done => {
     const play = newPlay('hello');
     play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
       play.createRoom();
     });
     play.on(Event.ROOM_CREATED, () => {
@@ -24,8 +22,6 @@ describe('test create room', () => {
     const roomName = '110';
     const play = newPlay('hello1');
     play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
       play.createRoom({ roomName });
     });
     play.on(Event.ROOM_CREATED, () => {
@@ -41,9 +37,6 @@ describe('test create room', () => {
     const roomName = `room_${randId}`;
     const play = newPlay('cr2');
     play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
-
       const props = {
         title: 'room title',
         level: 2,
@@ -143,8 +136,6 @@ describe('test create room', () => {
   it('test room opened', done => {
     const play = newPlay('cr6');
     play.on(Event.CONNECTED, () => {
-      expect(play._sessionToken).to.be.not.equal(null);
-      expect(play._masterServer).to.be.not.equal(null);
       play.createRoom();
     });
     play.on(Event.ROOM_CREATED, () => {
