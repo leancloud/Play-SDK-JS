@@ -8,13 +8,13 @@ describe('test reset', () => {
     play.on(Event.CONNECTED, () => {
       play.createRoom();
     });
-    play.on(Event.ROOM_JOINED, () => {
+    play.on(Event.ROOM_JOINED, async () => {
       if (flag) {
         play.disconnect();
         done();
         return;
       }
-      play.reset();
+      await play.reset();
       play.connect();
       flag = true;
     });

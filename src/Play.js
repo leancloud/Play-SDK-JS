@@ -1,7 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import _ from 'lodash';
 
-import PlayState from './PlayState';
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 
@@ -45,7 +44,7 @@ export default class Play extends EventEmitter {
      * @type {string}
      */
     this.userId = null;
-    this.reset();
+    this._clear();
 
     // fsm
     this._fsm = new PlayFSM({
@@ -99,18 +98,8 @@ export default class Play extends EventEmitter {
    * 重置
    */
   reset() {
-    this._room = null;
-    this._player = null;
-    this._cachedRoomMsg = null;
-    this._playState = PlayState.CLOSED;
-    this._masterServer = null;
-    this._gameServer = null;
-    this._msgId = 0;
-    this._inLobby = false;
-    this._lobbyRoomList = null;
-    this._connectFailedCount = 0;
-    this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
+    this._clear();
+    return this._fsm.handle('reset');
   }
 
   /**
@@ -384,5 +373,14 @@ export default class Play extends EventEmitter {
       properties,
       expectedValues
     );
+  }
+
+  // 清理内存数据
+  _clear() {
+    this._lobbyRoomList = null;
+    this._masterServer = null;
+    this._gameServer = null;
+    this._room = null;
+    this._player = null;
   }
 }

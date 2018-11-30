@@ -60,15 +60,37 @@ const PlayFSM = machina.Fsm.extend({
       },
     },
 
+    // 连接 Router 状态
     connecting: {
       _onEnter() {
         debug(`${this._play.userId} connecting _onEnter()`);
       },
-      async connectFailed() {
-        // 判断连接状态并关闭
-        this._router.abort();
-        await this._lobbyConn.close();
-        this.transition('init');
+      reset() {
+        return new Promise((resolve, reject) => {
+          try {
+            this._router.abort();
+            this.transition('init');
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+    },
+
+    // 连接 Lobby 状态
+    lobbyConnecting: {
+      reset() {
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._lobbyConn.close();
+            // TODO 处理连接的 resolve, reject
+            this.transition('init');
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
       },
     },
 
@@ -152,11 +174,36 @@ const PlayFSM = machina.Fsm.extend({
           }
         });
       },
+
+      reset() {
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._lobbyConn.close();
+            this.transition('init');
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
     },
 
-    lobbyToGame: {
+    gameConnecting: {
       _onEnter() {
-        debug('lobbyToGame _onEnter()');
+        debug('gameConnecting _onEnter()');
+      },
+
+      reset() {
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._gameConn.close();
+            // TODO 处理连接的 resolve, reject
+            this.transition('init');
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
       },
     },
 
@@ -325,6 +372,18 @@ const PlayFSM = machina.Fsm.extend({
           }
         });
       },
+
+      reset() {
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._gameConn.close();
+            this.transition('init');
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
     },
   },
 
@@ -437,7 +496,7 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _joinRandomRoom(matchProperties, expectedUserIds) {
-    this.transition('lobbyToGame');
+    this.transition('gameConnecting');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinRandomRoom(
@@ -465,7 +524,7 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _rejoinRoom(roomName) {
-    this.transition('lobbyToGame');
+    this.transition('gameConnecting');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.rejoinRoom(roomName);
@@ -493,6 +552,7 @@ const PlayFSM = machina.Fsm.extend({
     return new Promise(async (resolve, reject) => {
       try {
         const serverInfo = await this._router.connect(this._play._gameVersion);
+        this.transition('lobbyConnecting');
         const { primaryServer, secondaryServer } = serverInfo;
         this._primaryServer = primaryServer;
         this._secondaryServer = secondaryServer;
@@ -524,7 +584,7 @@ const PlayFSM = machina.Fsm.extend({
   },
 
   _connectGame(addr, secureAddr) {
-    this.transition('lobbyToGame');
+    this.transition('gameConnecting');
     return new Promise(async (resolve, reject) => {
       try {
         const gameServer = addr || secureAddr;
