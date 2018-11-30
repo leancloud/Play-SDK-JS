@@ -1,10 +1,8 @@
 import { newPlay } from '../Utils';
-import { error } from '../../src/Logger';
 import Event from '../../src/Event';
 import ReceiverGroup from '../../src/ReceiverGroup';
 
 const { expect } = require('chai');
-const debug = require('debug')('Test:CreateRoom');
 
 describe('test custom event', () => {
   it('test custom event with ReceiverGroup', async () =>
