@@ -274,6 +274,12 @@ export default class LobbyConnection extends Connection {
             break;
         }
         break;
+      case 'events':
+        // 目前不作处理
+        break;
+      case 'statistic':
+        // 目前不作处理
+        break;
       case 'conv':
         switch (msg.op) {
           case 'results':

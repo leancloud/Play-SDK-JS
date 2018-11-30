@@ -297,6 +297,9 @@ export default class GameConnection extends Connection {
             break;
         }
         break;
+      case 'events':
+        // 目前不作处理
+        break;
       case 'direct':
         this._handleSendEventMsg(msg);
         break;

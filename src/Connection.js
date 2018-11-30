@@ -5,11 +5,13 @@ import { clearTimeout, setTimeout } from 'timers';
 import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
 
 export const ERROR_EVENT = 'ERROR_EVENT';
+export const DISCONNECT_EVENT = 'DISCONNECT_EVENT';
 
 export function convertRoomOptions(roomOptions) {
   const options = {};
@@ -48,41 +50,52 @@ export default class Connection extends EventEmitter {
       this._ws = new WebSocket(server);
       this._ws.onopen = () => {
         debug(`${this._userId} : ${this._flag} connection opened`);
+        this._connected();
         resolve();
       };
-      this._ws.onmessage = message => {
-        this._stopPong();
-        this._pongTimer = setTimeout(() => {
-          this._pingTimer = setTimeout(() => {
-            this._ws.onclose = () => {
-              // TODO 发送「断线」事件
-            };
-            this._ws.close();
-          }, this._getPingDuration());
-        }, this._getPingDuration() * MAX_NO_PONG_TIMES);
-        const msg = JSON.parse(message.data);
-        debug(`${this._userId} : ${this._flag} <- ${msg.op} ${message.data}`);
-        const { i } = msg;
-        if (!_.isNull(i) && this._requests[i]) {
-          // 如果有对应 resolve，则返回
-          const { resolve: res, reject: rej } = this._requests[i];
-          if (msg.cmd === 'error') {
-            const { reasonCode, detail } = msg;
-            rej(new PlayError(reasonCode, detail));
-          } else {
-            res(msg);
-          }
-        } else {
-          // 交由子类处理事件
-          this._handleMessage(msg);
-        }
+      this._ws.onclose = () => {
+        reject(
+          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
+        );
       };
-      this._ws.onclose = () => {};
       this._ws.onerror = err => {
-        error(err.message);
-        reject(err);
+        reject(new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, err.message));
       };
     });
+  }
+
+  _connected() {
+    this._ws.onmessage = message => {
+      this._stopPong();
+      this._pongTimer = setTimeout(() => {
+        this._pingTimer = setTimeout(() => {
+          this._ws.close();
+        }, this._getPingDuration());
+      }, this._getPingDuration() * MAX_NO_PONG_TIMES);
+      const msg = JSON.parse(message.data);
+      debug(`${this._userId} : ${this._flag} <- ${msg.op} ${message.data}`);
+      const { i } = msg;
+      if (!_.isNull(i) && this._requests[i]) {
+        // 如果有对应 resolve，则返回
+        const { resolve: res, reject: rej } = this._requests[i];
+        if (msg.cmd === 'error') {
+          const { reasonCode, detail } = msg;
+          rej(new PlayError(reasonCode, detail));
+        } else {
+          res(msg);
+        }
+      } else if (_.isEmpty(msg)) {
+        debug('pong');
+      } else {
+        // 交由子类处理事件
+        this._handleMessage(msg);
+      }
+    };
+    this._ws.onclose = () => {
+      this._stopPing();
+      this._stopPong();
+      this.emit(DISCONNECT_EVENT);
+    };
   }
 
   send(msg, withIndex = true) {
@@ -111,8 +124,12 @@ export default class Connection extends EventEmitter {
           this.send(ping, false);
         }, this._getPingDuration());
       } else {
-        // TODO Websocket 状态错误
-        reject();
+        reject(
+          new PlayError(
+            PlayErrorCode.SEND_MESSAGE_STATE_ERROR,
+            `Websocket send message error state: ${this._ws.readyState}`
+          )
+        );
       }
     });
   }
@@ -129,7 +146,9 @@ export default class Connection extends EventEmitter {
           resolve();
         };
         this._ws.onerror = err => {
-          reject(err);
+          reject(
+            new PlayError(PlayErrorCode.CLOSE_WEBSOCKET_ERROR, err.message)
+          );
         };
         this._ws.close();
       } else {
