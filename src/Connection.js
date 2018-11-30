@@ -121,16 +121,20 @@ export default class Connection extends EventEmitter {
     this._stopPing();
     this._stopPong();
     return new Promise((resolve, reject) => {
-      this._ws.onopen = null;
-      this._ws.onmessage = null;
-      this._ws.onclose = () => {
-        debug(`${this._userId} : ${this._flag} closed`);
+      if (this._ws) {
+        this._ws.onopen = null;
+        this._ws.onmessage = null;
+        this._ws.onclose = () => {
+          debug(`${this._userId} : ${this._flag} closed`);
+          resolve();
+        };
+        this._ws.onerror = err => {
+          reject(err);
+        };
+        this._ws.close();
+      } else {
         resolve();
-      };
-      this._ws.onerror = err => {
-        reject(err);
-      };
-      this._ws.close();
+      }
     });
   }
 

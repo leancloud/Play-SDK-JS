@@ -98,6 +98,7 @@ export default class Play extends EventEmitter {
    * 重置
    */
   reset() {
+    debug('reset');
     this._clear();
     return this._fsm.handle('reset');
   }

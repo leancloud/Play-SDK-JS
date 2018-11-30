@@ -58,7 +58,6 @@ export default class AppRouter {
   }
 
   _connect() {
-    debug('AppRouter _connect()');
     let masterURL = NorthCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
@@ -112,6 +111,7 @@ export default class AppRouter {
 
   abort() {
     if (this._httpReq) {
+      debug('AppRouter abort');
       this._httpReq.abort();
     }
   }
