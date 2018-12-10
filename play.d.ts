@@ -283,4 +283,4 @@ export function setLogger(logger: {
   Error: (...args: any[]) => any;
 }): void;
 
-export const play: Play;
+export const p: Play;
