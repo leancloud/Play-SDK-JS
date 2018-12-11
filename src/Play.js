@@ -65,12 +65,17 @@ export default class Play extends EventEmitter {
   /**
    * 初始化客户端
    * @param {Object} opts
+   * @param {String} opts.userId 玩家唯一 Id
    * @param {String} opts.appId APP ID
    * @param {String} opts.appKey APP KEY
    * @param {Number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
    */
-  init(opts) {
+  constructor(opts) {
+    super();
+    if (!(typeof opts.userId === 'string')) {
+      throw new TypeError(`${opts.userId} is not a string`);
+    }
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
     }
@@ -86,6 +91,7 @@ export default class Play extends EventEmitter {
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
       throw new TypeError(`${opts.feature} is not a boolean`);
     }
+    this.userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
@@ -97,7 +103,6 @@ export default class Play extends EventEmitter {
      * 玩家 ID
      * @type {string}
      */
-    this.userId = null;
     this.reset();
   }
 

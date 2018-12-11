@@ -142,14 +142,13 @@ describe('test connection', () => {
   });
 
   it('test ws', done => {
-    const play = new Play();
-    play.init({
+    const play = new Play({
+      userId: 'ct_8',
       appId: APP_ID,
       appKey: APP_KEY,
       region: APP_REGION,
       ssl: false,
     });
-    play.userId = 'ct_8';
     play.on(Event.CONNECTED, () => {
       play.disconnect();
       done();

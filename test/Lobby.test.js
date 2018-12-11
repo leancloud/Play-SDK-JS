@@ -8,13 +8,12 @@ const debug = require('debug')('Test:Lobby');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
-    const play = new Play();
-    play.init({
+    const play = new Play({
+      userId: 'play',
       appId: APP_ID,
       appKey: APP_KEY,
       region: APP_REGION,
     });
-    play.userId = 'play';
     play.on(Event.CONNECTED, () => {
       play.joinLobby();
     });
@@ -92,14 +91,13 @@ describe('test lobby', () => {
   });
 
   it('test autoJoinLobby', done => {
-    const play = new Play();
-    play.autoJoinLobby = true;
-    play.init({
+    const play = new Play({
+      userId: 'play',
       appId: APP_ID,
       appKey: APP_KEY,
       region: APP_REGION,
     });
-    play.userId = 'play';
+    play.autoJoinLobby = true;
     play.on(Event.LOBBY_JOINED, () => {
       play.joinOrCreateRoom('lt3_room');
     });

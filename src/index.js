@@ -8,10 +8,7 @@ import CreateRoomFlag from './CreateRoomFlag';
 import { setAdapters } from './PlayAdapter';
 import { LogLevel, setLogger } from './Logger';
 
-const p = new Play();
-
 export {
-  p,
   Play,
   Region,
   Room,
