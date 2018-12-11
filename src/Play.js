@@ -96,7 +96,7 @@ export default class Play extends EventEmitter {
       opts.gameVersion !== undefined &&
       !(typeof opts.gameVersion === 'string')
     ) {
-      throw new TypeError(`${opts.gameVersion} is not a boolean`);
+      throw new TypeError(`${opts.gameVersion} is not a string`);
     }
     /**
      * 玩家 ID
