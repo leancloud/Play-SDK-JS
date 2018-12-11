@@ -151,20 +151,19 @@ export default class Play extends EventEmitter {
       debug(`wait time: ${waitTime}`);
       this._connectTimer = setTimeout(() => {
         debug('connect time out');
-        this._connect(this.gameVersion);
+        this._connect();
         clearTimeout(this._connectTimer);
         this._connectTimer = null;
       }, waitTime);
     } else {
-      this._connect(this.gameVersion);
+      this._connect();
     }
   }
 
-  _connect(gameVersion) {
-    if (gameVersion && !(typeof gameVersion === 'string')) {
-      throw new TypeError(`${gameVersion} is not a string`);
+  _connect() {
+    if (this.gameVersion && !(typeof this.gameVersion === 'string')) {
+      throw new TypeError(`${this.gameVersion} is not a string`);
     }
-    this.gameVersion = gameVersion;
     let masterURL = EastCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
