@@ -22,9 +22,6 @@ function handleSessionOpen(play, msg) {
     const player = new Player(play);
     player._userId = play.userId;
     play._player = player;
-    if (play.autoJoinLobby) {
-      play.joinLobby();
-    }
     if (play._gameToLobby) {
       play.emit(Event.ROOM_LEFT);
       play._gameToLobby = false;

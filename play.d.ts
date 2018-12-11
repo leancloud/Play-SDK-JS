@@ -198,15 +198,17 @@ export class Play extends EventEmitter<PlayEvent> {
 
   userId: string;
 
-  init(opts: {
+  constructor(opts: {
     appId: string;
     appKey: string;
     region: Region;
-    autoJoinLobby?: boolean;
+    userId: string;
     ssl?: boolean;
-  }): void;
+    feature?: string;
+    gameVersion?: string;
+  });
 
-  connect(opts?: { gameVersion?: string }): void;
+  connect(): void;
 
   reconnect(): void;
 

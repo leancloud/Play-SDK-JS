@@ -70,12 +70,10 @@ export default class Play extends EventEmitter {
    * @param {String} opts.appKey APP KEY
    * @param {Number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
+   * @param {String} [opts.gameVersion] 游戏版本号
    */
   constructor(opts) {
     super();
-    if (!(typeof opts.userId === 'string')) {
-      throw new TypeError(`${opts.userId} is not a string`);
-    }
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
     }
@@ -85,12 +83,25 @@ export default class Play extends EventEmitter {
     if (!(typeof opts.region === 'number')) {
       throw new TypeError(`${opts.region} is not a number`);
     }
+    if (!(typeof opts.userId === 'string')) {
+      throw new TypeError(`${opts.userId} is not a string`);
+    }
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
-      throw new TypeError(`${opts.feature} is not a boolean`);
+      throw new TypeError(`${opts.ssl} is not a boolean`);
     }
+    if (
+      opts.gameVersion !== undefined &&
+      !(typeof opts.gameVersion === 'string')
+    ) {
+      throw new TypeError(`${opts.gameVersion} is not a boolean`);
+    }
+    /**
+     * 玩家 ID
+     * @type {string}
+     */
     this.userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
@@ -99,19 +110,22 @@ export default class Play extends EventEmitter {
     if (opts.ssl === false) {
       this._insecure = true;
     }
-    /**
-     * 玩家 ID
-     * @type {string}
-     */
+    if (opts.gameVersion) {
+      this.gameVersion = opts.gameVersion;
+    } else {
+      /**
+       * 游戏版本号
+       * @type {string}
+       */
+      this.gameVersion = '0.0.1';
+    }
     this.reset();
   }
 
   /**
    * 建立连接
-   * @param {Object} [opts] 连接选项
-   * @param {string} [opts.gameVersion] 游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
    */
-  connect({ gameVersion = '0.0.1' } = {}) {
+  connect() {
     // 判断是否有 userId
     if (this.userId === null) {
       throw new Error('userId is null');
@@ -137,12 +151,12 @@ export default class Play extends EventEmitter {
       debug(`wait time: ${waitTime}`);
       this._connectTimer = setTimeout(() => {
         debug('connect time out');
-        this._connect(gameVersion);
+        this._connect(this.gameVersion);
         clearTimeout(this._connectTimer);
         this._connectTimer = null;
       }, waitTime);
     } else {
-      this._connect(gameVersion);
+      this._connect(this.gameVersion);
     }
   }
 
@@ -150,7 +164,7 @@ export default class Play extends EventEmitter {
     if (gameVersion && !(typeof gameVersion === 'string')) {
       throw new TypeError(`${gameVersion} is not a string`);
     }
-    this._gameVersion = gameVersion;
+    this.gameVersion = gameVersion;
     let masterURL = EastCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
@@ -214,7 +228,7 @@ export default class Play extends EventEmitter {
     const now = Date.now();
     if (now > this._serverValidTimeStamp) {
       // 超出 ttl 后将重新请求 router 连接
-      this.connect(this._gameVersion);
+      this.connect(this.gameVersion);
     } else {
       this._connectToMaster();
     }
@@ -289,7 +303,7 @@ export default class Play extends EventEmitter {
   }
 
   /**
-   * 加入大厅，只有在 autoJoinLobby = false 时才需要调用
+   * 加入大厅
    */
   joinLobby() {
     if (this._playState !== PlayState.LOBBY_OPEN) {
@@ -737,7 +751,7 @@ export default class Play extends EventEmitter {
       appId: this._appId,
       peerId: this.userId,
       sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
+      gameVersion: this.gameVersion,
     };
     this._sendLobbyMessage(msg);
   }
@@ -751,7 +765,7 @@ export default class Play extends EventEmitter {
       appId: this._appId,
       peerId: this.userId,
       sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
+      gameVersion: this.gameVersion,
     };
     this._sendGameMessage(msg);
   }
