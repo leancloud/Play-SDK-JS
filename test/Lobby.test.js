@@ -1,6 +1,6 @@
 import Event from '../src/Event';
 import { newPlay } from './Utils';
-import Play from '../src/Play';
+import Client from '../src/Client';
 import { APP_ID, APP_KEY, APP_REGION } from './Config';
 
 const { expect } = require('chai');
@@ -8,7 +8,7 @@ const debug = require('debug')('Test:Lobby');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
-    const play = new Play({
+    const play = new Client({
       userId: 'play',
       appId: APP_ID,
       appKey: APP_KEY,

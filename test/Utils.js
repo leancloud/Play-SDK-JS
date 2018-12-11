@@ -1,9 +1,9 @@
-import Play from '../src/Play';
+import Client from '../src/Client';
 import Region from '../src/Region';
 import { APP_ID, APP_KEY, APP_REGION } from './Config';
 
 function newPlay(userId) {
-  const play = new Play({
+  const play = new Client({
     userId,
     appId: APP_ID,
     appKey: APP_KEY,
@@ -13,7 +13,7 @@ function newPlay(userId) {
 }
 
 function newWechatPlay(userId) {
-  const play = new Play({
+  const play = new Client({
     userId,
     appId: 'vwDice44bmatVulkQvErSg5C-gzGzoHsz',
     appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
