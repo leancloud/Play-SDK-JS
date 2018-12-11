@@ -1,7 +1,7 @@
 import Event from '../src/Event';
 import { newPlay, newWechatPlay } from './Utils';
 import { APP_ID, APP_KEY, APP_REGION } from './Config';
-import Play from '../src/Play';
+import Client from '../src/Client';
 import ReceiverGroup from '../src/ReceiverGroup';
 
 const { expect } = require('chai');
@@ -142,7 +142,7 @@ describe('test connection', () => {
   });
 
   it('test ws', done => {
-    const play = new Play({
+    const play = new Client({
       userId: 'ct_8',
       appId: APP_ID,
       appKey: APP_KEY,
