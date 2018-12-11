@@ -282,5 +282,3 @@ export function setLogger(logger: {
   Warn: (...args: any[]) => any;
   Error: (...args: any[]) => any;
 }): void;
-
-export const p: Play;
