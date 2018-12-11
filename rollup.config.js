@@ -21,7 +21,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play.js',
       format: 'umd',
       sourcemap: true,
@@ -38,7 +38,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play.min.js',
       format: 'umd',
       sourcemap: true,
@@ -67,7 +67,7 @@ export default [
   {
     input: 'src/index-weapp.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play-weapp.js',
       format: 'umd',
       sourcemap: true,
@@ -84,7 +84,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play-laya.js',
       format: 'umd',
       sourcemap: true,

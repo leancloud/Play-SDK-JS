@@ -59,9 +59,9 @@ function _closeSocket(websocket, onClose) {
 }
 
 /**
- * Play 客户端类
+ * Client 客户端类
  */
-export default class Play extends EventEmitter {
+export default class Client extends EventEmitter {
   /**
    * 初始化客户端
    * @param {Object} opts
