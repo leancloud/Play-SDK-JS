@@ -5,6 +5,8 @@ script:
   - npm run lint
   - npm run build
   - npm run doc
+before_deploy:
+  - sh ./script/package.sh
 deploy:
   - provider: releases
     api_key:
@@ -13,6 +15,7 @@ deploy:
       - './dist/play.js'
       - './dist/play-weapp.js'
       - './dist/play-laya.js'
+      - './play-egret.zip'
     skip_cleanup: true
     on:
       tags: true

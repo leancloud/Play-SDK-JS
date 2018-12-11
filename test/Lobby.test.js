@@ -8,13 +8,12 @@ const debug = require('debug')('Test:Lobby');
 
 describe('test lobby', () => {
   it('test join lobby manually', done => {
-    const play = new Play();
-    play.init({
+    const play = new Play({
+      userId: 'play',
       appId: APP_ID,
       appKey: APP_KEY,
       region: APP_REGION,
     });
-    play.userId = 'play';
     play.on(Event.CONNECTED, () => {
       play.joinLobby();
     });
@@ -89,35 +88,5 @@ describe('test lobby', () => {
     play1.connect();
     play2.connect();
     play3.connect();
-  });
-
-  it('test autoJoinLobby', done => {
-    const play = new Play();
-    play.autoJoinLobby = true;
-    play.init({
-      appId: APP_ID,
-      appKey: APP_KEY,
-      region: APP_REGION,
-    });
-    play.userId = 'play';
-    play.on(Event.LOBBY_JOINED, () => {
-      play.joinOrCreateRoom('lt3_room');
-    });
-    play.on(Event.ROOM_CREATED, () => {
-      debug('room created');
-    });
-    play.on(Event.ROOM_CREATE_FAILED, () => {
-      debug('room create failed');
-    });
-    play.on(Event.ROOM_JOINED, () => {
-      debug('room joined');
-      play.disconnect();
-      done();
-    });
-    play.on(Event.ROOM_JOIN_FAILED, err => {
-      debug(`room join failed: ${err}`);
-    });
-
-    play.connect();
   });
 });

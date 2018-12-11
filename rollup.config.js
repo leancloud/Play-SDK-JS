@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
+import minify from 'rollup-plugin-babel-minify';
 
 const babelrc = JSON.parse(readFileSync('./.babelrc', 'utf8'));
 
@@ -32,6 +33,26 @@ export default [
         browser: true,
       }),
       commonjs(),
+    ],
+  },
+  {
+    input: 'src/index.js',
+    output: {
+      name: 'play',
+      file: 'dist/play.min.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    plugins: [
+      json(),
+      babel(BABEL_CONFIG),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+      minify({
+        // Options for babel-minify.
+      }),
     ],
   },
   {
