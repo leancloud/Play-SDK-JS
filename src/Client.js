@@ -292,7 +292,7 @@ export default class Client extends EventEmitter {
     this._lobbyRoomList = null;
     this._connectFailedCount = 0;
     this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
+    this._connectCallback = null;
     this._stopConnectTimer();
     this._cancelHttp();
     this._stopPing();
@@ -551,9 +551,12 @@ export default class Client extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'open',
+      op: 'update-system-property',
       i: this._getMsgId(),
       toggle: opened,
+      sysAttr: {
+        open: opened,
+      },
     };
     this._sendGameMessage(msg);
   }
@@ -574,9 +577,37 @@ export default class Client extends EventEmitter {
     }
     const msg = {
       cmd: 'conv',
-      op: 'visible',
+      op: 'update-system-property',
       i: this._getMsgId(),
       toggle: visible,
+      sysAttr: {
+        visible,
+      },
+    };
+    this._sendGameMessage(msg);
+  }
+
+  /**
+   * 设置房间邀请好友 ID 数组
+   * @param {Array.<string>} expectedUserIds 邀请好友 ID 数组
+   */
+  setRoomExpectedUserIds(expectedUserIds) {
+    if (!Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array of userId`);
+    }
+    if (this._room === null) {
+      throw new Error('room is null');
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      i: this._getMsgId(),
+      sysAttr: {
+        expectMembers: expectedUserIds,
+      },
     };
     this._sendGameMessage(msg);
   }
@@ -646,6 +677,28 @@ export default class Client extends EventEmitter {
       toActorIds: options.targetActorIds,
     };
     this._sendGameMessage(msg);
+  }
+
+  /**
+   * 将玩家踢出房间
+   * @param {Number} playerId
+   */
+  kickPlayer(playerId, { code = null, msg = null } = {}) {
+    if (!(typeof playerId === 'number')) {
+      throw new TypeError(`${playerId} is not a number`);
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const m = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: playerId,
+      appCode: code,
+      appMsg: msg,
+    };
+    this._sendGameMessage(m);
   }
 
   /**
@@ -803,9 +856,9 @@ export default class Client extends EventEmitter {
   }
 
   // 连接至大厅服务器
-  _connectToMaster(gameToLobby = false) {
+  _connectToMaster(callback = null) {
     this._playState = PlayState.CONNECTING;
-    this._gameToLobby = gameToLobby;
+    this._connectCallback = callback;
     const { WebSocket } = adapters;
     this._lobbyWS = new WebSocket(this._masterServer);
     this._lobbyWS.onopen = () => {

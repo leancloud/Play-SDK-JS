@@ -8,12 +8,11 @@ import { debug, error } from '../Logger';
 // 连接建立
 function handleSessionOpen(play, msg) {
   if (msg.reasonCode) {
+    play._playState = PlayState.CLOSED;
     play._closeLobbySocket(() => {
-      play._playState = PlayState.CLOSED;
-      const { reasonCode, detail } = msg;
-      this.emit(Event.CONNECT_FAILED, {
-        code: reasonCode,
-        detail,
+      play.emit(Event.CONNECT_FAILED, {
+        code: msg.reasonCode,
+        detail: msg.detail,
       });
     });
   } else {
@@ -22,9 +21,12 @@ function handleSessionOpen(play, msg) {
     const player = new Player(play);
     player._userId = play.userId;
     play._player = player;
-    if (play._gameToLobby) {
-      play.emit(Event.ROOM_LEFT);
-      play._gameToLobby = false;
+    if (play.autoJoinLobby) {
+      play.joinLobby();
+    }
+    if (play._connectCallback) {
+      play._connectCallback();
+      play._connectCallback = null;
     } else {
       play.emit(Event.CONNECTED);
     }

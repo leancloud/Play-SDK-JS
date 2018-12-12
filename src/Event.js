@@ -109,6 +109,21 @@ const Event = {
    */
   ROOM_LEFT: 'roomLeft',
   /**
+   * 被踢出房间
+   * @event Play#ROOM_KICKED
+   * @param {Object} payload
+   * @param {Number} payload.code
+   * @param {String} payload.msg
+   */
+  ROOM_KICKED: 'roomKicked',
+  /**
+   * 房间系统属性变化，包括 是否开启，是否可见，邀请的好友 ID 数组
+   * @event Play#ROOM_SYSTEM_PROPERTIES_CHANGED
+   * @param {Object} payload
+   * @param {Object} payload.changedProps
+   */
+  ROOM_SYSTEM_PROPERTIES_CHANGED: 'roomSystemPropertiesChanged',
+  /**
    * 房间自定义属性变化
    * @event Play#ROOM_CUSTOM_PROPERTIES_CHANGED
    * @param {Object} payload

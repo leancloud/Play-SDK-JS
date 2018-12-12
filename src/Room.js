@@ -12,12 +12,14 @@ export default class Room {
   static _newFromJSONObject(play, roomJSONObject) {
     const room = new Room(play);
     room._name = roomJSONObject.cid;
-    room._opened = roomJSONObject.open;
-    room._visible = roomJSONObject.visible;
     room._maxPlayerCount = roomJSONObject.maxMembers;
     room._masterActorId = roomJSONObject.masterActorId;
-    room._expectedUserIds = roomJSONObject.expectMembers;
     room._players = {};
+    room._sysProps = {
+      opened: roomJSONObject.open,
+      visible: roomJSONObject.visible,
+      expectedUserIds: roomJSONObject.expectMembers,
+    };
     for (let i = 0; i < roomJSONObject.members.length; i += 1) {
       const playerDTO = roomJSONObject.members[i];
       const player = Player._newFromJSONObject(play, playerDTO);
@@ -49,7 +51,7 @@ export default class Room {
    * @readonly
    */
   get opened() {
-    return this._opened;
+    return this._sysProps.opened;
   }
 
   /**
@@ -58,7 +60,7 @@ export default class Room {
    * @readonly
    */
   get visible() {
-    return this._visible;
+    return this._sysProps.visible;
   }
 
   /**
@@ -93,7 +95,7 @@ export default class Room {
    * @readonly
    */
   get expectedUserIds() {
-    return this._expectedUserIds;
+    return this._sysProps.expectedUserIds;
   }
 
   /**
@@ -158,6 +160,10 @@ export default class Room {
 
   _removePlayer(actorId) {
     delete this._players[actorId];
+  }
+
+  _mergeSystemProperties(changedProps) {
+    this._sysProps = Object.assign(this._sysProps, changedProps);
   }
 
   _mergeProperties(changedProperties) {
