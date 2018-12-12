@@ -54,6 +54,10 @@ export enum Event {
   MASTER_SWITCHED = 'masterSwitched',
   /** 离开房间 */
   ROOM_LEFT = 'roomLeft',
+  /** 被踢出房间 */
+  ROOM_KICKED = 'roomKicked',
+  /** 房间系统属性变化，包括 是否开启，是否可见，邀请的好友 ID 数组 */
+  ROOM_SYSTEM_PROPERTIES_CHANGED = 'roomSystemPropertiesChanged',
   /** 房间自定义属性变化 */
   ROOM_CUSTOM_PROPERTIES_CHANGED = 'roomCustomPropertiesChanged',
   /** 玩家自定义属性变化 */
@@ -110,6 +114,13 @@ declare interface PlayEvent {
     newMaster: Player;
   };
   roomLeft: void;
+  roomKicked: {
+    code: number;
+    msg: string;
+  };
+  roomSystemPropertiesChanged: {
+    changedProps: CustomProperties;
+  };
   roomCustomPropertiesChanged: {
     changedProps: CustomProperties;
   };
@@ -251,6 +262,16 @@ export class Client extends EventEmitter<PlayEvent> {
   setRoomOpened(opened: boolean): void;
 
   setRoomVisible(visible: boolean): void;
+
+  setRoomExpectedUserIds(expectedUserIds: string[]): void;
+
+  kickPlayer(
+    playerId: number,
+    opts?: {
+      code?: number;
+      msg?: string;
+    }
+  ): void;
 
   setMaster(newMasterId: number): void;
 
