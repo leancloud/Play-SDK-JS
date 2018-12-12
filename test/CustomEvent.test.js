@@ -7,9 +7,9 @@ const { expect } = require('chai');
 
 describe('test custom event', () => {
   it('test custom event with ReceiverGroup', done => {
-    const roomName = '511';
-    const play1 = newPlay('hello');
-    const play2 = newPlay('world');
+    const roomName = 'ce_r_1';
+    const play1 = newPlay('ce_1_1');
+    const play2 = newPlay('ce_1_2');
 
     play1.on(Event.CONNECTED, () => {
       expect(play1._sessionToken).to.be.not.equal(null);

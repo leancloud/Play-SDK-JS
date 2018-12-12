@@ -2,7 +2,7 @@ import d from 'debug';
 import Event from '../src/Event';
 
 // import CreateRoomFlag from '../src/CreateRoomFlag';
-import { newPlay } from './Utils';
+import { newPlay, newQCloudPlay } from './Utils';
 
 const { expect } = require('chai');
 
@@ -314,6 +314,30 @@ describe('test change properties', () => {
     });
 
     play1.connect();
+  });
+
+  it('test change room system props', done => {
+    const play = newQCloudPlay('cp6_1');
+    play.on(Event.CONNECTED, () => {
+      expect(play._sessionToken).to.be.not.equal(null);
+      expect(play._masterServer).to.be.not.equal(null);
+      play.createRoom();
+    });
+    play.on(Event.ROOM_CREATED, () => {
+      debug(play.room.name);
+      play.setRoomOpened(false);
+      play.setRoomVisible(false);
+      play.setRoomExpectedUserIds(['cp6_2', 'cp6_3']);
+    });
+    play.on(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, data => {
+      const { changedProps } = data;
+      debug(JSON.stringify(changedProps));
+      if (changedProps.expectedUserIds) {
+        play.disconnect();
+        done();
+      }
+    });
+    play.connect();
   });
 
   // it('test change room properties failed', done => {
