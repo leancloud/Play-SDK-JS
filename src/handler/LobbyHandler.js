@@ -22,9 +22,9 @@ function handleSessionOpen(play, msg) {
     const player = new Player(play);
     player._userId = play._userId;
     play._player = player;
-    if (play._gameToLobby) {
-      play.emit(Event.ROOM_LEFT);
-      play._gameToLobby = false;
+    if (play._connectCallback) {
+      play._connectCallback();
+      play._connectCallback = null;
     } else {
       play.emit(Event.CONNECTED);
     }

@@ -284,7 +284,7 @@ export default class Client extends EventEmitter {
     this._lobbyRoomList = null;
     this._connectFailedCount = 0;
     this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
+    this._connectCallback = null;
     this._stopConnectTimer();
     this._cancelHttp();
     this._stopPing();
@@ -657,6 +657,28 @@ export default class Client extends EventEmitter {
   }
 
   /**
+   * 将玩家踢出房间
+   * @param {Number} playerId
+   */
+  kickPlayer(playerId, { code = null, msg = null } = {}) {
+    if (!(typeof playerId === 'number')) {
+      throw new TypeError(`${playerId} is not a number`);
+    }
+    if (this._playState !== PlayState.GAME_OPEN) {
+      throw new Error(`error play state: ${this._playState}`);
+    }
+    const m = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: playerId,
+      appCode: code,
+      appMsg: msg,
+    };
+    this._sendGameMessage(m);
+  }
+
+  /**
    * 获取当前所在房间
    * @return {Room}
    * @readonly
@@ -795,9 +817,9 @@ export default class Client extends EventEmitter {
   }
 
   // 连接至大厅服务器
-  _connectToMaster(gameToLobby = false) {
+  _connectToMaster(callback = null) {
     this._playState = PlayState.CONNECTING;
-    this._gameToLobby = gameToLobby;
+    this._connectCallback = callback;
     const { WebSocket } = adapters;
     this._lobbyWS = new WebSocket(this._masterServer);
     this._lobbyWS.onopen = () => {
