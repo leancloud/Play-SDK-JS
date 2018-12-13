@@ -21,7 +21,7 @@ export default class Room {
     for (let i = 0; i < roomJSONObject.members.length; i += 1) {
       const playerDTO = roomJSONObject.members[i];
       const player = Player._newFromJSONObject(play, playerDTO);
-      if (player.userId === play.userId) {
+      if (player.userId === play._userId) {
         play._player = player;
       }
       room._players[player.actorId] = player;

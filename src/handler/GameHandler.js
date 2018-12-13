@@ -214,7 +214,7 @@ function handleEvent(play, msg) {
 
 export default function handleGameMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Game  msg: ${msg.op} \n<- ${message.data}`);
+  debug(`${play._userId} Game  msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
