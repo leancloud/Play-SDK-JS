@@ -40,7 +40,7 @@ describe('test lobby', () => {
         customRoomPropertiesKeysForLobby: ['level'],
       };
       play1.createRoom({
-        roomName: play1.userId,
+        roomName: 'room1',
         roomOptions: options,
       });
     });
@@ -51,7 +51,7 @@ describe('test lobby', () => {
       }
     });
     play2.on(Event.CONNECTED, () => {
-      play2.createRoom({ roomName: play2.userId });
+      play2.createRoom({ roomName: 'room2' });
     });
     play2.on(Event.ROOM_CREATED, () => {
       roomCount += 1;
@@ -60,7 +60,7 @@ describe('test lobby', () => {
       }
     });
     play3.on(Event.CONNECTED, () => {
-      play3.createRoom({ roomName: play3.userId });
+      play3.createRoom({ roomName: 'room3' });
     });
     play3.on(Event.ROOM_CREATED, () => {
       roomCount += 1;

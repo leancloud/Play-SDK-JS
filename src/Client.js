@@ -98,11 +98,7 @@ export default class Client extends EventEmitter {
     ) {
       throw new TypeError(`${opts.gameVersion} is not a string`);
     }
-    /**
-     * 玩家 ID
-     * @type {string}
-     */
-    this.userId = opts.userId;
+    this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
@@ -111,13 +107,9 @@ export default class Client extends EventEmitter {
       this._insecure = true;
     }
     if (opts.gameVersion) {
-      this.gameVersion = opts.gameVersion;
+      this._gameVersion = opts.gameVersion;
     } else {
-      /**
-       * 游戏版本号
-       * @type {string}
-       */
-      this.gameVersion = '0.0.1';
+      this._gameVersion = '0.0.1';
     }
     this.reset();
   }
@@ -127,7 +119,7 @@ export default class Client extends EventEmitter {
    */
   connect() {
     // 判断是否有 userId
-    if (this.userId === null) {
+    if (this._userId === null) {
       throw new Error('userId is null');
     }
     if (
@@ -161,8 +153,8 @@ export default class Client extends EventEmitter {
   }
 
   _connect() {
-    if (this.gameVersion && !(typeof this.gameVersion === 'string')) {
-      throw new TypeError(`${this.gameVersion} is not a string`);
+    if (this._gameVersion && !(typeof this._gameVersion === 'string')) {
+      throw new TypeError(`${this._gameVersion} is not a string`);
     }
     let masterURL = EastCNServerURL;
     if (this._region === Region.NorthChina) {
@@ -227,7 +219,7 @@ export default class Client extends EventEmitter {
     const now = Date.now();
     if (now > this._serverValidTimeStamp) {
       // 超出 ttl 后将重新请求 router 连接
-      this.connect(this.gameVersion);
+      this.connect(this._gameVersion);
     } else {
       this._connectToMaster();
     }
@@ -272,7 +264,7 @@ export default class Client extends EventEmitter {
         debug('on close game socket');
         this._playState = PlayState.CLOSED;
         this.emit(Event.DISCONNECTED);
-        debug(`${this.userId} disconnect.`);
+        debug(`${this._userId} disconnect.`);
       });
     });
   }
@@ -748,9 +740,9 @@ export default class Client extends EventEmitter {
       op: 'open',
       i: this._getMsgId(),
       appId: this._appId,
-      peerId: this.userId,
+      peerId: this._userId,
       sdkVersion: PlayVersion,
-      gameVersion: this.gameVersion,
+      gameVersion: this._gameVersion,
     };
     this._sendLobbyMessage(msg);
   }
@@ -762,9 +754,9 @@ export default class Client extends EventEmitter {
       op: 'open',
       i: this._getMsgId(),
       appId: this._appId,
-      peerId: this.userId,
+      peerId: this._userId,
       sdkVersion: PlayVersion,
-      gameVersion: this.gameVersion,
+      gameVersion: this._gameVersion,
     };
     this._sendGameMessage(msg);
   }
@@ -785,7 +777,7 @@ export default class Client extends EventEmitter {
       throw new TypeError(`${msg} is not an object`);
     }
     const msgData = JSON.stringify(msg);
-    debug(`${this.userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
+    debug(`${this._userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
     const { WebSocket } = adapters;
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(msgData);

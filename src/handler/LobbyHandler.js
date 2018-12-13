@@ -20,7 +20,7 @@ function handleSessionOpen(play, msg) {
     play._playState = PlayState.LOBBY_OPEN;
     play._sessionToken = msg.st;
     const player = new Player(play);
-    player._userId = play.userId;
+    player._userId = play._userId;
     play._player = player;
     if (play._gameToLobby) {
       play.emit(Event.ROOM_LEFT);
@@ -102,7 +102,7 @@ function handleJoinGameServer(play, msg) {
 // 大厅消息处理
 export default function handleLobbyMsg(play, message) {
   const msg = JSON.parse(message.data);
-  debug(`${play.userId} Lobby msg: ${msg.op} \n<- ${message.data}`);
+  debug(`${play._userId} Lobby msg: ${msg.op} \n<- ${message.data}`);
   switch (msg.cmd) {
     case 'session':
       switch (msg.op) {
