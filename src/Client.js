@@ -149,9 +149,6 @@ export default class Client extends EventEmitter {
   }
 
   _connect() {
-    if (this._gameVersion && !(typeof this._gameVersion === 'string')) {
-      throw new TypeError(`${this._gameVersion} is not a string`);
-    }
     let masterURL = EastCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
