@@ -118,10 +118,6 @@ export default class Client extends EventEmitter {
    * 建立连接
    */
   connect() {
-    // 判断是否有 userId
-    if (this._userId === null) {
-      throw new Error('userId is null');
-    }
     if (
       this._playState === PlayState.CONNECTING ||
       this._playState === PlayState.LOBBY_OPEN ||
