@@ -58,12 +58,9 @@ function _closeSocket(websocket, onClose) {
   }
 }
 
-/**
- * Client 客户端类
- */
 export default class Client extends EventEmitter {
   /**
-   * 初始化客户端
+   * 多人对战游戏服务的客户端
    * @param {Object} opts
    * @param {String} opts.userId 玩家唯一 Id
    * @param {String} opts.appId APP ID
