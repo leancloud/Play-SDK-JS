@@ -1,7 +1,7 @@
 import machina from 'machina';
 import _ from 'lodash';
 import { debug } from './Logger';
-import AppRouter from './AppRouter';
+import LobbyRouter from './LobbyRouter';
 import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import GameConnection, {
@@ -16,7 +16,6 @@ import GameConnection, {
   PLAYER_ONLINE_EVENT,
   SEND_CUSTOM_EVENT,
 } from './GameConnection';
-import PlayErrorCode from './PlayErrorCode';
 import Event from './Event';
 
 const PlayFSM = machina.Fsm.extend({
@@ -33,7 +32,7 @@ const PlayFSM = machina.Fsm.extend({
       _onEnter() {
         debug('init _onEnter()');
         const { _appId, _insecure, _feature } = this._play;
-        this._router = new AppRouter({
+        this._router = new LobbyRouter({
           appId: _appId,
           insecure: _insecure,
           feature: _feature,
@@ -328,25 +327,7 @@ const PlayFSM = machina.Fsm.extend({
           try {
             await this._gameConn.leaveRoom();
             await this._gameConn.close();
-            const serverInfo = await this._router.connect(
-              this._play._gameVersion
-            );
-            const { primaryServer, secondaryServer } = serverInfo;
-            this._primaryServer = primaryServer;
-            this._secondaryServer = secondaryServer;
-            // 与大厅建立连接
-            await this._lobbyConn.connect(
-              this._primaryServer,
-              this._play.userId
-            );
-            // 打开会话
-            const {
-              _appId: appId,
-              userId,
-              _gameVersion: gameVersion,
-            } = this._play;
-            await this._lobbyConn.openSession(appId, userId, gameVersion);
-            this.transition('lobbyConnected');
+            await this._connectLobby();
             resolve();
             this._play.emit(Event.ROOM_LEFT);
           } catch (err) {
@@ -414,20 +395,8 @@ const PlayFSM = machina.Fsm.extend({
     },
   },
 
-  _connect() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this._connectLobby();
-        resolve();
-        this._play.emit(Event.CONNECTED);
-      } catch (err) {
-        reject(err);
-        this._play.emit(Event.CONNECT_FAILED, {
-          code: err.code,
-          detail: err.detail,
-        });
-      }
-    });
+  async _connect() {
+    await this._connectLobby();
   },
 
   _createRoom(roomName, roomOptions, expectedUserIds) {
@@ -442,15 +411,9 @@ const PlayFSM = machina.Fsm.extend({
         await this._connectGame(addr, secureAddr);
         await this._createGameRoom(cid, roomOptions, expectedUserIds);
         resolve();
-        this._play.emit(Event.ROOM_CREATED);
-        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
-        if (err.code === PlayErrorCode.GAME_CREATE_ROOM_ERROR) {
-          await this._gameConn.close();
-        }
         this.transition('lobbyConnected');
         reject(err);
-        this._play.emit(Event.ROOM_CREATE_FAILED);
       }
     });
   },
@@ -466,14 +429,9 @@ const PlayFSM = machina.Fsm.extend({
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid, expectedUserIds);
         resolve();
-        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
-        if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
-          await this._gameConn.close();
-        }
         this.transition('lobbyConnected');
         reject(err);
-        this._play.emit(Event.ROOM_JOIN_FAILED);
       }
     });
   },
@@ -491,17 +449,12 @@ const PlayFSM = machina.Fsm.extend({
         if (op === 'started') {
           await this._createGameRoom(cid, roomOptions, expectedUserIds);
           resolve();
-          this._play.emit(Event.ROOM_CREATED);
-          this._play.emit(Event.ROOM_JOINED);
         } else {
           await this._joinGameRoom(cid, expectedUserIds);
           resolve();
-          this._play.emit(Event.ROOM_JOINED);
         }
       } catch (err) {
-        if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
-          await this._gameConn.close();
-        }
+        this.transition('lobbyConnected');
         reject(err);
       }
     });
@@ -519,14 +472,9 @@ const PlayFSM = machina.Fsm.extend({
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid, expectedUserIds, matchProperties);
         resolve();
-        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
-        if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
-          await this._gameConn.close();
-        }
         this.transition('lobbyConnected');
         reject(err);
-        this._play.emit(Event.ROOM_JOIN_FAILED);
       }
     });
   },
@@ -540,13 +488,8 @@ const PlayFSM = machina.Fsm.extend({
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid);
         resolve();
-        this._play.emit(Event.ROOM_JOINED);
       } catch (err) {
-        if (err.code === PlayErrorCode.GAME_JOIN_ROOM_ERROR) {
-          await this._gameConn.close();
-        }
         reject(err);
-        this._play.emit(Event.ROOM_JOIN_FAILED);
       }
     });
   },
@@ -555,7 +498,7 @@ const PlayFSM = machina.Fsm.extend({
     this.transition('connecting');
     return new Promise(async (resolve, reject) => {
       try {
-        const serverInfo = await this._router.connect(this._play._gameVersion);
+        const serverInfo = await this._router.fetch(this._play._gameVersion);
         this.transition('lobbyConnecting');
         const { primaryServer, secondaryServer } = serverInfo;
         this._primaryServer = primaryServer;
@@ -572,13 +515,8 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('lobbyConnected');
         resolve();
       } catch (err) {
-        await this._lobbyConn.close();
         this.transition('init');
         reject(err);
-        this._play.emit(Event.CONNECT_FAILED, {
-          code: err.code,
-          detail: err.detail,
-        });
       }
     });
   },
@@ -597,7 +535,6 @@ const PlayFSM = machina.Fsm.extend({
         await this._gameConn.openSession(appId, userId, gameVersion);
         resolve();
       } catch (err) {
-        await this._gameConn.close();
         this.transition('lobbyConnected');
         reject(err);
       }

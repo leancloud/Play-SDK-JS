@@ -1,6 +1,4 @@
 import request from 'superagent';
-import _ from 'lodash';
-
 import { debug } from './Logger';
 import {
   PlayVersion,
@@ -13,7 +11,7 @@ import isWeapp from './Utils';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 
-export default class AppRouter {
+export default class LobbyRouter {
   constructor({ appId, insecure, feature }) {
     this._appId = appId;
     this._insecure = insecure;
@@ -23,12 +21,9 @@ export default class AppRouter {
     this._serverValidTimeStamp = 0;
   }
 
-  connect(gameVersion) {
-    debug(`AppRouter connect(${gameVersion})`);
+  fetch() {
+    debug('LobbyRouter fetch');
     return new Promise((resolve, reject) => {
-      if (!_.isString(gameVersion)) {
-        throw new TypeError(`${gameVersion} is not a string`);
-      }
       const now = Date.now();
       debug(`${now}, ${this._serverValidTimeStamp}`);
       if (now < this._serverValidTimeStamp) {
@@ -37,27 +32,28 @@ export default class AppRouter {
           primaryServer: this._primaryServer,
           secondaryServer: this._secondaryServer,
         });
+      } else if (now < this._nextConnectTimestamp) {
+        // 判断连接间隔，如果在间隔内，则延迟连接
+        const delayTime = this._nextConnectTimestamp - now;
+        this._delayFetch(delayTime, resolve, reject);
       } else {
-        this._resolve = resolve;
-        this._reject = reject;
-        if (now < this._nextConnectTimestamp) {
-          // 判断连接间隔，如果在间隔内，则延迟连接
-          const waitTime = this._nextConnectTimestamp - now;
-          debug(`wait time: ${waitTime} for connect`);
-          this._connectTimer = setTimeout(() => {
-            debug('connect time out');
-            clearTimeout(this._connectTimer);
-            this._connectTimer = null;
-            this._connect(PlayVersion);
-          }, waitTime);
-        } else {
-          this._connect(gameVersion);
-        }
+        // 直接获取
+        this._fetch(resolve, reject);
       }
     });
   }
 
-  _connect() {
+  _delayFetch(delay, resolve, reject) {
+    debug(`delay: ${delay} for connect`);
+    this._connectTimer = setTimeout(() => {
+      debug('connect time out');
+      clearTimeout(this._connectTimer);
+      this._connectTimer = null;
+      this._fetch(resolve, reject);
+    }, delay);
+  }
+
+  _fetch(resolve, reject) {
     let masterURL = NorthCNServerURL;
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
@@ -86,7 +82,7 @@ export default class AppRouter {
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
             Date.now() + 2 ** this._connectFailedCount * 1000;
-          this._reject(new PlayError(PlayErrorCode.ROUTER_ERROR, err.message));
+          reject(new PlayError(PlayErrorCode.ROUTER_ERROR, err.message));
         } else {
           const body = JSON.parse(response.text);
           debug(response.text);
@@ -101,7 +97,7 @@ export default class AppRouter {
           this._secondaryServer = secondary;
           // ttl
           this._serverValidTimeStamp = Date.now() + ttl * 1000;
-          this._resolve({
+          resolve({
             primaryServer: this._primaryServer,
             secondaryServer: this._secondaryServer,
           });
@@ -111,7 +107,7 @@ export default class AppRouter {
 
   abort() {
     if (this._httpReq) {
-      debug('AppRouter abort');
+      debug('LobbyRouter abort');
       this._httpReq.abort();
     }
   }

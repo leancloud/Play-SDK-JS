@@ -1,6 +1,5 @@
 import { PlayVersion } from './Config';
 import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
@@ -40,15 +39,15 @@ export default class GameConnection extends Connection {
         };
         const res = await super.send(msg);
         if (res.reasonCode) {
+          await this.close();
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {
           resolve();
         }
       } catch (err) {
-        reject(
-          new PlayError(PlayErrorCode.OPEN_GAME_SESSION_ERROR, err.message)
-        );
+        await this.close();
+        reject(err);
       }
     });
   }
@@ -72,18 +71,15 @@ export default class GameConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
+          await this.close();
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.GAME_CREATE_ROOM_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           const room = Room._newFromJSONObject(res);
           resolve(room);
         }
       } catch (err) {
+        await this.close();
         reject(err);
       }
     });
@@ -105,18 +101,15 @@ export default class GameConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
+          await this.close();
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.GAME_JOIN_ROOM_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           const room = Room._newFromJSONObject(res);
           resolve(room);
         }
       } catch (err) {
+        await this.close();
         reject(err);
       }
     });
@@ -129,8 +122,13 @@ export default class GameConnection extends Connection {
           cmd: 'conv',
           op: 'remove',
         };
-        await super.send(msg);
-        resolve();
+        const res = await super.send(msg);
+        if (res.reasonCode) {
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
+        } else {
+          resolve();
+        }
       } catch (err) {
         reject(err);
       }

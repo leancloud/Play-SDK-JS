@@ -77,17 +77,17 @@ export default class Connection extends EventEmitter {
       const { i } = msg;
       if (!_.isNull(i) && this._requests[i]) {
         // 如果有对应 resolve，则返回
-        const { resolve: res, reject: rej } = this._requests[i];
+        const { resolve, reject } = this._requests[i];
         if (msg.cmd === 'error') {
           const { reasonCode, detail } = msg;
-          rej(new PlayError(reasonCode, detail));
+          reject(new PlayError(reasonCode, detail));
         } else {
-          res(msg);
+          resolve(msg);
         }
       } else if (_.isEmpty(msg)) {
         debug('pong');
       } else {
-        // 交由子类处理事件
+        // 通知类消息交由子类处理事件
         this._handleMessage(msg);
       }
     };

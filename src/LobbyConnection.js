@@ -1,6 +1,5 @@
 import { PlayVersion } from './Config';
 import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
 
@@ -29,20 +28,15 @@ export default class LobbyConnection extends Connection {
         };
         const res = await super.send(msg);
         if (res.reasonCode) {
+          await this.close();
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.OPEN_LOBBY_SESSION_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           resolve();
         }
       } catch (err) {
-        reject(
-          new PlayError(PlayErrorCode.OPEN_LOBBY_SESSION_ERROR, err.detail)
-        );
+        await this.close();
+        reject(err);
       }
     });
   }
@@ -57,12 +51,7 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.JOIN_LOBBY_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           resolve();
         }
@@ -107,12 +96,7 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.LOBBY_CREATE_ROOM_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           const { cid, addr, secureAddr } = res;
           resolve({ cid, addr, secureAddr });
@@ -137,12 +121,7 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.LOBBY_JOIN_ROOM_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           const { cid, addr, secureAddr } = res;
           resolve({ cid, addr, secureAddr });
@@ -168,29 +147,8 @@ export default class LobbyConnection extends Connection {
         }
         const res = await super.send(msg);
         if (res.reasonCode) {
-          const { op, reasonCode, detail } = res;
-          if (op === 'started') {
-            reject(
-              new PlayError(
-                PlayErrorCode.LOBBY_CREATE_ROOM_ERROR,
-                `${reasonCode} : ${detail}`
-              )
-            );
-          } else if (op === 'added') {
-            reject(
-              new PlayError(
-                PlayErrorCode.LOBBY_JOIN_ROOM_ERROR,
-                `${reasonCode} : ${detail}`
-              )
-            );
-          } else {
-            reject(
-              new PlayError(
-                PlayErrorCode.UNKNOWN_ERROR,
-                `${reasonCode} : ${detail}`
-              )
-            );
-          }
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
         } else {
           const { op, cid, addr, secureAddr } = res;
           resolve({ op, cid, addr, secureAddr });
@@ -217,12 +175,7 @@ export default class LobbyConnection extends Connection {
         const res = await super.send(msg);
         if (res.reasonCode) {
           const { reasonCode, detail } = res;
-          reject(
-            new PlayError(
-              PlayErrorCode.LOBBY_JOIN_RANDOM_ROOM_ERROR,
-              `${reasonCode} : ${detail}`
-            )
-          );
+          reject(new PlayError(reasonCode, detail));
         } else {
           const { op, cid, addr, secureAddr } = res;
           resolve({ op, cid, addr, secureAddr });
