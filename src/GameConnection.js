@@ -210,6 +210,7 @@ export default class GameConnection extends Connection {
           toActorIds: options.targetActorIds,
         };
         await super.send(msg);
+        resolve();
       } catch (err) {
         reject(err);
       }
@@ -227,8 +228,13 @@ export default class GameConnection extends Connection {
         if (expectedValues) {
           msg.expectAttr = expectedValues;
         }
-        super.send(msg);
-        resolve();
+        const res = await super.send(msg);
+        if (res.reasonCode) {
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
+        } else {
+          resolve();
+        }
       } catch (err) {
         reject(err);
       }
@@ -247,8 +253,13 @@ export default class GameConnection extends Connection {
         if (expectedValues) {
           msg.expectAttr = expectedValues;
         }
-        super.send(msg);
-        resolve();
+        const res = super.send(msg);
+        if (res.reasonCode) {
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
+        } else {
+          resolve();
+        }
       } catch (err) {
         reject(err);
       }
