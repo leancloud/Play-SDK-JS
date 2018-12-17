@@ -313,7 +313,7 @@ export default class GameConnection extends Connection {
         this._handleSendEventMsg(msg);
         break;
       case 'error':
-        super._handleErrorMsg(msg);
+        super._handleErrorNotify(msg);
         break;
       default:
         super._handleUnknownMsg(msg);

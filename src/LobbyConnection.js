@@ -35,7 +35,6 @@ export default class LobbyConnection extends Connection {
           resolve();
         }
       } catch (err) {
-        await this.close();
         reject(err);
       }
     });
@@ -244,7 +243,7 @@ export default class LobbyConnection extends Connection {
         }
         break;
       case 'error':
-        super._handleErrorMsg(msg);
+        super._handleErrorNotify(msg);
         break;
       default:
         super._handleUnknownMsg(msg);

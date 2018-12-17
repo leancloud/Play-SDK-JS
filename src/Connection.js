@@ -80,6 +80,8 @@ export default class Connection extends EventEmitter {
         const { resolve, reject } = this._requests[i];
         if (msg.cmd === 'error') {
           this._handleErrorMsg(msg);
+          const { reasonCode, detail } = msg;
+          reject(new PlayError(reasonCode, detail));
         } else {
           resolve(msg);
         }
@@ -140,6 +142,7 @@ export default class Connection extends EventEmitter {
       if (this._ws) {
         this._ws.onopen = null;
         this._ws.onmessage = null;
+        debug(`${this._userId} : ${this._flag} close`);
         this._ws.onclose = () => {
           debug(`${this._userId} : ${this._flag} closed`);
           resolve();
@@ -187,6 +190,10 @@ export default class Connection extends EventEmitter {
   async _handleErrorMsg(msg) {
     error(JSON.stringify(msg));
     await this.close();
+  }
+
+  _handleErrorNotify(msg) {
+    this._handleErrorMsg(msg);
     const { reasonCode: code, detail } = msg;
     this.emit(ERROR_EVENT, { code, detail });
   }

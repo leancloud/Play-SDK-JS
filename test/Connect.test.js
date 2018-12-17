@@ -4,6 +4,7 @@ import Event from '../src/Event';
 import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
 import LobbyRouter from '../src/LobbyRouter';
+import PlayError from '../src/PlayError';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -18,16 +19,23 @@ describe('test connect', () => {
   it('test connect with same id', async () => {
     const p0 = newPlay('tc1_0');
     const p1 = newPlay('tc1_0');
+    let f0 = false;
+    let f1 = false;
     await p0.connect();
-    p0.on(Event.ERROR, async err => {
-      const { code, detail } = err;
+    p0.on(Event.ERROR, async ({ code, detail }) => {
       debug(`${code}, ${detail}`);
       if (code === 4102) {
-        await p0.disconnect();
-        await p1.disconnect();
+        f0 = true;
+        if (f0 && f1) {
+          p1.disconnect();
+        }
       }
     });
     await p1.connect();
+    f1 = true;
+    if (f0 && f1) {
+      p1.disconnect();
+    }
   });
 
   it('test disconnect from lobby', async () => {
@@ -50,7 +58,9 @@ describe('test connect', () => {
     try {
       await p.connect();
     } catch (err) {
-      console.error(err);
+      const { code, detail } = err;
+      debug(`${code} - ${detail}`);
+      expect(code).to.be.equal(4104);
     }
   });
 

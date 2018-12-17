@@ -17,6 +17,7 @@ import GameConnection, {
   SEND_CUSTOM_EVENT,
 } from './GameConnection';
 import Event from './Event';
+import PlayError from './PlayError';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -62,6 +63,13 @@ const PlayFSM = machina.Fsm.extend({
     connecting: {
       _onEnter() {
         debug(`${this._play.userId} connecting _onEnter()`);
+        this._lobbyConn.on('ERROR_EVENT', ({ code, detail }) => {
+          debug('lobby connection error event');
+          this._play.emit(Event.ERROR, {
+            code,
+            detail,
+          });
+        });
       },
       reset() {
         return new Promise((resolve, reject) => {
@@ -111,12 +119,6 @@ const PlayFSM = machina.Fsm.extend({
         this._lobbyConn.on(ROOM_LIST_UPDATED_EVENT, roomList => {
           this._play._lobbyRoomList = roomList;
           this._play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
-        });
-        this._lobbyConn.on(ERROR_EVENT, ({ code, detail }) => {
-          this._play.emit(Event.ERROR, {
-            code,
-            detail,
-          });
         });
         this._lobbyConn.on(DISCONNECT_EVENT, () => {
           this._play.emit(Event.DISCONNECTED);
@@ -178,7 +180,6 @@ const PlayFSM = machina.Fsm.extend({
             await this._lobbyConn.close();
             this.transition('init');
             resolve();
-            this._play.emit(Event.DISCONNECTED);
           } catch (err) {
             reject(err);
           }
@@ -201,6 +202,13 @@ const PlayFSM = machina.Fsm.extend({
     gameConnecting: {
       _onEnter() {
         debug('gameConnecting _onEnter()');
+        this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
+          await this._gameConn.close();
+          this._play.emit(Event.ERROR, {
+            code,
+            detail,
+          });
+        });
       },
 
       reset() {
@@ -307,12 +315,6 @@ const PlayFSM = machina.Fsm.extend({
             senderId,
           });
         });
-        this._gameConn.on(ERROR_EVENT, ({ code, detail }) => {
-          this._play.emit(Event.ERROR, {
-            code,
-            detail,
-          });
-        });
         this._gameConn.on(DISCONNECT_EVENT, () => {
           this._play.emit(Event.DISCONNECTED);
         });
@@ -395,8 +397,8 @@ const PlayFSM = machina.Fsm.extend({
     },
   },
 
-  async _connect() {
-    await this._connectLobby();
+  _connect() {
+    return this._connectLobby();
   },
 
   _createRoom(roomName, roomOptions, expectedUserIds) {
@@ -515,6 +517,8 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('lobbyConnected');
         resolve();
       } catch (err) {
+        debug(`connect lobby error:`);
+        debug(err instanceof PlayError);
         this.transition('init');
         reject(err);
       }
