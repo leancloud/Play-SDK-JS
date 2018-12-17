@@ -79,8 +79,7 @@ export default class Connection extends EventEmitter {
         // 如果有对应 resolve，则返回
         const { resolve, reject } = this._requests[i];
         if (msg.cmd === 'error') {
-          const { reasonCode, detail } = msg;
-          reject(new PlayError(reasonCode, detail));
+          this._handleErrorMsg(msg);
         } else {
           resolve(msg);
         }
@@ -185,8 +184,9 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  _handleErrorMsg(msg) {
+  async _handleErrorMsg(msg) {
     error(JSON.stringify(msg));
+    await this.close();
     const { reasonCode: code, detail } = msg;
     this.emit(ERROR_EVENT, { code, detail });
   }
