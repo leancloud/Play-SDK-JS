@@ -1,123 +1,36 @@
-import Event from '../src/Event';
 import { newPlay } from './Utils';
-import Play from '../src/Play';
-import { APP_ID, APP_KEY, APP_REGION } from './Config';
-
-const { expect } = require('chai');
-const debug = require('debug')('Test:Lobby');
+import Event from '../src/Event';
 
 describe('test lobby', () => {
-  it('test join lobby manually', done => {
-    const play = new Play();
-    play.init({
-      appId: APP_ID,
-      appKey: APP_KEY,
-      region: APP_REGION,
-    });
-    play.userId = 'play';
-    play.on(Event.CONNECTED, () => {
-      play.joinLobby();
-    });
-    play.on(Event.LOBBY_JOINED, () => {
-      play.disconnect();
-      done();
-    });
-    play.connect();
+  it('test join lobby manually', async () => {
+    const p = newPlay('tl0');
+    await p.connect();
+    await p.joinLobby();
+    await p.disconnect();
   });
 
-  it('test room list update', done => {
-    const play1 = newPlay('play1');
-    const play2 = newPlay('play2');
-    const play3 = newPlay('play3');
-    const play4 = newPlay('play4');
-    let roomCount = 0;
-    play1.on(Event.CONNECTED, () => {
-      const props = {
-        title: 'room title',
-        level: 2,
-      };
-      const options = {
-        customRoomProperties: props,
-        customRoomPropertiesKeysForLobby: ['level'],
-      };
-      play1.createRoom({
-        roomName: play1.userId,
-        roomOptions: options,
-      });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      roomCount += 1;
-      if (roomCount === 3) {
-        play4.connect();
-      }
-    });
-    play2.on(Event.CONNECTED, () => {
-      play2.createRoom({ roomName: play2.userId });
-    });
-    play2.on(Event.ROOM_CREATED, () => {
-      roomCount += 1;
-      if (roomCount === 3) {
-        play4.connect();
-      }
-    });
-    play3.on(Event.CONNECTED, () => {
-      play3.createRoom({ roomName: play3.userId });
-    });
-    play3.on(Event.ROOM_CREATED, () => {
-      roomCount += 1;
-      if (roomCount === 3) {
-        play4.connect();
-      }
-    });
-    play4.on(Event.CONNECTED, () => {
-      play4.joinLobby();
-    });
-    play4.on(Event.LOBBY_ROOM_LIST_UPDATED, () => {
-      if (play4.lobbyRoomList.length > 0) {
-        for (let i = 0; i < play4.lobbyRoomList.length; i += 1) {
-          const lobbyRoom = play4.lobbyRoomList[i];
-          debug(lobbyRoom.customRoomProperties);
+  it('test room list update', async () =>
+    new Promise(async resolve => {
+      const p0 = newPlay('tl1_0');
+      const p1 = newPlay('tl1_1');
+      const p2 = newPlay('tl1_2');
+      const p3 = newPlay('tl1_3');
+      await p0.connect();
+      await p0.createRoom({ roomName: p0.userId });
+      await p1.connect();
+      await p1.createRoom({ roomName: p1.userId });
+      await p2.connect();
+      await p2.createRoom({ roomName: p2.userId });
+      await p3.connect();
+      await p3.joinLobby();
+      p3.on(Event.LOBBY_ROOM_LIST_UPDATED, async () => {
+        if (p3.lobbyRoomList.length >= 3) {
+          await p0.disconnect();
+          await p1.disconnect();
+          await p2.disconnect();
+          await p3.disconnect();
+          resolve();
         }
-        expect(play4.lobbyRoomList.length >= 3).to.be.equal(true);
-        play1.disconnect();
-        play2.disconnect();
-        play3.disconnect();
-        play4.disconnect();
-        done();
-      }
-    });
-    play1.connect();
-    play2.connect();
-    play3.connect();
-  });
-
-  // it('test autoJoinLobby', done => {
-  //   const play = new Play();
-  //   play.autoJoinLobby = true;
-  //   play.init({
-  //     appId: APP_ID,
-  //     appKey: APP_KEY,
-  //     region: APP_REGION,
-  //   });
-  //   play.userId = 'play';
-  //   play.on(Event.LOBBY_JOINED, () => {
-  //     play.joinOrCreateRoom('lt3_room');
-  //   });
-  //   play.on(Event.ROOM_CREATED, () => {
-  //     debug('room created');
-  //   });
-  //   play.on(Event.ROOM_CREATE_FAILED, () => {
-  //     debug('room create failed');
-  //   });
-  //   play.on(Event.ROOM_JOINED, () => {
-  //     debug('room joined');
-  //     play.disconnect();
-  //     done();
-  //   });
-  //   play.on(Event.ROOM_JOIN_FAILED, err => {
-  //     debug(`room join failed: ${err}`);
-  //   });
-
-  //   play.connect();
-  // });
+      });
+    }));
 });

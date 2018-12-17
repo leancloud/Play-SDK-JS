@@ -9,97 +9,84 @@ const { expect } = require('chai');
 const debug = d('Test:ChangeProperties');
 
 describe('test change properties', () => {
-  it('test change room properties', done => {
-    const roomName = 'cp311';
-    const play1 = newPlay('hello3110');
-    const play2 = newPlay('world3110');
-    let p1Flag = false;
-    let p2Flag = false;
-
-    play1.on(Event.CONNECTED, () => {
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-      const props = play1.room.getCustomProperties();
-      expect(props.title).to.be.equal('room311');
-      expect(props.gold).to.be.equal(1000);
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
+  it('test change room properties', () =>
+    new Promise(async resolve => {
+      const roomName = 'tcp0_r';
+      const p0 = newPlay('tcp0_0');
+      const p1 = newPlay('tcp0_1');
+      let f0 = false;
+      let f1 = false;
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
+        const props = p0.room.getCustomProperties();
+        expect(props.title).to.be.equal('room311');
+        expect(props.gold).to.be.equal(1000);
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
+        const props = p1.room.getCustomProperties();
+        expect(props.title).to.be.equal('room311');
+        expect(props.gold).to.be.equal(1000);
+        f1 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
       const props = {
         title: 'room311',
         gold: 1000,
       };
-      play2.room.setCustomProperties(props);
-    });
-    play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-      const props = play2.room.getCustomProperties();
-      expect(props.title).to.be.equal('room311');
-      expect(props.gold).to.be.equal(1000);
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
+      p1.room.setCustomProperties(props);
+    }));
 
-    play1.connect();
-  });
+  it('test change room properties with cas', () =>
+    new Promise(async resolve => {
+      const roomName = 'tcp1_r';
+      const p0 = newPlay('tcp1_0');
+      const p1 = newPlay('tcp1_1');
+      let f0 = false;
+      let f1 = false;
 
-  it('test change room properties with cas', done => {
-    const roomName = '312';
-    const play1 = newPlay('hello3120');
-    const play2 = newPlay('world3120');
-    let p1Flag = false;
-    let p2Flag = false;
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
+        const props = p0.room.getCustomProperties();
+        expect(props.id).to.be.equal(1);
+        expect(props.title).to.be.equal('room312');
+        expect(props.gold).to.be.equal(1000);
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
 
-    play1.on(Event.CONNECTED, () => {
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-      const props = play1.room.getCustomProperties();
-      expect(props.id).to.be.equal(1);
-      expect(props.title).to.be.equal('room312');
-      expect(props.gold).to.be.equal(1000);
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      const props = {
-        id: 1,
-        title: 'room312',
-        gold: 1000,
-      };
-      play2.room.setCustomProperties(props);
-
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
+        const props = p1.room.getCustomProperties();
+        expect(props.id).to.be.equal(1);
+        expect(props.title).to.be.equal('room312');
+        expect(props.gold).to.be.equal(1000);
+        f1 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
+      // 校验属性，用于「失败」测试
       const p = {
         id: 2,
         gold: 2000,
@@ -107,66 +94,71 @@ describe('test change properties', () => {
       const ep = {
         id: 2,
       };
-      play2.room.setCustomProperties(p, {
+      p1.room.setCustomProperties(p, {
         expectedValues: ep,
       });
-    });
-    play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-      const props = play2.room.getCustomProperties();
-      expect(props.id).to.be.equal(1);
-      expect(props.title).to.be.equal('room312');
-      expect(props.gold).to.be.equal(1000);
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
 
-    play1.connect();
-  });
+      const props = {
+        id: 1,
+        title: 'room312',
+        gold: 1000,
+      };
+      p1.room.setCustomProperties(props);
+    }));
 
-  it('test change player properties', done => {
-    const roomName = '313';
-    const play1 = newPlay('hello3130');
-    const play2 = newPlay('world3130');
-    let p1Flag = false;
-    let p2Flag = false;
+  it('test change player properties', () =>
+    new Promise(async resolve => {
+      const roomName = 'tcp2_r';
+      const p0 = newPlay('tcp2_0');
+      const p1 = newPlay('tcp2_1');
+      let f0 = false;
+      let f1 = false;
 
-    play1.on(Event.CONNECTED, () => {
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
-      const { player } = data;
-      const props = player.getCustomProperties();
-      expect(props.nickname).to.be.equal('Li Lei');
-      expect(props.gold).to.be.equal(1000);
-      const { poker } = props;
-      expect(poker.flower).to.be.equal(1);
-      expect(poker.num).to.be.equal(13);
-      const { arr } = props;
-      expect(arr[0]).to.be.equal(true);
-      expect(arr[1]).to.be.equal(111);
-      expect(arr[2].flower).to.be.equal(1);
-      expect(arr[2].num).to.be.equal(13);
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
+        const { player } = data;
+        const props = player.getCustomProperties();
+        expect(props.nickname).to.be.equal('Li Lei');
+        expect(props.gold).to.be.equal(1000);
+        const { poker } = props;
+        expect(poker.flower).to.be.equal(1);
+        expect(poker.num).to.be.equal(13);
+        const { arr } = props;
+        expect(arr[0]).to.be.equal(true);
+        expect(arr[1]).to.be.equal(111);
+        expect(arr[2].flower).to.be.equal(1);
+        expect(arr[2].num).to.be.equal(13);
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
 
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
+        const { player } = data;
+        const props = player.getCustomProperties();
+        expect(props.nickname).to.be.equal('Li Lei');
+        expect(props.gold).to.be.equal(1000);
+        const { poker } = props;
+        expect(poker.flower).to.be.equal(1);
+        expect(poker.num).to.be.equal(13);
+        expect(props.arr[0]).to.be.equal(true);
+        expect(props.arr[1]).to.be.equal(111);
+        expect(props.arr[2].flower).to.be.equal(1);
+        expect(props.arr[2].num).to.be.equal(13);
+        f1 = true;
+        if (f0 && f1) {
+          p0.disconnect();
+          p1.disconnect();
+          resolve();
+        }
+      });
+
       const props = {
         nickname: 'Li Lei',
         gold: 1000,
@@ -178,70 +170,48 @@ describe('test change properties', () => {
       props.poker = poker;
       const arr = [true, 111, poker];
       props.arr = arr;
-      play2.player.setCustomProperties(props);
-    });
-    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
-      const { player } = data;
-      const props = player.getCustomProperties();
-      expect(props.nickname).to.be.equal('Li Lei');
-      expect(props.gold).to.be.equal(1000);
-      const { poker } = props;
-      expect(poker.flower).to.be.equal(1);
-      expect(poker.num).to.be.equal(13);
-      expect(props.arr[0]).to.be.equal(true);
-      expect(props.arr[1]).to.be.equal(111);
-      expect(props.arr[2].flower).to.be.equal(1);
-      expect(props.arr[2].num).to.be.equal(13);
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
+      p1.player.setCustomProperties(props);
+    }));
 
-    play1.connect();
-  });
+  it('test change player properties with cas', () =>
+    new Promise(async resolve => {
+      const roomName = 'tcp3_r';
+      const p0 = newPlay('tcp3_0');
+      const p1 = newPlay('tcp3_1');
+      let f0 = false;
+      let f1 = false;
 
-  it('test change player properties with cas', done => {
-    const roomName = '316';
-    const play1 = newPlay('hello3160');
-    const play2 = newPlay('world3160');
-    let p1Flag = false;
-    let p2Flag = false;
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
+        const { player } = data;
+        const props = player.getCustomProperties();
+        expect(props.id).to.be.equal(1);
+        expect(props.nickname).to.be.equal('Li Lei');
+        expect(props.gold).to.be.equal(1000);
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
 
-    play1.on(Event.CONNECTED, () => {
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
-      const { player } = data;
-      const props = player.getCustomProperties();
-      expect(props.id).to.be.equal(1);
-      expect(props.nickname).to.be.equal('Li Lei');
-      expect(props.gold).to.be.equal(1000);
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      const props = {
-        id: 1,
-        nickname: 'Li Lei',
-        gold: 1000,
-      };
-      play2.player.setCustomProperties(props);
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
+        const { player } = data;
+        const props = player.getCustomProperties();
+        expect(props.id).to.be.equal(1);
+        expect(props.nickname).to.be.equal('Li Lei');
+        expect(props.gold).to.be.equal(1000);
+        f1 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
 
       const p = {
         nickname: 'Jim',
@@ -249,119 +219,40 @@ describe('test change properties', () => {
       const ep = {
         id: 0,
       };
-      play2.player.setCustomProperties(p, {
+      p1.player.setCustomProperties(p, {
         expectedValues: ep,
       });
-    });
-    play2.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
-      const { player } = data;
-      const props = player.getCustomProperties();
-      expect(props.id).to.be.equal(1);
-      expect(props.nickname).to.be.equal('Li Lei');
-      expect(props.gold).to.be.equal(1000);
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
 
-    play1.connect();
-  });
-
-  it('test get player properties when join room', done => {
-    const roomName = '315';
-    const play1 = newPlay('hello3150');
-    const play2 = newPlay('world3150');
-
-    play1.on(Event.CONNECTED, () => {
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
       const props = {
-        ready: true,
+        id: 1,
+        nickname: 'Li Lei',
+        gold: 1000,
       };
-      play1.player.setCustomProperties(props);
-    });
-    play1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, () => {
-      play2.connect();
-    });
+      p1.player.setCustomProperties(props);
+    }));
 
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      const { master } = play2.room;
-      debug(master);
-      const me = play2.room.getPlayer(play2.player.actorId);
-      debug(me);
-      expect(master.getCustomProperties().ready).to.be.equal(true);
-      play1.disconnect();
-      play2.disconnect();
-      done();
-    });
+  it('test get player properties when join room', async () => {
+    const roomName = 'tcp4_r';
+    const p0 = newPlay('tcp4_0');
+    const p1 = newPlay('tcp4_1');
 
-    play1.connect();
+    await p0.connect();
+    await p0.createRoom({ roomName });
+    const props = {
+      ready: true,
+    };
+    await p0.player.setCustomProperties(props);
+    debug('p0 set props done');
+
+    await p1.connect();
+    await p1.joinRoom(roomName);
+    expect(p1.room.name).to.be.equal(roomName);
+    const { master } = p1.room;
+    debug(master);
+    const me = p1.room.getPlayer(p1.player.actorId);
+    debug(me);
+    expect(master.getCustomProperties().ready).to.be.equal(true);
+    await p0.disconnect();
+    await p1.disconnect();
   });
-
-  // it('test change room properties failed', done => {
-  //   const roomName = '311';
-  //   const play1 = newPlay('hello3170');
-  //   const play2 = newPlay('world3170');
-  //   let p1Flag = false;
-  //   let p2Flag = false;
-
-  //   play1.on(Event.LOBBY_JOINED, () => {
-  //     expect(play1._sessionToken).to.be.not.equal(null);
-  //     play1.createRoom({ roomName,
-  //       roomOptions: {
-  //         flag: CreateRoomFlag.MasterUpdateRoomProperties,
-  //       }
-  //     });
-  //   });
-  //   play1.on(Event.ROOM_CREATED, () => {
-  //     expect(play1.room.name).to.be.equal(roomName);
-  //     play2.joinRoom(roomName);
-  //   });
-  //   play1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-  //     const props = play1.room.getCustomProperties();
-  //     expect(props.title).to.be.equal('room311');
-  //     expect(props.gold).to.be.equal(1000);
-  //     p1Flag = true;
-  //     if (p1Flag && p2Flag) {
-  //       play1.disconnect();
-  //       play2.disconnect();
-  //       done();
-  //     }
-  //   });
-
-  //   play2.on(Event.LOBBY_JOINED, () => {
-  //     expect(play2._sessionToken).to.be.not.equal(null);
-  //   });
-  //   play2.on(Event.ROOM_JOINED, () => {
-  //     expect(play2.room.name).to.be.equal(roomName);
-  //     const props = {
-  //       title: 'room311',
-  //       gold: 1000,
-  //     };
-  //     play2.room.setCustomProperties(props);
-  //   });
-  //   play2.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, () => {
-  //     const props = play2.room.getCustomProperties();
-  //     expect(props.title).to.be.equal('room311');
-  //     expect(props.gold).to.be.equal(1000);
-  //     p2Flag = true;
-  //     if (p1Flag && p2Flag) {
-  //       play1.disconnect();
-  //       play2.disconnect();
-  //       done();
-  //     }
-  //   });
-
-  //   play1.connect();
-  //   play2.connect();
-  // });
 });

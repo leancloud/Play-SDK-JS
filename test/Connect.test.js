@@ -1,200 +1,126 @@
 import _ from 'lodash';
-import Event from '../src/Event';
 import { newPlay, newWechatPlay } from './Utils';
+import Event from '../src/Event';
 import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
-import AppRouter from '../src/AppRouter';
+import LobbyRouter from '../src/LobbyRouter';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
 
-describe('test connection', () => {
-  it('test connect', done => {
-    const play = newPlay('tc0');
-    play.on(Event.CONNECTED, () => {
-      debug('OnConnected');
-      play.disconnect();
-      done();
-    });
-    play.on(Event.CONNECT_FAILED, error => {
-      debug(`OnConnectFailed: ${error}`);
-    });
-    play.connect();
+describe('test connect', () => {
+  it('test connect', async () => {
+    const p = newPlay('tc0');
+    await p.connect();
+    await p.disconnect();
   });
 
-  it('test connect with same id', done => {
-    const play1 = newPlay('tc11');
-    const play2 = newPlay('tc11');
-    let f1 = false;
-    let f2 = false;
-    play1.on(Event.CONNECTED, () => {
-      play2.connect();
-    });
-    play1.on(Event.ERROR, err => {
+  it('test connect with same id', async () => {
+    const p0 = newPlay('tc1_0');
+    const p1 = newPlay('tc1_0');
+    await p0.connect();
+    p0.on(Event.ERROR, async err => {
       const { code, detail } = err;
       debug(`${code}, ${detail}`);
       if (code === 4102) {
-        f1 = true;
-        if (f1 && f2) {
-          play1.disconnect();
-          play2.disconnect();
-          done();
-        }
+        await p0.disconnect();
+        await p1.disconnect();
       }
     });
-    play2.on(Event.CONNECTED, () => {
-      debug('play2 connected');
-      f2 = true;
-      if (f1 && f2) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-    play1.connect();
+    await p1.connect();
   });
 
-  it('test disconnect from master', done => {
-    const play = newPlay('tc2');
-    let reconnectFlag = false;
-    play.on(Event.CONNECTED, () => {
-      debug('play connected');
-      play.disconnect();
-    });
-    play.on(Event.DISCONNECTED, () => {
-      debug('play disconnected');
-      if (reconnectFlag) {
-        done();
-      } else {
-        play.reconnect();
-        reconnectFlag = true;
-      }
-    });
-    play.connect();
+  it('test disconnect from lobby', async () => {
+    const p = newPlay('tc2');
+    await p.connect();
+    await p.disconnect();
+    await p.reconnect();
+    await p.disconnect();
   });
 
-  it('test disconnect from game', done => {
-    const play = newPlay('tc3');
-    const roomName = 'roomname';
-    play.on(Event.CONNECTED, () => {
-      play.createRoom({ roomName });
-    });
-    play.on(Event.ROOM_CREATED, () => {
-      expect(play._room.name).to.be.equal(roomName);
-      play.disconnect();
-    });
-    play.on(Event.DISCONNECTED, () => {
-      done();
-    });
-    play.connect();
+  it('test disconnect from game', async () => {
+    const p = newPlay('tc3');
+    await p.connect();
+    await p.createRoom();
+    await p.disconnect();
   });
 
-  it('test connect failed', done => {
-    let connectCount = 0;
-    const play = newPlay('tc4');
-    play.on(Event.CONNECTED, () => {
-      play.disconnect();
-      done();
-    });
-    play.on(Event.CONNECT_FAILED, () => {
-      connectCount += 1;
-      if (connectCount >= 5) {
-        play.disconnect();
-        done();
-      } else {
-        play.connect();
-      }
-    });
-    play.connect();
+  it('test connect failed', async () => {
+    const p = newPlay('tc4 ');
+    try {
+      await p.connect();
+    } catch (err) {
+      console.error(err);
+    }
   });
 
-  it('test keep alive', done => {
-    const roomName = 'tc5_room';
+  it('test keep alive', async () => {
+    const roomName = 'tc5_r';
     const play = newPlay('tc5');
-    play.on(Event.CONNECTED, () => {
-      play.createRoom(roomName);
+    await play.connect();
+    await play.createRoom(roomName);
+    return new Promise(resolve => {
+      setTimeout(() => {
+        debug('keep alive timeout');
+        play.disconnect();
+        resolve();
+      }, 30000);
     });
-    play.on(Event.ROOM_JOINED, () => {
-      debug('joined');
-    });
-
-    setTimeout(() => {
-      debug('keep alive timeout');
-      play.disconnect();
-      done();
-    }, 30000);
-
-    play.connect();
   });
 
-  it('test wechat', done => {
-    const play = newWechatPlay('ct6');
-    play.on(Event.CONNECTED, () => {
-      debug('OnConnected');
-      play.disconnect();
-      done();
-    });
-    play.on(Event.CONNECT_FAILED, error => {
-      debug(`OnConnectFailed: ${error}`);
-    });
-    play.connect();
+  it('test wechat', async () => {
+    const p = newWechatPlay('tc6');
+    await p.connect();
+    await p.disconnect();
   });
 
-  it('test ws', done => {
-    const router = new AppRouter({
+  it('test ws', async () => {
+    const router = new LobbyRouter({
       appId: APP_ID,
       insecure: true,
     });
-    router.connect('0.0.1').then(serverInfo => {
-      const { primaryServer, secondaryServer } = serverInfo;
-      expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
-      expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
-      done();
-    });
+    const serverInfo = await router.fetch('0.0.1');
+    const { primaryServer, secondaryServer } = serverInfo;
+    expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
+    expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
   });
 
   it('test connect repeatedly', done => {
-    const play = newPlay('ct_9');
-    play.on(Event.CONNECTED, () => {
-      debug('OnConnected');
-      play.connect();
-      play.disconnect();
-      done();
-    });
-    play.connect();
-    play.connect();
+    const p = newPlay('tc_7');
+    p.connect()
+      .then(async () => {
+        await p.disconnect();
+        done();
+      })
+      .catch(console.error);
+    p.connect();
   });
 
-  it('test only send', done => {
-    const play = newPlay('ct_10');
+  it('test only send', async () => {
+    const p = newPlay('tc_8');
     let timer = null;
-    play.on(Event.CONNECTED, () => {
-      play.createRoom();
-    });
-    play.on(Event.ROOM_CREATED, () => {
-      debug(play.room.name);
-      // 模拟每 5s 发送一次给「其他人」的自定义事件（没有应答消息），20s 后会触发主动 ping 服务器
-      timer = setInterval(() => {
-        debug('send custom event');
-        play.sendEvent(
-          'hello',
-          {},
-          {
-            receiverGroup: ReceiverGroup.Others,
-          }
-        );
-      }, 5000);
-      setTimeout(() => {
-        clearInterval(timer);
-        play.disconnect();
-        done();
-      }, 30000);
-    });
-    play.on(Event.CUSTOM_EVENT, event => {
+    await p.connect();
+    await p.createRoom();
+    p.on(Event.CUSTOM_EVENT, event => {
       const { eventId } = event;
       debug(`recv: ${eventId}`);
     });
-
-    play.connect();
+    timer = setInterval(() => {
+      debug('send custom event');
+      p.sendEvent(
+        'hello',
+        {},
+        {
+          receiverGroup: ReceiverGroup.Others,
+        }
+      );
+    }, 5000);
+    return new Promise(resolve => {
+      setTimeout(async () => {
+        clearInterval(timer);
+        await p.disconnect();
+        resolve();
+      }, 30000);
+    });
   });
 });
