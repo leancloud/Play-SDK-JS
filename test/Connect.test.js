@@ -4,7 +4,6 @@ import Event from '../src/Event';
 import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
 import LobbyRouter from '../src/LobbyRouter';
-import PlayError from '../src/PlayError';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
