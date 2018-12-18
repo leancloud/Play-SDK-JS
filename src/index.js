@@ -1,4 +1,4 @@
-import Play from './Play';
+import Client from './Client';
 import Region from './Region';
 import Room from './Room';
 import Player from './Player';
@@ -8,11 +8,8 @@ import CreateRoomFlag from './CreateRoomFlag';
 import { setAdapters } from './PlayAdapter';
 import { LogLevel, setLogger } from './Logger';
 
-const play = new Play();
-
 export {
-  play,
-  Play,
+  Client,
   Region,
   Room,
   Player,

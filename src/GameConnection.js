@@ -46,7 +46,6 @@ export default class GameConnection extends Connection {
           resolve();
         }
       } catch (err) {
-        await this.close();
         reject(err);
       }
     });

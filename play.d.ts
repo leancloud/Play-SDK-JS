@@ -2,10 +2,15 @@ export as namespace Play;
 
 declare class EventEmitter<T> {
   on<K extends keyof T>(event: K, listener: (payload: T[K]) => any): this;
+
   on(evt: string, listener: Function): this;
+
   once<K extends keyof T>(event: K, listener: (payload: T[K]) => any): this;
+
   once(evt: string, listener: Function): this;
+
   off<K extends keyof T>(evt: K | string, listener?: Function): this;
+
   emit<K extends keyof T>(evt: K | string, ...args: any[]): boolean;
 }
 
@@ -82,117 +87,154 @@ interface ErrorEvent {
 }
 
 declare interface PlayEvent {
-  [Event.CONNECTED]: void;
-  [Event.CONNECT_FAILED]: ErrorEvent;
-  [Event.DISCONNECTED]: void;
-  [Event.LOBBY_JOINED]: void;
-  [Event.LOBBY_LEFT]: void;
-  [Event.LOBBY_ROOM_LIST_UPDATED]: void;
-  [Event.ROOM_CREATED]: void;
-  [Event.ROOM_CREATE_FAILED]: ErrorEvent;
-  [Event.ROOM_JOINED]: void;
-  [Event.ROOM_JOIN_FAILED]: ErrorEvent;
-  [Event.PLAYER_ROOM_JOINED]: {
+  connected: void;
+  connectFailed: ErrorEvent;
+  disconnected: void;
+  lobbyJoined: void;
+  lobbyLeft: void;
+  lobbyRoomListUpdate: void;
+  roomCreated: void;
+  roomCreateFailed: ErrorEvent;
+  roomJoined: void;
+  roomJoinFailed: ErrorEvent;
+  newPlayerJoinedRoom: {
     newPlayer: Player;
   };
-  [Event.PLAYER_ROOM_LEFT]: {
+  playerLeftRoom: {
     leftPlayer: Player;
   };
-  [Event.PLAYER_ACTIVITY_CHANGED]: {
+  playerActivityChanged: {
     player: Player;
   };
-  [Event.MASTER_SWITCHED]: {
+  masterSwitched: {
     newMaster: Player;
   };
-  [Event.ROOM_LEFT]: void;
-  [Event.ROOM_CUSTOM_PROPERTIES_CHANGED]: {
+  roomLeft: void;
+  roomCustomPropertiesChanged: {
     changedProps: CustomProperties;
   };
-  [Event.PLAYER_CUSTOM_PROPERTIES_CHANGED]: {
+  playerCustomPropertiesChanged: {
     player: Player;
     changedProps: CustomProperties;
   };
-  [Event.CUSTOM_EVENT]: {
+  customEvent: {
     eventId: number | string;
     eventData: CustomEventData;
     senderId: number;
   };
-  [Event.ERROR]: ErrorEvent;
+  error: ErrorEvent;
 }
 
 export class LobbyRoom {
   readonly roomName: string;
+
   readonly maxPlayerCount: number;
+
   readonly expectedUserIds: string[];
+
   readonly emptyRoomTtl: number;
+
   readonly playerTtl: number;
+
   readonly playerCount: number;
+
   readonly customRoomPropertiesForLobby: CustomProperties;
 }
 
 export class Player {
   readonly userId: string;
+
   readonly actorId: number;
+
   isLocal(): boolean;
+
   isMaster(): boolean;
+
   isInActive(): boolean;
+
   setCustomProperties(
     properties: CustomProperties,
     opts?: {
       expectedValues?: CustomProperties;
     }
   ): void;
+
   getCustomProperties(): CustomProperties;
 }
 
 export class Room {
   readonly name: string;
+
   readonly opened: boolean;
+
   readonly visible: boolean;
+
   readonly maxPlayerCount: number;
+
   readonly master: Player;
+
   readonly masterId: number;
+
   readonly expectedUserIds: string[];
+
   readonly playerList: Player[];
+
   getPlayer(actorId: number): Player;
+
   setCustomProperties(
     properties: CustomProperties,
     opts?: {
       expectedValues?: CustomProperties;
     }
   ): void;
+
   getCustomProperties(): CustomProperties;
 }
 
-export class Play extends EventEmitter<PlayEvent> {
+export class Client extends EventEmitter<PlayEvent> {
   readonly room: Room;
+
   readonly player: Player;
+
   userId: string;
-  init(opts: {
+
+  constructor(opts: {
     appId: string;
     appKey: string;
     region: Region;
-    autoJoinLobby?: boolean;
+    userId: string;
     ssl?: boolean;
-  }): void;
-  connect(opts?: { gameVersion?: string }): void;
+    feature?: string;
+    gameVersion?: string;
+  });
+
+  connect(): void;
+
   reconnect(): void;
+
   reconnectAndRejoin(): void;
+
   disconnect(): void;
+
   joinLobby(): void;
+
   leaveLobby(): void;
+
   createRoom(opts?: {
     roomName?: string;
     roomOptions?: Object;
     expectedUserIds?: string[];
   }): void;
+
   joinRoom(
     roomName: string,
     opts?: {
       expectedUserIds?: string[];
     }
   ): void;
+
   rejoinRoom(roomName: string): void;
+
   joinOrCreateRoom(
     roomName: string,
     opts?: {
@@ -200,13 +242,18 @@ export class Play extends EventEmitter<PlayEvent> {
       expectedUserIds: string[];
     }
   ): void;
+
   joinRandomRoom(opts?: {
     matchProperties?: Object;
     expectedUserIds?: string[];
   }): void;
+
   setRoomOpened(opened: boolean): void;
+
   setRoomVisible(visible: boolean): void;
+
   setMaster(newMasterId: number): void;
+
   sendEvent(
     eventId: number | string,
     eventData: CustomEventData,
@@ -215,6 +262,7 @@ export class Play extends EventEmitter<PlayEvent> {
       targetActorIds?: number[];
     }
   ): void;
+
   leaveRoom(): void;
 }
 
@@ -232,9 +280,7 @@ export enum LogLevel {
 }
 
 export function setLogger(logger: {
-  [LogLevel.Debug]: (...args: any[]) => any;
-  [LogLevel.Warn]: (...args: any[]) => any;
-  [LogLevel.Error]: (...args: any[]) => any;
+  Debug: (...args: any[]) => any;
+  Warn: (...args: any[]) => any;
+  Error: (...args: any[]) => any;
 }): void;
-
-export const play: Play;

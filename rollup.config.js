@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
+import minify from 'rollup-plugin-babel-minify';
 
 const babelrc = JSON.parse(readFileSync('./.babelrc', 'utf8'));
 
@@ -20,7 +21,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play.js',
       format: 'umd',
       sourcemap: true,
@@ -37,6 +38,26 @@ export default [
   {
     input: 'src/index.js',
     output: {
+      name: 'Play',
+      file: 'dist/play.min.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    plugins: [
+      json(),
+      babel(BABEL_CONFIG),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+      minify({
+        // Options for babel-minify.
+      }),
+    ],
+  },
+  {
+    input: 'src/index.js',
+    output: {
       file: 'dist/play-node.js',
       format: 'cjs',
       sourcemap: true,
@@ -46,7 +67,7 @@ export default [
   {
     input: 'src/index-weapp.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play-weapp.js',
       format: 'umd',
       sourcemap: true,
@@ -63,7 +84,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      name: 'play',
+      name: 'Play',
       file: 'dist/play-laya.js',
       format: 'umd',
       sourcemap: true,

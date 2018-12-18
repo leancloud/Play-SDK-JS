@@ -62,7 +62,7 @@ const PlayFSM = machina.Fsm.extend({
     // 连接 Router 状态
     connecting: {
       _onEnter() {
-        debug(`${this._play.userId} connecting _onEnter()`);
+        debug(`${this._play._userId} connecting _onEnter()`);
         this._lobbyConn.on('ERROR_EVENT', ({ code, detail }) => {
           debug('lobby connection error event');
           this._play.emit(Event.ERROR, {
@@ -174,7 +174,7 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       disconnect() {
-        debug(`${this._play.userId} disconnect lobby`);
+        debug(`${this._play._userId} disconnect lobby`);
         return new Promise(async (resolve, reject) => {
           try {
             await this._lobbyConn.close();
@@ -370,7 +370,7 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       disconnect() {
-        debug(`${this._play.userId} disconnect game`);
+        debug(`${this._play._userId} disconnect game`);
         return new Promise(async (resolve, reject) => {
           try {
             await this._gameConn.close();
@@ -508,11 +508,15 @@ const PlayFSM = machina.Fsm.extend({
         // 与大厅建立连接
         await this._lobbyConn.connect(
           this._primaryServer,
-          this._play.userId
+          this._play._userId
         );
         this.transition('lobbyOpening');
         // 打开会话
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
+        const {
+          _appId: appId,
+          _userId: userId,
+          _gameVersion: gameVersion,
+        } = this._play;
         await this._lobbyConn.openSession(appId, userId, gameVersion);
         this.transition('lobbyConnected');
         resolve();
@@ -532,10 +536,14 @@ const PlayFSM = machina.Fsm.extend({
         const gameServer = addr || secureAddr;
         await this._gameConn.connect(
           gameServer,
-          this._play.userId
+          this._play._userId
         );
         this.transition('gameOpening');
-        const { _appId: appId, userId, _gameVersion: gameVersion } = this._play;
+        const {
+          _appId: appId,
+          _userId: userId,
+          _gameVersion: gameVersion,
+        } = this._play;
         await this._gameConn.openSession(appId, userId, gameVersion);
         resolve();
       } catch (err) {
@@ -587,7 +595,7 @@ const PlayFSM = machina.Fsm.extend({
     /* eslint no-param-reassign: ["error", { "props": false }] */
     _.forEach(gameRoom.playerList, player => {
       player._play = this._play;
-      if (player.userId === this._play.userId) {
+      if (player.userId === this._play._userId) {
         this._play._player = player;
       }
     });

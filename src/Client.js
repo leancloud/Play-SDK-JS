@@ -4,19 +4,19 @@ import _ from 'lodash';
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 
-/**
- * Play 客户端类
- */
-export default class Play extends EventEmitter {
+export default class Client extends EventEmitter {
   /**
-   * 初始化客户端
+   * 多人对战游戏服务的客户端
    * @param {Object} opts
+   * @param {String} opts.userId 玩家唯一 Id
    * @param {String} opts.appId APP ID
    * @param {String} opts.appKey APP KEY
    * @param {Number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
+   * @param {String} [opts.gameVersion] 游戏版本号
    */
-  init(opts) {
+  constructor(opts) {
+    super();
     if (!(typeof opts.appId === 'string')) {
       throw new TypeError(`${opts.appId} is not a string`);
     }
@@ -26,12 +26,22 @@ export default class Play extends EventEmitter {
     if (!(typeof opts.region === 'number')) {
       throw new TypeError(`${opts.region} is not a number`);
     }
+    if (!(typeof opts.userId === 'string')) {
+      throw new TypeError(`${opts.userId} is not a string`);
+    }
     if (opts.feature !== undefined && !(typeof opts.feature === 'string')) {
       throw new TypeError(`${opts.feature} is not a string`);
     }
     if (opts.ssl !== undefined && !(typeof opts.ssl === 'boolean')) {
-      throw new TypeError(`${opts.feature} is not a boolean`);
+      throw new TypeError(`${opts.ssl} is not a boolean`);
     }
+    if (
+      opts.gameVersion !== undefined &&
+      !(typeof opts.gameVersion === 'string')
+    ) {
+      throw new TypeError(`${opts.gameVersion} is not a string`);
+    }
+    this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
     this._region = opts.region;
@@ -39,13 +49,11 @@ export default class Play extends EventEmitter {
     if (opts.ssl === false) {
       this._insecure = true;
     }
-    /**
-     * 玩家 ID
-     * @type {string}
-     */
-    this.userId = null;
-    this._clear();
-
+    if (opts.gameVersion) {
+      this._gameVersion = opts.gameVersion;
+    } else {
+      this._gameVersion = '0.0.1';
+    }
     // fsm
     this._fsm = new PlayFSM({
       play: this,
@@ -54,19 +62,8 @@ export default class Play extends EventEmitter {
 
   /**
    * 建立连接
-   * @param {Object} [opts] 连接选项
-   * @param {string} [opts.gameVersion] 游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1
    */
-  connect({ gameVersion = '0.0.1' } = {}) {
-    debug(`call connect(${gameVersion})`);
-    // 判断是否有 userId
-    if (_.isNull(this.userId)) {
-      throw new Error('userId is null');
-    }
-    if (!_.isString(gameVersion)) {
-      throw new TypeError(`${gameVersion} is not a string`);
-    }
-    this._gameVersion = gameVersion;
+  connect() {
     return this._fsm.handle('connect');
   }
 
@@ -104,7 +101,7 @@ export default class Play extends EventEmitter {
   }
 
   /**
-   * 加入大厅，只有在 autoJoinLobby = false 时才需要调用
+   * 加入大厅
    */
   joinLobby() {
     return this._fsm.handle('joinLobby');
