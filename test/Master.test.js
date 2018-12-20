@@ -6,203 +6,90 @@ const { expect } = require('chai');
 const debug = require('debug')('Test:Master');
 
 describe('test master', () => {
-  it('test set new master', done => {
-    const roomName = 'tm1';
-    const play1 = newPlay('tm1_1');
-    const play2 = newPlay('tm1_2');
+  it('test set new master', async () =>
+    new Promise(async resolve => {
+      const roomName = 'tm0_r';
+      const p0 = newPlay('tm0_0');
+      const p1 = newPlay('tm0_1');
+      let f0 = false;
+      let f1 = false;
 
-    play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.MASTER_SWITCHED, data => {
-      const { newMaster } = data;
-      expect(play1.room.masterId).to.be.equal(newMaster.actorId);
-    });
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.MASTER_SWITCHED, async data => {
+        const { newMaster } = data;
+        expect(p0.room.masterId).to.be.equal(newMaster.actorId);
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.MASTER_SWITCHED, async data => {
+        const { newMaster } = data;
+        expect(p1.room.masterId).to.be.equal(newMaster.actorId);
+        f1 = true;
+        if (f0 && f1) {
+          await p1.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
+      await p0.setMaster(p1.player.actorId);
+    }));
 
-    play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-      play1.setMaster(play2.player.actorId);
-    });
-    play2.on(Event.MASTER_SWITCHED, data => {
-      const { newMaster } = data;
-      expect(play2.room.masterId).to.be.equal(newMaster.actorId);
-      play1.disconnect();
-      play2.disconnect();
-      done();
-    });
+  it('test master leave', () =>
+    new Promise(async resolve => {
+      const roomName = 'tm1_r';
+      const p0 = newPlay('tm1_0');
+      const p1 = newPlay('tm1_1');
 
-    play1.connect();
-  });
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.MASTER_SWITCHED, async data => {
+        const { newMaster } = data;
+        expect(p1.player.actorId).to.be.equal(newMaster.actorId);
+        await p0.disconnect();
+        await p1.disconnect();
+        resolve();
+      });
+      await p0.leaveRoom();
+    }));
 
-  it('test master leave', done => {
-    const roomName = 'tm2';
-    const play1 = newPlay('tm2_1');
-    const play2 = newPlay('tm2_2');
-    let f1 = false;
-    let f2 = false;
+  it('test fixed master', () =>
+    new Promise(async resolve => {
+      const roomName = 'tm2_r';
+      const p0 = newPlay('tm2_0');
+      const p1 = newPlay('tm2_1');
 
-    play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.PLAYER_ROOM_JOINED, () => {
-      play1.leaveRoom();
-    });
-    play1.on(Event.ROOM_LEFT, () => {
-      f1 = true;
-      if (f1 && f2) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-    });
-    play2.on(Event.PLAYER_ROOM_LEFT, data => {
-      const { leftPlayer } = data;
-      debug(`${leftPlayer.userId} left room`);
-      expect(leftPlayer.actorId).to.be.equal(1);
-    });
-    play2.on(Event.MASTER_SWITCHED, data => {
-      const { newMaster } = data;
-      expect(play2.room.masterId).to.be.equal(newMaster.actorId);
-      f2 = true;
-      if (f1 && f2) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play1.connect();
-  });
-
-  it('test fixed master', done => {
-    const roomName = 'tm3';
-    const play1 = newPlay('tm3_1');
-    const play2 = newPlay('tm3_2');
-    let f1 = false;
-    let f2 = false;
-
-    play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom({
+      await p0.connect();
+      await p0.createRoom({
         roomName,
         roomOptions: {
           flag: CreateRoomFlag.FixedMaster,
         },
       });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.PLAYER_ROOM_JOINED, () => {
-      play1.leaveRoom();
-    });
-    play1.on(Event.ROOM_LEFT, () => {
-      f1 = true;
-      if (f1 && f2) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
-    });
-    play2.on(Event.PLAYER_ROOM_LEFT, data => {
-      const { leftPlayer } = data;
-      debug(`${leftPlayer.userId} left room`);
-      expect(leftPlayer.actorId).to.be.equal(1);
-    });
-    play2.on(Event.MASTER_SWITCHED, data => {
-      const { newMaster } = data;
-      expect(newMaster).to.be.equal(null);
-      expect(play2.room.masterId).to.be.equal(-1);
-      expect(play2.room.master).to.be.equal(null);
-      f2 = true;
-      if (f1 && f2) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play1.connect();
-  });
-
-  // it('test set master failed', (done) => {
-  //   const roomName = '613';
-  //   const play1 = newPlay('hello3');
-  //   const play2 = newPlay('world4');
-  //   let p1Flag = false;
-  //   let p2Flag = false;
-
-  //   play1.on(Event.CONNECTED, () => {
-  //     expect(play1._sessionToken).to.be.not.equal(null);
-  //     play1.createRoom({ roomName,
-  //      roomOptions: {
-  //       flag: CreateRoomFlag.MasterSetMaster
-  //      }
-  //     });
-  //   });
-  //   play1.on(Event.ROOM_CREATED, () => {
-  //     expect(play1.room.name).to.be.equal(roomName);
-  //     play2.connect();
-  //   });
-  //   play1.on(Event.MASTER_SWITCHED, (data) => {
-  //     const { newMaster } = data;
-  //     expect(play1.room.masterId).to.be.equal(newMaster.actorId);
-  //     p1Flag = true;
-  //     if (p1Flag && p2Flag) {
-  //       play1.disconnect();
-  //       play2.disconnect();
-  //       done();
-  //     }
-  //   });
-
-  //   play2.on(Event.CONNECTED, () => {
-  //     expect(play2._sessionToken).to.be.not.equal(null);
-  //     play2.joinRoom(roomName);
-  //   });
-  //   play2.on(Event.ROOM_JOINED, () => {
-  //     expect(play2.room.name).to.be.equal(roomName);
-  //     play2.setMaster(play2.player.actorId);
-  //   });
-  //   play2.on(Event.MASTER_SWITCHED, (data) => {
-  //     const { newMaster } = data;
-  //     expect(play2.room.masterId).to.be.equal(newMaster.actorId);
-  //     p2Flag = true;
-  //     if (p1Flag && p2Flag) {
-  //       play1.disconnect();
-  //       play2.disconnect();
-  //       done();
-  //     }
-  //   });
-
-  //   play1.connect();
-  // });
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.PLAYER_ROOM_LEFT, data => {
+        const { leftPlayer } = data;
+        debug(`${leftPlayer.userId} left room`);
+        expect(leftPlayer.actorId).to.be.equal(1);
+      });
+      p1.on(Event.MASTER_SWITCHED, async data => {
+        const { newMaster } = data;
+        expect(newMaster).to.be.equal(null);
+        expect(p1.room.masterId).to.be.equal(-1);
+        expect(p1.room.master).to.be.equal(null);
+        await p0.disconnect();
+        await p1.disconnect();
+        resolve();
+      });
+      await p0.leaveRoom();
+    }));
 });

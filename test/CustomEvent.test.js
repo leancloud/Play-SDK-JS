@@ -1,40 +1,30 @@
+import { newPlay } from './Utils';
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
-
-import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 
 describe('test custom event', () => {
-  it('test custom event with ReceiverGroup', done => {
-    const roomName = '511';
-    const play1 = newPlay('hello');
-    const play2 = newPlay('world');
+  it('test custom event with ReceiverGroup', async () =>
+    new Promise(async resolve => {
+      const roomName = 'tce0_r';
+      const p0 = newPlay('tce0_0');
+      const p1 = newPlay('tce0_1');
 
-    play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.connect();
-    });
-    play1.on(Event.CUSTOM_EVENT, event => {
-      const { eventId, eventData } = event;
-      expect(eventId).to.be.equal('hi');
-      expect(eventData.name).to.be.equal('aaaa');
-      expect(eventData.body).to.be.equal('bbbb');
-      play1.disconnect();
-      play2.disconnect();
-      done();
-    });
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.CUSTOM_EVENT, async event => {
+        const { eventId, eventData } = event;
+        expect(eventId).to.be.equal('hi');
+        expect(eventData.name).to.be.equal('aaaa');
+        expect(eventData.body).to.be.equal('bbbb');
+        await p0.disconnect();
+        await p1.disconnect();
+        resolve();
+      });
 
-    play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
-      play2.joinRoom(roomName);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
+      await p1.connect();
+      await p1.joinRoom(roomName);
       const eventData = {
         name: 'aaaa',
         body: 'bbbb',
@@ -42,51 +32,46 @@ describe('test custom event', () => {
       const options = {
         receiverGroup: ReceiverGroup.MasterClient,
       };
-      play2.sendEvent('hi', eventData, options);
-    });
-    play2.on(Event.CUSTOM_EVENT, event => {
-      const { eventId, eventData } = event;
-      expect(eventId).to.be.equal('hi');
-      expect(eventData.name).to.be.equal('aaaa');
-      expect(eventData.body).to.be.equal('bbbb');
-    });
+      p1.sendEvent('hi', eventData, options);
+    }));
 
-    play1.connect();
-  });
+  it('test custom event with target ids', async () =>
+    new Promise(async resolve => {
+      const roomName = 'tce1_r';
+      const p0 = newPlay('tce1_0');
+      const p1 = newPlay('tce1_1');
+      let f0 = false;
+      let f1 = false;
 
-  it('test custom event with target ids', done => {
-    const roomName = '515';
-    const play1 = newPlay('hello2');
-    const play2 = newPlay('world2');
-    let p1Flag = false;
-    let p2Flag = false;
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.CUSTOM_EVENT, async event => {
+        const { eventId, eventData } = event;
+        expect(eventId).to.be.equal('hello');
+        expect(eventData.name).to.be.equal('aaaa');
+        expect(eventData.body).to.be.equal('bbbb');
+        f0 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
 
-    play1.on(Event.CONNECTED, () => {
-      expect(play1._sessionToken).to.be.not.equal(null);
-      play1.createRoom({ roomName });
-    });
-    play1.on(Event.ROOM_CREATED, () => {
-      expect(play1.room.name).to.be.equal(roomName);
-      play2.joinRoom(roomName);
-    });
-    play1.on(Event.CUSTOM_EVENT, event => {
-      const { eventId, eventData } = event;
-      expect(eventId).to.be.equal('hello');
-      expect(eventData.name).to.be.equal('aaaa');
-      expect(eventData.body).to.be.equal('bbbb');
-      p1Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play2.on(Event.CONNECTED, () => {
-      expect(play2._sessionToken).to.be.not.equal(null);
-    });
-    play2.on(Event.ROOM_JOINED, () => {
-      expect(play2.room.name).to.be.equal(roomName);
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.CUSTOM_EVENT, async event => {
+        const { eventId, eventData } = event;
+        expect(eventId).to.be.equal('hello');
+        expect(eventData.name).to.be.equal('aaaa');
+        expect(eventData.body).to.be.equal('bbbb');
+        f1 = true;
+        if (f0 && f1) {
+          await p0.disconnect();
+          await p1.disconnect();
+          resolve();
+        }
+      });
       const eventData = {
         name: 'aaaa',
         body: 'bbbb',
@@ -94,22 +79,6 @@ describe('test custom event', () => {
       const options = {
         targetActorIds: [1, 2],
       };
-      play2.sendEvent('hello', eventData, options);
-    });
-    play2.on(Event.CUSTOM_EVENT, event => {
-      const { eventId, eventData } = event;
-      expect(eventId).to.be.equal('hello');
-      expect(eventData.name).to.be.equal('aaaa');
-      expect(eventData.body).to.be.equal('bbbb');
-      p2Flag = true;
-      if (p1Flag && p2Flag) {
-        play1.disconnect();
-        play2.disconnect();
-        done();
-      }
-    });
-
-    play1.connect();
-    play2.connect();
-  });
+      p1.sendEvent('hello', eventData, options);
+    }));
 });

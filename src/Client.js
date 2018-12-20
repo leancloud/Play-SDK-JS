@@ -1,62 +1,8 @@
-import request from 'superagent';
 import EventEmitter from 'eventemitter3';
+import _ from 'lodash';
 
-import Region from './Region';
-import Event from './Event';
-import handleLobbyMsg from './handler/LobbyHandler';
-import handleGameMsg from './handler/GameHandler';
-import {
-  PlayVersion,
-  NorthCNServerURL,
-  EastCNServerURL,
-  USServerURL,
-} from './Config';
-import { adapters } from './PlayAdapter';
-import isWeapp from './Utils';
-import PlayState from './PlayState';
-import { debug, warn, error } from './Logger';
-
-const MAX_PLAYER_COUNT = 10;
-const LOBBY_KEEPALIVE_DURATION = 120000;
-const GAME_KEEPALIVE_DURATION = 10000;
-const MAX_NO_PONG_TIMES = 2;
-
-function convertRoomOptions(roomOptions) {
-  const options = {};
-  if (!roomOptions.opened) options.open = roomOptions.opened;
-  if (!roomOptions.visible) options.visible = roomOptions.visible;
-  if (roomOptions.emptyRoomTtl > 0)
-    options.emptyRoomTtl = roomOptions.emptyRoomTtl;
-  if (roomOptions.playerTtl > 0) options.playerTtl = roomOptions.playerTtl;
-  if (
-    roomOptions.maxPlayerCount > 0 &&
-    roomOptions.maxPlayerCount < MAX_PLAYER_COUNT
-  )
-    options.maxMembers = roomOptions.maxPlayerCount;
-  if (roomOptions.customRoomProperties)
-    options.attr = roomOptions.customRoomProperties;
-  if (roomOptions.customRoomPropertyKeysForLobby)
-    options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
-  if (roomOptions.flag) options.flag = roomOptions.flag;
-  return options;
-}
-
-function _closeSocket(websocket, onClose) {
-  const ws = websocket;
-  if (ws) {
-    ws.onopen = null;
-    ws.onconnect = null;
-    ws.onmessage = null;
-    ws.onclose = onClose;
-    try {
-      ws.close();
-    } catch (e) {
-      debug(`close socket exception: ${e}`);
-    }
-  } else if (onClose) {
-    onClose();
-  }
-}
+import { debug } from './Logger';
+import PlayFSM from './PlayFSM';
 
 export default class Client extends EventEmitter {
   /**
@@ -108,209 +54,64 @@ export default class Client extends EventEmitter {
     } else {
       this._gameVersion = '0.0.1';
     }
-    this.reset();
+    // fsm
+    this._fsm = new PlayFSM({
+      play: this,
+    });
   }
 
   /**
    * 建立连接
    */
   connect() {
-    if (
-      this._playState === PlayState.CONNECTING ||
-      this._playState === PlayState.LOBBY_OPEN ||
-      this._playState === PlayState.GAME_OPEN
-    ) {
-      warn(`Current play state: ${this._playState}, ignore`);
-      return;
-    }
-    // 判断是否已经在等待连接
-    if (this._connectTimer) {
-      warn('waiting for connect');
-      return;
-    }
-
-    // 判断连接时间
-    const now = new Date().getTime();
-    if (now < this._nextConnectTimestamp) {
-      const waitTime = this._nextConnectTimestamp - now;
-      debug(`wait time: ${waitTime}`);
-      this._connectTimer = setTimeout(() => {
-        debug('connect time out');
-        this._connect();
-        clearTimeout(this._connectTimer);
-        this._connectTimer = null;
-      }, waitTime);
-    } else {
-      this._connect();
-    }
-  }
-
-  _connect() {
-    let masterURL = EastCNServerURL;
-    if (this._region === Region.NorthChina) {
-      masterURL = NorthCNServerURL;
-    } else if (this._region === Region.EastChina) {
-      masterURL = EastCNServerURL;
-    } else if (this._region === Region.NorthAmerica) {
-      masterURL = USServerURL;
-    }
-
-    this._playState = PlayState.CONNECTING;
-    const query = { appId: this._appId, sdkVersion: PlayVersion };
-    // 使用设置覆盖 SDK 判断的 feature
-    if (this._feature) {
-      query.feature = this._feature;
-    } else if (isWeapp) {
-      query.feature = 'wechat';
-    }
-    // 使用 ws
-    if (this._insecure) {
-      query.insecure = this._insecure;
-    }
-    this._httpReq = request
-      .get(masterURL)
-      .query(query)
-      .end((err, response) => {
-        if (err) {
-          error(err);
-          // 连接失败，则增加下次连接时间间隔
-          this._connectFailedCount += 1;
-          this._nextConnectTimestamp =
-            Date.now() + 2 ** this._connectFailedCount * 1000;
-          this.emit(Event.CONNECT_FAILED, {
-            code: -1,
-            detail: 'Game router connect failed',
-          });
-        } else {
-          const body = JSON.parse(response.text);
-          debug(response.text);
-          // 重置下次允许的连接时间
-          this._connectFailedCount = 0;
-          this._nextConnectTimestamp = 0;
-          clearTimeout(this._connectTimer);
-          this._connectTimer = null;
-          // 主大厅服务器
-          this._primaryServer = body.server;
-          // 备用大厅服务器
-          this._secondaryServer = body.secondary;
-          // 默认服务器是 master server
-          this._masterServer = this._primaryServer;
-          // ttl
-          this._serverValidTimeStamp = Date.now() + body.ttl * 1000;
-          this._connectToMaster();
-        }
-      });
+    return this._fsm.handle('connect');
   }
 
   /**
    * 重新连接
    */
   reconnect() {
-    const now = Date.now();
-    if (now > this._serverValidTimeStamp) {
-      // 超出 ttl 后将重新请求 router 连接
-      this.connect(this._gameVersion);
-    } else {
-      this._connectToMaster();
-    }
+    return this._fsm.handle('connect');
   }
 
   /**
    * 重新连接并自动加入房间
    */
   reconnectAndRejoin() {
-    if (this._cachedRoomMsg === null) {
-      throw new Error('no cache room info');
+    if (_.isNull(this._lastRoomId)) {
+      throw new Error('There is not room name for rejoin');
     }
-    if (this._cachedRoomMsg.cid === undefined) {
-      throw new Error('not cache room name');
-    }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: this._cachedRoomMsg.cid,
-      rejoin: true,
-    };
-    this._connectToGame();
+    return this._fsm.handle('reconnectAndRejoin');
   }
 
   /**
    * 断开连接
    */
   disconnect() {
-    if (
-      this._playState !== PlayState.LOBBY_OPEN &&
-      this._playState !== PlayState.GAME_OPEN
-    ) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    this._playState = PlayState.CLOSING;
-    this._stopPing();
-    this._stopPong();
-    this._closeLobbySocket(() => {
-      debug('on close lobby socket');
-      this._closeGameSocket(() => {
-        debug('on close game socket');
-        this._playState = PlayState.CLOSED;
-        this.emit(Event.DISCONNECTED);
-        debug(`${this._userId} disconnect.`);
-      });
-    });
+    return this._fsm.handle('disconnect');
   }
 
   /**
    * 重置
    */
   reset() {
-    this._room = null;
-    this._player = null;
-    this._cachedRoomMsg = null;
-    this._playState = PlayState.CLOSED;
-    this._masterServer = null;
-    this._gameServer = null;
-    this._msgId = 0;
-    this._inLobby = false;
-    this._lobbyRoomList = null;
-    this._connectFailedCount = 0;
-    this._nextConnectTimestamp = 0;
-    this._gameToLobby = false;
-    this._stopConnectTimer();
-    this._cancelHttp();
-    this._stopPing();
-    this._stopPong();
-    this._closeLobbySocket();
-    this._closeGameSocket();
+    debug('reset');
+    this._clear();
+    return this._fsm.handle('reset');
   }
 
   /**
    * 加入大厅
    */
   joinLobby() {
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'lobby',
-      op: 'add',
-      i: this._getMsgId(),
-    };
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('joinLobby');
   }
 
   /**
    * 离开大厅
    */
   leaveLobby() {
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'lobby',
-      op: 'remove',
-      i: this._getMsgId(),
-    };
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('leaveLobby');
   }
 
   /**
@@ -342,29 +143,13 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    // 缓存 GameServer 创建房间的消息体
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'start',
-      i: this._getMsgId(),
-    };
-    if (roomName) {
-      this._cachedRoomMsg.cid = roomName;
-    }
-    // 拷贝房间属性（包括 系统属性和玩家定义属性）
-    if (roomOptions) {
-      const opts = convertRoomOptions(roomOptions);
-      this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
-    }
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-    // Router 创建房间的消息体
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    debug('create room');
+    return this._fsm.handle(
+      'createRoom',
+      roomName,
+      roomOptions,
+      expectedUserIds
+    );
   }
 
   /**
@@ -379,21 +164,7 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    // 加入房间的消息体
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-    };
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('joinRoom', roomName, expectedUserIds);
   }
 
   /**
@@ -404,18 +175,7 @@ export default class Client extends EventEmitter {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-      rejoin: true,
-    };
-    const msg = this._cachedRoomMsg;
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('rejoinRoom', roomName);
   }
 
   /**
@@ -440,40 +200,18 @@ export default class Client extends EventEmitter {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
     if (roomOptions !== null && !(roomOptions instanceof Object)) {
       throw new TypeError(`${roomOptions} is not a Object`);
     }
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-    };
-    // 拷贝房间参数
-    if (roomOptions != null) {
-      const opts = convertRoomOptions(roomOptions);
-      this._cachedRoomMsg = Object.assign(this._cachedRoomMsg, opts);
-    }
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-      cid: roomName,
-      createOnNotFound: true,
-    };
-    if (expectedUserIds) {
-      msg.expectMembers = expectedUserIds;
-    }
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle(
+      'joinOrCreateRoom',
+      roomName,
+      roomOptions,
+      expectedUserIds
+    );
   }
 
   /**
@@ -489,32 +227,7 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    if (this._playState !== PlayState.LOBBY_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    this._cachedRoomMsg = {
-      cmd: 'conv',
-      op: 'add',
-      i: this._getMsgId(),
-    };
-    if (matchProperties) {
-      this._cachedRoomMsg.expectAttr = matchProperties;
-    }
-    if (expectedUserIds) {
-      this._cachedRoomMsg.expectMembers = expectedUserIds;
-    }
-
-    const msg = {
-      cmd: 'conv',
-      op: 'add-random',
-    };
-    if (matchProperties) {
-      msg.expectAttr = matchProperties;
-    }
-    if (expectedUserIds) {
-      msg.expectMembers = expectedUserIds;
-    }
-    this._sendLobbyMessage(msg);
+    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
   }
 
   /**
@@ -528,16 +241,7 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'open',
-      i: this._getMsgId(),
-      toggle: opened,
-    };
-    this._sendGameMessage(msg);
+    return this._fsm.handle('setRoomOpened', opened);
   }
 
   /**
@@ -551,16 +255,7 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'visible',
-      i: this._getMsgId(),
-      toggle: visible,
-    };
-    this._sendGameMessage(msg);
+    return this._fsm.handle('setRoomVisible', visible);
   }
 
   /**
@@ -574,16 +269,7 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'update-master-client',
-      i: this._getMsgId(),
-      masterActorId: newMasterId,
-    };
-    this._sendGameMessage(msg);
+    return this._fsm.handle('setMaster', newMasterId);
   }
 
   /**
@@ -616,34 +302,14 @@ export default class Client extends EventEmitter {
     if (this._player === null) {
       throw new Error('player is null');
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'direct',
-      i: this._getMsgId(),
-      eventId,
-      msg: eventData,
-      receiverGroup: options.receiverGroup,
-      toActorIds: options.targetActorIds,
-    };
-    this._sendGameMessage(msg);
+    return this._fsm.handle('sendEvent', eventId, eventData, options);
   }
 
   /**
    * 离开房间
    */
   leaveRoom() {
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'remove',
-      i: this._getMsgId(),
-      cid: this.room.name,
-    };
-    this._sendGameMessage(msg);
+    return this._fsm.handle('leaveRoom');
   }
 
   /**
@@ -681,19 +347,11 @@ export default class Client extends EventEmitter {
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'update',
-      i: this._getMsgId(),
-      attr: properties,
-    };
-    if (expectedValues) {
-      msg.expectAttr = expectedValues;
-    }
-    this._sendGameMessage(msg);
+    return this._fsm.handle(
+      'setRoomCustomProperties',
+      properties,
+      expectedValues
+    );
   }
 
   // 设置玩家属性
@@ -707,209 +365,20 @@ export default class Client extends EventEmitter {
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
     }
-    if (this._playState !== PlayState.GAME_OPEN) {
-      throw new Error(`error play state: ${this._playState}`);
-    }
-    const msg = {
-      cmd: 'conv',
-      op: 'update-player-prop',
-      i: this._getMsgId(),
-      targetActorId: actorId,
-      attr: properties,
-    };
-    if (expectedValues) {
-      msg.expectAttr = expectedValues;
-    }
-    this._sendGameMessage(msg);
+    return this._fsm.handle(
+      'setPlayerCustomProperties',
+      actorId,
+      properties,
+      expectedValues
+    );
   }
 
-  // 开始大厅会话
-  _lobbySessionOpen() {
-    const msg = {
-      cmd: 'session',
-      op: 'open',
-      i: this._getMsgId(),
-      appId: this._appId,
-      peerId: this._userId,
-      sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
-    };
-    this._sendLobbyMessage(msg);
-  }
-
-  // 开始房间会话
-  _gameSessionOpen() {
-    const msg = {
-      cmd: 'session',
-      op: 'open',
-      i: this._getMsgId(),
-      appId: this._appId,
-      peerId: this._userId,
-      sdkVersion: PlayVersion,
-      gameVersion: this._gameVersion,
-    };
-    this._sendGameMessage(msg);
-  }
-
-  // 发送大厅消息
-  _sendLobbyMessage(msg) {
-    this._send(this._lobbyWS, msg, 'Lobby', LOBBY_KEEPALIVE_DURATION);
-  }
-
-  // 发送房间消息
-  _sendGameMessage(msg) {
-    this._send(this._gameWS, msg, 'Game ', GAME_KEEPALIVE_DURATION);
-  }
-
-  // 发送消息
-  _send(ws, msg, flag, duration) {
-    if (!(typeof msg === 'object')) {
-      throw new TypeError(`${msg} is not an object`);
-    }
-    const msgData = JSON.stringify(msg);
-    debug(`${this._userId} ${flag} msg: ${msg.op} \n-> ${msgData}`);
-    const { WebSocket } = adapters;
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.send(msgData);
-      // 心跳包
-      this._stopPing();
-      this._ping = setTimeout(() => {
-        debug('ping');
-        const ping = {};
-        this._send(ws, ping, flag, duration);
-      }, duration);
-    } else {
-      this._stopPing();
-      this._stopPong();
-    }
-  }
-
-  // 连接至大厅服务器
-  _connectToMaster(gameToLobby = false) {
-    this._playState = PlayState.CONNECTING;
-    this._gameToLobby = gameToLobby;
-    const { WebSocket } = adapters;
-    this._lobbyWS = new WebSocket(this._masterServer);
-    this._lobbyWS.onopen = () => {
-      debug('Lobby websocket opened');
-      this._lobbySessionOpen();
-    };
-    this._lobbyWS.onmessage = msg => {
-      this._stopPong();
-      this._startPongListener(this._lobbyWS, LOBBY_KEEPALIVE_DURATION);
-      handleLobbyMsg(this, msg);
-    };
-    this._lobbyWS.onclose = () => {
-      debug('Lobby websocket closed');
-      if (this._playState === PlayState.CONNECTING) {
-        // 连接失败
-        if (this._masterServer === this._secondaryServer) {
-          this.emit(Event.CONNECT_FAILED, {
-            code: -2,
-            detail: 'Lobby socket connect failed',
-          });
-        } else {
-          // 内部重连
-          this._masterServer = this._secondaryServer;
-          this._connectToMaster();
-        }
-      } else {
-        // 断开连接
-        this._playState = PlayState.CLOSED;
-        this.emit(Event.DISCONNECTED);
-      }
-      this._stopPing();
-      this._stopPong();
-    };
-    this._lobbyWS.onerror = err => {
-      error(err);
-    };
-  }
-
-  // 连接至游戏服务器
-  _connectToGame() {
-    this._playState = PlayState.CONNECTING;
-    const { WebSocket } = adapters;
-    this._gameWS = new WebSocket(this._gameServer);
-    this._gameWS.onopen = () => {
-      debug('Game websocket opened');
-      this._gameSessionOpen();
-    };
-    this._gameWS.onmessage = msg => {
-      this._stopPong();
-      this._startPongListener(this._gameWS, GAME_KEEPALIVE_DURATION);
-      handleGameMsg(this, msg);
-    };
-    this._gameWS.onclose = () => {
-      debug('Game websocket closed');
-      if (this._playState === PlayState.CONNECTING) {
-        // 连接失败
-        this.emit(Event.CONNECT_FAILED, {
-          code: -2,
-          detail: 'Game socket connect failed',
-        });
-      } else {
-        // 断开连接
-        this._playState = PlayState.CLOSED;
-        this.emit(Event.DISCONNECTED);
-      }
-      this._stopPing();
-      this._stopPong();
-    };
-    this._gameWS.onerror = err => {
-      error(err);
-    };
-  }
-
-  _getMsgId() {
-    this._msgId += 1;
-    return this._msgId;
-  }
-
-  _stopConnectTimer() {
-    if (this._connectTimer) {
-      clearTimeout(this._connectTimer);
-      this._connectTimer = null;
-    }
-  }
-
-  _stopPing() {
-    if (this._ping) {
-      clearTimeout(this._ping);
-      this._ping = null;
-    }
-  }
-
-  _stopPong() {
-    if (this._pong) {
-      clearTimeout(this._pong);
-      this._pong = null;
-    }
-  }
-
-  _startPongListener(ws, duration) {
-    this._pong = setTimeout(() => {
-      // ping
-      this._send(ws, {}, '', duration);
-      this._pong = setTimeout(() => {
-        ws.close();
-      }, duration);
-    }, duration * MAX_NO_PONG_TIMES);
-  }
-
-  _cancelHttp() {
-    if (this._httpReq) {
-      this._httpReq.abort();
-    }
-  }
-
-  _closeLobbySocket(onClose) {
-    _closeSocket(this._lobbyWS, onClose);
-    this._lobbyWS = null;
-  }
-
-  _closeGameSocket(onClose) {
-    _closeSocket(this._gameWS, onClose);
-    this._gameWS = null;
+  // 清理内存数据
+  _clear() {
+    this._lobbyRoomList = null;
+    this._masterServer = null;
+    this._gameServer = null;
+    this._room = null;
+    this._player = null;
   }
 }
