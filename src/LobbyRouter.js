@@ -8,8 +8,6 @@ import {
 } from './Config';
 import Region from './Region';
 import isWeapp from './Utils';
-import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 
 export default class LobbyRouter {
   constructor({ appId, insecure, feature }) {
