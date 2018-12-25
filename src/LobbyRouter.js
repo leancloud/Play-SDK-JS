@@ -82,7 +82,7 @@ export default class LobbyRouter {
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
             Date.now() + 2 ** this._connectFailedCount * 1000;
-          reject(new PlayError(PlayErrorCode.ROUTER_ERROR, err.message));
+          reject(err);
         } else {
           const body = JSON.parse(response.text);
           debug(response.text);
