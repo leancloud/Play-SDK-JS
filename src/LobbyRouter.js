@@ -8,8 +8,6 @@ import {
 } from './Config';
 import Region from './Region';
 import isWeapp from './Utils';
-import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 
 export default class LobbyRouter {
   constructor({ appId, insecure, feature }) {
@@ -82,7 +80,7 @@ export default class LobbyRouter {
           this._connectFailedCount += 1;
           this._nextConnectTimestamp =
             Date.now() + 2 ** this._connectFailedCount * 1000;
-          reject(new PlayError(PlayErrorCode.ROUTER_ERROR, err.message));
+          reject(err);
         } else {
           const body = JSON.parse(response.text);
           debug(response.text);

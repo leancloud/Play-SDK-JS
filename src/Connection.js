@@ -59,7 +59,7 @@ export default class Connection extends EventEmitter {
         );
       };
       this._ws.onerror = err => {
-        reject(new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, err.message));
+        reject(err);
       };
     });
   }
@@ -148,9 +148,7 @@ export default class Connection extends EventEmitter {
           resolve();
         };
         this._ws.onerror = err => {
-          reject(
-            new PlayError(PlayErrorCode.CLOSE_WEBSOCKET_ERROR, err.message)
-          );
+          reject(err);
         };
         this._ws.close();
       } else {
