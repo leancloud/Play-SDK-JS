@@ -7,6 +7,7 @@ import ReceiverGroup from './ReceiverGroup';
 import CreateRoomFlag from './CreateRoomFlag';
 import { setAdapters } from './PlayAdapter';
 import { LogLevel, setLogger } from './Logger';
+import PlayError from './PlayError';
 
 export {
   Client,
@@ -19,4 +20,5 @@ export {
   setAdapters,
   LogLevel,
   setLogger,
+  PlayError,
 };
