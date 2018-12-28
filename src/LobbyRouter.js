@@ -10,8 +10,9 @@ import Region from './Region';
 import isWeapp from './Utils';
 
 export default class LobbyRouter {
-  constructor({ appId, insecure, feature }) {
+  constructor({ appId, region, insecure, feature }) {
     this._appId = appId;
+    this._region = region;
     this._insecure = insecure;
     this._feature = feature;
     this._nextConnectTimestamp = 0;
@@ -53,6 +54,7 @@ export default class LobbyRouter {
 
   _fetch(resolve, reject) {
     let masterURL = NorthCNServerURL;
+    debug(`region: ${this._region}`);
     if (this._region === Region.NorthChina) {
       masterURL = NorthCNServerURL;
     } else if (this._region === Region.EastChina) {
