@@ -130,27 +130,11 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       joinLobby() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._lobbyConn.joinLobby();
-            resolve();
-            this._play.emit(Event.LOBBY_JOINED);
-          } catch (err) {
-            reject(err);
-          }
-        });
+        return this._lobbyConn.joinLobby();
       },
 
       leaveLobby() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._lobbyConn.leaveLobby();
-            resolve();
-            this._play.emit(Event.LOBBY_LEFT);
-          } catch (err) {
-            reject(err);
-          }
-        });
+        return this._lobbyConn.leaveLobby();
       },
 
       createRoom(roomName, roomOptions, expectedUserIds) {
