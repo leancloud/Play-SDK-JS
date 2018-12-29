@@ -18,6 +18,7 @@ import GameConnection, {
 } from './GameConnection';
 import Event from './Event';
 import PlayError from './PlayError';
+import AppRouter from './AppRouter';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -33,6 +34,7 @@ const PlayFSM = machina.Fsm.extend({
       _onEnter() {
         debug('init _onEnter()');
         const { _appId, _region, _insecure, _feature } = this._play;
+        this._appRouter = new AppRouter(_appId);
         this._router = new LobbyRouter({
           appId: _appId,
           region: _region,
@@ -75,6 +77,7 @@ const PlayFSM = machina.Fsm.extend({
       reset() {
         return new Promise((resolve, reject) => {
           try {
+            this._appRouter.abort();
             this._router.abort();
             this.transition('init');
             resolve();
@@ -485,9 +488,12 @@ const PlayFSM = machina.Fsm.extend({
     this.transition('connecting');
     return new Promise(async (resolve, reject) => {
       try {
-        const serverInfo = await this._router.fetch(this._play._gameVersion);
+        // 先获取大厅路由地址
+        const lobbyRouterUrl = await this._appRouter.fetch();
+        // 再获取大厅服务器地址
+        const lobbyServerInfo = await this._router.fetch(lobbyRouterUrl);
         this.transition('lobbyConnecting');
-        const { primaryServer, secondaryServer } = serverInfo;
+        const { primaryServer, secondaryServer } = lobbyServerInfo;
         this._primaryServer = primaryServer;
         this._secondaryServer = secondaryServer;
         // 与大厅建立连接

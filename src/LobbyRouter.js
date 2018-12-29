@@ -1,12 +1,6 @@
 import request from 'superagent';
 import { debug } from './Logger';
-import {
-  PlayVersion,
-  NorthCNServerURL,
-  EastCNServerURL,
-  USServerURL,
-} from './Config';
-import Region from './Region';
+import PlayVersion from './Config';
 import isWeapp from './Utils';
 
 export default class LobbyRouter {
@@ -20,7 +14,7 @@ export default class LobbyRouter {
     this._serverValidTimeStamp = 0;
   }
 
-  fetch() {
+  fetch(url) {
     debug('LobbyRouter fetch');
     return new Promise((resolve, reject) => {
       const now = Date.now();
@@ -37,7 +31,7 @@ export default class LobbyRouter {
         this._delayFetch(delayTime, resolve, reject);
       } else {
         // 直接获取
-        this._fetch(resolve, reject);
+        this._fetch(url, resolve, reject);
       }
     });
   }
@@ -52,16 +46,8 @@ export default class LobbyRouter {
     }, delay);
   }
 
-  _fetch(resolve, reject) {
-    let masterURL = NorthCNServerURL;
-    debug(`region: ${this._region}`);
-    if (this._region === Region.NorthChina) {
-      masterURL = NorthCNServerURL;
-    } else if (this._region === Region.EastChina) {
-      masterURL = EastCNServerURL;
-    } else if (this._region === Region.NorthAmerica) {
-      masterURL = USServerURL;
-    }
+  _fetch(url, resolve, reject) {
+    debug(`fetch lobby server info from: ${url}`);
     const query = { appId: this._appId, sdkVersion: PlayVersion };
     // 使用设置覆盖 SDK 判断的 feature
     if (this._feature) {
@@ -74,7 +60,7 @@ export default class LobbyRouter {
       query.insecure = this._insecure;
     }
     this._httpReq = request
-      .get(masterURL)
+      .get(url)
       .query(query)
       .end((err, response) => {
         if (err) {
