@@ -319,7 +319,6 @@ const PlayFSM = machina.Fsm.extend({
             await this._gameConn.close();
             await this._connectLobby();
             resolve();
-            this._play.emit(Event.ROOM_LEFT);
           } catch (err) {
             reject(err);
           }
