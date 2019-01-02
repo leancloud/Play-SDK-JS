@@ -557,6 +557,7 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('gameConnected');
         resolve();
       } catch (err) {
+        await this._gameConn.close();
         reject(err);
       }
     });
@@ -575,6 +576,7 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('gameConnected');
         resolve();
       } catch (err) {
+        await this._gameConn.close();
         reject(err);
       }
     });
