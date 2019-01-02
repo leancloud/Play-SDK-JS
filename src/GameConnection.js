@@ -202,7 +202,6 @@ export default class GameConnection extends Connection {
       try {
         const msg = {
           cmd: 'direct',
-          i: this._getMsgId(),
           eventId,
           msg: eventData,
           receiverGroup: options.receiverGroup,
