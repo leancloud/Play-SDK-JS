@@ -193,7 +193,6 @@ export default class LobbyConnection extends Connection {
         const msg = {
           cmd: 'conv',
           op: 'add',
-          i: this._getMsgId(),
           cid: roomName,
           rejoin: true,
         };
