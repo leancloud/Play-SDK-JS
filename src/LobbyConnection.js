@@ -134,13 +134,15 @@ export default class LobbyConnection extends Connection {
   joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
     return new Promise(async (resolve, reject) => {
       try {
-        const msg = {
+        let msg = {
           cmd: 'conv',
           op: 'add',
-          i: this._getMsgId(),
           cid: roomName,
           createOnNotFound: true,
         };
+        if (roomOptions) {
+          msg = Object.assign(msg, convertRoomOptions(roomOptions));
+        }
         if (expectedUserIds) {
           msg.expectMembers = expectedUserIds;
         }
