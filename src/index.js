@@ -1,5 +1,4 @@
 import Client from './Client';
-import Region from './Region';
 import Room from './Room';
 import Player from './Player';
 import Event from './Event';
@@ -11,7 +10,6 @@ import PlayError from './PlayError';
 
 export {
   Client,
-  Region,
   Room,
   Player,
   Event,

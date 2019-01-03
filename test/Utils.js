@@ -1,13 +1,11 @@
 import Client from '../src/Client';
-import Region from '../src/Region';
-import { APP_ID, APP_KEY, APP_REGION } from './Config';
+import { APP_ID, APP_KEY } from './Config';
 
 function newPlay(userId) {
   const play = new Client({
     userId,
     appId: APP_ID,
     appKey: APP_KEY,
-    region: APP_REGION,
   });
   return play;
 }
@@ -17,7 +15,6 @@ function newWechatPlay(userId) {
     userId,
     appId: 'vwDice44bmatVulkQvErSg5C-gzGzoHsz',
     appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
-    region: Region.NorthChina,
     feature: 'wechat',
   });
   return play;

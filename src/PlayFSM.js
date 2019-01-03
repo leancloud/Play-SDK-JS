@@ -510,7 +510,7 @@ const PlayFSM = machina.Fsm.extend({
         this.transition('lobbyConnected');
         resolve();
       } catch (err) {
-        debug(`connect lobby error:`);
+        debug(`connect lobby error:${err}`);
         debug(err instanceof PlayError);
         this.transition('init');
         reject(err);
