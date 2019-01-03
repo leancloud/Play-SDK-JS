@@ -1,7 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import _ from 'lodash';
 
-import { clearTimeout, setTimeout } from 'timers';
 import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
