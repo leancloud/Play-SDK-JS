@@ -14,15 +14,6 @@ declare class EventEmitter<T> {
   emit<K extends keyof T>(evt: K | string, ...args: any[]): boolean;
 }
 
-export enum Region {
-  /** 华北节点 */
-  NorthChina,
-  /** 华东节点 */
-  EastChina,
-  /** 美国节点 */
-  NorthAmerica,
-}
-
 export enum Event {
   /** 连接成功 */
   CONNECTED = 'connected',
@@ -201,7 +192,6 @@ export class Client extends EventEmitter<PlayEvent> {
   constructor(opts: {
     appId: string;
     appKey: string;
-    region: Region;
     userId: string;
     ssl?: boolean;
     feature?: string;
