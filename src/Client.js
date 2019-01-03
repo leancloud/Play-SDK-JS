@@ -11,7 +11,6 @@ export default class Client extends EventEmitter {
    * @param {String} opts.userId 玩家唯一 Id
    * @param {String} opts.appId APP ID
    * @param {String} opts.appKey APP KEY
-   * @param {Number} opts.region 节点地区
    * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
    * @param {String} [opts.gameVersion] 游戏版本号
    */
@@ -22,9 +21,6 @@ export default class Client extends EventEmitter {
     }
     if (!(typeof opts.appKey === 'string')) {
       throw new TypeError(`${opts.appKey} is not a string`);
-    }
-    if (!(typeof opts.region === 'number')) {
-      throw new TypeError(`${opts.region} is not a number`);
     }
     if (!(typeof opts.userId === 'string')) {
       throw new TypeError(`${opts.userId} is not a string`);
@@ -44,7 +40,6 @@ export default class Client extends EventEmitter {
     this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
-    this._region = opts.region;
     this._feature = opts.feature;
     if (opts.ssl === false) {
       this._insecure = true;
