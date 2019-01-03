@@ -4,9 +4,8 @@ import PlayVersion from './Config';
 import isWeapp from './Utils';
 
 export default class LobbyRouter {
-  constructor({ appId, region, insecure, feature }) {
+  constructor({ appId, insecure, feature }) {
     this._appId = appId;
-    this._region = region;
     this._insecure = insecure;
     this._feature = feature;
     this._nextConnectTimestamp = 0;
