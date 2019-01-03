@@ -1,4 +1,4 @@
-import { PlayVersion } from './Config';
+import PlayVersion from './Config';
 import PlayError from './PlayError';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
@@ -134,13 +134,15 @@ export default class LobbyConnection extends Connection {
   joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
     return new Promise(async (resolve, reject) => {
       try {
-        const msg = {
+        let msg = {
           cmd: 'conv',
           op: 'add',
-          i: this._getMsgId(),
           cid: roomName,
           createOnNotFound: true,
         };
+        if (roomOptions) {
+          msg = Object.assign(msg, convertRoomOptions(roomOptions));
+        }
         if (expectedUserIds) {
           msg.expectMembers = expectedUserIds;
         }
@@ -191,7 +193,6 @@ export default class LobbyConnection extends Connection {
         const msg = {
           cmd: 'conv',
           op: 'add',
-          i: this._getMsgId(),
           cid: roomName,
           rejoin: true,
         };

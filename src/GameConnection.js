@@ -1,4 +1,4 @@
-import { PlayVersion } from './Config';
+import PlayVersion from './Config';
 import PlayError from './PlayError';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
@@ -202,7 +202,6 @@ export default class GameConnection extends Connection {
       try {
         const msg = {
           cmd: 'direct',
-          i: this._getMsgId(),
           eventId,
           msg: eventData,
           receiverGroup: options.receiverGroup,
