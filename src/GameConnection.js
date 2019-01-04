@@ -18,6 +18,7 @@ export const PLAYER_PROPERTIES_CHANGED_EVENT =
 export const PLAYER_OFFLINE_EVENT = 'PLAYER_OFFLINE_EVENT';
 export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
+export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class GameConnection extends Connection {
@@ -197,6 +198,30 @@ export default class GameConnection extends Connection {
     });
   }
 
+  kickPlayer(actorId, code, msg) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const req = {
+          cmd: 'conv',
+          op: 'kick',
+          i: this._getMsgId(),
+          targetActorId: actorId,
+          appCode: code,
+          appMsg: msg,
+        };
+        const res = await super.send(req);
+        if (res.reasonCode) {
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
+        } else {
+          resolve();
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
   sendEvent(eventId, eventData, options) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -299,6 +324,9 @@ export default class GameConnection extends Connection {
           case 'members-online':
             this._handlePlayerOnlineMsg(msg);
             break;
+          case 'kicked-notice':
+            this._handleKickedMsg(msg);
+            break;
           default:
             super._handleUnknownMsg(msg);
             break;
@@ -369,5 +397,10 @@ export default class GameConnection extends Connection {
   _handleSendEventMsg(msg) {
     const { eventId, msg: eventData, fromActorId: senderId } = msg;
     this.emit(SEND_CUSTOM_EVENT, eventId, eventData, senderId);
+  }
+
+  _handleKickedMsg(msg) {
+    const { appCode, appMsg } = msg;
+    this.emit(ROOM_KICKED_EVENT, appCode, appMsg);
   }
 }
