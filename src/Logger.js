@@ -23,6 +23,7 @@ export function setLogger(newLogger) {
 
 /**
  * 调试输出
+ * @ignore
  * @param {String} log
  */
 export function debug(log) {
@@ -32,6 +33,7 @@ export function debug(log) {
 
 /**
  * 警告输出
+ * @ignore
  * @param {String} log
  */
 export function warn(log) {
@@ -41,6 +43,7 @@ export function warn(log) {
 
 /**
  * 错误输出
+ * @ignore
  * @param {String} log
  */
 export function error(log) {

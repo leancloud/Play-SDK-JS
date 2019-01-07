@@ -4,16 +4,16 @@ import _ from 'lodash';
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 
+/**
+ * 多人对战游戏服务的客户端
+ * @param {Object} opts
+ * @param {String} opts.userId 玩家唯一 Id
+ * @param {String} opts.appId APP ID
+ * @param {String} opts.appKey APP KEY
+ * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
+ * @param {String} [opts.gameVersion] 游戏版本号
+ */
 export default class Client extends EventEmitter {
-  /**
-   * 多人对战游戏服务的客户端
-   * @param {Object} opts
-   * @param {String} opts.userId 玩家唯一 Id
-   * @param {String} opts.appId APP ID
-   * @param {String} opts.appKey APP KEY
-   * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
-   * @param {String} [opts.gameVersion] 游戏版本号
-   */
   constructor(opts) {
     super();
     if (!(typeof opts.appId === 'string')) {
