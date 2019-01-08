@@ -1,5 +1,4 @@
 import PlayVersion from './Config';
-import PlayError from './PlayError';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
@@ -36,11 +35,7 @@ export default class GameConnection extends Connection {
       sdkVersion: PlayVersion,
       gameVersion,
     };
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   async createRoom(roomId, roomOptions, expectedUserIds) {
@@ -58,11 +53,7 @@ export default class GameConnection extends Connection {
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    const res = await super.send(msg, undefined, false);
     return Room._newFromJSONObject(res);
   }
 
@@ -78,11 +69,7 @@ export default class GameConnection extends Connection {
     if (expectedUserIds) {
       msg.expectMembers = expectedUserIds;
     }
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    const res = await super.send(msg, undefined, false);
     return Room._newFromJSONObject(res);
   }
 
@@ -91,11 +78,7 @@ export default class GameConnection extends Connection {
       cmd: 'conv',
       op: 'remove',
     };
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   async setRoomOpened(opened) {
@@ -104,11 +87,7 @@ export default class GameConnection extends Connection {
       op: 'open',
       toggle: opened,
     };
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   async setRoomVisible(visible) {
@@ -117,11 +96,7 @@ export default class GameConnection extends Connection {
       op: 'visible',
       toggle: visible,
     };
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   async setMaster(newMasterId) {
@@ -130,11 +105,7 @@ export default class GameConnection extends Connection {
       op: 'update-master-client',
       masterActorId: newMasterId,
     };
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   kickPlayer(actorId, code, msg) {
@@ -181,11 +152,7 @@ export default class GameConnection extends Connection {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   async setPlayerCustomProperties(actorId, properties, expectedValues) {
@@ -198,11 +165,7 @@ export default class GameConnection extends Connection {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    const res = await super.send(msg);
-    if (res.reasonCode) {
-      const { reasonCode, detail } = res;
-      throw new PlayError(reasonCode, detail);
-    }
+    await super.send(msg, undefined, false);
   }
 
   _getPingDuration() {

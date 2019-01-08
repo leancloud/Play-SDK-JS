@@ -5,6 +5,7 @@ import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
+import { tap } from './Utils';
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
@@ -98,7 +99,7 @@ export default class Connection extends EventEmitter {
     };
   }
 
-  send(msg, withIndex = true) {
+  send(msg, withIndex = true, ignoreServerError = true) {
     const msgId = this._getMsgId();
     if (withIndex) {
       Object.assign(msg, {
@@ -131,7 +132,16 @@ export default class Connection extends EventEmitter {
           )
         );
       }
-    });
+    }).then(
+      ignoreServerError
+        ? undefined
+        : tap(res => {
+            if (res.reasonCode) {
+              const { reasonCode, detail } = res;
+              throw new PlayError(reasonCode, detail);
+            }
+          })
+    );
   }
 
   close() {
