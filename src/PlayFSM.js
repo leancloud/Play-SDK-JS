@@ -15,6 +15,7 @@ import GameConnection, {
   PLAYER_OFFLINE_EVENT,
   PLAYER_ONLINE_EVENT,
   SEND_CUSTOM_EVENT,
+  ROOM_KICKED_EVENT,
 } from './GameConnection';
 import Event from './Event';
 import PlayError from './PlayError';
@@ -305,6 +306,13 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(DISCONNECT_EVENT, () => {
           this._play.emit(Event.DISCONNECTED);
         });
+        this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
+          this.transition('gameClosing');
+          await this._gameConn.close();
+          await this._connectLobby();
+          this.transition('lobbyConnected');
+          this._play.emit(Event.ROOM_KICKED, { code, msg });
+        });
       },
 
       _onExit() {
@@ -317,6 +325,7 @@ const PlayFSM = machina.Fsm.extend({
             await this._gameConn.leaveRoom();
             await this._gameConn.close();
             await this._connectLobby();
+            this.transition('lobbyConnected');
             resolve();
           } catch (err) {
             reject(err);
@@ -334,6 +343,10 @@ const PlayFSM = machina.Fsm.extend({
 
       setMaster(newMasterId) {
         return this._gameConn.setMaster(newMasterId);
+      },
+
+      kickPlayer(actorId, code, msg) {
+        return this._gameConn.kickPlayer(actorId, code, msg);
       },
 
       sendEvent(eventId, eventData, options) {
@@ -379,6 +392,12 @@ const PlayFSM = machina.Fsm.extend({
             reject(err);
           }
         });
+      },
+    },
+
+    gameClosing: {
+      _onEnter() {
+        debug('gameClosing onEnter');
       },
     },
   },

@@ -307,6 +307,19 @@ export default class Client extends EventEmitter {
     return this._fsm.handle('leaveRoom');
   }
 
+  kickPlayer(actorId, { code = null, msg = null } = {}) {
+    if (!_.isNumber(actorId)) {
+      throw new TypeError(`${actorId} is not a number`);
+    }
+    if (!_.isNull(code) && !_.isNumber(code)) {
+      throw new TypeError(`${code} is not a number`);
+    }
+    if (!_.isNull(msg) && !_.isString(msg)) {
+      throw new TypeError(`${msg} is not a string`);
+    }
+    return this._fsm.handle('kickPlayer', actorId, code, msg);
+  }
+
   /**
    * 获取当前所在房间
    * @return {Room}

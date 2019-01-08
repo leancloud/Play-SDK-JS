@@ -101,6 +101,10 @@ declare interface PlayEvent {
     newMaster: Player;
   };
   roomLeft: void;
+  roomKicked: {
+    code: number;
+    msg: string;
+  };
   roomCustomPropertiesChanged: {
     changedProps: CustomProperties;
   };
@@ -254,6 +258,14 @@ export class Client extends EventEmitter<PlayEvent> {
   ): Promise<void>;
 
   leaveRoom(): Promise<void>;
+
+  kickPlayer(
+    actorId: number,
+    opts?: {
+      code?: number;
+      msg?: string;
+    }
+  ): Promise<void>;
 }
 
 export enum CreateRoomFlag {
