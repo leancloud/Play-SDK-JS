@@ -108,28 +108,16 @@ export default class GameConnection extends Connection {
     await super.send(msg, undefined, false);
   }
 
-  kickPlayer(actorId, code, msg) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const req = {
-          cmd: 'conv',
-          op: 'kick',
-          i: this._getMsgId(),
-          targetActorId: actorId,
-          appCode: code,
-          appMsg: msg,
-        };
-        const res = await super.send(req);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async kickPlayer(actorId, code, msg) {
+    const req = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: actorId,
+      appCode: code,
+      appMsg: msg,
+    };
+    await super.send(req, undefined, false);
   }
 
   async sendEvent(eventId, eventData, options) {
