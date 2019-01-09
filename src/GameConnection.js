@@ -128,7 +128,7 @@ export default class GameConnection extends Connection {
       receiverGroup: options.receiverGroup,
       toActorIds: options.targetActorIds,
     };
-    await super.send(msg);
+    await super.send(msg, false);
   }
 
   async setRoomCustomProperties(properties, expectedValues) {
