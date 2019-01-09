@@ -99,7 +99,7 @@ export default class Connection extends EventEmitter {
     };
   }
 
-  send(msg, withIndex = true, ignoreServerError = true) {
+  async send(msg, withIndex = true, ignoreServerError = true) {
     const msgId = this._getMsgId();
     if (withIndex) {
       Object.assign(msg, {
@@ -109,29 +109,30 @@ export default class Connection extends EventEmitter {
     // 输出日志
     const msgData = JSON.stringify(msg);
     debug(`${this._userId} : ${this._flag} -> ${msg.op} ${msgData}`);
+    const { WebSocket } = adapters;
+    if (this._ws.readyState !== WebSocket.OPEN) {
+      throw new PlayError(
+        PlayErrorCode.SEND_MESSAGE_STATE_ERROR,
+        `Websocket send message error state: ${this._ws.readyState}`
+      );
+    }
+    this._ws.send(msgData);
+    // 处理心跳包
+    this._stopPing();
+    this._pingTimer = setTimeout(() => {
+      const ping = {};
+      this.send(ping, false);
+    }, this._getPingDuration());
+
+    if (!withIndex) {
+      return undefined;
+    }
     return new Promise((resolve, reject) => {
-      const { WebSocket } = adapters;
-      if (this._ws.readyState === WebSocket.OPEN) {
-        this._requests[msgId] = {
-          msg,
-          resolve,
-          reject,
-        };
-        this._ws.send(msgData);
-        // 处理心跳包
-        this._stopPing();
-        this._pingTimer = setTimeout(() => {
-          const ping = {};
-          this.send(ping, false);
-        }, this._getPingDuration());
-      } else {
-        reject(
-          new PlayError(
-            PlayErrorCode.SEND_MESSAGE_STATE_ERROR,
-            `Websocket send message error state: ${this._ws.readyState}`
-          )
-        );
-      }
+      this._requests[msgId] = {
+        msg,
+        resolve,
+        reject,
+      };
     }).then(
       ignoreServerError
         ? undefined
