@@ -20,6 +20,7 @@ import GameConnection, {
 import Event from './Event';
 import PlayError from './PlayError';
 import AppRouter from './AppRouter';
+import { tapError } from './Utils';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -552,7 +553,9 @@ const PlayFSM = machina.Fsm.extend({
           _userId: userId,
           _gameVersion: gameVersion,
         } = this._play;
-        await this._gameConn.openSession(appId, userId, gameVersion);
+        await this._gameConn
+          .openSession(appId, userId, gameVersion)
+          .catch(tapError(() => this._gameConn.close()));
         resolve();
       } catch (err) {
         this.transition('lobbyConnected');

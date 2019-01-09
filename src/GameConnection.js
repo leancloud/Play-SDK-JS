@@ -1,5 +1,4 @@
 import PlayVersion from './Config';
-import PlayError from './PlayError';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
@@ -27,266 +26,134 @@ export default class GameConnection extends Connection {
     this._flag = 'game';
   }
 
-  openSession(appId, userId, gameVersion) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'session',
-          op: 'open',
-          appId,
-          peerId: userId,
-          sdkVersion: PlayVersion,
-          gameVersion,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          await this.close();
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async openSession(appId, userId, gameVersion) {
+    const msg = {
+      cmd: 'session',
+      op: 'open',
+      appId,
+      peerId: userId,
+      sdkVersion: PlayVersion,
+      gameVersion,
+    };
+    await super.send(msg, undefined, false);
   }
 
-  createRoom(roomId, roomOptions, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let msg = {
-          cmd: 'conv',
-          op: 'start',
-        };
-        if (roomId) {
-          msg.cid = roomId;
-        }
-        // 拷贝房间属性（包括 系统属性和玩家定义属性）
-        if (roomOptions) {
-          msg = Object.assign(msg, convertRoomOptions(roomOptions));
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          await this.close();
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const room = Room._newFromJSONObject(res);
-          resolve(room);
-        }
-      } catch (err) {
-        await this.close();
-        reject(err);
-      }
-    });
+  async createRoom(roomId, roomOptions, expectedUserIds) {
+    let msg = {
+      cmd: 'conv',
+      op: 'start',
+    };
+    if (roomId) {
+      msg.cid = roomId;
+    }
+    // 拷贝房间属性（包括 系统属性和玩家定义属性）
+    if (roomOptions) {
+      msg = Object.assign(msg, convertRoomOptions(roomOptions));
+    }
+    if (expectedUserIds) {
+      msg.expectMembers = expectedUserIds;
+    }
+    const res = await super.send(msg, undefined, false);
+    return Room._newFromJSONObject(res);
   }
 
-  joinRoom(roomName, matchProperties, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'add',
-          cid: roomName,
-        };
-        if (matchProperties) {
-          msg.expectAttr = matchProperties;
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          await this.close();
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const room = Room._newFromJSONObject(res);
-          resolve(room);
-        }
-      } catch (err) {
-        await this.close();
-        reject(err);
-      }
-    });
+  async joinRoom(roomName, matchProperties, expectedUserIds) {
+    const msg = {
+      cmd: 'conv',
+      op: 'add',
+      cid: roomName,
+    };
+    if (matchProperties) {
+      msg.expectAttr = matchProperties;
+    }
+    if (expectedUserIds) {
+      msg.expectMembers = expectedUserIds;
+    }
+    const res = await super.send(msg, undefined, false);
+    return Room._newFromJSONObject(res);
   }
 
-  leaveRoom() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'remove',
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async leaveRoom() {
+    const msg = {
+      cmd: 'conv',
+      op: 'remove',
+    };
+    await super.send(msg, undefined, false);
   }
 
-  setRoomOpened(opened) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'open',
-          toggle: opened,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async setRoomOpened(opened) {
+    const msg = {
+      cmd: 'conv',
+      op: 'open',
+      toggle: opened,
+    };
+    await super.send(msg, undefined, false);
   }
 
-  setRoomVisible(visible) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'visible',
-          toggle: visible,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async setRoomVisible(visible) {
+    const msg = {
+      cmd: 'conv',
+      op: 'visible',
+      toggle: visible,
+    };
+    await super.send(msg, undefined, false);
   }
 
-  setMaster(newMasterId) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'update-master-client',
-          masterActorId: newMasterId,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async setMaster(newMasterId) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-master-client',
+      masterActorId: newMasterId,
+    };
+    await super.send(msg, undefined, false);
   }
 
-  kickPlayer(actorId, code, msg) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const req = {
-          cmd: 'conv',
-          op: 'kick',
-          i: this._getMsgId(),
-          targetActorId: actorId,
-          appCode: code,
-          appMsg: msg,
-        };
-        const res = await super.send(req);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async kickPlayer(actorId, code, msg) {
+    const req = {
+      cmd: 'conv',
+      op: 'kick',
+      i: this._getMsgId(),
+      targetActorId: actorId,
+      appCode: code,
+      appMsg: msg,
+    };
+    await super.send(req, undefined, false);
   }
 
-  sendEvent(eventId, eventData, options) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'direct',
-          eventId,
-          msg: eventData,
-          receiverGroup: options.receiverGroup,
-          toActorIds: options.targetActorIds,
-        };
-        await super.send(msg);
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async sendEvent(eventId, eventData, options) {
+    const msg = {
+      cmd: 'direct',
+      eventId,
+      msg: eventData,
+      receiverGroup: options.receiverGroup,
+      toActorIds: options.targetActorIds,
+    };
+    await super.send(msg, false);
   }
 
-  setRoomCustomProperties(properties, expectedValues) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'update',
-          attr: properties,
-        };
-        if (expectedValues) {
-          msg.expectAttr = expectedValues;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async setRoomCustomProperties(properties, expectedValues) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update',
+      attr: properties,
+    };
+    if (expectedValues) {
+      msg.expectAttr = expectedValues;
+    }
+    await super.send(msg, undefined, false);
   }
 
-  setPlayerCustomProperties(actorId, properties, expectedValues) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'update-player-prop',
-          targetActorId: actorId,
-          attr: properties,
-        };
-        if (expectedValues) {
-          msg.expectAttr = expectedValues;
-        }
-        const res = super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async setPlayerCustomProperties(actorId, properties, expectedValues) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-player-prop',
+      targetActorId: actorId,
+      attr: properties,
+    };
+    if (expectedValues) {
+      msg.expectAttr = expectedValues;
+    }
+    await super.send(msg, undefined, false);
   }
 
   _getPingDuration() {
