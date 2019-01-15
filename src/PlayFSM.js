@@ -90,7 +90,7 @@ const PlayFSM = machina.Fsm.extend({
           this._play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
         });
         this._lobbyConn.on(DISCONNECT_EVENT, () => {
-          this._play.emit(Event.DISCONNECTED);
+          this.handle('onTransition', 'disconnect');
         });
       },
 
@@ -251,7 +251,7 @@ const PlayFSM = machina.Fsm.extend({
           });
         });
         this._gameConn.on(DISCONNECT_EVENT, () => {
-          this._play.emit(Event.DISCONNECTED);
+          this.handle('onTransition', 'disconnect');
         });
         this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
           await this._gameConn.close();
@@ -346,6 +346,10 @@ const PlayFSM = machina.Fsm.extend({
     },
 
     disconnect: {
+      _onEnter() {
+        this._play.emit(Event.DISCONNECTED);
+      },
+
       reconnect() {
         this.handle('onTransition', 'connecting');
         return this._connectLobby().then(
