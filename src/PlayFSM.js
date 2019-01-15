@@ -257,7 +257,7 @@ const PlayFSM = machina.Fsm.extend({
           await this._gameConn.close();
           await this._connectLobby().then(
             tap(() => {
-              this.handle('onTransition', 'lobby');
+              this.handle('onTransition', 'gameToLobby');
             })
           );
           this._play.emit(Event.ROOM_KICKED, { code, msg });
@@ -270,7 +270,7 @@ const PlayFSM = machina.Fsm.extend({
 
       onTransition(nextState) {
         if (
-          nextState === 'lobby' ||
+          nextState === 'gameToLobby' ||
           nextState === 'disconnect' ||
           nextState === 'close'
         ) {
@@ -281,6 +281,7 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       leaveRoom() {
+        this.handle('onTransition', 'gameToLobby');
         return new Promise(async (resolve, reject) => {
           try {
             await this._gameConn.leaveRoom();
@@ -342,6 +343,20 @@ const PlayFSM = machina.Fsm.extend({
             reject(err);
           }
         });
+      },
+    },
+
+    gameToLobby: {
+      onTransition(nextState) {
+        if (nextState === 'lobby' || nextState === 'game') {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from gameToLobby to ${nextState}`);
+        }
+      },
+
+      close() {
+        this.transition('close');
       },
     },
 
