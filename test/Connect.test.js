@@ -39,10 +39,11 @@ describe('test connect', () => {
   });
 
   it('test disconnect from lobby', async () => {
-    const p = newPlay('tc2');
+    let p = newPlay('tc2');
     await p.connect();
     await p.close();
-    await p.reconnect();
+    p = newPlay('tc2');
+    await p.connect();
     await p.close();
   });
 

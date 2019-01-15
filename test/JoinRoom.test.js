@@ -80,7 +80,7 @@ describe('test join room', () => {
   it('test rejoin room', async () => {
     const roomName = 'jr4_r';
     const p0 = newPlay('jr4_0');
-    const p1 = newPlay('jr4_1');
+    let p1 = newPlay('jr4_1');
 
     await p0.connect();
     const options = {
@@ -98,6 +98,8 @@ describe('test join room', () => {
     await p1.connect();
     await p1.joinRoom(roomName);
     await p1.close();
+
+    p1 = newPlay('jr4_1');
     await p1.connect();
     await p1.rejoinRoom(roomName);
 
@@ -108,7 +110,7 @@ describe('test join room', () => {
   it('test reconnectAndRejoin room', async () => {
     const roomName = 'jr5_r';
     const p0 = newPlay('jr5_0');
-    const p1 = newPlay('jr5_1');
+    let p1 = newPlay('jr5_1');
 
     await p0.connect();
     const options = {
@@ -122,6 +124,8 @@ describe('test join room', () => {
     await p1.connect();
     await p1.joinRoom(roomName);
     await p1.close();
+
+    p1 = newPlay('jr5_1');
     await p1.reconnectAndRejoin();
 
     await p0.close();

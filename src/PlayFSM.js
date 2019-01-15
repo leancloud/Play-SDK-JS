@@ -346,7 +346,12 @@ const PlayFSM = machina.Fsm.extend({
     },
 
     disconnect: {
-      reconnect() {},
+      reconnect() {
+        this.handle('onTransition', 'connecting');
+        return this._connectLobby().then(
+          tap(() => this.handle('onTransition', 'lobby'))
+        );
+      },
 
       reconnectAndRejoin() {
         this.handle('onTransition', 'connecting');
@@ -377,6 +382,10 @@ const PlayFSM = machina.Fsm.extend({
         } else if (nextState === 'game') {
           await this._gameConn.close();
         }
+      },
+
+      '*': evt => {
+        throw new Error(`Error event: ${evt.inputType} on close state`);
       },
     },
   },

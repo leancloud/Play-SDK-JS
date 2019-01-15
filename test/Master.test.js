@@ -33,7 +33,7 @@ describe('test master', () => {
         expect(p1.room.masterId).to.be.equal(newMaster.actorId);
         f1 = true;
         if (f0 && f1) {
-          await p1.close();
+          await p0.close();
           await p1.close();
           resolve();
         }

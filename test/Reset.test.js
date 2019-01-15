@@ -4,19 +4,21 @@ const debug = require('debug')('Test:close');
 
 describe('test close', () => {
   it('test close', async () => {
-    const p = newPlay('tr0_0');
+    let p = newPlay('tr0_0');
     await p.connect();
     await p.createRoom();
     await p.close();
+    p = newPlay('tr0_0');
     await p.connect();
     await p.createRoom();
     await p.close();
   });
 
   it('test router connecting close', async () => {
-    const p = newPlay('tr1_0');
+    let p = newPlay('tr1_0');
     p.connect();
     await p.close();
+    p = newPlay('tr1_0');
     await p.connect();
     await p.close();
   });
@@ -33,10 +35,11 @@ describe('test close', () => {
   });
 
   it('test game connecting close', async () => {
-    const p = newPlay('tr3_0');
+    let p = newPlay('tr3_0');
     await p.connect();
     p.createRoom();
     await p.close();
+    p = newPlay('tr3_0');
     await p.connect();
     await p.createRoom();
     await p.close();
