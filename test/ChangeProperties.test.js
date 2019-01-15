@@ -24,8 +24,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -37,8 +37,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -66,8 +66,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -81,8 +81,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -131,8 +131,8 @@ describe('test change properties', () => {
         expect(arr[2].num).to.be.equal(13);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -153,8 +153,8 @@ describe('test change properties', () => {
         expect(props.arr[2].num).to.be.equal(13);
         f1 = true;
         if (f0 && f1) {
-          p0.disconnect();
-          p1.disconnect();
+          p0.close();
+          p1.close();
           resolve();
         }
       });
@@ -191,8 +191,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -207,8 +207,8 @@ describe('test change properties', () => {
         expect(props.gold).to.be.equal(1000);
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -252,7 +252,7 @@ describe('test change properties', () => {
     const me = p1.room.getPlayer(p1.player.actorId);
     debug(me);
     expect(master.getCustomProperties().ready).to.be.equal(true);
-    await p0.disconnect();
-    await p1.disconnect();
+    await p0.close();
+    await p1.close();
   });
 });

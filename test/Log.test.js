@@ -12,6 +12,6 @@ describe('test log', () => {
     });
     const p = newPlay('tl0');
     await p.connect();
-    await p.disconnect();
+    await p.close();
   });
 });

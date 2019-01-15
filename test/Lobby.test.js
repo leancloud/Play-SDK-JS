@@ -6,7 +6,7 @@ describe('test lobby', () => {
     const p = newPlay('tl0');
     await p.connect();
     await p.joinLobby();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test room list update', async () =>
@@ -25,10 +25,10 @@ describe('test lobby', () => {
       await p3.joinLobby();
       p3.on(Event.LOBBY_ROOM_LIST_UPDATED, async () => {
         if (p3.lobbyRoomList.length >= 3) {
-          await p0.disconnect();
-          await p1.disconnect();
-          await p2.disconnect();
-          await p3.disconnect();
+          await p0.close();
+          await p1.close();
+          await p2.close();
+          await p3.close();
           resolve();
         }
       });

@@ -18,9 +18,8 @@ import GameConnection, {
   ROOM_KICKED_EVENT,
 } from './GameConnection';
 import Event from './Event';
-import PlayError from './PlayError';
 import AppRouter from './AppRouter';
-import { tapError } from './Utils';
+import { tap } from './Utils';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -46,81 +45,46 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn = new GameConnection();
       },
 
-      connect() {
-        return this._connect();
+      onTransition(nextState) {
+        if (nextState === 'connecting' || nextState === 'close') {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from init to ${nextState}`);
+        }
       },
 
-      reconnectAndRejoin() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._connect();
-            await this._joinRoom(this._play._lastRoomId);
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
+      connect() {
+        this.handle('onTransition', 'connecting');
+        return this._connectLobby().then(
+          tap(() => this.handle('onTransition', 'lobby'))
+        );
       },
     },
 
-    // 连接 Router 状态
     connecting: {
+      onTransition(nextState) {
+        if (nextState === 'lobby' || nextState === 'close') {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from connecting to ${nextState}`);
+        }
+      },
+
+      close() {
+        this.transition('close');
+      },
+    },
+
+    lobby: {
       _onEnter() {
-        debug(`${this._play._userId} connecting _onEnter()`);
-        this._lobbyConn.on('ERROR_EVENT', ({ code, detail }) => {
-          debug('lobby connection error event');
+        debug('lobby _onEnter()');
+        this._lobbyConn.on(ERROR_EVENT, async ({ code, detail }) => {
+          await this._lobbyConn.close();
           this._play.emit(Event.ERROR, {
             code,
             detail,
           });
         });
-      },
-      reset() {
-        return new Promise((resolve, reject) => {
-          try {
-            this._appRouter.abort();
-            this._router.abort();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    },
-
-    // 连接 Lobby 状态
-    lobbyConnecting: {
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._lobbyConn.close();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    },
-
-    lobbyOpening: {
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._lobbyConn.close();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    },
-
-    lobbyConnected: {
-      _onEnter() {
-        debug('lobbyConnected _onEnter()');
         this._lobbyConn.on(ROOM_LIST_UPDATED_EVENT, roomList => {
           this._play._lobbyRoomList = roomList;
           this._play.emit(Event.LOBBY_ROOM_LIST_UPDATED);
@@ -132,6 +96,18 @@ const PlayFSM = machina.Fsm.extend({
 
       _onExit() {
         this._lobbyConn.removeAllListeners();
+      },
+
+      onTransition(nextState) {
+        if (
+          nextState === 'lobbyToGame' ||
+          nextState === 'close' ||
+          nextState === 'disconnect'
+        ) {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from lobby to ${nextState}`);
+        }
       },
 
       joinLobby() {
@@ -162,24 +138,11 @@ const PlayFSM = machina.Fsm.extend({
         return this._rejoinRoom(roomName);
       },
 
-      disconnect() {
-        debug(`${this._play._userId} disconnect lobby`);
+      close() {
         return new Promise(async (resolve, reject) => {
           try {
             await this._lobbyConn.close();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._lobbyConn.close();
-            this.transition('init');
+            this.transition('close');
             resolve();
           } catch (err) {
             reject(err);
@@ -188,9 +151,26 @@ const PlayFSM = machina.Fsm.extend({
       },
     },
 
-    gameConnecting: {
+    lobbyToGame: {
+      onTransition(nextState) {
+        if (nextState === 'lobby' || nextState === 'game') {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from lobbyToGame to ${nextState}`);
+        }
+      },
+
+      close() {
+        this.transition('close');
+      },
+    },
+
+    game: {
       _onEnter() {
-        debug('gameConnecting _onEnter()');
+        debug('game _onEnter()');
+        // 为 reconnectAndRejoin() 保存房间 id
+        this._play._lastRoomId = this._play.room.name;
+        // 注册事件
         this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
           await this._gameConn.close();
           this._play.emit(Event.ERROR, {
@@ -198,40 +178,6 @@ const PlayFSM = machina.Fsm.extend({
             detail,
           });
         });
-      },
-
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._gameConn.close();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    },
-
-    gameOpening: {
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._gameConn.close();
-            this.transition('init');
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    },
-
-    gameConnected: {
-      _onEnter() {
-        debug('gameConnected _onEnter()');
-        // 为 reconnectAndRejoin() 保存房间 id
-        this._play._lastRoomId = this._play.room.name;
         this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
           this._play._room._addPlayer(newPlayer);
           this._play.emit(Event.PLAYER_ROOM_JOINED, {
@@ -308,10 +254,12 @@ const PlayFSM = machina.Fsm.extend({
           this._play.emit(Event.DISCONNECTED);
         });
         this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
-          this.transition('gameClosing');
           await this._gameConn.close();
-          await this._connectLobby();
-          this.transition('lobbyConnected');
+          await this._connectLobby().then(
+            tap(() => {
+              this.handle('onTransition', 'lobby');
+            })
+          );
           this._play.emit(Event.ROOM_KICKED, { code, msg });
         });
       },
@@ -320,13 +268,28 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.removeAllListeners();
       },
 
+      onTransition(nextState) {
+        if (
+          nextState === 'lobby' ||
+          nextState === 'disconnect' ||
+          nextState === 'close'
+        ) {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from game to ${nextState}`);
+        }
+      },
+
       leaveRoom() {
         return new Promise(async (resolve, reject) => {
           try {
             await this._gameConn.leaveRoom();
             await this._gameConn.close();
-            await this._connectLobby();
-            this.transition('lobbyConnected');
+            await this._connectLobby().then(
+              tap(() => {
+                this.handle('onTransition', 'lobby');
+              })
+            );
             resolve();
           } catch (err) {
             reject(err);
@@ -369,25 +332,11 @@ const PlayFSM = machina.Fsm.extend({
         );
       },
 
-      disconnect() {
-        debug(`${this._play._userId} disconnect game`);
+      close() {
         return new Promise(async (resolve, reject) => {
           try {
             await this._gameConn.close();
-            this.transition('init');
-            resolve();
-            this._play.emit(Event.DISCONNECTED);
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-
-      reset() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await this._gameConn.close();
-            this.transition('init');
+            this.transition('close');
             resolve();
           } catch (err) {
             reject(err);
@@ -396,18 +345,44 @@ const PlayFSM = machina.Fsm.extend({
       },
     },
 
-    gameClosing: {
-      _onEnter() {
-        debug('gameClosing onEnter');
+    disconnect: {
+      reconnect() {},
+
+      reconnectAndRejoin() {
+        this.handle('onTransition', 'connecting');
+        return new Promise(async (resolve, reject) => {
+          try {
+            await this._connectLobby().then(
+              tap(() => {
+                this.handle('onTransition', 'lobby');
+              })
+            );
+            await this._joinRoom(this._play._lastRoomId);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+
+      close() {
+        this.transition('close');
       },
     },
-  },
 
-  _connect() {
-    return this._connectLobby();
+    close: {
+      async onTransition(nextState) {
+        if (nextState === 'lobby') {
+          await this._lobbyConn.close();
+        } else if (nextState === 'game') {
+          await this._gameConn.close();
+        }
+      },
+    },
   },
 
   _createRoom(roomName, roomOptions, expectedUserIds) {
+    this.handle('onTransition', 'lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.createRoom(
@@ -418,15 +393,17 @@ const PlayFSM = machina.Fsm.extend({
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         await this._createGameRoom(cid, roomOptions, expectedUserIds);
+        this.handle('onTransition', 'game');
         resolve();
       } catch (err) {
-        this.transition('lobbyConnected');
+        this.handle('onTransition', 'lobby');
         reject(err);
       }
     });
   },
 
   _joinRoom(roomName, expectedUserIds) {
+    this.handle('onTransition', 'lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinRoom(
@@ -436,15 +413,17 @@ const PlayFSM = machina.Fsm.extend({
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid, expectedUserIds);
+        this.handle('onTransition', 'game');
         resolve();
       } catch (err) {
-        this.transition('lobbyConnected');
+        this.handle('onTransition', 'lobby');
         reject(err);
       }
     });
   },
 
   _joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
+    this.handle('onTransition', 'lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinOrCreateRoom(
@@ -456,20 +435,20 @@ const PlayFSM = machina.Fsm.extend({
         await this._connectGame(addr, secureAddr);
         if (op === 'started') {
           await this._createGameRoom(cid, roomOptions, expectedUserIds);
-          resolve();
         } else {
           await this._joinGameRoom(cid, expectedUserIds);
-          resolve();
         }
+        this.handle('onTransition', 'game');
+        resolve();
       } catch (err) {
-        this.transition('lobbyConnected');
+        this.handle('onTransition', 'lobby');
         reject(err);
       }
     });
   },
 
   _joinRandomRoom(matchProperties, expectedUserIds) {
-    this.transition('gameConnecting');
+    this.handle('onTransition', 'lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.joinRandomRoom(
@@ -479,86 +458,89 @@ const PlayFSM = machina.Fsm.extend({
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid, expectedUserIds, matchProperties);
+        this.handle('onTransition', 'game');
         resolve();
       } catch (err) {
-        this.transition('lobbyConnected');
+        this.handle('onTransition', 'lobby');
         reject(err);
       }
     });
   },
 
   _rejoinRoom(roomName) {
-    this.transition('gameConnecting');
+    this.handle('onTransition', 'lobbyToGame');
     return new Promise(async (resolve, reject) => {
       try {
         const roomInfo = await this._lobbyConn.rejoinRoom(roomName);
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         await this._joinGameRoom(cid);
+        this.handle('onTransition', 'game');
         resolve();
       } catch (err) {
+        this.handle('onTransition', 'lobby');
         reject(err);
       }
     });
   },
 
   _connectLobby() {
-    this.transition('connecting');
     return new Promise(async (resolve, reject) => {
       try {
         // 先获取大厅路由地址
         const lobbyRouterUrl = await this._appRouter.fetch();
         // 再获取大厅服务器地址
         const lobbyServerInfo = await this._router.fetch(lobbyRouterUrl);
-        this.transition('lobbyConnecting');
         const { primaryServer, secondaryServer } = lobbyServerInfo;
         this._primaryServer = primaryServer;
         this._secondaryServer = secondaryServer;
-        // 与大厅建立连接
+        // 与大厅服务器建立连接
         await this._lobbyConn.connect(
           this._primaryServer,
           this._play._userId
         );
-        this.transition('lobbyOpening');
-        // 打开会话
-        const {
-          _appId: appId,
-          _userId: userId,
-          _gameVersion: gameVersion,
-        } = this._play;
+      } catch (err) {
+        reject(err);
+      }
+      // 打开大厅服务器会话
+      const {
+        _appId: appId,
+        _userId: userId,
+        _gameVersion: gameVersion,
+      } = this._play;
+      try {
         await this._lobbyConn.openSession(appId, userId, gameVersion);
-        this.transition('lobbyConnected');
         resolve();
       } catch (err) {
-        debug(`connect lobby error:${err}`);
-        debug(err instanceof PlayError);
-        this.transition('init');
+        await this._lobbyConn.close();
         reject(err);
       }
     });
   },
 
   _connectGame(addr, secureAddr) {
-    this.transition('gameConnecting');
     return new Promise(async (resolve, reject) => {
+      // 与游戏服务器建立连接
       try {
         const gameServer = addr || secureAddr;
         await this._gameConn.connect(
           gameServer,
           this._play._userId
         );
-        this.transition('gameOpening');
+      } catch (err) {
+        reject(err);
+      }
+      // 打开游戏服务器会话
+      try {
         const {
           _appId: appId,
           _userId: userId,
           _gameVersion: gameVersion,
         } = this._play;
-        await this._gameConn
-          .openSession(appId, userId, gameVersion)
-          .catch(tapError(() => this._gameConn.close()));
+        await this._gameConn.openSession(appId, userId, gameVersion);
         resolve();
       } catch (err) {
-        this.transition('lobbyConnected');
+        await this._gameConn.close();
         reject(err);
       }
     });
@@ -574,7 +556,6 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._initGame(gameRoom);
         await this._lobbyConn.close();
-        this.transition('gameConnected');
         resolve();
       } catch (err) {
         await this._gameConn.close();
@@ -593,7 +574,6 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._initGame(gameRoom);
         await this._lobbyConn.close();
-        this.transition('gameConnected');
         resolve();
       } catch (err) {
         await this._gameConn.close();

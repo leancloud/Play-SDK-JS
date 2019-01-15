@@ -21,8 +21,8 @@ describe('test master', () => {
         expect(p0.room.masterId).to.be.equal(newMaster.actorId);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -33,8 +33,8 @@ describe('test master', () => {
         expect(p1.room.masterId).to.be.equal(newMaster.actorId);
         f1 = true;
         if (f0 && f1) {
-          await p1.disconnect();
-          await p1.disconnect();
+          await p1.close();
+          await p1.close();
           resolve();
         }
       });
@@ -54,8 +54,8 @@ describe('test master', () => {
       p1.on(Event.MASTER_SWITCHED, async data => {
         const { newMaster } = data;
         expect(p1.player.actorId).to.be.equal(newMaster.actorId);
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       });
       await p0.leaveRoom();
@@ -86,8 +86,8 @@ describe('test master', () => {
         expect(newMaster).to.be.equal(null);
         expect(p1.room.masterId).to.be.equal(-1);
         expect(p1.room.master).to.be.equal(null);
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       });
       await p0.leaveRoom();

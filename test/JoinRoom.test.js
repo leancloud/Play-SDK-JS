@@ -14,8 +14,8 @@ describe('test join room', () => {
     });
     await p1.connect();
     await p1.joinRoom(roomName);
-    await p0.disconnect();
-    await p1.disconnect();
+    await p0.close();
+    await p1.close();
   });
 
   it('test join random room', async () => {
@@ -26,8 +26,8 @@ describe('test join room', () => {
     await p0.createRoom(roomName);
     await p1.connect();
     await p1.joinRandomRoom();
-    await p0.disconnect();
-    await p1.disconnect();
+    await p0.close();
+    await p1.close();
   });
 
   it('test join with expected userIds', async () => {
@@ -53,9 +53,9 @@ describe('test join room', () => {
       debug(err);
       await p2.connect();
       await p2.joinRoom(roomName);
-      await p0.disconnect();
-      await p1.disconnect();
-      await p2.disconnect();
+      await p0.close();
+      await p1.close();
+      await p2.close();
     }
   });
 
@@ -70,8 +70,8 @@ describe('test join room', () => {
       await p1.connect();
       await p1.joinRoom(roomName);
       p1.on(Event.PLAYER_ROOM_LEFT, async () => {
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       });
       p0.leaveRoom();
@@ -97,12 +97,12 @@ describe('test join room', () => {
 
     await p1.connect();
     await p1.joinRoom(roomName);
-    await p1.disconnect();
+    await p1.close();
     await p1.connect();
     await p1.rejoinRoom(roomName);
 
-    await p0.disconnect();
-    await p1.disconnect();
+    await p0.close();
+    await p1.close();
   });
 
   it('test reconnectAndRejoin room', async () => {
@@ -121,11 +121,11 @@ describe('test join room', () => {
 
     await p1.connect();
     await p1.joinRoom(roomName);
-    await p1.disconnect();
+    await p1.close();
     await p1.reconnectAndRejoin();
 
-    await p0.disconnect();
-    await p1.disconnect();
+    await p0.close();
+    await p1.close();
   });
 
   it('test join name room failed', async () => {
@@ -142,8 +142,8 @@ describe('test join room', () => {
       await p1.joinRoom(roomName2);
     } catch (err) {
       debug(err);
-      await p0.disconnect();
-      await p1.disconnect();
+      await p0.close();
+      await p1.close();
     }
   });
 
@@ -184,9 +184,9 @@ describe('test join room', () => {
       });
     } catch (err) {
       debug(err);
-      await p0.disconnect();
-      await p1.disconnect();
-      await p2.disconnect();
+      await p0.close();
+      await p1.close();
+      await p2.close();
     }
   });
 
@@ -208,8 +208,8 @@ describe('test join room', () => {
     await p1.joinRoom(roomName);
     await p2.joinRoom(roomName);
 
-    await p0.disconnect();
-    await p1.disconnect();
-    await p2.disconnect();
+    await p0.close();
+    await p1.close();
+    await p2.close();
   });
 });

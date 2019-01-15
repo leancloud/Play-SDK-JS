@@ -13,7 +13,7 @@ describe('test connect', () => {
   it('test connect', async () => {
     const p = newPlay('tc0');
     await p.connect();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test connect with same id', async () => {
@@ -27,30 +27,30 @@ describe('test connect', () => {
       if (code === 4102) {
         f0 = true;
         if (f0 && f1) {
-          p1.disconnect();
+          await p1.close();
         }
       }
     });
     await p1.connect();
     f1 = true;
     if (f0 && f1) {
-      p1.disconnect();
+      await p1.close();
     }
   });
 
   it('test disconnect from lobby', async () => {
     const p = newPlay('tc2');
     await p.connect();
-    await p.disconnect();
+    await p.close();
     await p.reconnect();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test disconnect from game', async () => {
     const p = newPlay('tc3');
     await p.connect();
     await p.createRoom();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test connect failed', async () => {
@@ -72,7 +72,7 @@ describe('test connect', () => {
     return new Promise(resolve => {
       setTimeout(() => {
         debug('keep alive timeout');
-        play.disconnect();
+        play.close();
         resolve();
       }, 30000);
     });
@@ -81,7 +81,7 @@ describe('test connect', () => {
   it('test wechat', async () => {
     const p = newWechatPlay('tc6');
     await p.connect();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test ws', async () => {
@@ -101,7 +101,7 @@ describe('test connect', () => {
     const p = newPlay('tc_7');
     p.connect()
       .then(async () => {
-        await p.disconnect();
+        await p.close();
         done();
       })
       .catch(console.error);
@@ -130,7 +130,7 @@ describe('test connect', () => {
     return new Promise(resolve => {
       setTimeout(async () => {
         clearInterval(timer);
-        await p.disconnect();
+        await p.close();
         resolve();
       }, 30000);
     });
