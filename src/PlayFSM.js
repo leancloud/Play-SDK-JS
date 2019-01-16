@@ -63,7 +63,11 @@ const PlayFSM = machina.Fsm.extend({
 
     connecting: {
       onTransition(nextState) {
-        if (nextState === 'lobby' || nextState === 'close') {
+        if (
+          nextState === 'lobby' ||
+          nextState === 'disconnect' ||
+          nextState === 'close'
+        ) {
           this.transition(nextState);
         } else {
           throw new Error(`Error transition: from connecting to ${nextState}`);
@@ -101,8 +105,8 @@ const PlayFSM = machina.Fsm.extend({
       onTransition(nextState) {
         if (
           nextState === 'lobbyToGame' ||
-          nextState === 'close' ||
-          nextState === 'disconnect'
+          nextState === 'disconnect' ||
+          nextState === 'close'
         ) {
           this.transition(nextState);
         } else {
@@ -153,7 +157,12 @@ const PlayFSM = machina.Fsm.extend({
 
     lobbyToGame: {
       onTransition(nextState) {
-        if (nextState === 'lobby' || nextState === 'game') {
+        if (
+          nextState === 'lobby' ||
+          nextState === 'game' ||
+          nextState === 'disconnect' ||
+          nextState === 'close'
+        ) {
           this.transition(nextState);
         } else {
           throw new Error(`Error transition: from lobbyToGame to ${nextState}`);
@@ -348,7 +357,12 @@ const PlayFSM = machina.Fsm.extend({
 
     gameToLobby: {
       onTransition(nextState) {
-        if (nextState === 'lobby' || nextState === 'game') {
+        if (
+          nextState === 'lobby' ||
+          nextState === 'game' ||
+          nextState === 'disconnect' ||
+          nextState === 'close'
+        ) {
           this.transition(nextState);
         } else {
           throw new Error(`Error transition: from gameToLobby to ${nextState}`);
@@ -363,6 +377,14 @@ const PlayFSM = machina.Fsm.extend({
     disconnect: {
       _onEnter() {
         this._play.emit(Event.DISCONNECTED);
+      },
+
+      onTransition(nextState) {
+        if (nextState === 'connecting' || nextState === 'close') {
+          this.transition(nextState);
+        } else {
+          throw new Error(`Error transition: from disconnect to ${nextState}`);
+        }
       },
 
       reconnect() {
