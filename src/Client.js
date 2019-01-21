@@ -66,7 +66,7 @@ export default class Client extends EventEmitter {
    * 重新连接
    */
   reconnect() {
-    return this._fsm.handle('connect');
+    return this._fsm.handle('reconnect');
   }
 
   /**
@@ -80,19 +80,12 @@ export default class Client extends EventEmitter {
   }
 
   /**
-   * 断开连接
+   * 关闭
    */
-  disconnect() {
-    return this._fsm.handle('disconnect');
-  }
-
-  /**
-   * 重置
-   */
-  reset() {
-    debug('reset');
+  close() {
+    debug('close');
     this._clear();
-    return this._fsm.handle('reset');
+    return this._fsm.handle('close');
   }
 
   /**
@@ -383,6 +376,7 @@ export default class Client extends EventEmitter {
 
   // 清理内存数据
   _clear() {
+    this.removeAllListeners();
     this._lobbyRoomList = null;
     this._masterServer = null;
     this._gameServer = null;

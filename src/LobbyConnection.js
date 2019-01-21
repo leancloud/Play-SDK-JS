@@ -28,7 +28,6 @@ export default class LobbyConnection extends Connection {
         };
         const res = await super.send(msg);
         if (res.reasonCode) {
-          await this.close();
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {

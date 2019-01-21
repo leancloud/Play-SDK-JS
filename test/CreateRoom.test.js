@@ -9,7 +9,7 @@ describe('test create room', () => {
     const p = newPlay('cr1');
     await p.connect();
     await p.createRoom();
-    await p.disconnect();
+    await p.close();
   });
 
   it('test create simple room', async () => {
@@ -20,7 +20,7 @@ describe('test create room', () => {
       roomName,
     });
     expect(p.room.name).to.be.equal(roomName);
-    await p.disconnect();
+    await p.close();
   });
 
   it('test create custom room', async () => {
@@ -50,7 +50,7 @@ describe('test create room', () => {
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
     expect(p.room.expectedUserIds).to.be.deep.equal(['world']);
-    await p.disconnect();
+    await p.close();
   });
 
   it('test create room failed', async () => {
@@ -65,8 +65,8 @@ describe('test create room', () => {
       await p1.createRoom({ roomName });
     } catch (err) {
       error(err);
-      await p0.disconnect();
-      await p1.disconnect();
+      await p0.close();
+      await p1.close();
     }
   });
 
@@ -90,8 +90,8 @@ describe('test create room', () => {
         expect(p0.room.playerList.length).to.be.equal(2);
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -100,8 +100,8 @@ describe('test create room', () => {
       expect(p1.room.playerList.length).to.be.equal(2);
       f1 = true;
       if (f0 && f1) {
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       }
     });
@@ -119,7 +119,7 @@ describe('test create room', () => {
       p.on(Event.ROOM_VISIBLE_CHANGED, async data => {
         const { visible } = data;
         expect(visible).to.be.equal(false);
-        await p.disconnect();
+        await p.close();
         resolve();
       });
       p.setRoomOpened(false);

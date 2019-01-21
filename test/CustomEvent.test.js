@@ -18,8 +18,8 @@ describe('test custom event', () => {
         expect(eventId).to.be.equal('hi');
         expect(eventData.name).to.be.equal('aaaa');
         expect(eventData.body).to.be.equal('bbbb');
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       });
 
@@ -52,8 +52,8 @@ describe('test custom event', () => {
         expect(eventData.body).to.be.equal('bbbb');
         f0 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -67,8 +67,8 @@ describe('test custom event', () => {
         expect(eventData.body).to.be.equal('bbbb');
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });

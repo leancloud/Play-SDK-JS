@@ -195,9 +195,8 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  async _handleErrorMsg(msg) {
+  _handleErrorMsg(msg) {
     error(JSON.stringify(msg));
-    await this.close();
   }
 
   _handleErrorNotify(msg) {

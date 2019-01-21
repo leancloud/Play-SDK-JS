@@ -23,8 +23,8 @@ describe('test kick', () => {
         debug(`kicked: ${code}, ${msg}`);
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -32,8 +32,8 @@ describe('test kick', () => {
       await p0.kickPlayer(p1.player.actorId);
       f0 = true;
       if (f0 && f1) {
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       }
     }));
@@ -57,8 +57,8 @@ describe('test kick', () => {
         expect(code).to.be.equal(404);
         f1 = true;
         if (f0 && f1) {
-          await p0.disconnect();
-          await p1.disconnect();
+          await p0.close();
+          await p1.close();
           resolve();
         }
       });
@@ -69,8 +69,8 @@ describe('test kick', () => {
       });
       f0 = true;
       if (f0 && f1) {
-        await p0.disconnect();
-        await p1.disconnect();
+        await p0.close();
+        await p1.close();
         resolve();
       }
     }));
