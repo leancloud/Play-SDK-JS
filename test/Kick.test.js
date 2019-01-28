@@ -23,6 +23,7 @@ describe('test kick', () => {
         debug(`kicked: ${code}, ${msg}`);
         f1 = true;
         if (f0 && f1) {
+          debug('f1 close');
           await p0.close();
           await p1.close();
           resolve();
@@ -32,6 +33,7 @@ describe('test kick', () => {
       await p0.kickPlayer(p1.player.actorId);
       f0 = true;
       if (f0 && f1) {
+        debug('f0 close');
         await p0.close();
         await p1.close();
         resolve();

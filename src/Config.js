@@ -1,4 +1,4 @@
 // SDK 版本号
-import { version } from '../package.json';
+import { version, protocolVersion } from '../package.json';
 
-export default version;
+export { version as sdkVersion, protocolVersion };

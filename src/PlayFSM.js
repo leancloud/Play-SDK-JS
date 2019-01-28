@@ -263,12 +263,10 @@ const PlayFSM = machina.Fsm.extend({
           this.handle('onTransition', 'disconnect');
         });
         this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
+          this.handle('onTransition', 'gameToLobby');
           await this._gameConn.close();
-          await this._connectLobby().then(
-            tap(() => {
-              this.handle('onTransition', 'gameToLobby');
-            })
-          );
+          await this._connectLobby();
+          this.handle('onTransition', 'lobby');
           this._play.emit(Event.ROOM_KICKED, { code, msg });
         });
       },

@@ -1,6 +1,6 @@
 import request from 'superagent';
 import { debug } from './Logger';
-import PlayVersion from './Config';
+import { sdkVersion, protocolVersion } from './Config';
 import isWeapp from './Utils';
 
 export default class LobbyRouter {
@@ -47,7 +47,7 @@ export default class LobbyRouter {
   _fetch(url) {
     return new Promise((resolve, reject) => {
       debug(`fetch lobby server info from: ${url}`);
-      const query = { appId: this._appId, sdkVersion: PlayVersion };
+      const query = { appId: this._appId, sdkVersion, protocolVersion };
       // 使用设置覆盖 SDK 判断的 feature
       if (this._feature) {
         query.feature = this._feature;
@@ -88,6 +88,7 @@ export default class LobbyRouter {
             });
           }
         });
+      debug(`fetch server url: ${this._httpReq.url}`);
     });
   }
 
