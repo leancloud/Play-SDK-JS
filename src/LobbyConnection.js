@@ -1,4 +1,4 @@
-import PlayVersion from './Config';
+import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
 import Connection, { convertRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
@@ -23,7 +23,8 @@ export default class LobbyConnection extends Connection {
           op: 'open',
           appId,
           peerId: userId,
-          sdkVersion: PlayVersion,
+          sdkVersion,
+          protocolVersion,
           gameVersion,
         };
         const res = await super.send(msg);

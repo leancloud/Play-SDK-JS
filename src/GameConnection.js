@@ -1,4 +1,4 @@
-import PlayVersion from './Config';
+import { sdkVersion, protocolVersion } from './Config';
 import Connection, { convertRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
@@ -32,7 +32,8 @@ export default class GameConnection extends Connection {
       op: 'open',
       appId,
       peerId: userId,
-      sdkVersion: PlayVersion,
+      sdkVersion,
+      protocolVersion,
       gameVersion,
     };
     await super.send(msg, undefined, false);
