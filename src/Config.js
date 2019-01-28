@@ -1,5 +1,5 @@
 // SDK 版本号
-import { version } from '../package.json';
+import { version, protoVersion } from '../package.json';
 
 export const sdkVersion = version;
-export const protocolVersion = '0.18.0';
+export const protocolVersion = protoVersion;

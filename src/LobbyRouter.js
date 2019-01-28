@@ -88,6 +88,7 @@ export default class LobbyRouter {
             });
           }
         });
+      debug(`fetch server url: ${this._httpReq.url}`);
     });
   }
 
