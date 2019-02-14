@@ -558,7 +558,7 @@ const PlayFSM = machina.Fsm.extend({
       } = this._play;
       try {
         await this._lobbyConn.openSession(appId, userId, gameVersion);
-        resolve();
+        resolve(this._play);
       } catch (err) {
         await this._lobbyConn.close();
         reject(err);
