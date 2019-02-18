@@ -138,7 +138,7 @@ describe('test connect', () => {
   });
 
   it('test connect return', () => {
-    const p = newPlay('tc0');
+    const p = newPlay('tc9');
     p.connect().then(async client => {
       debug(client._userId);
       await p.close();

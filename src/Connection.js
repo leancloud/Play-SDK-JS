@@ -167,6 +167,10 @@ export default class Connection extends EventEmitter {
     });
   }
 
+  _simulateDisconnection() {
+    this._ws.close();
+  }
+
   _getMsgId() {
     this._msgId += 1;
     return this._msgId;

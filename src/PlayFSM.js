@@ -59,6 +59,11 @@ const PlayFSM = machina.Fsm.extend({
           tap(() => this.handle('onTransition', 'lobby'))
         );
       },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on init state`);
+      },
     },
 
     connecting: {
@@ -74,8 +79,15 @@ const PlayFSM = machina.Fsm.extend({
         }
       },
 
+      connect() {},
+
       close() {
         this.transition('close');
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on connecting state`);
       },
     },
 
@@ -153,6 +165,15 @@ const PlayFSM = machina.Fsm.extend({
           }
         });
       },
+
+      _simulateDisconnection() {
+        this._lobbyConn._simulateDisconnection();
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on lobby state`);
+      },
     },
 
     lobbyToGame: {
@@ -171,6 +192,11 @@ const PlayFSM = machina.Fsm.extend({
 
       close() {
         this.transition('close');
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on lobbyToGame state`);
       },
     },
 
@@ -351,6 +377,15 @@ const PlayFSM = machina.Fsm.extend({
           }
         });
       },
+
+      _simulateDisconnection() {
+        this._gameConn._simulateDisconnection();
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on game state`);
+      },
     },
 
     gameToLobby: {
@@ -369,6 +404,11 @@ const PlayFSM = machina.Fsm.extend({
 
       close() {
         this.transition('close');
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on gameToLobby state`);
       },
     },
 
@@ -411,6 +451,11 @@ const PlayFSM = machina.Fsm.extend({
 
       close() {
         this.transition('close');
+      },
+
+      '*': evt => {
+        const { inputType } = evt;
+        throw new Error(`you cannot call ${inputType} on disconnect state`);
       },
     },
 

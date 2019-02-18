@@ -110,7 +110,7 @@ describe('test join room', () => {
   it('test reconnectAndRejoin room', async () => {
     const roomName = 'jr5_r';
     const p0 = newPlay('jr5_0');
-    let p1 = newPlay('jr5_1');
+    const p1 = newPlay('jr5_1');
 
     await p0.connect();
     const options = {
@@ -123,13 +123,13 @@ describe('test join room', () => {
 
     await p1.connect();
     await p1.joinRoom(roomName);
-    await p1.close();
-
-    p1 = newPlay('jr5_1');
-    await p1.reconnectAndRejoin();
-
-    await p0.close();
-    await p1.close();
+    p1.on(Event.DISCONNECTED, async () => {
+      debug('disconnected');
+      await p1.reconnectAndRejoin();
+      await p0.close();
+      await p1.close();
+    });
+    p1._simulateDisconnection();
   });
 
   it('test join name room failed', async () => {

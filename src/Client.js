@@ -300,6 +300,13 @@ export default class Client extends EventEmitter {
     return this._fsm.handle('leaveRoom');
   }
 
+  /**
+   * 踢人
+   * @param {Number} actorId 踢用户的 actorId
+   * @param {Object} [opts] 附带参数
+   * @param {Number} [opts.code] 编码
+   * @param {String} [opts.msg] 附带信息
+   */
   kickPlayer(actorId, { code = null, msg = null } = {}) {
     if (!_.isNumber(actorId)) {
       throw new TypeError(`${actorId} is not a number`);
@@ -382,5 +389,10 @@ export default class Client extends EventEmitter {
     this._gameServer = null;
     this._room = null;
     this._player = null;
+  }
+
+  // 模拟断线
+  _simulateDisconnection() {
+    this._fsm.handle('_simulateDisconnection');
   }
 }
