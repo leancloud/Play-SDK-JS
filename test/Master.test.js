@@ -1,6 +1,6 @@
 import Event from '../src/Event';
 import CreateRoomFlag from '../src/CreateRoomFlag';
-import { newPlay } from './Utils';
+import { newPlay, newQCloudPlay } from './Utils';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Master');
@@ -9,8 +9,8 @@ describe('test master', () => {
   it('test set new master', async () =>
     new Promise(async resolve => {
       const roomName = 'tm0_r';
-      const p0 = newPlay('tm0_0');
-      const p1 = newPlay('tm0_1');
+      const p0 = newQCloudPlay('tm0_0');
+      const p1 = newQCloudPlay('tm0_1');
       let f0 = false;
       let f1 = false;
 
@@ -38,7 +38,11 @@ describe('test master', () => {
           resolve();
         }
       });
+      expect(p0.room.masterId).to.be.equal(p0.player.actorId);
+      debug(`before master id: ${p0.room.masterId}`);
       await p0.setMaster(p1.player.actorId);
+      expect(p0.room.masterId).to.be.equal(p1.player.actorId);
+      debug(`after master id: ${p0.room.masterId}`);
     }));
 
   it('test master leave', () =>

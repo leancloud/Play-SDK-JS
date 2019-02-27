@@ -1,8 +1,9 @@
-import { newPlay } from './Utils';
+import { newPlay, newQCloudPlay } from './Utils';
 import { error } from '../src/Logger';
 import Event from '../src/Event';
 
 const { expect } = require('chai');
+const debug = require('debug')('Test:CreateRoom');
 
 describe('test create room', () => {
   it('test null name room', async () => {
@@ -109,20 +110,24 @@ describe('test create room', () => {
 
   it('test room open and visible', async () =>
     new Promise(async resolve => {
-      const p = newPlay('cr6');
+      const p = newQCloudPlay('cr6');
       await p.connect();
       await p.createRoom();
       p.on(Event.ROOM_OPEN_CHANGED, data => {
         const { opened } = data;
         expect(opened).to.be.equal(false);
+        expect(p.room.opened).to.be.equal(false);
       });
       p.on(Event.ROOM_VISIBLE_CHANGED, async data => {
         const { visible } = data;
         expect(visible).to.be.equal(false);
+        expect(p.room.visible).to.be.equal(false);
         await p.close();
         resolve();
       });
-      p.setRoomOpened(false);
-      p.setRoomVisible(false);
+      await p.setRoomOpened(false);
+      debug(`current room opened: ${p.room.opened}`);
+      await p.setRoomVisible(false);
+      debug(`current room visible: ${p.room.visible}`);
     }));
 });

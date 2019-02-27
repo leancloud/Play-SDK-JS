@@ -2,7 +2,7 @@ import d from 'debug';
 import Event from '../src/Event';
 
 // import CreateRoomFlag from '../src/CreateRoomFlag';
-import { newPlay } from './Utils';
+import { newPlay, newQCloudPlay } from './Utils';
 
 const { expect } = require('chai');
 
@@ -12,8 +12,8 @@ describe('test change properties', () => {
   it('test change room properties', () =>
     new Promise(async resolve => {
       const roomName = 'tcp0_r';
-      const p0 = newPlay('tcp0_0');
-      const p1 = newPlay('tcp0_1');
+      const p0 = newQCloudPlay('tcp0_0');
+      const p1 = newQCloudPlay('tcp0_1');
       let f0 = false;
       let f1 = false;
       await p0.connect();
@@ -46,7 +46,11 @@ describe('test change properties', () => {
         title: 'room311',
         gold: 1000,
       };
-      p1.room.setCustomProperties(props);
+      await p1.room.setCustomProperties(props);
+      debug(`current room title: ${props.title}`);
+      expect(props.title).to.be.equal('room311');
+      debug(`current room gold: ${props.gold}`);
+      expect(props.gold).to.be.equal(1000);
     }));
 
   it('test change room properties with cas', () =>
@@ -109,8 +113,8 @@ describe('test change properties', () => {
   it('test change player properties', () =>
     new Promise(async resolve => {
       const roomName = 'tcp2_r';
-      const p0 = newPlay('tcp2_0');
-      const p1 = newPlay('tcp2_1');
+      const p0 = newQCloudPlay('tcp2_0');
+      const p1 = newQCloudPlay('tcp2_1');
       let f0 = false;
       let f1 = false;
 
@@ -170,7 +174,11 @@ describe('test change properties', () => {
       props.poker = poker;
       const arr = [true, 111, poker];
       props.arr = arr;
-      p1.player.setCustomProperties(props);
+      await p1.player.setCustomProperties(props);
+      debug(`current nickname: ${props.nickname}`);
+      expect(props.nickname).to.be.equal('Li Lei');
+      debug(`current gold: ${props.gold}`);
+      expect(props.gold).to.be.equal(1000);
     }));
 
   it('test change player properties with cas', () =>

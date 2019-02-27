@@ -30,7 +30,9 @@ describe('test kick', () => {
         }
       });
 
+      expect(p0.room.playerList.length).to.be.equal(2);
       await p0.kickPlayer(p1.player.actorId);
+      expect(p0.room.playerList.length).to.be.equal(1);
       f0 = true;
       if (f0 && f1) {
         debug('f0 close');

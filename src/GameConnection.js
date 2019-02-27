@@ -82,34 +82,34 @@ export default class GameConnection extends Connection {
     await super.send(msg, undefined, false);
   }
 
-  async setRoomOpened(opened) {
+  setRoomOpened(opened) {
     const msg = {
       cmd: 'conv',
       op: 'open',
       toggle: opened,
     };
-    await super.send(msg, undefined, false);
+    return super.send(msg, undefined, false);
   }
 
-  async setRoomVisible(visible) {
+  setRoomVisible(visible) {
     const msg = {
       cmd: 'conv',
       op: 'visible',
       toggle: visible,
     };
-    await super.send(msg, undefined, false);
+    return super.send(msg, undefined, false);
   }
 
-  async setMaster(newMasterId) {
+  setMaster(newMasterId) {
     const msg = {
       cmd: 'conv',
       op: 'update-master-client',
       masterActorId: newMasterId,
     };
-    await super.send(msg, undefined, false);
+    return super.send(msg, undefined, false);
   }
 
-  async kickPlayer(actorId, code, msg) {
+  kickPlayer(actorId, code, msg) {
     const req = {
       cmd: 'conv',
       op: 'kick',
@@ -118,7 +118,7 @@ export default class GameConnection extends Connection {
       appCode: code,
       appMsg: msg,
     };
-    await super.send(req, undefined, false);
+    return super.send(req, undefined, false);
   }
 
   async sendEvent(eventId, eventData, options) {
@@ -132,7 +132,7 @@ export default class GameConnection extends Connection {
     await super.send(msg, false);
   }
 
-  async setRoomCustomProperties(properties, expectedValues) {
+  setRoomCustomProperties(properties, expectedValues) {
     const msg = {
       cmd: 'conv',
       op: 'update',
@@ -141,10 +141,10 @@ export default class GameConnection extends Connection {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    await super.send(msg, undefined, false);
+    return super.send(msg, undefined, false);
   }
 
-  async setPlayerCustomProperties(actorId, properties, expectedValues) {
+  setPlayerCustomProperties(actorId, properties, expectedValues) {
     const msg = {
       cmd: 'conv',
       op: 'update-player-prop',
@@ -154,7 +154,7 @@ export default class GameConnection extends Connection {
     if (expectedValues) {
       msg.expectAttr = expectedValues;
     }
-    await super.send(msg, undefined, false);
+    return super.send(msg, undefined, false);
   }
 
   _getPingDuration() {
