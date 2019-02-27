@@ -237,11 +237,13 @@ const PlayFSM = machina.Fsm.extend({
           });
         });
         this._gameConn.on(ROOM_OPEN_CHANGED_EVENT, open => {
+          this._play._room._opened = open;
           this._play.emit(Event.ROOM_OPEN_CHANGED, {
             opened: open,
           });
         });
         this._gameConn.on(ROOM_VISIBLE_CHANGED_EVENT, visible => {
+          this._play._room._visible = visible;
           this._play.emit(Event.ROOM_VISIBLE_CHANGED, {
             visible,
           });
@@ -332,19 +334,39 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       setRoomOpened(opened) {
-        return this._gameConn.setRoomOpened(opened);
+        return this._gameConn.setRoomOpened(opened).then(
+          tap(res => {
+            const { toggle } = res;
+            this._play._room._opened = toggle;
+          })
+        );
       },
 
       setRoomVisible(visible) {
-        return this._gameConn.setRoomVisible(visible);
+        return this._gameConn.setRoomVisible(visible).then(
+          tap(res => {
+            const { toggle } = res;
+            this._play._room._visible = toggle;
+          })
+        );
       },
 
       setMaster(newMasterId) {
-        return this._gameConn.setMaster(newMasterId);
+        return this._gameConn.setMaster(newMasterId).then(
+          tap(res => {
+            const { masterActorId } = res;
+            this._play._room._masterActorId = masterActorId;
+          })
+        );
       },
 
       kickPlayer(actorId, code, msg) {
-        return this._gameConn.kickPlayer(actorId, code, msg);
+        return this._gameConn.kickPlayer(actorId, code, msg).then(
+          tap(res => {
+            const { targetActorId } = res;
+            this._play._room._removePlayer(targetActorId);
+          })
+        );
       },
 
       sendEvent(eventId, eventData, options) {
@@ -352,18 +374,26 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       setRoomCustomProperties(properties, expectedValues) {
-        return this._gameConn.setRoomCustomProperties(
-          properties,
-          expectedValues
-        );
+        return this._gameConn
+          .setRoomCustomProperties(properties, expectedValues)
+          .then(
+            tap(res => {
+              const { attr } = res;
+              this._play._room._mergeProperties(attr);
+            })
+          );
       },
 
       setPlayerCustomProperties(actorId, properties, expectedValues) {
-        return this._gameConn.setPlayerCustomProperties(
-          actorId,
-          properties,
-          expectedValues
-        );
+        return this._gameConn
+          .setPlayerCustomProperties(actorId, properties, expectedValues)
+          .then(
+            tap(res => {
+              const { actorId: aId, attr } = res;
+              const player = this._play._room.getPlayer(aId);
+              player._mergeProperties(attr);
+            })
+          );
       },
 
       close() {
