@@ -130,4 +130,12 @@ describe('test create room', () => {
       await p.setRoomVisible(false);
       debug(`current room visible: ${p.room.visible}`);
     }));
+
+  it('test catch state error when create room', done => {
+    const p = newPlay('cr7');
+    p.createRoom().catch(err => {
+      debug(err);
+      done();
+    });
+  });
 });

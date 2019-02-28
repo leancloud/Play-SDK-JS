@@ -20,6 +20,8 @@ import GameConnection, {
 import Event from './Event';
 import AppRouter from './AppRouter';
 import { tap } from './Utils';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -62,7 +64,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on init state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on init state`
+          )
+        );
       },
     },
 
@@ -87,7 +94,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on connecting state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on connecting state`
+          )
+        );
       },
     },
 
@@ -172,7 +184,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on lobby state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on lobby state`
+          )
+        );
       },
     },
 
@@ -196,7 +213,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on lobbyToGame state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on lobbyToGame state`
+          )
+        );
       },
     },
 
@@ -414,7 +436,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on game state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on game state`
+          )
+        );
       },
     },
 
@@ -438,7 +465,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on gameToLobby state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on gameToLobby state`
+          )
+        );
       },
     },
 
@@ -485,7 +517,12 @@ const PlayFSM = machina.Fsm.extend({
 
       '*': evt => {
         const { inputType } = evt;
-        throw new Error(`you cannot call ${inputType} on disconnect state`);
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on disconnect state`
+          )
+        );
       },
     },
 
@@ -499,7 +536,13 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       '*': evt => {
-        throw new Error(`Error event: ${evt.inputType} on close state`);
+        const { inputType } = evt;
+        return Promise.reject(
+          new PlayError(
+            PlayErrorCode.STATE_ERROR,
+            `you cannot call ${inputType} on close state`
+          )
+        );
       },
     },
   },
