@@ -58,21 +58,21 @@ export default class Client extends EventEmitter {
   /**
    * 建立连接
    */
-  connect() {
+  async connect() {
     return this._fsm.handle('connect');
   }
 
   /**
    * 重新连接
    */
-  reconnect() {
+  async reconnect() {
     return this._fsm.handle('reconnect');
   }
 
   /**
    * 重新连接并自动加入房间
    */
-  reconnectAndRejoin() {
+  async reconnectAndRejoin() {
     if (_.isNull(this._lastRoomId)) {
       throw new Error('There is not room name for rejoin');
     }
@@ -82,7 +82,7 @@ export default class Client extends EventEmitter {
   /**
    * 关闭
    */
-  close() {
+  async close() {
     debug('close');
     this._clear();
     return this._fsm.handle('close');
@@ -91,14 +91,14 @@ export default class Client extends EventEmitter {
   /**
    * 加入大厅
    */
-  joinLobby() {
+  async joinLobby() {
     return this._fsm.handle('joinLobby');
   }
 
   /**
    * 离开大厅
    */
-  leaveLobby() {
+  async leaveLobby() {
     return this._fsm.handle('leaveLobby');
   }
 
@@ -117,7 +117,7 @@ export default class Client extends EventEmitter {
    * @param {CreateRoomFlag} [opts.roomOptions.flag] 创建房间标记，可多选
    * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  createRoom({
+  async createRoom({
     roomName = null,
     roomOptions = null,
     expectedUserIds = null,
@@ -145,7 +145,7 @@ export default class Client extends EventEmitter {
    * @param {string} roomName 房间名称
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  joinRoom(roomName, { expectedUserIds = null } = {}) {
+  async joinRoom(roomName, { expectedUserIds = null } = {}) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -159,7 +159,7 @@ export default class Client extends EventEmitter {
    * 重新加入房间
    * @param {string} roomName 房间名称
    */
-  rejoinRoom(roomName) {
+  async rejoinRoom(roomName) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -181,7 +181,7 @@ export default class Client extends EventEmitter {
    * @param {CreateRoomFlag} [opts.roomOptions.flag] 创建房间标记，可多选
    * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  joinOrCreateRoom(
+  async joinOrCreateRoom(
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
@@ -208,7 +208,10 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  joinRandomRoom({ matchProperties = null, expectedUserIds = null } = {}) {
+  async joinRandomRoom({
+    matchProperties = null,
+    expectedUserIds = null,
+  } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
@@ -222,7 +225,7 @@ export default class Client extends EventEmitter {
    * 设置房间开启 / 关闭
    * @param {Boolean} opened 是否开启
    */
-  setRoomOpened(opened) {
+  async setRoomOpened(opened) {
     if (!(typeof opened === 'boolean')) {
       throw new TypeError(`${opened} is not a boolean value`);
     }
@@ -236,7 +239,7 @@ export default class Client extends EventEmitter {
    * 设置房间可见 / 不可见
    * @param {Boolean} visible 是否可见
    */
-  setRoomVisible(visible) {
+  async setRoomVisible(visible) {
     if (!(typeof visible === 'boolean')) {
       throw new TypeError(`${visible} is not a boolean value`);
     }
@@ -250,7 +253,7 @@ export default class Client extends EventEmitter {
    * 设置房主
    * @param {number} newMasterId 新房主 ID
    */
-  setMaster(newMasterId) {
+  async setMaster(newMasterId) {
     if (!(typeof newMasterId === 'number')) {
       throw new TypeError(`${newMasterId} is not a number`);
     }
@@ -268,7 +271,7 @@ export default class Client extends EventEmitter {
    * @param {ReceiverGroup} options.receiverGroup 接收组
    * @param {Array.<number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
-  sendEvent(eventId, eventData, options) {
+  async sendEvent(eventId, eventData, options) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a string or number`);
     }
@@ -296,7 +299,7 @@ export default class Client extends EventEmitter {
   /**
    * 离开房间
    */
-  leaveRoom() {
+  async leaveRoom() {
     return this._fsm.handle('leaveRoom');
   }
 
@@ -307,7 +310,7 @@ export default class Client extends EventEmitter {
    * @param {Number} [opts.code] 编码
    * @param {String} [opts.msg] 附带信息
    */
-  kickPlayer(actorId, { code = null, msg = null } = {}) {
+  async kickPlayer(actorId, { code = null, msg = null } = {}) {
     if (!_.isNumber(actorId)) {
       throw new TypeError(`${actorId} is not a number`);
     }
