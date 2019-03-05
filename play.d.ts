@@ -273,7 +273,7 @@ export enum CreateRoomFlag {
   MasterUpdateRoomProperties = 2,
 }
 
-export function setAdapter(newAdapters: { WebSocketAdapter: Function }): void;
+export function setAdapters(newAdapters: { WebSocket: Function }): void;
 
 export enum LogLevel {
   Debug = 'Debug',
