@@ -174,6 +174,14 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
+      pause() {
+        this._lobbyConn._pause();
+      },
+
+      resume() {
+        this._lobbyConn._resume();
+      },
+
       _simulateDisconnection() {
         this._lobbyConn._simulateDisconnection();
       },
@@ -420,6 +428,14 @@ const PlayFSM = machina.Fsm.extend({
             reject(err);
           }
         });
+      },
+
+      pause() {
+        this._gameConn._pause();
+      },
+
+      resume() {
+        this._gameConn._resume();
       },
 
       _simulateDisconnection() {

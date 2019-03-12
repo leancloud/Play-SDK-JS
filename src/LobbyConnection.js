@@ -215,7 +215,7 @@ export default class LobbyConnection extends Connection {
   }
 
   // 处理被动通知消息
-  _handleMessage(msg) {
+  _handleNotification(msg) {
     switch (msg.cmd) {
       case 'lobby':
         switch (msg.op) {

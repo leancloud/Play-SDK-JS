@@ -324,6 +324,20 @@ export default class Client extends EventEmitter {
   }
 
   /**
+   * 暂停消息队列处理
+   */
+  pause() {
+    this._fsm.handle('pause');
+  }
+
+  /**
+   * 恢复消息队列处理
+   */
+  resume() {
+    this._fsm.handle('resume');
+  }
+
+  /**
    * 获取当前所在房间
    * @return {Room}
    * @readonly

@@ -33,7 +33,7 @@ export function convertRoomOptions(roomOptions) {
   return options;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleMessage", "_handleErrorMsg", "_handleUnknownMsg"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg"] }] */
 export default class Connection extends EventEmitter {
   constructor() {
     super();
@@ -41,6 +41,9 @@ export default class Connection extends EventEmitter {
     this._msgId = 0;
     this._pingTimer = null;
     this._pongTimer = null;
+    // 消息处理及缓存
+    this._isMessageQueueRunning = false;
+    this._messageQueue = null;
   }
 
   connect(server, userId) {
@@ -65,6 +68,9 @@ export default class Connection extends EventEmitter {
   }
 
   _connected() {
+    // 每次连接成功后将会得到最新快照，之前的缓存没有意义了
+    this._isMessageQueueRunning = true;
+    this._messageQueue = [];
     this._ws.onmessage = message => {
       this._stopPong();
       this._pongTimer = setTimeout(() => {
@@ -74,22 +80,10 @@ export default class Connection extends EventEmitter {
       }, this._getPingDuration() * MAX_NO_PONG_TIMES);
       const msg = JSON.parse(message.data);
       debug(`${this._userId} : ${this._flag} <- ${msg.op} ${message.data}`);
-      const { i } = msg;
-      if (!_.isNull(i) && this._requests[i]) {
-        // 如果有对应 resolve，则返回
-        const { resolve, reject } = this._requests[i];
-        if (msg.cmd === 'error') {
-          this._handleErrorMsg(msg);
-          const { reasonCode, detail } = msg;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve(msg);
-        }
-      } else if (_.isEmpty(msg)) {
-        debug('pong');
-      } else {
-        // 通知类消息交由子类处理事件
+      if (this._isMessageQueueRunning) {
         this._handleMessage(msg);
+      } else {
+        this._messageQueue.push(msg);
       }
     };
     this._ws.onclose = () => {
@@ -194,8 +188,28 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  /* eslint no-unused-vars: ["error", { "args": "none" }] */
   _handleMessage(msg) {
+    const { i } = msg;
+    if (!_.isNull(i) && this._requests[i]) {
+      // 如果有对应 resolve，则返回
+      const { resolve, reject } = this._requests[i];
+      if (msg.cmd === 'error') {
+        this._handleErrorMsg(msg);
+        const { reasonCode, detail } = msg;
+        reject(new PlayError(reasonCode, detail));
+      } else {
+        resolve(msg);
+      }
+    } else if (_.isEmpty(msg)) {
+      debug('pong');
+    } else {
+      // 通知类消息交由子类处理事件
+      this._handleNotification(msg);
+    }
+  }
+
+  /* eslint no-unused-vars: ["error", { "args": "none" }] */
+  _handleNotification(msg) {
     throw new Error('must implement the method');
   }
 
@@ -210,6 +224,18 @@ export default class Connection extends EventEmitter {
   }
 
   _handleUnknownMsg(msg) {
-    error(`unknow msg: ${JSON.stringify(msg)}`);
+    error(`unknown msg: ${JSON.stringify(msg)}`);
+  }
+
+  _pause() {
+    this._isMessageQueueRunning = false;
+  }
+
+  _resume() {
+    this._isMessageQueueRunning = true;
+    while (this._messageQueue.length > 0) {
+      const msg = this._messageQueue.shift();
+      this._handleMessage(msg);
+    }
   }
 }
