@@ -175,11 +175,11 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       pause() {
-        this._lobbyConn.pause();
+        this._lobbyConn._pause();
       },
 
       resume() {
-        this._lobbyConn.resume();
+        this._lobbyConn._resume();
       },
 
       _simulateDisconnection() {
@@ -430,12 +430,12 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
-      _pause() {
-        this._gameConn.pause();
+      pause() {
+        this._gameConn._pause();
       },
 
-      _resume() {
-        this._gameConn.resume();
+      resume() {
+        this._gameConn._resume();
       },
 
       _simulateDisconnection() {

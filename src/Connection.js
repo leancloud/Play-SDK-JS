@@ -224,7 +224,7 @@ export default class Connection extends EventEmitter {
   }
 
   _handleUnknownMsg(msg) {
-    error(`unknow msg: ${JSON.stringify(msg)}`);
+    error(`unknown msg: ${JSON.stringify(msg)}`);
   }
 
   _pause() {
