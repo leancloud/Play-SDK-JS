@@ -174,6 +174,14 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
+      pauseMessageQueue() {
+        this._lobbyConn._pauseMessageQueue();
+      },
+
+      resumeMessageQueue() {
+        this._lobbyConn._resumeMessageQueue();
+      },
+
       _simulateDisconnection() {
         this._lobbyConn._simulateDisconnection();
       },
@@ -422,6 +430,14 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
+      pauseMessageQueue() {
+        this._gameConn._pauseMessageQueue();
+      },
+
+      resumeMessageQueue() {
+        this._gameConn._pauseMessageQueue();
+      },
+
       _simulateDisconnection() {
         this._gameConn._simulateDisconnection();
       },
@@ -645,10 +661,7 @@ const PlayFSM = machina.Fsm.extend({
         this._primaryServer = primaryServer;
         this._secondaryServer = secondaryServer;
         // 与大厅服务器建立连接
-        await this._lobbyConn.connect(
-          this._primaryServer,
-          this._play._userId
-        );
+        await this._lobbyConn.connect(this._primaryServer, this._play._userId);
       } catch (err) {
         reject(err);
       }
@@ -673,10 +686,7 @@ const PlayFSM = machina.Fsm.extend({
       // 与游戏服务器建立连接
       try {
         const gameServer = addr || secureAddr;
-        await this._gameConn.connect(
-          gameServer,
-          this._play._userId
-        );
+        await this._gameConn.connect(gameServer, this._play._userId);
       } catch (err) {
         reject(err);
       }

@@ -266,6 +266,9 @@ export class Client extends EventEmitter<PlayEvent> {
       msg?: string;
     }
   ): Promise<void>;
+
+  pauseMessageQueue(): void;
+  resumeMessageQueue(): void;
 }
 
 export enum CreateRoomFlag {

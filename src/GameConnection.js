@@ -161,7 +161,7 @@ export default class GameConnection extends Connection {
     return GAME_KEEPALIVE_DURATION;
   }
 
-  _handleMessage(msg) {
+  _handleNotification(msg) {
     switch (msg.cmd) {
       case 'conv':
         switch (msg.op) {

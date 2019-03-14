@@ -142,6 +142,14 @@ export default class Room {
     return this._properties;
   }
 
+  /**
+   * 获取自定义属性
+   * @return {Object}
+   */
+  get customProperties() {
+    return this._properties;
+  }
+
   _addPlayer(newPlayer) {
     if (!(newPlayer instanceof Player)) {
       throw new TypeError(`${newPlayer} is not a Player`);
