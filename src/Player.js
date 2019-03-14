@@ -94,6 +94,14 @@ export default class Player {
     return this.properties;
   }
 
+  /**
+   * 获取自定义属性
+   * @return {Object}
+   */
+  get customProperties() {
+    return this.properties;
+  }
+
   // 设置活跃状态
   _setActive(active) {
     this.active = active;
