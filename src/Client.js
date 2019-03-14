@@ -326,15 +326,15 @@ export default class Client extends EventEmitter {
   /**
    * 暂停消息队列处理
    */
-  pause() {
-    this._fsm.handle('pause');
+  pauseMessageQueue() {
+    this._fsm.handle('pauseMessageQueue');
   }
 
   /**
    * 恢复消息队列处理
    */
-  resume() {
-    this._fsm.handle('resume');
+  resumeMessageQueue() {
+    this._fsm.handle('resumeMessageQueue');
   }
 
   /**

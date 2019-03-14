@@ -19,18 +19,18 @@ describe('test message queue', () => {
     p0.on(Event.CUSTOM_EVENT, ({ eventId }) => {
       debug(`received event: ${eventId}`);
     });
-    p0.pause();
+    p0.pauseMessageQueue();
     await p1.connect();
     await p1.joinRoom(roomName);
-    p0.resume();
-    p0.pause();
+    p0.resumeMessageQueue();
+    p0.pauseMessageQueue();
     const options = {
       receiverGroup: ReceiverGroup.MasterClient,
     };
     await p1.sendEvent('hi', null, options);
     return new Promise(resolve => {
       setTimeout(async () => {
-        p0.resume();
+        p0.resumeMessageQueue();
         await p0.close();
         await p1.close();
         resolve();

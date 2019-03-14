@@ -227,11 +227,11 @@ export default class Connection extends EventEmitter {
     error(`unknown msg: ${JSON.stringify(msg)}`);
   }
 
-  _pause() {
+  _pauseMessageQueue() {
     this._isMessageQueueRunning = false;
   }
 
-  _resume() {
+  _resumeMessageQueue() {
     this._isMessageQueueRunning = true;
     while (this._messageQueue.length > 0) {
       const msg = this._messageQueue.shift();
