@@ -43,8 +43,6 @@ const PlayFSM = machina.Fsm.extend({
           insecure: _insecure,
           feature: _feature,
         });
-        this._lobbyConn = new LobbyConnection();
-        this._gameConn = new GameConnection();
       },
 
       onTransition(nextState) {
@@ -57,6 +55,8 @@ const PlayFSM = machina.Fsm.extend({
 
       connect() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return this._connectLobby().then(
           tap(() => this.handle('onTransition', 'lobby'))
         );
@@ -103,7 +103,7 @@ const PlayFSM = machina.Fsm.extend({
       _onEnter() {
         debug('lobby _onEnter()');
         this._lobbyConn.on(ERROR_EVENT, async ({ code, detail }) => {
-          await this._lobbyConn.close();
+          this._lobbyConn.close();
           this._play.emit(Event.ERROR, {
             code,
             detail,
@@ -165,7 +165,7 @@ const PlayFSM = machina.Fsm.extend({
       close() {
         return new Promise(async (resolve, reject) => {
           try {
-            await this._lobbyConn.close();
+            this._lobbyConn.close();
             this.transition('close');
             resolve();
           } catch (err) {
@@ -229,7 +229,7 @@ const PlayFSM = machina.Fsm.extend({
         this._play._lastRoomId = this._play.room.name;
         // 注册事件
         this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
-          await this._gameConn.close();
+          this._gameConn.close();
           this._play.emit(Event.ERROR, {
             code,
             detail,
@@ -314,7 +314,7 @@ const PlayFSM = machina.Fsm.extend({
         });
         this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
           this.handle('onTransition', 'gameToLobby');
-          await this._gameConn.close();
+          this._gameConn.close();
           await this._connectLobby();
           this.handle('onTransition', 'lobby');
           this._play.emit(Event.ROOM_KICKED, { code, msg });
@@ -342,7 +342,7 @@ const PlayFSM = machina.Fsm.extend({
         return new Promise(async (resolve, reject) => {
           try {
             await this._gameConn.leaveRoom();
-            await this._gameConn.close();
+            this._gameConn.close();
             await this._connectLobby().then(
               tap(() => {
                 this.handle('onTransition', 'lobby');
@@ -421,7 +421,7 @@ const PlayFSM = machina.Fsm.extend({
       close() {
         return new Promise(async (resolve, reject) => {
           try {
-            await this._gameConn.close();
+            this._gameConn.close();
             this.transition('close');
             resolve();
           } catch (err) {
@@ -493,6 +493,8 @@ const PlayFSM = machina.Fsm.extend({
 
       reconnect() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return this._connectLobby().then(
           tap(() => this.handle('onTransition', 'lobby'))
         );
@@ -500,6 +502,8 @@ const PlayFSM = machina.Fsm.extend({
 
       reconnectAndRejoin() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return new Promise(async (resolve, reject) => {
           try {
             await this._connectLobby().then(
@@ -529,11 +533,11 @@ const PlayFSM = machina.Fsm.extend({
     },
 
     close: {
-      async onTransition(nextState) {
+      onTransition(nextState) {
         if (nextState === 'lobby') {
-          await this._lobbyConn.close();
+          this._lobbyConn.close();
         } else if (nextState === 'game') {
-          await this._gameConn.close();
+          this._gameConn.close();
         }
       },
 
@@ -675,7 +679,7 @@ const PlayFSM = machina.Fsm.extend({
         await this._lobbyConn.openSession(appId, userId, gameVersion);
         resolve(this._play);
       } catch (err) {
-        await this._lobbyConn.close();
+        this._lobbyConn.close();
         reject(err);
       }
     });
@@ -700,7 +704,7 @@ const PlayFSM = machina.Fsm.extend({
         await this._gameConn.openSession(appId, userId, gameVersion);
         resolve();
       } catch (err) {
-        await this._gameConn.close();
+        this._gameConn.close();
         reject(err);
       }
     });
@@ -715,10 +719,10 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         this._initGame(gameRoom);
-        await this._lobbyConn.close();
+        this._lobbyConn.close();
         resolve();
       } catch (err) {
-        await this._gameConn.close();
+        this._gameConn.close();
         reject(err);
       }
     });
@@ -733,10 +737,10 @@ const PlayFSM = machina.Fsm.extend({
           expectedUserIds
         );
         this._initGame(gameRoom);
-        await this._lobbyConn.close();
+        this._lobbyConn.close();
         resolve();
       } catch (err) {
-        await this._gameConn.close();
+        this._gameConn.close();
         reject(err);
       }
     });

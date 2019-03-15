@@ -15,6 +15,20 @@ describe('test kick', () => {
 
       await p0.connect();
       await p0.createRoom({ roomName });
+
+      p0.on(Event.PLAYER_ROOM_JOINED, async ({ newPlayer }) => {
+        expect(p0.room.playerList.length).to.be.equal(2);
+        await p0.kickPlayer(newPlayer.actorId);
+        expect(p0.room.playerList.length).to.be.equal(1);
+        f0 = true;
+        if (f0 && f1) {
+          debug('f0 close');
+          await p0.close();
+          await p1.close();
+          resolve();
+        }
+      });
+
       await p1.connect();
       await p1.joinRoom(roomName);
 
@@ -29,24 +43,13 @@ describe('test kick', () => {
           resolve();
         }
       });
-
-      expect(p0.room.playerList.length).to.be.equal(2);
-      await p0.kickPlayer(p1.player.actorId);
-      expect(p0.room.playerList.length).to.be.equal(1);
-      f0 = true;
-      if (f0 && f1) {
-        debug('f0 close');
-        await p0.close();
-        await p1.close();
-        resolve();
-      }
     }));
 
   it('test kick with msg', () =>
     new Promise(async resolve => {
-      const roomName = 'tk0_r';
-      const p0 = newQCloudPlay('tk0_0');
-      const p1 = newQCloudPlay('tk0_1');
+      const roomName = 'tk1_r';
+      const p0 = newQCloudPlay('tk1_0');
+      const p1 = newQCloudPlay('tk1_1');
       let f0 = false;
       let f1 = false;
 
