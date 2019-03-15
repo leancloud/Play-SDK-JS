@@ -412,4 +412,11 @@ export default class Client extends EventEmitter {
   _simulateDisconnection() {
     this._fsm.handle('_simulateDisconnection');
   }
+
+  /**
+   * 获取用户 id
+   */
+  get userId() {
+    return this._userId;
+  }
 }
