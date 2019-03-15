@@ -33,7 +33,15 @@ export default class AppRouter {
               reject(err);
             } else {
               const body = JSON.parse(response.text);
-              const { ttl, play_server: playServer } = body;
+              const {
+                ttl,
+                play_server: secondaryServer,
+                multiplayer_router_server: primaryServer,
+              } = body;
+              const playServer = primaryServer || secondaryServer;
+              if (playServer === undefined) {
+                reject(new Error('play server is null'));
+              }
               this._url = `https://${playServer}/1/multiplayer/router/router`;
               this._serverValidTimestamp = Date.now() + ttl * 1000;
               debug(`server valid timestamp: ${this._serverValidTimestamp}`);
