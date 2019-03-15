@@ -319,6 +319,7 @@ const PlayFSM = machina.Fsm.extend({
           this.handle('onTransition', 'lobby');
           this._play.emit(Event.ROOM_KICKED, { code, msg });
         });
+        this._gameConn._resumeMessageQueue();
       },
 
       _onExit() {
@@ -714,6 +715,7 @@ const PlayFSM = machina.Fsm.extend({
           roomOptions,
           expectedUserIds
         );
+        this._gameConn._pauseMessageQueue();
         this._initGame(gameRoom);
         await this._lobbyConn.close();
         resolve();
@@ -732,6 +734,7 @@ const PlayFSM = machina.Fsm.extend({
           matchProperties,
           expectedUserIds
         );
+        this._gameConn._pauseMessageQueue();
         this._initGame(gameRoom);
         await this._lobbyConn.close();
         resolve();
