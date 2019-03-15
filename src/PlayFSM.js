@@ -43,8 +43,6 @@ const PlayFSM = machina.Fsm.extend({
           insecure: _insecure,
           feature: _feature,
         });
-        this._lobbyConn = new LobbyConnection();
-        this._gameConn = new GameConnection();
       },
 
       onTransition(nextState) {
@@ -57,6 +55,8 @@ const PlayFSM = machina.Fsm.extend({
 
       connect() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return this._connectLobby().then(
           tap(() => this.handle('onTransition', 'lobby'))
         );
@@ -165,7 +165,7 @@ const PlayFSM = machina.Fsm.extend({
       close() {
         return new Promise(async (resolve, reject) => {
           try {
-            await this._lobbyConn.close();
+            this._lobbyConn.close();
             this.transition('close');
             resolve();
           } catch (err) {
@@ -421,7 +421,7 @@ const PlayFSM = machina.Fsm.extend({
       close() {
         return new Promise(async (resolve, reject) => {
           try {
-            await this._gameConn.close();
+            this._gameConn.close();
             this.transition('close');
             resolve();
           } catch (err) {
@@ -493,6 +493,8 @@ const PlayFSM = machina.Fsm.extend({
 
       reconnect() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return this._connectLobby().then(
           tap(() => this.handle('onTransition', 'lobby'))
         );
@@ -500,6 +502,8 @@ const PlayFSM = machina.Fsm.extend({
 
       reconnectAndRejoin() {
         this.handle('onTransition', 'connecting');
+        this._lobbyConn = new LobbyConnection();
+        this._gameConn = new GameConnection();
         return new Promise(async (resolve, reject) => {
           try {
             await this._connectLobby().then(
@@ -529,11 +533,11 @@ const PlayFSM = machina.Fsm.extend({
     },
 
     close: {
-      async onTransition(nextState) {
+      onTransition(nextState) {
         if (nextState === 'lobby') {
-          await this._lobbyConn.close();
+          this._lobbyConn.close();
         } else if (nextState === 'game') {
-          await this._gameConn.close();
+          this._gameConn.close();
         }
       },
 
