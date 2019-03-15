@@ -38,11 +38,11 @@ export default class AppRouter {
                 play_server: secondaryServer,
                 multiplayer_router_server: primaryServer,
               } = body;
-              const playServer = primaryServer || secondaryServer;
-              if (playServer === undefined) {
-                reject(new Error('play server is null'));
+              const routerServer = primaryServer || secondaryServer;
+              if (routerServer === undefined) {
+                reject(new Error('router server is null'));
               }
-              this._url = `https://${playServer}/1/multiplayer/router/router`;
+              this._url = `https://${routerServer}/1/multiplayer/router/router`;
               this._serverValidTimestamp = Date.now() + ttl * 1000;
               debug(`server valid timestamp: ${this._serverValidTimestamp}`);
               debug(`get app router from server: ${this._url}`);
