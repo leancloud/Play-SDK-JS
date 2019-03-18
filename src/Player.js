@@ -21,7 +21,7 @@ export default class Player {
 
   /**
    * 玩家 ID
-   * @type {string}
+   * @type {String}
    * @readonly
    */
   get userId() {
@@ -30,7 +30,7 @@ export default class Player {
 
   /**
    * 房间玩家 ID
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get actorId() {

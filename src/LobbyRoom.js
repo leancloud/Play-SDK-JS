@@ -16,7 +16,7 @@ export default class LobbyRoom {
 
   /**
    * 房间名称
-   * @type {string}
+   * @type {String}
    * @readonly
    */
   get roomName() {
@@ -25,7 +25,7 @@ export default class LobbyRoom {
 
   /**
    * 房间最大玩家数
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get maxPlayerCount() {
@@ -34,7 +34,7 @@ export default class LobbyRoom {
 
   /**
    * 邀请好友 ID 数组
-   * @type {Array.<string>}
+   * @type {Array.<String>}
    * @readonly
    */
   get expectedUserIds() {
@@ -43,7 +43,7 @@ export default class LobbyRoom {
 
   /**
    * 房间置空后销毁时间（秒）
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get emptyRoomTtl() {
@@ -52,7 +52,7 @@ export default class LobbyRoom {
 
   /**
    * 玩家离线后踢出房间时间（秒）
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get playerTtl() {
@@ -61,7 +61,7 @@ export default class LobbyRoom {
 
   /**
    * 当前房间玩家数量
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get playerCount() {

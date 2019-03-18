@@ -1,7 +1,7 @@
 /**
  * 创建房间标识
  * @readonly
- * @enum {number}
+ * @enum {Number}
  */
 const CreateRoomFlag = {
   /**

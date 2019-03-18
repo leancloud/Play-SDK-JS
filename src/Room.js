@@ -1,4 +1,5 @@
 import Player from './Player';
+import ReceiverGroup from './ReceiverGroup';
 
 /**
  * 房间类
@@ -29,7 +30,7 @@ export default class Room {
 
   /**
    * 房间名称
-   * @type {string}
+   * @type {String}
    * @readonly
    */
   get name() {
@@ -38,7 +39,7 @@ export default class Room {
 
   /**
    * 房间是否开启
-   * @type {boolean}
+   * @type {Boolean}
    * @readonly
    */
   get opened() {
@@ -47,7 +48,7 @@ export default class Room {
 
   /**
    * 房间是否可见
-   * @type {boolean}
+   * @type {Boolean}
    * @readonly
    */
   get visible() {
@@ -56,7 +57,7 @@ export default class Room {
 
   /**
    * 房间允许的最大玩家数量
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get maxPlayerCount() {
@@ -73,7 +74,7 @@ export default class Room {
 
   /**
    * 房间主机玩家 ID
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get masterId() {
@@ -82,7 +83,7 @@ export default class Room {
 
   /**
    * 邀请的好友 ID 列表
-   * @type {Array.<string>}
+   * @type {Array.<String>}
    * @readonly
    */
   get expectedUserIds() {
@@ -91,7 +92,7 @@ export default class Room {
 
   /**
    * 根据 actorId 获取 Player 对象
-   * @param {number} actorId 玩家在房间中的 Id
+   * @param {Number} actorId 玩家在房间中的 Id
    * @return {Player}
    */
   getPlayer(actorId) {
@@ -131,6 +132,57 @@ export default class Room {
    */
   get customProperties() {
     return this._properties;
+  }
+
+  /**
+   * 踢人
+   * @param {Number} actorId 踢用户的 actorId
+   * @param {Object} [opts] 附带参数
+   * @param {Number} [opts.code] 编码
+   * @param {String} [opts.msg] 附带信息
+   */
+  async kickPlayer(actorId, { code = null, msg = null } = {}) {
+    return this._play.kickPlayer(actorId, { code, msg });
+  }
+
+  /**
+   * 设置房间开启 / 关闭
+   * @param {Boolean} opened 是否开启
+   */
+  async setOpened(opened) {
+    return this._play.setRoomOpened(opened);
+  }
+
+  /**
+   * 设置房间可见 / 不可见
+   * @param {Boolean} visible 是否可见
+   */
+  async setVisible(visible) {
+    return this._play.setRoomVisible(visible);
+  }
+
+  /**
+   * 设置房主
+   * @param {Number} newMasterId 新房主 ID
+   */
+  async setMaster(newMasterId) {
+    return this._play.setMaster(newMasterId);
+  }
+
+  /**
+   * 发送自定义消息
+   * @param {Number|String} eventId 事件 ID
+   * @param {Object} eventData 事件参数
+   * @param {Object} options 发送事件选项
+   * @param {ReceiverGroup} options.receiverGroup 接收组
+   * @param {Array.<Number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
+   */
+  async sendEvent(
+    eventId,
+    eventData = {},
+    options = { receiverGroup: ReceiverGroup.All }
+  ) {
+    return this._play.sendEvent(eventId, eventData, options);
   }
 
   _addPlayer(newPlayer) {

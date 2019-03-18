@@ -1,7 +1,7 @@
 /**
  * 事件
  * @readonly
- * @enum {string}
+ * @enum {String}
  */
 const Event = {
   /**

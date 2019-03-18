@@ -112,7 +112,7 @@ describe('test create room', () => {
     new Promise(async resolve => {
       const p = newQCloudPlay('cr6');
       await p.connect();
-      await p.createRoom();
+      const pRoom = await p.createRoom();
       p.on(Event.ROOM_OPEN_CHANGED, data => {
         const { opened } = data;
         expect(opened).to.be.equal(false);
@@ -125,9 +125,9 @@ describe('test create room', () => {
         await p.close();
         resolve();
       });
-      await p.setRoomOpened(false);
+      await pRoom.setOpened(false);
       debug(`current room opened: ${p.room.opened}`);
-      await p.setRoomVisible(false);
+      await pRoom.setVisible(false);
       debug(`current room visible: ${p.room.visible}`);
     }));
 

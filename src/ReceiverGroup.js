@@ -1,7 +1,7 @@
 /**
  * 接收组枚举
  * @readonly
- * @enum {number}
+ * @enum {Number}
  */
 const ReceiverGroup = {
   /**
