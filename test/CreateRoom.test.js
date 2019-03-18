@@ -17,10 +17,10 @@ describe('test create room', () => {
     const roomName = 'cr2_r';
     const p = newPlay('cr2');
     await p.connect();
-    await p.createRoom({
+    const room = await p.createRoom({
       roomName,
     });
-    expect(p.room.name).to.be.equal(roomName);
+    expect(room.name).to.be.equal(roomName);
     await p.close();
   });
 
@@ -40,17 +40,17 @@ describe('test create room', () => {
       customRoomPropertiesKeysForLobby: ['level'],
     };
     const expectedUserIds = ['world'];
-    await p.joinOrCreateRoom(roomName, {
+    const room = await p.joinOrCreateRoom(roomName, {
       roomOptions: options,
       expectedUserIds,
     });
-    expect(p.room.name).to.be.equal(roomName);
-    expect(p.room.visible).to.be.equal(false);
-    expect(p.room.maxPlayerCount).to.be.equal(2);
+    expect(room.name).to.be.equal(roomName);
+    expect(room.visible).to.be.equal(false);
+    expect(room.maxPlayerCount).to.be.equal(2);
     const props = p.room.customProperties;
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
-    expect(p.room.expectedUserIds).to.be.deep.equal(['world']);
+    expect(room.expectedUserIds).to.be.deep.equal(['world']);
     await p.close();
   });
 

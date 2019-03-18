@@ -1,6 +1,7 @@
 import { newPlay } from './Utils';
 import Event from '../src/Event';
 
+const { expect } = require('chai');
 const debug = require('debug')('Test:JoinRoom');
 
 describe('test join room', () => {
@@ -9,9 +10,10 @@ describe('test join room', () => {
     const p0 = newPlay('jr0_0');
     const p1 = newPlay('jr0_1');
     await p0.connect();
-    await p0.createRoom({
+    const room = await p0.createRoom({
       roomName,
     });
+    expect(room.name).to.be.equal(roomName);
     await p1.connect();
     await p1.joinRoom(roomName);
     await p0.close();
@@ -25,7 +27,8 @@ describe('test join room', () => {
     await p0.connect();
     await p0.createRoom(roomName);
     await p1.connect();
-    await p1.joinRandomRoom();
+    const room = await p1.joinRandomRoom();
+    expect(room).to.be.not.equal(undefined);
     await p0.close();
     await p1.close();
   });
@@ -101,7 +104,8 @@ describe('test join room', () => {
 
     p1 = newPlay('jr4_1');
     await p1.connect();
-    await p1.rejoinRoom(roomName);
+    const room = await p1.rejoinRoom(roomName);
+    expect(room.name).to.be.equal(roomName);
 
     await p0.close();
     await p1.close();
