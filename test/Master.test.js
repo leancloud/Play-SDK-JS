@@ -15,7 +15,7 @@ describe('test master', () => {
       let f1 = false;
 
       await p0.connect();
-      await p0.createRoom({ roomName });
+      const p0Room = await p0.createRoom({ roomName });
       p0.on(Event.MASTER_SWITCHED, async data => {
         const { newMaster } = data;
         expect(p0.room.masterId).to.be.equal(newMaster.actorId);
@@ -40,9 +40,9 @@ describe('test master', () => {
       });
       expect(p0.room.masterId).to.be.equal(p0.player.actorId);
       debug(`before master id: ${p0.room.masterId}`);
-      await p0.setMaster(p1.player.actorId);
-      expect(p0.room.masterId).to.be.equal(p1.player.actorId);
-      debug(`after master id: ${p0.room.masterId}`);
+      await p0Room.setMaster(p1.player.actorId);
+      expect(p0Room.masterId).to.be.equal(p1.player.actorId);
+      debug(`after master id: ${p0Room.masterId}`);
     }));
 
   it('test master leave', () =>

@@ -17,10 +17,10 @@ describe('test create room', () => {
     const roomName = 'cr2_r';
     const p = newPlay('cr2');
     await p.connect();
-    await p.createRoom({
+    const room = await p.createRoom({
       roomName,
     });
-    expect(p.room.name).to.be.equal(roomName);
+    expect(room.name).to.be.equal(roomName);
     await p.close();
   });
 
@@ -40,17 +40,17 @@ describe('test create room', () => {
       customRoomPropertiesKeysForLobby: ['level'],
     };
     const expectedUserIds = ['world'];
-    await p.joinOrCreateRoom(roomName, {
+    const room = await p.joinOrCreateRoom(roomName, {
       roomOptions: options,
       expectedUserIds,
     });
-    expect(p.room.name).to.be.equal(roomName);
-    expect(p.room.visible).to.be.equal(false);
-    expect(p.room.maxPlayerCount).to.be.equal(2);
-    const props = p.room.getCustomProperties();
+    expect(room.name).to.be.equal(roomName);
+    expect(room.visible).to.be.equal(false);
+    expect(room.maxPlayerCount).to.be.equal(2);
+    const props = p.room.customProperties;
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
-    expect(p.room.expectedUserIds).to.be.deep.equal(['world']);
+    expect(room.expectedUserIds).to.be.deep.equal(['world']);
     await p.close();
   });
 
@@ -84,10 +84,10 @@ describe('test create room', () => {
       p0.on(Event.PLAYER_ROOM_JOINED, async data => {
         const { newPlayer } = data;
         expect(p0.room.playerList.length).to.be.equal(2);
-        expect(p0.player.isMaster()).to.be.equal(true);
-        expect(newPlayer.isMaster()).to.be.equal(false);
-        expect(p0.player.isLocal()).to.be.equal(true);
-        expect(newPlayer.isLocal()).to.be.equal(false);
+        expect(p0.player.isMaster).to.be.equal(true);
+        expect(newPlayer.isMaster).to.be.equal(false);
+        expect(p0.player.isLocal).to.be.equal(true);
+        expect(newPlayer.isLocal).to.be.equal(false);
         expect(p0.room.playerList.length).to.be.equal(2);
         f0 = true;
         if (f0 && f1) {
@@ -112,7 +112,7 @@ describe('test create room', () => {
     new Promise(async resolve => {
       const p = newQCloudPlay('cr6');
       await p.connect();
-      await p.createRoom();
+      const pRoom = await p.createRoom();
       p.on(Event.ROOM_OPEN_CHANGED, data => {
         const { opened } = data;
         expect(opened).to.be.equal(false);
@@ -125,9 +125,9 @@ describe('test create room', () => {
         await p.close();
         resolve();
       });
-      await p.setRoomOpened(false);
+      await pRoom.setOpened(false);
       debug(`current room opened: ${p.room.opened}`);
-      await p.setRoomVisible(false);
+      await pRoom.setVisible(false);
       debug(`current room visible: ${p.room.visible}`);
     }));
 

@@ -81,4 +81,40 @@ describe('test custom event', () => {
       };
       p1.sendEvent('hello', eventData, options);
     }));
+
+  it('test simple event', async () =>
+    new Promise(async resolve => {
+      const roomName = 'tce2_r';
+      const p0 = newPlay('tce2_0');
+      const p1 = newPlay('tce2_1');
+      let f0 = false;
+      let f1 = false;
+
+      await p0.connect();
+      await p0.createRoom({ roomName });
+      p0.on(Event.CUSTOM_EVENT, async event => {
+        const { eventId } = event;
+        expect(eventId).to.be.equal('hi');
+        f0 = true;
+        if (f0 && f1) {
+          await p0.close();
+          await p1.close();
+          resolve();
+        }
+      });
+
+      await p1.connect();
+      await p1.joinRoom(roomName);
+      p1.on(Event.CUSTOM_EVENT, async event => {
+        const { eventId } = event;
+        expect(eventId).to.be.equal('hi');
+        f1 = true;
+        if (f0 && f1) {
+          await p0.close();
+          await p1.close();
+          resolve();
+        }
+      });
+      p1.sendEvent('hi');
+    }));
 });

@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
+import ReceiverGroup from './ReceiverGroup';
 
 /**
  * 多人对战游戏服务的客户端
@@ -105,7 +106,7 @@ export default class Client extends EventEmitter {
   /**
    * 创建房间
    * @param {Object} [opts] 创建房间选项
-   * @param {string} [opts.roomName] 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
+   * @param {String} [opts.roomName] 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
    * @param {Object} [opts.roomOptions] 创建房间选项，默认值为 null
    * @param {Boolean} [opts.roomOptions.opened] 房间是否打开
    * @param {Boolean} [opts.roomOptions.visible] 房间是否可见，只有「可见」的房间会出现在房间列表里
@@ -113,9 +114,9 @@ export default class Client extends EventEmitter {
    * @param {Number} [opts.roomOptions.playerTtl] 玩家掉线后，延迟销毁的时间
    * @param {Number} [opts.roomOptions.maxPlayerCount] 最大玩家数量
    * @param {Object} [opts.roomOptions.customRoomProperties] 自定义房间属性
-   * @param {Array.<string>} [opts.roomOptions.customRoomPropertyKeysForLobby] 在大厅中可获得的房间属性「键」数组
+   * @param {Array.<String>} [opts.roomOptions.customRoomPropertyKeysForLobby] 在大厅中可获得的房间属性「键」数组
    * @param {CreateRoomFlag} [opts.roomOptions.flag] 创建房间标记，可多选
-   * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
+   * @param {Array.<String>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async createRoom({
     roomName = null,
@@ -142,7 +143,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 加入房间
-   * @param {string} roomName 房间名称
+   * @param {String} roomName 房间名称
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinRoom(roomName, { expectedUserIds = null } = {}) {
@@ -157,7 +158,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 重新加入房间
-   * @param {string} roomName 房间名称
+   * @param {String} roomName 房间名称
    */
   async rejoinRoom(roomName) {
     if (!(typeof roomName === 'string')) {
@@ -168,7 +169,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 随机加入或创建房间
-   * @param {string} roomName 房间名称
+   * @param {String} roomName 房间名称
    * @param {Object} [opts] 创建房间选项
    * @param {Object} [opts.roomOptions] 创建房间选项，默认值为 null
    * @param {Boolean} [opts.roomOptions.opened] 房间是否打开
@@ -177,9 +178,9 @@ export default class Client extends EventEmitter {
    * @param {Number} [opts.roomOptions.playerTtl] 玩家掉线后，延迟销毁的时间
    * @param {Number} [opts.roomOptions.maxPlayerCount] 最大玩家数量
    * @param {Object} [opts.roomOptions.customRoomProperties] 自定义房间属性
-   * @param {Array.<string>} [opts.roomOptions.customRoomPropertyKeysForLobby] 在大厅中可获得的房间属性「键」数组
+   * @param {Array.<String>} [opts.roomOptions.customRoomPropertyKeysForLobby] 在大厅中可获得的房间属性「键」数组
    * @param {CreateRoomFlag} [opts.roomOptions.flag] 创建房间标记，可多选
-   * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
+   * @param {Array.<String>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinOrCreateRoom(
     roomName,
@@ -206,7 +207,7 @@ export default class Client extends EventEmitter {
    * 随机加入房间
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
-   * @param {Array.<string>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
+   * @param {Array.<String>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinRandomRoom({
     matchProperties = null,
@@ -251,7 +252,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 设置房主
-   * @param {number} newMasterId 新房主 ID
+   * @param {Number} newMasterId 新房主 ID
    */
   async setMaster(newMasterId) {
     if (!(typeof newMasterId === 'number')) {
@@ -265,13 +266,17 @@ export default class Client extends EventEmitter {
 
   /**
    * 发送自定义消息
-   * @param {number|string} eventId 事件 ID
+   * @param {Number|String} eventId 事件 ID
    * @param {Object} eventData 事件参数
    * @param {Object} options 发送事件选项
    * @param {ReceiverGroup} options.receiverGroup 接收组
-   * @param {Array.<number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
+   * @param {Array.<Number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
-  async sendEvent(eventId, eventData, options) {
+  async sendEvent(
+    eventId,
+    eventData = {},
+    options = { receiverGroup: ReceiverGroup.All }
+  ) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a string or number`);
     }
@@ -325,6 +330,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 暂停消息队列处理
+   * @return {void}
    */
   pauseMessageQueue() {
     this._fsm.handle('pauseMessageQueue');
@@ -332,6 +338,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 恢复消息队列处理
+   * @return {void}
    */
   resumeMessageQueue() {
     this._fsm.handle('resumeMessageQueue');
@@ -339,7 +346,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取当前所在房间
-   * @return {Room}
+   * @type {Room}
    * @readonly
    */
   get room() {
@@ -348,7 +355,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取当前玩家
-   * @return {Player}
+   * @type {Player}
    * @readonly
    */
   get player() {
@@ -357,7 +364,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取房间列表
-   * @return {Array.<LobbyRoom>}
+   * @type {Array.<LobbyRoom>}
    * @readonly
    */
   get lobbyRoomList() {
@@ -415,6 +422,8 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取用户 id
+   * @type {String}
+   * @readonly
    */
   get userId() {
     return this._userId;

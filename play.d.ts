@@ -45,6 +45,8 @@ export enum Event {
   MASTER_SWITCHED = 'masterSwitched',
   /** 离开房间 */
   ROOM_LEFT = 'roomLeft',
+  /** 被踢出房间 */
+  ROOM_KICKED = 'roomKicked',
   /** 房间自定义属性变化 */
   ROOM_CUSTOM_PROPERTIES_CHANGED = 'roomCustomPropertiesChanged',
   /** 玩家自定义属性变化 */
@@ -141,11 +143,11 @@ export class Player {
 
   readonly actorId: number;
 
-  isLocal(): boolean;
+  readonly isLocal: boolean;
 
-  isMaster(): boolean;
+  readonly isMaster: boolean;
 
-  isInActive(): boolean;
+  readonly isActive: boolean;
 
   setCustomProperties(
     properties: CustomProperties,
@@ -154,7 +156,7 @@ export class Player {
     }
   ): Promise<void>;
 
-  getCustomProperties(): CustomProperties;
+  readonly customProperties: CustomProperties;
 }
 
 export class Room {
@@ -183,7 +185,32 @@ export class Room {
     }
   ): Promise<void>;
 
-  getCustomProperties(): CustomProperties;
+  readonly customProperties: CustomProperties;
+
+  setOpened(opened: boolean): Promise<void>;
+
+  setVisible(visible: boolean): Promise<void>;
+
+  setMaster(newMasterId: number): Promise<void>;
+
+  sendEvent(
+    eventId: number | string,
+    eventData?: CustomEventData,
+    options?: {
+      receiverGroup?: ReceiverGroup;
+      targetActorIds?: number[];
+    }
+  ): Promise<void>;
+
+  kickPlayer(
+    actorId: number,
+    opts?: {
+      code?: number;
+      msg?: string;
+    }
+  ): Promise<void>;
+
+  leave(): Promise<void>;
 }
 
 export class Client extends EventEmitter<PlayEvent> {
@@ -202,13 +229,13 @@ export class Client extends EventEmitter<PlayEvent> {
     gameVersion?: string;
   });
 
-  connect(): Promise<void>;
+  connect(): Promise<Client>;
 
-  reconnect(): Promise<void>;
+  reconnect(): Promise<Client>;
 
-  reconnectAndRejoin(): Promise<void>;
+  reconnectAndRejoin(): Promise<Room>;
 
-  disconnect(): Promise<void>;
+  close(): Promise<void>;
 
   joinLobby(): Promise<void>;
 
@@ -218,16 +245,16 @@ export class Client extends EventEmitter<PlayEvent> {
     roomName?: string;
     roomOptions?: Object;
     expectedUserIds?: string[];
-  }): Promise<void>;
+  }): Promise<Room>;
 
   joinRoom(
     roomName: string,
     opts?: {
       expectedUserIds?: string[];
     }
-  ): Promise<void>;
+  ): Promise<Room>;
 
-  rejoinRoom(roomName: string): Promise<void>;
+  rejoinRoom(roomName: string): Promise<Room>;
 
   joinOrCreateRoom(
     roomName: string,
@@ -235,12 +262,12 @@ export class Client extends EventEmitter<PlayEvent> {
       roomOptions?: Object;
       expectedUserIds: string[];
     }
-  ): Promise<void>;
+  ): Promise<Room>;
 
   joinRandomRoom(opts?: {
     matchProperties?: Object;
     expectedUserIds?: string[];
-  }): Promise<void>;
+  }): Promise<Room>;
 
   setRoomOpened(opened: boolean): Promise<void>;
 
@@ -250,8 +277,8 @@ export class Client extends EventEmitter<PlayEvent> {
 
   sendEvent(
     eventId: number | string,
-    eventData: CustomEventData,
-    options: {
+    eventData?: CustomEventData,
+    options?: {
       receiverGroup?: ReceiverGroup;
       targetActorIds?: number[];
     }

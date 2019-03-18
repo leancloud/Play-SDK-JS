@@ -511,8 +511,8 @@ const PlayFSM = machina.Fsm.extend({
                 this.handle('onTransition', 'lobby');
               })
             );
-            await this._joinRoom(this._play._lastRoomId);
-            resolve();
+            const gameRoom = await this._joinRoom(this._play._lastRoomId);
+            resolve(gameRoom);
           } catch (err) {
             reject(err);
           }
@@ -562,9 +562,13 @@ const PlayFSM = machina.Fsm.extend({
         );
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
-        await this._createGameRoom(cid, roomOptions, expectedUserIds);
+        const gameRoom = await this._createGameRoom(
+          cid,
+          roomOptions,
+          expectedUserIds
+        );
         this.handle('onTransition', 'game');
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this.handle('onTransition', 'lobby');
         reject(err);
@@ -582,9 +586,9 @@ const PlayFSM = machina.Fsm.extend({
         );
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
-        await this._joinGameRoom(cid, expectedUserIds);
+        const gameRoom = await this._joinGameRoom(cid, expectedUserIds);
         this.handle('onTransition', 'game');
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this.handle('onTransition', 'lobby');
         reject(err);
@@ -603,13 +607,18 @@ const PlayFSM = machina.Fsm.extend({
         );
         const { op, cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
+        let gameRoom = null;
         if (op === 'started') {
-          await this._createGameRoom(cid, roomOptions, expectedUserIds);
+          gameRoom = await this._createGameRoom(
+            cid,
+            roomOptions,
+            expectedUserIds
+          );
         } else {
-          await this._joinGameRoom(cid, expectedUserIds);
+          gameRoom = await this._joinGameRoom(cid, expectedUserIds);
         }
         this.handle('onTransition', 'game');
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this.handle('onTransition', 'lobby');
         reject(err);
@@ -627,9 +636,13 @@ const PlayFSM = machina.Fsm.extend({
         );
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
-        await this._joinGameRoom(cid, expectedUserIds, matchProperties);
+        const gameRoom = await this._joinGameRoom(
+          cid,
+          expectedUserIds,
+          matchProperties
+        );
         this.handle('onTransition', 'game');
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this.handle('onTransition', 'lobby');
         reject(err);
@@ -644,9 +657,9 @@ const PlayFSM = machina.Fsm.extend({
         const roomInfo = await this._lobbyConn.rejoinRoom(roomName);
         const { cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
-        await this._joinGameRoom(cid);
+        const gameRoom = await this._joinGameRoom(cid);
         this.handle('onTransition', 'game');
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this.handle('onTransition', 'lobby');
         reject(err);
@@ -720,7 +733,7 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._initGame(gameRoom);
         this._lobbyConn.close();
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this._gameConn.close();
         reject(err);
@@ -738,7 +751,7 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._initGame(gameRoom);
         this._lobbyConn.close();
-        resolve();
+        resolve(gameRoom);
       } catch (err) {
         this._gameConn.close();
         reject(err);

@@ -21,7 +21,7 @@ export default class Player {
 
   /**
    * 玩家 ID
-   * @type {string}
+   * @type {String}
    * @readonly
    */
   get userId() {
@@ -30,7 +30,7 @@ export default class Player {
 
   /**
    * 房间玩家 ID
-   * @type {number}
+   * @type {Number}
    * @readonly
    */
   get actorId() {
@@ -39,9 +39,10 @@ export default class Player {
 
   /**
    * 判断是不是当前客户端玩家
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
-  isLocal() {
+  get isLocal() {
     return (
       this._actorId !== -1 && this._play._player._actorId === this._actorId
     );
@@ -49,17 +50,19 @@ export default class Player {
 
   /**
    * 判断是不是主机玩家
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
-  isMaster() {
+  get isMaster() {
     return this._actorId !== -1 && this._play._room.masterId === this._actorId;
   }
 
   /**
    * 判断是不是活跃状态
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
-  isActive() {
+  get isActive() {
     return this.active;
   }
 
@@ -78,25 +81,9 @@ export default class Player {
   }
 
   /**
-   * @deprecated
    * 获取自定义属性
-   * @return {Object}
-   */
-  getCustomProperties() {
-    return this.properties;
-  }
-
-  /**
-   * 获取自定义属性
-   * @return {Object}
-   */
-  get CustomProperties() {
-    return this.properties;
-  }
-
-  /**
-   * 获取自定义属性
-   * @return {Object}
+   * @type {Object}
+   * @readonly
    */
   get customProperties() {
     return this.properties;

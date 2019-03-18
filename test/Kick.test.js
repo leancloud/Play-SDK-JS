@@ -14,11 +14,11 @@ describe('test kick', () => {
       let f1 = false;
 
       await p0.connect();
-      await p0.createRoom({ roomName });
+      const p0Room = await p0.createRoom({ roomName });
 
       p0.on(Event.PLAYER_ROOM_JOINED, async ({ newPlayer }) => {
         expect(p0.room.playerList.length).to.be.equal(2);
-        await p0.kickPlayer(newPlayer.actorId);
+        await p0Room.kickPlayer(newPlayer.actorId);
         expect(p0.room.playerList.length).to.be.equal(1);
         f0 = true;
         if (f0 && f1) {
@@ -54,7 +54,7 @@ describe('test kick', () => {
       let f1 = false;
 
       await p0.connect();
-      await p0.createRoom({ roomName });
+      const p0Room = await p0.createRoom({ roomName });
       await p1.connect();
       await p1.joinRoom(roomName);
 
@@ -70,7 +70,7 @@ describe('test kick', () => {
         }
       });
 
-      await p0.kickPlayer(p1.player.actorId, {
+      await p0Room.kickPlayer(p1.player.actorId, {
         code: 404,
         msg: 'You cheat!',
       });
