@@ -135,6 +135,13 @@ export default class Room {
   }
 
   /**
+   * 离开房间
+   */
+  async leave() {
+    return this._play.leaveRoom();
+  }
+
+  /**
    * 踢人
    * @param {Number} actorId 踢用户的 actorId
    * @param {Object} [opts] 附带参数

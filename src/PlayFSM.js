@@ -511,8 +511,8 @@ const PlayFSM = machina.Fsm.extend({
                 this.handle('onTransition', 'lobby');
               })
             );
-            await this._joinRoom(this._play._lastRoomId);
-            resolve();
+            const gameRoom = await this._joinRoom(this._play._lastRoomId);
+            resolve(gameRoom);
           } catch (err) {
             reject(err);
           }

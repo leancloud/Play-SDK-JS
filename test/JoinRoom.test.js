@@ -69,7 +69,7 @@ describe('test join room', () => {
       const p1 = newPlay('jr3_1');
 
       await p0.connect();
-      await p0.createRoom({ roomName });
+      const p0Room = await p0.createRoom({ roomName });
       await p1.connect();
       await p1.joinRoom(roomName);
       p1.on(Event.PLAYER_ROOM_LEFT, async () => {
@@ -77,7 +77,7 @@ describe('test join room', () => {
         await p1.close();
         resolve();
       });
-      p0.leaveRoom();
+      await p0Room.leave();
     }));
 
   it('test rejoin room', async () => {
