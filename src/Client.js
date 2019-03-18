@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
+import ReceiverGroup from './ReceiverGroup';
 
 /**
  * 多人对战游戏服务的客户端
@@ -271,7 +272,11 @@ export default class Client extends EventEmitter {
    * @param {ReceiverGroup} options.receiverGroup 接收组
    * @param {Array.<number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
-  async sendEvent(eventId, eventData, options) {
+  async sendEvent(
+    eventId,
+    eventData = {},
+    options = { receiverGroup: ReceiverGroup.All }
+  ) {
     if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a string or number`);
     }
