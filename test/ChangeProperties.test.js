@@ -19,7 +19,7 @@ describe('test change properties', () => {
       await p0.connect();
       await p0.createRoom({ roomName });
       p0.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
-        const props = p0.room.getCustomProperties();
+        const props = p0.room.customProperties;
         expect(props.title).to.be.equal('room311');
         expect(props.gold).to.be.equal(1000);
         f0 = true;
@@ -32,7 +32,7 @@ describe('test change properties', () => {
       await p1.connect();
       await p1.joinRoom(roomName);
       p1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
-        const props = p1.room.getCustomProperties();
+        const props = p1.room.customProperties;
         expect(props.title).to.be.equal('room311');
         expect(props.gold).to.be.equal(1000);
         f1 = true;
@@ -64,7 +64,7 @@ describe('test change properties', () => {
       await p0.connect();
       await p0.createRoom({ roomName });
       p0.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
-        const props = p0.room.getCustomProperties();
+        const props = p0.room.customProperties;
         expect(props.id).to.be.equal(1);
         expect(props.title).to.be.equal('room312');
         expect(props.gold).to.be.equal(1000);
@@ -79,7 +79,7 @@ describe('test change properties', () => {
       await p1.connect();
       await p1.joinRoom(roomName);
       p1.on(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, async () => {
-        const props = p1.room.getCustomProperties();
+        const props = p1.room.customProperties;
         expect(props.id).to.be.equal(1);
         expect(props.title).to.be.equal('room312');
         expect(props.gold).to.be.equal(1000);
@@ -122,7 +122,7 @@ describe('test change properties', () => {
       await p0.createRoom({ roomName });
       p0.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
         const { player } = data;
-        const props = player.getCustomProperties();
+        const props = player.customProperties;
         expect(props.nickname).to.be.equal('Li Lei');
         expect(props.gold).to.be.equal(1000);
         const { poker } = props;
@@ -145,7 +145,7 @@ describe('test change properties', () => {
       await p1.joinRoom(roomName);
       p1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, data => {
         const { player } = data;
-        const props = player.getCustomProperties();
+        const props = player.customProperties;
         expect(props.nickname).to.be.equal('Li Lei');
         expect(props.gold).to.be.equal(1000);
         const { poker } = props;
@@ -193,7 +193,7 @@ describe('test change properties', () => {
       await p0.createRoom({ roomName });
       p0.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
         const { player } = data;
-        const props = player.getCustomProperties();
+        const props = player.customProperties;
         expect(props.id).to.be.equal(1);
         expect(props.nickname).to.be.equal('Li Lei');
         expect(props.gold).to.be.equal(1000);
@@ -209,7 +209,7 @@ describe('test change properties', () => {
       await p1.joinRoom(roomName);
       p1.on(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, async data => {
         const { player } = data;
-        const props = player.getCustomProperties();
+        const props = player.customProperties;
         expect(props.id).to.be.equal(1);
         expect(props.nickname).to.be.equal('Li Lei');
         expect(props.gold).to.be.equal(1000);
@@ -259,7 +259,7 @@ describe('test change properties', () => {
     debug(master);
     const me = p1.room.getPlayer(p1.player.actorId);
     debug(me);
-    expect(master.getCustomProperties().ready).to.be.equal(true);
+    expect(master.customProperties.ready).to.be.equal(true);
     await p0.close();
     await p1.close();
   });

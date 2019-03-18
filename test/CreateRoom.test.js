@@ -47,7 +47,7 @@ describe('test create room', () => {
     expect(p.room.name).to.be.equal(roomName);
     expect(p.room.visible).to.be.equal(false);
     expect(p.room.maxPlayerCount).to.be.equal(2);
-    const props = p.room.getCustomProperties();
+    const props = p.room.customProperties;
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
     expect(p.room.expectedUserIds).to.be.deep.equal(['world']);
@@ -84,10 +84,10 @@ describe('test create room', () => {
       p0.on(Event.PLAYER_ROOM_JOINED, async data => {
         const { newPlayer } = data;
         expect(p0.room.playerList.length).to.be.equal(2);
-        expect(p0.player.isMaster()).to.be.equal(true);
-        expect(newPlayer.isMaster()).to.be.equal(false);
-        expect(p0.player.isLocal()).to.be.equal(true);
-        expect(newPlayer.isLocal()).to.be.equal(false);
+        expect(p0.player.isMaster).to.be.equal(true);
+        expect(newPlayer.isMaster).to.be.equal(false);
+        expect(p0.player.isLocal).to.be.equal(true);
+        expect(newPlayer.isLocal).to.be.equal(false);
         expect(p0.room.playerList.length).to.be.equal(2);
         f0 = true;
         if (f0 && f1) {

@@ -92,7 +92,7 @@ describe('test join room', () => {
     });
     p0.on(Event.PLAYER_ACTIVITY_CHANGED, data => {
       const { player } = data;
-      debug(`${player.userId}'s activity is ${player.isActive()}`);
+      debug(`${player.userId}'s activity is ${player.isActive}`);
     });
 
     await p1.connect();

@@ -126,23 +126,6 @@ export default class Room {
   }
 
   /**
-   * @deprecated
-   * 获取自定义属性
-   * @return {Object}
-   */
-  getCustomProperties() {
-    return this._properties;
-  }
-
-  /**
-   * 获取自定义属性
-   * @return {Object}
-   */
-  get CustomProperties() {
-    return this._properties;
-  }
-
-  /**
    * 获取自定义属性
    * @return {Object}
    */
