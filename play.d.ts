@@ -147,7 +147,7 @@ export class Player {
 
   readonly isMaster: boolean;
 
-  readonly isInActive: boolean;
+  readonly isActive: boolean;
 
   setCustomProperties(
     properties: CustomProperties,

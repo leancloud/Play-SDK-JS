@@ -39,7 +39,8 @@ export default class Player {
 
   /**
    * 判断是不是当前客户端玩家
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
   get isLocal() {
     return (
@@ -49,7 +50,8 @@ export default class Player {
 
   /**
    * 判断是不是主机玩家
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
   get isMaster() {
     return this._actorId !== -1 && this._play._room.masterId === this._actorId;
@@ -57,7 +59,8 @@ export default class Player {
 
   /**
    * 判断是不是活跃状态
-   * @return {Boolean}
+   * @type {Boolean}
+   * @readonly
    */
   get isActive() {
     return this.active;
@@ -79,7 +82,8 @@ export default class Player {
 
   /**
    * 获取自定义属性
-   * @return {Object}
+   * @type {Object}
+   * @readonly
    */
   get customProperties() {
     return this.properties;

@@ -346,7 +346,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取当前所在房间
-   * @return {Room}
+   * @type {Room}
    * @readonly
    */
   get room() {
@@ -355,7 +355,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取当前玩家
-   * @return {Player}
+   * @type {Player}
    * @readonly
    */
   get player() {
@@ -364,7 +364,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取房间列表
-   * @return {Array.<LobbyRoom>}
+   * @type {Array.<LobbyRoom>}
    * @readonly
    */
   get lobbyRoomList() {
@@ -422,7 +422,8 @@ export default class Client extends EventEmitter {
 
   /**
    * 获取用户 id
-   * @return {String}
+   * @type {String}
+   * @readonly
    */
   get userId() {
     return this._userId;

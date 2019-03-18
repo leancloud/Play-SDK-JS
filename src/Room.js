@@ -66,6 +66,7 @@ export default class Room {
 
   /**
    * 获取房主
+   * @type {Player}
    * @readonly
    */
   get master() {
@@ -109,7 +110,7 @@ export default class Room {
 
   /**
    * 获取房间内的玩家列表
-   * @return {Array.<Player>}
+   * @type {Array.<Player>}
    * @readonly
    */
   get playerList() {
@@ -128,7 +129,8 @@ export default class Room {
 
   /**
    * 获取自定义属性
-   * @return {Object}
+   * @type {Object}
+   * @readonly
    */
   get customProperties() {
     return this._properties;
