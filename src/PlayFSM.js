@@ -401,7 +401,10 @@ const PlayFSM = machina.Fsm.extend({
           .then(
             tap(res => {
               const { attr } = res;
-              this._play._room._mergeProperties(attr);
+              if (attr) {
+                // 如果属性没变化，服务端则不会下发 attr 属性
+                this._play._room._mergeProperties(attr);
+              }
             })
           );
       },
@@ -412,8 +415,10 @@ const PlayFSM = machina.Fsm.extend({
           .then(
             tap(res => {
               const { actorId: aId, attr } = res;
-              const player = this._play._room.getPlayer(aId);
-              player._mergeProperties(attr);
+              if (aId && attr) {
+                const player = this._play._room.getPlayer(aId);
+                player._mergeProperties(attr);
+              }
             })
           );
       },
