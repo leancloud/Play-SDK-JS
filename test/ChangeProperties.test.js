@@ -263,4 +263,20 @@ describe('test change properties', () => {
     await p0.close();
     await p1.close();
   });
+
+  it('test change properties with same value', async () => {
+    const roomName = 'tcp5_r';
+    const p0 = newPlay('tcp5_0');
+
+    await p0.connect();
+    await p0.createRoom({ roomName });
+    const props = {
+      ready: true,
+    };
+    await p0.room.setCustomProperties(props);
+    await p0.room.setCustomProperties(props);
+    await p0.player.setCustomProperties(props);
+    await p0.player.setCustomProperties(props);
+    await p0.close();
+  });
 });
