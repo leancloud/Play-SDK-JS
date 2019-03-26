@@ -440,7 +440,7 @@ const PlayFSM = machina.Fsm.extend({
       },
 
       resumeMessageQueue() {
-        this._gameConn._pauseMessageQueue();
+        this._gameConn._resumeMessageQueue();
       },
 
       _simulateDisconnection() {
