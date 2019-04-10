@@ -228,8 +228,8 @@ export default class LobbyConnection extends Connection {
           const { reasonCode, detail } = res;
           reject(new PlayError(reasonCode, detail));
         } else {
-          const { cid } = res;
-          resolve(cid);
+          const lobbyRoom = new LobbyRoom(res);
+          resolve(lobbyRoom);
         }
       } catch (err) {
         reject(err);

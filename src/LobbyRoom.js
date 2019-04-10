@@ -3,12 +3,40 @@
  */
 export default class LobbyRoom {
   constructor(lobbyRoomDTO) {
-    this._roomName = lobbyRoomDTO.cid;
-    this._maxPlayerCount = lobbyRoomDTO.maxMembers;
-    this._expectedUserIds = lobbyRoomDTO.expectMembers;
-    this._emptyRoomTtl = lobbyRoomDTO.emptyRoomTtl;
-    this._playerTtl = lobbyRoomDTO.playerTtl;
-    this._playerCount = lobbyRoomDTO.playerCount;
+    const {
+      cid,
+      maxMembers,
+      expectMembers,
+      emptyRoomTtl,
+      playerTtl,
+      playerCount,
+      visible,
+      open,
+    } = lobbyRoomDTO;
+    if (cid !== undefined) {
+      this._roomName = cid;
+    }
+    if (maxMembers !== undefined) {
+      this._maxPlayerCount = maxMembers;
+    }
+    if (expectMembers !== undefined) {
+      this._expectedUserIds = expectMembers;
+    }
+    if (emptyRoomTtl !== undefined) {
+      this._emptyRoomTtl = emptyRoomTtl;
+    }
+    if (playerTtl !== undefined) {
+      this._playerTtl = playerTtl;
+    }
+    if (playerCount !== undefined) {
+      this._playerCount = playerCount;
+    }
+    if (visible !== undefined) {
+      this._visible = visible;
+    }
+    if (open !== undefined) {
+      this._open = open;
+    }
     if (lobbyRoomDTO.attr) {
       this._customRoomProperties = lobbyRoomDTO.attr;
     }
@@ -75,5 +103,23 @@ export default class LobbyRoom {
    */
   get customRoomProperties() {
     return this._customRoomProperties;
+  }
+
+  /**
+   * 房间是否可见
+   * @type {Boolean}
+   * @readonly
+   */
+  get visible() {
+    return this._visible;
+  }
+
+  /**
+   * 房间是否开启
+   * @type {Boolean}
+   * @readonly
+   */
+  get opened() {
+    return this._open;
   }
 }
