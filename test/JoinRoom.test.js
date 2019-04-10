@@ -220,4 +220,16 @@ describe('test join room', () => {
     await p1.close();
     await p2.close();
   });
+
+  it('test match random', async () => {
+    const p0 = newPlay('jr9');
+    await p0.connect();
+    try {
+      const cid = await p0.matchRandom();
+      await p0.joinRoom(cid);
+      p0.close();
+    } catch (err) {
+      debug(err);
+    }
+  });
 });

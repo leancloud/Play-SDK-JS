@@ -162,6 +162,10 @@ const PlayFSM = machina.Fsm.extend({
         return this._rejoinRoom(roomName);
       },
 
+      matchRandom(matchProperties, expectedUserIds) {
+        return this._lobbyConn.matchRandom(matchProperties, expectedUserIds);
+      },
+
       close() {
         return new Promise(async (resolve, reject) => {
           try {
