@@ -3,43 +3,15 @@
  */
 export default class LobbyRoom {
   constructor(lobbyRoomDTO) {
-    const {
-      cid,
-      maxMembers,
-      expectMembers,
-      emptyRoomTtl,
-      playerTtl,
-      playerCount,
-      visible,
-      open,
-    } = lobbyRoomDTO;
-    if (cid !== undefined) {
-      this._roomName = cid;
-    }
-    if (maxMembers !== undefined) {
-      this._maxPlayerCount = maxMembers;
-    }
-    if (expectMembers !== undefined) {
-      this._expectedUserIds = expectMembers;
-    }
-    if (emptyRoomTtl !== undefined) {
-      this._emptyRoomTtl = emptyRoomTtl;
-    }
-    if (playerTtl !== undefined) {
-      this._playerTtl = playerTtl;
-    }
-    if (playerCount !== undefined) {
-      this._playerCount = playerCount;
-    }
-    if (visible !== undefined) {
-      this._visible = visible;
-    }
-    if (open !== undefined) {
-      this._open = open;
-    }
-    if (lobbyRoomDTO.attr) {
-      this._customRoomProperties = lobbyRoomDTO.attr;
-    }
+    this._roomName = lobbyRoomDTO.cid;
+    this._maxPlayerCount = lobbyRoomDTO.maxMembers;
+    this._expectedUserIds = lobbyRoomDTO.expectMembers;
+    this._emptyRoomTtl = lobbyRoomDTO.emptyRoomTtl;
+    this._playerTtl = lobbyRoomDTO.playerTtl;
+    this._playerCount = lobbyRoomDTO.playerCount;
+    this._visible = lobbyRoomDTO.visible;
+    this._open = lobbyRoomDTO.open;
+    this._customRoomProperties = lobbyRoomDTO.attr;
   }
 
   /**
@@ -111,7 +83,7 @@ export default class LobbyRoom {
    * @readonly
    */
   get visible() {
-    return this._visible;
+    return this._visible === true;
   }
 
   /**
@@ -120,6 +92,6 @@ export default class LobbyRoom {
    * @readonly
    */
   get opened() {
-    return this._open;
+    return this._open === true;
   }
 }
