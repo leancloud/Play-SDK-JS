@@ -1,4 +1,4 @@
-import { newPlay } from './Utils';
+import { newPlay, newQCloudPlay } from './Utils';
 import Event from '../src/Event';
 
 const { expect } = require('chai');
@@ -219,5 +219,40 @@ describe('test join room', () => {
     await p0.close();
     await p1.close();
     await p2.close();
+  });
+
+  it('test match random', async () => {
+    const roomName = 'jr9_r';
+    const p0 = newQCloudPlay('jr9_0');
+    const p1 = newQCloudPlay('jr9_1');
+    try {
+      await p0.connect();
+      const props = {
+        lv: 2,
+      };
+      const options = {
+        customRoomProperties: props,
+        customRoomPropertyKeysForLobby: ['lv'],
+      };
+      await p0.createRoom({
+        roomName,
+        roomOptions: options,
+      });
+      await p1.connect();
+      const matchProps = {
+        lv: 2,
+      };
+      const lobbyRoom = await p1.matchRandom({
+        matchProperties: matchProps,
+      });
+      debug(JSON.stringify(lobbyRoom));
+      await p1.joinRoom(lobbyRoom.roomName);
+      p0.close();
+      p1.close();
+    } catch (err) {
+      debug(err);
+      p0.close();
+      p1.close();
+    }
   });
 });

@@ -9,9 +9,9 @@ export default class LobbyRoom {
     this._emptyRoomTtl = lobbyRoomDTO.emptyRoomTtl;
     this._playerTtl = lobbyRoomDTO.playerTtl;
     this._playerCount = lobbyRoomDTO.playerCount;
-    if (lobbyRoomDTO.attr) {
-      this._customRoomProperties = lobbyRoomDTO.attr;
-    }
+    this._visible = lobbyRoomDTO.visible;
+    this._open = lobbyRoomDTO.open;
+    this._customRoomProperties = lobbyRoomDTO.attr;
   }
 
   /**
@@ -75,5 +75,23 @@ export default class LobbyRoom {
    */
   get customRoomProperties() {
     return this._customRoomProperties;
+  }
+
+  /**
+   * 房间是否可见
+   * @type {Boolean}
+   * @readonly
+   */
+  get visible() {
+    return this._visible === true;
+  }
+
+  /**
+   * 房间是否开启
+   * @type {Boolean}
+   * @readonly
+   */
+  get opened() {
+    return this._open === true;
   }
 }

@@ -210,6 +210,33 @@ export default class LobbyConnection extends Connection {
     });
   }
 
+  matchRandom(matchProperties, expectedUserIds) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const msg = {
+          cmd: 'conv',
+          op: 'match-random',
+        };
+        if (matchProperties) {
+          msg.expectAttr = matchProperties;
+        }
+        if (expectedUserIds) {
+          msg.expectMembers = expectedUserIds;
+        }
+        const res = await super.send(msg);
+        if (res.reasonCode) {
+          const { reasonCode, detail } = res;
+          reject(new PlayError(reasonCode, detail));
+        } else {
+          const lobbyRoom = new LobbyRoom(res);
+          resolve(lobbyRoom);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
   _getPingDuration() {
     return LOBBY_KEEPALIVE_DURATION;
   }
