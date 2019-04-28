@@ -222,7 +222,7 @@ export default class GameConnection extends Connection {
   }
 
   _handlePlayerLeftMsg(msg) {
-    const { initByActor: actorId } = msg;
+    const { actorId } = msg;
     this.emit(PLAYER_LEFT_EVENT, actorId);
   }
 
