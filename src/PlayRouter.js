@@ -1,14 +1,19 @@
 import request from 'superagent';
 import { debug } from './Logger';
 
-export default class AppRouter {
-  constructor(appId) {
+export default class PlayRouter {
+  constructor(appId, playServer) {
     this._appId = appId;
+    this._playServer = playServer;
     this._url = null;
     this._serverValidTimestamp = 0;
   }
 
   fetch() {
+    // 私有部署和本地调试
+    if (this._playServer !== undefined) {
+      return Promise.resolve(`${this._playServer}/router`);
+    }
     const now = Date.now();
     if (now < this._serverValidTimestamp) {
       // 在有效期内，则直接返回缓存数据

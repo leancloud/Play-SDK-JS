@@ -4,7 +4,7 @@ import Event from '../src/Event';
 import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
 import LobbyRouter from '../src/LobbyRouter';
-import AppRouter from '../src/AppRouter';
+import PlayRouter from '../src/PlayRouter';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -86,12 +86,12 @@ describe('test connect', () => {
   });
 
   it('test ws', async () => {
-    const appRouter = new AppRouter(APP_ID);
+    const playRouter = new PlayRouter(APP_ID);
     const router = new LobbyRouter({
       appId: APP_ID,
       insecure: true,
     });
-    const lobbyRouterUrl = await appRouter.fetch();
+    const lobbyRouterUrl = await playRouter.fetch();
     const serverInfo = await router.fetch(lobbyRouterUrl);
     const { primaryServer, secondaryServer } = serverInfo;
     expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
