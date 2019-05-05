@@ -12,7 +12,7 @@ export default class AppRouter {
   fetch() {
     // 私有部署和本地调试
     if (this._playRouter !== undefined) {
-      return Promise.resolve(`https://${this._playRouter}/router`);
+      return Promise.resolve(`${this._playRouter}/router`);
     }
     const now = Date.now();
     if (now < this._serverValidTimestamp) {

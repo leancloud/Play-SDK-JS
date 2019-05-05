@@ -13,7 +13,7 @@ describe('test router', () => {
       appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
       appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
       userId: 'tar1',
-      playRouter: 'game-router-cn-e1.leancloud.cn/v1',
+      playRouter: 'https://game-router-cn-e1.leancloud.cn/v1',
     });
     await p.connect();
     await p.createRoom();
