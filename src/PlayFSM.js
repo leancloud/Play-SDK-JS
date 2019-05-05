@@ -18,7 +18,7 @@ import GameConnection, {
   ROOM_KICKED_EVENT,
 } from './GameConnection';
 import Event from './Event';
-import AppRouter from './AppRouter';
+import PlayRouter from './PlayRouter';
 import { tap } from './Utils';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
@@ -37,7 +37,7 @@ const PlayFSM = machina.Fsm.extend({
       _onEnter() {
         debug('init _onEnter()');
         const { _appId, _insecure, _feature, _playRouter } = this._play;
-        this._appRouter = new AppRouter(_appId, _playRouter);
+        this._playRouter = new PlayRouter(_appId, _playRouter);
         this._router = new LobbyRouter({
           appId: _appId,
           insecure: _insecure,
@@ -680,7 +680,7 @@ const PlayFSM = machina.Fsm.extend({
     return new Promise(async (resolve, reject) => {
       try {
         // 先获取大厅路由地址
-        const lobbyRouterUrl = await this._appRouter.fetch();
+        const lobbyRouterUrl = await this._playRouter.fetch();
         // 再获取大厅服务器地址
         const lobbyServerInfo = await this._router.fetch(lobbyRouterUrl);
         const { primaryServer, secondaryServer } = lobbyServerInfo;
