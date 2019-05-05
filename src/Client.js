@@ -13,6 +13,7 @@ import ReceiverGroup from './ReceiverGroup';
  * @param {String} opts.appKey APP KEY
  * @param {Boolean} [opts.ssl] 是否使用 ssl，仅在 Client Engine 中可用
  * @param {String} [opts.gameVersion] 游戏版本号
+ * @param {String} [opts.playRouter] 路由地址
  */
 export default class Client extends EventEmitter {
   constructor(opts) {
@@ -38,6 +39,12 @@ export default class Client extends EventEmitter {
     ) {
       throw new TypeError(`${opts.gameVersion} is not a string`);
     }
+    if (
+      opts.playRouter !== undefined &&
+      !(typeof opts.playRouter === 'string')
+    ) {
+      throw new TypeError(`${opts.playRouter} is not a string`);
+    }
     this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
@@ -50,6 +57,7 @@ export default class Client extends EventEmitter {
     } else {
       this._gameVersion = '0.0.1';
     }
+    this._playRouter = opts.playRouter;
     // fsm
     this._fsm = new PlayFSM({
       play: this,
