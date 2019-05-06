@@ -227,6 +227,7 @@ export class Client extends EventEmitter<PlayEvent> {
     ssl?: boolean;
     feature?: string;
     gameVersion?: string;
+    playServer?: string;
   });
 
   connect(): Promise<Client>;
