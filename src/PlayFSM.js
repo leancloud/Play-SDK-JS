@@ -36,8 +36,8 @@ const PlayFSM = machina.Fsm.extend({
     init: {
       _onEnter() {
         debug('init _onEnter()');
-        const { _appId, _insecure, _feature, _playRouter } = this._play;
-        this._playRouter = new PlayRouter(_appId, _playRouter);
+        const { _appId, _insecure, _feature, _playServer } = this._play;
+        this._playRouter = new PlayRouter(_appId, _playServer);
         this._router = new LobbyRouter({
           appId: _appId,
           insecure: _insecure,
