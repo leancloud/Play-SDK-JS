@@ -15,7 +15,7 @@ describe('test custom event', () => {
       await p0.createRoom({ roomName });
       p0.on(Event.CUSTOM_EVENT, async event => {
         const { eventId, eventData } = event;
-        expect(eventId).to.be.equal('hi');
+        expect(eventId).to.be.equal(1);
         expect(eventData.name).to.be.equal('aaaa');
         expect(eventData.body).to.be.equal('bbbb');
         await p0.close();
@@ -32,7 +32,7 @@ describe('test custom event', () => {
       const options = {
         receiverGroup: ReceiverGroup.MasterClient,
       };
-      p1.sendEvent('hi', eventData, options);
+      p1.sendEvent(1, eventData, options);
     }));
 
   it('test custom event with target ids', async () =>
@@ -47,7 +47,7 @@ describe('test custom event', () => {
       await p0.createRoom({ roomName });
       p0.on(Event.CUSTOM_EVENT, async event => {
         const { eventId, eventData } = event;
-        expect(eventId).to.be.equal('hello');
+        expect(eventId).to.be.equal(2);
         expect(eventData.name).to.be.equal('aaaa');
         expect(eventData.body).to.be.equal('bbbb');
         f0 = true;
@@ -62,7 +62,7 @@ describe('test custom event', () => {
       await p1.joinRoom(roomName);
       p1.on(Event.CUSTOM_EVENT, async event => {
         const { eventId, eventData } = event;
-        expect(eventId).to.be.equal('hello');
+        expect(eventId).to.be.equal(2);
         expect(eventData.name).to.be.equal('aaaa');
         expect(eventData.body).to.be.equal('bbbb');
         f1 = true;
@@ -79,7 +79,7 @@ describe('test custom event', () => {
       const options = {
         targetActorIds: [1, 2],
       };
-      p1.sendEvent('hello', eventData, options);
+      p1.sendEvent(2, eventData, options);
     }));
 
   it('test simple event', async () =>
@@ -94,7 +94,7 @@ describe('test custom event', () => {
       await p0.createRoom({ roomName });
       p0.on(Event.CUSTOM_EVENT, async event => {
         const { eventId } = event;
-        expect(eventId).to.be.equal('hi');
+        expect(eventId).to.be.equal(3);
         f0 = true;
         if (f0 && f1) {
           await p0.close();
@@ -107,7 +107,7 @@ describe('test custom event', () => {
       await p1.joinRoom(roomName);
       p1.on(Event.CUSTOM_EVENT, async event => {
         const { eventId } = event;
-        expect(eventId).to.be.equal('hi');
+        expect(eventId).to.be.equal(3);
         f1 = true;
         if (f0 && f1) {
           await p0.close();
@@ -115,6 +115,6 @@ describe('test custom event', () => {
           resolve();
         }
       });
-      p1.sendEvent('hi');
+      p1.sendEvent(3);
     }));
 });

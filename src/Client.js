@@ -301,8 +301,8 @@ export default class Client extends EventEmitter {
     eventData = {},
     options = { receiverGroup: ReceiverGroup.All }
   ) {
-    if (!(typeof eventId === 'string') && !(typeof eventId === 'number')) {
-      throw new TypeError(`${eventId} is not a string or number`);
+    if (!(typeof eventId === 'number')) {
+      throw new TypeError(`${eventId} is not a number`);
     }
     if (!(typeof eventData === 'object')) {
       throw new TypeError(`${eventData} is not an object`);
