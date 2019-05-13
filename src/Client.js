@@ -304,6 +304,9 @@ export default class Client extends EventEmitter {
     if (!(typeof eventId === 'number')) {
       throw new TypeError(`${eventId} is not a number`);
     }
+    if (eventId < -128 || eventId > 127) {
+      throw new Error('eventId must be [-128, 127]');
+    }
     if (!(typeof eventData === 'object')) {
       throw new TypeError(`${eventData} is not an object`);
     }
