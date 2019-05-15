@@ -215,35 +215,24 @@ export default class Client extends EventEmitter {
    * 随机加入房间
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
-   * @param {Array.<String>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  async joinRandomRoom({
-    matchProperties = null,
-    expectedUserIds = null,
-  } = {}) {
+  async joinRandomRoom({ matchProperties = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
+    return this._fsm.handle('joinRandomRoom', matchProperties, null);
   }
 
   /**
    * 随机匹配，匹配成功后并不加入房间，而是返回房间 id
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
-   * @param {Array.<String>} [opts.expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
-  async matchRandom({ matchProperties = null, expectedUserIds = null } = {}) {
+  async matchRandom({ matchProperties = null } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    return this._fsm.handle('matchRandom', matchProperties, expectedUserIds);
+    return this._fsm.handle('matchRandom', matchProperties, null);
   }
 
   /**

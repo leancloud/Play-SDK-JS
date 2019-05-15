@@ -265,15 +265,9 @@ export class Client extends EventEmitter<PlayEvent> {
     }
   ): Promise<Room>;
 
-  joinRandomRoom(opts?: {
-    matchProperties?: Object;
-    expectedUserIds?: string[];
-  }): Promise<Room>;
+  joinRandomRoom(opts?: { matchProperties?: Object }): Promise<Room>;
 
-  matchRandom(opts?: {
-    matchProperties?: Object;
-    expectedUserIds?: string[];
-  }): Promise<Room>;
+  matchRandom(opts?: { matchProperties?: Object }): Promise<Room>;
 
   setRoomOpened(opened: boolean): Promise<void>;
 
