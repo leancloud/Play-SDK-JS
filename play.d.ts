@@ -218,6 +218,8 @@ export class Client extends EventEmitter<PlayEvent> {
 
   readonly player: Player;
 
+  readonly lobbyRoomList: LobbyRoom[];
+
   userId: string;
 
   constructor(opts: {
