@@ -270,6 +270,11 @@ export class Client extends EventEmitter<PlayEvent> {
     expectedUserIds?: string[];
   }): Promise<Room>;
 
+  matchRandom(opts?: {
+    matchProperties?: Object;
+    expectedUserIds?: string[];
+  }): Promise<Room>;
+
   setRoomOpened(opened: boolean): Promise<void>;
 
   setRoomVisible(visible: boolean): Promise<void>;
