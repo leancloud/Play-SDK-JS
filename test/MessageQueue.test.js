@@ -27,7 +27,7 @@ describe('test message queue', () => {
     const options = {
       receiverGroup: ReceiverGroup.MasterClient,
     };
-    await p1.sendEvent('hi', null, options);
+    await p1.sendEvent(1, null, options);
     return new Promise(resolve => {
       setTimeout(async () => {
         p0.resumeMessageQueue();
