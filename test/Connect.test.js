@@ -121,7 +121,7 @@ describe('test connect', () => {
     timer = setInterval(() => {
       debug('send custom event');
       p.sendEvent(
-        'hello',
+        123,
         {},
         {
           receiverGroup: ReceiverGroup.Others,
