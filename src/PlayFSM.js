@@ -162,8 +162,12 @@ const PlayFSM = machina.Fsm.extend({
         return this._rejoinRoom(roomName);
       },
 
-      matchRandom(matchProperties, expectedUserIds) {
-        return this._lobbyConn.matchRandom(matchProperties, expectedUserIds);
+      matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
+        return this._lobbyConn.matchRandom(
+          piggybackPeerId,
+          matchProperties,
+          expectedUserIds
+        );
       },
 
       close() {

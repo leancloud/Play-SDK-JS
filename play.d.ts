@@ -269,7 +269,10 @@ export class Client extends EventEmitter<PlayEvent> {
 
   joinRandomRoom(opts?: { matchProperties?: Object }): Promise<Room>;
 
-  matchRandom(opts?: { matchProperties?: Object }): Promise<LobbyRoom>;
+  matchRandom(
+    piggybackPeerId: string,
+    opts?: { matchProperties?: Object }
+  ): Promise<LobbyRoom>;
 
   setRoomOpened(opened: boolean): Promise<void>;
 

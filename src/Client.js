@@ -228,11 +228,19 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    */
-  async matchRandom({ matchProperties = null } = {}) {
+  async matchRandom(piggybackPeerId, { matchProperties = null } = {}) {
+    if (typeof piggybackPeerId !== 'string') {
+      throw new Error(`${piggybackPeerId} is not a string`);
+    }
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
-    return this._fsm.handle('matchRandom', matchProperties, null);
+    return this._fsm.handle(
+      'matchRandom',
+      piggybackPeerId,
+      matchProperties,
+      null
+    );
   }
 
   /**

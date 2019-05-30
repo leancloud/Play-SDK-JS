@@ -242,7 +242,7 @@ describe('test join room', () => {
       const matchProps = {
         lv: 2,
       };
-      const lobbyRoom = await p1.matchRandom({
+      const lobbyRoom = await p1.matchRandom('jr9_1', {
         matchProperties: matchProps,
       });
       debug(JSON.stringify(lobbyRoom));
