@@ -9,7 +9,7 @@ export default class Room {
   static _newFromJSONObject(roomJSONObject) {
     const room = new Room();
     room._name = roomJSONObject.cid;
-    room._opened = roomJSONObject.open;
+    room._open = roomJSONObject.open;
     room._visible = roomJSONObject.visible;
     room._maxPlayerCount = roomJSONObject.maxMembers;
     room._masterActorId = roomJSONObject.masterActorId;
@@ -42,8 +42,8 @@ export default class Room {
    * @type {Boolean}
    * @readonly
    */
-  get opened() {
-    return this._opened;
+  get open() {
+    return this._open;
   }
 
   /**
@@ -156,10 +156,10 @@ export default class Room {
 
   /**
    * 设置房间开启 / 关闭
-   * @param {Boolean} opened 是否开启
+   * @param {Boolean} open 是否开启
    */
-  async setOpened(opened) {
-    return this._play.setRoomOpened(opened);
+  async setOpen(open) {
+    return this._play.setRoomOpen(open);
   }
 
   /**
@@ -168,6 +168,45 @@ export default class Room {
    */
   async setVisible(visible) {
     return this._play.setRoomVisible(visible);
+  }
+
+  /**
+   * 设置房间允许的最大玩家数量
+   * @param {*} count 数量
+   */
+  async setMaxPlayerCount(count) {
+    return this._play.setRoomMaxPlayerCount(count);
+  }
+
+  /**
+   * 设置房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 玩家 Id 列表
+   */
+  async setExpectedUserIds(expectedUserIds) {
+    return this._play.setRoomExpectedUserIds(expectedUserIds);
+  }
+
+  /**
+   * 清空房间占位玩家 Id 列表
+   */
+  async clearExpectedUserIds() {
+    return this._play.clearRoomExpectedUserIds();
+  }
+
+  /**
+   * 增加房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 增加的玩家 Id 列表
+   */
+  async addExpectedUserIds(expectedUserIds) {
+    return this._play.addRoomExpectedUserIds(expectedUserIds);
+  }
+
+  /**
+   * 移除房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 移除的玩家 Id 列表
+   */
+  async removeExpectedUserIds(expectedUserIds) {
+    return this._play.removeRoomExpectedUserIds(expectedUserIds);
   }
 
   /**
@@ -208,5 +247,21 @@ export default class Room {
 
   _mergeProperties(changedProperties) {
     this._properties = Object.assign(this._properties, changedProperties);
+  }
+
+  _mergeSystemProps(changedProps) {
+    const { open, visible, maxMembers, expectMembers } = changedProps;
+    if (open !== undefined) {
+      this._open = open;
+    }
+    if (visible !== undefined) {
+      this._visible = visible;
+    }
+    if (maxMembers !== undefined) {
+      this._maxPlayerCount = maxMembers;
+    }
+    if (expectMembers !== undefined) {
+      this._expectedUserIds = expectMembers;
+    }
   }
 }

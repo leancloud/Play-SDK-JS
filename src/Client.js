@@ -116,7 +116,7 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 创建房间选项
    * @param {String} [opts.roomName] 房间名称，在整个游戏中唯一，默认值为 null，则由服务端分配一个唯一 Id
    * @param {Object} [opts.roomOptions] 创建房间选项，默认值为 null
-   * @param {Boolean} [opts.roomOptions.opened] 房间是否打开
+   * @param {Boolean} [opts.roomOptions.open] 房间是否打开
    * @param {Boolean} [opts.roomOptions.visible] 房间是否可见，只有「可见」的房间会出现在房间列表里
    * @param {Number} [opts.roomOptions.emptyRoomTtl] 房间为空后，延迟销毁的时间
    * @param {Number} [opts.roomOptions.playerTtl] 玩家掉线后，延迟销毁的时间
@@ -180,7 +180,7 @@ export default class Client extends EventEmitter {
    * @param {String} roomName 房间名称
    * @param {Object} [opts] 创建房间选项
    * @param {Object} [opts.roomOptions] 创建房间选项，默认值为 null
-   * @param {Boolean} [opts.roomOptions.opened] 房间是否打开
+   * @param {Boolean} [opts.roomOptions.open] 房间是否打开
    * @param {Boolean} [opts.roomOptions.visible] 房间是否可见，只有「可见」的房间会出现在房间列表里
    * @param {Number} [opts.roomOptions.emptyRoomTtl] 房间为空后，延迟销毁的时间
    * @param {Number} [opts.roomOptions.playerTtl] 玩家掉线后，延迟销毁的时间
@@ -245,16 +245,16 @@ export default class Client extends EventEmitter {
 
   /**
    * 设置房间开启 / 关闭
-   * @param {Boolean} opened 是否开启
+   * @param {Boolean} open 是否开启
    */
-  async setRoomOpened(opened) {
-    if (!(typeof opened === 'boolean')) {
-      throw new TypeError(`${opened} is not a boolean value`);
+  async setRoomOpen(open) {
+    if (!(typeof open === 'boolean')) {
+      throw new TypeError(`${open} is not a boolean value`);
     }
     if (this._room === null) {
       throw new Error('room is null');
     }
-    return this._fsm.handle('setRoomOpened', opened);
+    return this._fsm.handle('setRoomOpen', open);
   }
 
   /**
@@ -269,6 +269,57 @@ export default class Client extends EventEmitter {
       throw new Error('room is null');
     }
     return this._fsm.handle('setRoomVisible', visible);
+  }
+
+  /**
+   * 设置房间允许的最大玩家数量
+   * @param {*} count 数量
+   */
+  async setRoomMaxPlayerCount(count) {
+    if (!(typeof count === 'number') || count < 1) {
+      throw new TypeError(`${count} is not a positive number`);
+    }
+    return this._fsm.handle('setRoomMaxPlayerCount', count);
+  }
+
+  /**
+   * 设置房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 玩家 Id 列表
+   */
+  async setRoomExpectedUserIds(expectedUserIds) {
+    if (!Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array`);
+    }
+    return this._fsm.handle('setRoomExpectedUserIds', expectedUserIds);
+  }
+
+  /**
+   * 清空房间占位玩家 Id 列表
+   */
+  async clearRoomExpectedUserIds() {
+    return this._fsm.handle('clearRoomExpectedUserIds');
+  }
+
+  /**
+   * 增加房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 增加的玩家 Id 列表
+   */
+  async addRoomExpectedUserIds(expectedUserIds) {
+    if (!Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array`);
+    }
+    return this._fsm.handle('addRoomExpectedUserIds', expectedUserIds);
+  }
+
+  /**
+   * 移除房间占位玩家 Id 列表
+   * @param {*} expectedUserIds 移除的玩家 Id 列表
+   */
+  async removeRoomExpectedUserIds(expectedUserIds) {
+    if (!Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array`);
+    }
+    return this._fsm.handle('removeRoomExpectedUserIds', expectedUserIds);
   }
 
   /**

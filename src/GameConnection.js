@@ -12,6 +12,8 @@ export const MASTER_CHANGED_EVENT = 'MASTER_CHANGED_EVENT';
 export const ROOM_OPEN_CHANGED_EVENT = 'ROOM_OPEN_CHANGED_EVENT';
 export const ROOM_VISIBLE_CHANGED_EVENT = 'ROOM_VISIBLE_CHANGED_EVENT';
 export const ROOM_PROPERTIES_CHANGED_EVENT = 'ROOM_PROPERTIES_CHANGED_EVENT';
+export const ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT =
+  'ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT';
 export const PLAYER_PROPERTIES_CHANGED_EVENT =
   'PLAYER_PROPERTIES_CHANGED_EVENT';
 export const PLAYER_OFFLINE_EVENT = 'PLAYER_OFFLINE_EVENT';
@@ -82,11 +84,13 @@ export default class GameConnection extends Connection {
     await super.send(msg, undefined, false);
   }
 
-  setRoomOpened(opened) {
+  setRoomOpen(open) {
     const msg = {
       cmd: 'conv',
-      op: 'open',
-      toggle: opened,
+      op: 'update-system-property',
+      sysAttr: {
+        open,
+      },
     };
     return super.send(msg, undefined, false);
   }
@@ -94,8 +98,73 @@ export default class GameConnection extends Connection {
   setRoomVisible(visible) {
     const msg = {
       cmd: 'conv',
-      op: 'visible',
-      toggle: visible,
+      op: 'update-system-property',
+      sysAttr: {
+        visible,
+      },
+    };
+    return super.send(msg, undefined, false);
+  }
+
+  setRoomMaxPlayerCount(count) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      sysAttr: {
+        maxMembers: count,
+      },
+    };
+    return super.send(msg, undefined, false);
+  }
+
+  setRoomExpectedUserIds(expectedUserIds) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      sysAttr: {
+        expectMembers: {
+          $set: expectedUserIds,
+        },
+      },
+    };
+    return super.send(msg, undefined, false);
+  }
+
+  clearRoomExpectedUserIds() {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      sysAttr: {
+        expectMembers: {
+          $drop: true,
+        },
+      },
+    };
+    return super.send(msg, undefined, false);
+  }
+
+  addRoomExpectedUserIds(expectedUserIds) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      sysAttr: {
+        expectMembers: {
+          $add: expectedUserIds,
+        },
+      },
+    };
+    return super.send(msg, undefined, false);
+  }
+
+  removeRoomExpectedUserIds(expectedUserIds) {
+    const msg = {
+      cmd: 'conv',
+      op: 'update-system-property',
+      sysAttr: {
+        expectMembers: {
+          $remove: expectedUserIds,
+        },
+      },
     };
     return super.send(msg, undefined, false);
   }
@@ -174,7 +243,7 @@ export default class GameConnection extends Connection {
           case 'master-client-changed':
             this._handleMasterChangedMsg(msg);
             break;
-          case 'opened-notify':
+          case 'open-notify':
             this._handleRoomOpenChangedMsg(msg);
             break;
           case 'visible-notify':
@@ -194,6 +263,9 @@ export default class GameConnection extends Connection {
             break;
           case 'kicked-notice':
             this._handleKickedMsg(msg);
+            break;
+          case 'system-property-updated-notify':
+            this._handleRoomSystemPropsChangedMsg(msg);
             break;
           default:
             super._handleUnknownMsg(msg);
@@ -270,5 +342,16 @@ export default class GameConnection extends Connection {
   _handleKickedMsg(msg) {
     const { appCode, appMsg } = msg;
     this.emit(ROOM_KICKED_EVENT, appCode, appMsg);
+  }
+
+  _handleRoomSystemPropsChangedMsg(msg) {
+    const { sysAttr } = msg;
+    const changedProps = {
+      open: sysAttr.open,
+      visible: sysAttr.visible,
+      maxPlayerCount: sysAttr.maxMembers,
+      expectedUserIds: sysAttr.expectMembers,
+    };
+    this.emit(ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT, changedProps);
   }
 }

@@ -11,6 +11,7 @@ import GameConnection, {
   ROOM_OPEN_CHANGED_EVENT,
   ROOM_VISIBLE_CHANGED_EVENT,
   ROOM_PROPERTIES_CHANGED_EVENT,
+  ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
   PLAYER_PROPERTIES_CHANGED_EVENT,
   PLAYER_OFFLINE_EVENT,
   PLAYER_ONLINE_EVENT,
@@ -267,9 +268,9 @@ const PlayFSM = machina.Fsm.extend({
           });
         });
         this._gameConn.on(ROOM_OPEN_CHANGED_EVENT, open => {
-          this._play._room._opened = open;
+          this._play._room._open = open;
           this._play.emit(Event.ROOM_OPEN_CHANGED, {
-            opened: open,
+            open,
           });
         });
         this._gameConn.on(ROOM_VISIBLE_CHANGED_EVENT, visible => {
@@ -284,6 +285,15 @@ const PlayFSM = machina.Fsm.extend({
             changedProps,
           });
         });
+        this._gameConn.on(
+          ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
+          changedProps => {
+            this._play._room._mergeSystemProps(changedProps);
+            this._play.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+              changedProps,
+            });
+          }
+        );
         this._gameConn.on(
           PLAYER_PROPERTIES_CHANGED_EVENT,
           (actorId, changedProps) => {
@@ -363,11 +373,11 @@ const PlayFSM = machina.Fsm.extend({
         });
       },
 
-      setRoomOpened(opened) {
-        return this._gameConn.setRoomOpened(opened).then(
+      setRoomOpen(open) {
+        return this._gameConn.setRoomOpen(open).then(
           tap(res => {
-            const { toggle } = res;
-            this._play._room._opened = toggle;
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
           })
         );
       },
@@ -375,8 +385,53 @@ const PlayFSM = machina.Fsm.extend({
       setRoomVisible(visible) {
         return this._gameConn.setRoomVisible(visible).then(
           tap(res => {
-            const { toggle } = res;
-            this._play._room._visible = toggle;
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
+          })
+        );
+      },
+
+      setRoomMaxPlayerCount(count) {
+        return this._gameConn.setRoomMaxPlayerCount(count).then(
+          tap(res => {
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
+          })
+        );
+      },
+
+      setRoomExpectedUserIds(expectedUserIds) {
+        return this._gameConn.setRoomExpectedUserIds(expectedUserIds).then(
+          tap(res => {
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
+          })
+        );
+      },
+
+      clearRoomExpectedUserIds() {
+        return this._gameConn.clearRoomExpectedUserIds().then(
+          tap(res => {
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
+          })
+        );
+      },
+
+      addRoomExpectedUserIds(expectedUserIds) {
+        return this._gameConn.addRoomExpectedUserIds(expectedUserIds).then(
+          tap(res => {
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
+          })
+        );
+      },
+
+      removeRoomExpectedUserIds(expectedUserIds) {
+        return this._gameConn.removeRoomExpectedUserIds(expectedUserIds).then(
+          tap(res => {
+            const { sysAttr } = res;
+            this._play._room._mergeSystemProps(sysAttr);
           })
         );
       },
