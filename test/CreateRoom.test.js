@@ -1,4 +1,4 @@
-import { newPlay, newQCloudPlay } from './Utils';
+import { newPlay } from './Utils';
 import { error } from '../src/Logger';
 import Event from '../src/Event';
 
