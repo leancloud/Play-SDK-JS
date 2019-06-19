@@ -38,6 +38,7 @@ describe('test create room', () => {
         level: 2,
       },
       customRoomPropertiesKeysForLobby: ['level'],
+      pluginName: 'test_plugin',
     };
     const expectedUserIds = ['world'];
     const room = await p.joinOrCreateRoom(roomName, {

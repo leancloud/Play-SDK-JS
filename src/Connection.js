@@ -30,6 +30,9 @@ export function convertRoomOptions(roomOptions) {
   if (roomOptions.customRoomPropertyKeysForLobby)
     options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
   if (roomOptions.flag) options.flag = roomOptions.flag;
+  if (roomOptions.pluginName) {
+    options.pluginName = roomOptions.pluginName;
+  }
   return options;
 }
 
