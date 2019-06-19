@@ -210,12 +210,13 @@ export default class LobbyConnection extends Connection {
     });
   }
 
-  matchRandom(matchProperties, expectedUserIds) {
+  matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
     return new Promise(async (resolve, reject) => {
       try {
         const msg = {
           cmd: 'conv',
           op: 'match-random',
+          piggybackPeerId,
         };
         if (matchProperties) {
           msg.expectAttr = matchProperties;

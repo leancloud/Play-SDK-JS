@@ -110,6 +110,9 @@ declare interface PlayEvent {
   roomCustomPropertiesChanged: {
     changedProps: CustomProperties;
   };
+  roomSystemPropertiesChanged: {
+    changedProps: CustomProperties;
+  };
   playerCustomPropertiesChanged: {
     player: Player;
     changedProps: CustomProperties;
@@ -162,7 +165,7 @@ export class Player {
 export class Room {
   readonly name: string;
 
-  readonly opened: boolean;
+  readonly open: boolean;
 
   readonly visible: boolean;
 
@@ -187,9 +190,19 @@ export class Room {
 
   readonly customProperties: CustomProperties;
 
-  setOpened(opened: boolean): Promise<void>;
+  setOpen(open: boolean): Promise<void>;
 
   setVisible(visible: boolean): Promise<void>;
+
+  setRoomMaxPlayerCount(count: number): Promise<void>;
+
+  setRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
+
+  clearRoomExpectedUserIds(): Promise<void>;
+
+  addRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
+
+  removeRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
 
   setMaster(newMasterId: number): Promise<void>;
 
@@ -269,11 +282,24 @@ export class Client extends EventEmitter<PlayEvent> {
 
   joinRandomRoom(opts?: { matchProperties?: Object }): Promise<Room>;
 
-  matchRandom(opts?: { matchProperties?: Object }): Promise<LobbyRoom>;
+  matchRandom(
+    piggybackPeerId: string,
+    opts?: { matchProperties?: Object }
+  ): Promise<LobbyRoom>;
 
-  setRoomOpened(opened: boolean): Promise<void>;
+  setRoomOpen(open: boolean): Promise<void>;
 
   setRoomVisible(visible: boolean): Promise<void>;
+
+  setRoomMaxPlayerCount(count: number): Promise<void>;
+
+  setRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
+
+  clearRoomExpectedUserIds(): Promise<void>;
+
+  addRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
+
+  removeRoomExpectedUserIds(expectedUserIds: string[]): Promise<void>;
 
   setMaster(newMasterId: number): Promise<void>;
 

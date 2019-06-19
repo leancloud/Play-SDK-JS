@@ -91,7 +91,7 @@ export default class LobbyRoom {
    * @type {Boolean}
    * @readonly
    */
-  get opened() {
+  get open() {
     return this._open === true;
   }
 }

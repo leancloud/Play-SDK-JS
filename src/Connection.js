@@ -15,7 +15,7 @@ export const DISCONNECT_EVENT = 'DISCONNECT_EVENT';
 
 export function convertRoomOptions(roomOptions) {
   const options = {};
-  if (!roomOptions.opened) options.open = roomOptions.opened;
+  if (!roomOptions.open) options.open = roomOptions.open;
   if (!roomOptions.visible) options.visible = roomOptions.visible;
   if (roomOptions.emptyRoomTtl > 0)
     options.emptyRoomTtl = roomOptions.emptyRoomTtl;
@@ -52,7 +52,7 @@ export default class Connection extends EventEmitter {
       const { WebSocket } = adapters;
       this._ws = new WebSocket(server);
       this._ws.onopen = () => {
-        debug(`${this._userId} : ${this._flag} connection opened`);
+        debug(`${this._userId} : ${this._flag} connection open`);
         this._connected();
         resolve();
       };

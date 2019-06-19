@@ -90,10 +90,17 @@ const Event = {
    */
   MASTER_SWITCHED: 'masterSwitched',
   /**
+   * 房间系统属性变化
+   * @event Play#ROOM_SYSTEM_PROPERTIES_CHANGED
+   * @param {Object} payload
+   * @param {Object} payload.changedProps
+   */
+  ROOM_SYSTEM_PROPERTIES_CHANGED: 'roomSystemPropertiesChanged',
+  /**
    * 房间「开启 / 关闭」
    * @event Play#ROOM_OPEN_CHANGED
    * @param {Object} payload
-   * @param {Boolean} payload.opened
+   * @param {Boolean} payload.open
    */
   ROOM_OPEN_CHANGED: 'roomOpenChanged',
   /**
