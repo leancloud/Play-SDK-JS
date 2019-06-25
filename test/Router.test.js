@@ -13,7 +13,7 @@ describe('test router', () => {
       appId: 'pyon3kvufmleg773ahop2i7zy0tz2rfjx5bh82n7h5jzuwjg',
       appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
       userId: 'tar1',
-      playServer: 'https://api2.ziting.wang',
+      playServer: 'https://avoscloud.com',
     });
     await p.connect();
     await p.createRoom();
