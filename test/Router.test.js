@@ -10,10 +10,10 @@ describe('test router', () => {
 
   it('test play server', async () => {
     const p = new Client({
-      appId: 'pyon3kvufmleg773ahop2i7zy0tz2rfjx5bh82n7h5jzuwjg',
+      appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
       appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
       userId: 'tar1',
-      playServer: 'https://avoscloud.com',
+      playServer: 'https://fqr8l8ll.play.lncldapi.com',
     });
     await p.connect();
     await p.createRoom();
