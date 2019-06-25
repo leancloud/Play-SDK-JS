@@ -53,7 +53,7 @@ export default class Connection extends EventEmitter {
     this._userId = userId;
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      this._ws = new WebSocket(server);
+      this._ws = new WebSocket(server, 'protobuf.1');
       this._ws.onopen = () => {
         debug(`${this._userId} : ${this._flag} connection open`);
         this._connected();
