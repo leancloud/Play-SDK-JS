@@ -12,7 +12,7 @@ export default class PlayRouter {
   fetch() {
     // 私有部署和本地调试
     if (this._playServer !== undefined) {
-      return Promise.resolve(`${this._playServer}/router`);
+      return Promise.resolve(`${this._playServer}/1/multiplayer/router/route`);
     }
     const now = Date.now();
     if (now < this._serverValidTimestamp) {
@@ -47,7 +47,7 @@ export default class PlayRouter {
               if (routerServer === undefined) {
                 reject(new Error('router server is null'));
               }
-              this._url = `https://${routerServer}/1/multiplayer/router/router`;
+              this._url = `https://${routerServer}/1/multiplayer/router/route`;
               this._serverValidTimestamp = Date.now() + ttl * 1000;
               debug(`server valid timestamp: ${this._serverValidTimestamp}`);
               debug(`get app router from server: ${this._url}`);

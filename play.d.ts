@@ -47,6 +47,8 @@ export enum Event {
   ROOM_LEFT = 'roomLeft',
   /** 被踢出房间 */
   ROOM_KICKED = 'roomKicked',
+  /** 房间系统属性变化 */
+  ROOM_SYSTEM_PROPERTIES_CHANGED = 'roomSystemPropertiesChanged',
   /** 房间自定义属性变化 */
   ROOM_CUSTOM_PROPERTIES_CHANGED = 'roomCustomPropertiesChanged',
   /** 玩家自定义属性变化 */
@@ -207,7 +209,7 @@ export class Room {
   setMaster(newMasterId: number): Promise<void>;
 
   sendEvent(
-    eventId: number | string,
+    eventId: number,
     eventData?: CustomEventData,
     options?: {
       receiverGroup?: ReceiverGroup;
@@ -304,7 +306,7 @@ export class Client extends EventEmitter<PlayEvent> {
   setMaster(newMasterId: number): Promise<void>;
 
   sendEvent(
-    eventId: number | string,
+    eventId: number,
     eventData?: CustomEventData,
     options?: {
       receiverGroup?: ReceiverGroup;
