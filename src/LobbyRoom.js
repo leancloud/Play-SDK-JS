@@ -2,18 +2,6 @@
  * 大厅房间数据类
  */
 export default class LobbyRoom {
-  constructor(lobbyRoomDTO) {
-    this._roomName = lobbyRoomDTO.cid;
-    this._maxPlayerCount = lobbyRoomDTO.maxMembers;
-    this._expectedUserIds = lobbyRoomDTO.expectMembers;
-    this._emptyRoomTtl = lobbyRoomDTO.emptyRoomTtl;
-    this._playerTtl = lobbyRoomDTO.playerTtl;
-    this._playerCount = lobbyRoomDTO.playerCount;
-    this._visible = lobbyRoomDTO.visible;
-    this._open = lobbyRoomDTO.open;
-    this._customRoomProperties = lobbyRoomDTO.attr;
-  }
-
   /**
    * 房间名称
    * @type {String}

@@ -135,13 +135,13 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.oneofGroups_ = [
  */
 proto.cn.leancloud.play.proto.GenericCollectionValue.ValueCase = {
   VALUE_NOT_SET: 0,
-  INTVALUE: 2,
-  LONGINTVALUE: 3,
-  BOOLVALUE: 4,
-  STRINGVALUE: 5,
-  BYTESVALUE: 6,
-  FLOATVALUE: 7,
-  DOUBLEVALUE: 8,
+  INT_VALUE: 2,
+  LONG_INT_VALUE: 3,
+  BOOL_VALUE: 4,
+  STRING_VALUE: 5,
+  BYTES_VALUE: 6,
+  FLOAT_VALUE: 7,
+  DOUBLE_VALUE: 8,
 };
 
 /**
@@ -190,14 +190,14 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        intvalue: jspb.Message.getFieldWithDefault(msg, 2, 0),
-        longintvalue: jspb.Message.getFieldWithDefault(msg, 3, 0),
-        boolvalue: jspb.Message.getFieldWithDefault(msg, 4, false),
-        stringvalue: jspb.Message.getFieldWithDefault(msg, 5, ''),
-        bytesvalue: msg.getBytesvalue_asB64(),
-        floatvalue: +jspb.Message.getFieldWithDefault(msg, 7, 0.0),
-        doublevalue: +jspb.Message.getFieldWithDefault(msg, 8, 0.0),
-        objecttypeid: jspb.Message.getFieldWithDefault(msg, 9, 0),
+        intValue: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        longIntValue: jspb.Message.getFieldWithDefault(msg, 3, 0),
+        boolValue: jspb.Message.getFieldWithDefault(msg, 4, false),
+        stringValue: jspb.Message.getFieldWithDefault(msg, 5, ''),
+        bytesValue: msg.getBytesValue_asB64(),
+        floatValue: +jspb.Message.getFieldWithDefault(msg, 7, 0.0),
+        doubleValue: +jspb.Message.getFieldWithDefault(msg, 8, 0.0),
+        objectTypeId: jspb.Message.getFieldWithDefault(msg, 9, 0),
       };
 
     if (includeInstance) {
@@ -246,35 +246,35 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.deserializeBinaryFromReader
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setIntvalue(value);
+        msg.setIntValue(value);
         break;
       case 3:
         var value = /** @type {number} */ (reader.readInt64());
-        msg.setLongintvalue(value);
+        msg.setLongIntValue(value);
         break;
       case 4:
         var value = /** @type {boolean} */ (reader.readBool());
-        msg.setBoolvalue(value);
+        msg.setBoolValue(value);
         break;
       case 5:
         var value = /** @type {string} */ (reader.readString());
-        msg.setStringvalue(value);
+        msg.setStringValue(value);
         break;
       case 6:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
-        msg.setBytesvalue(value);
+        msg.setBytesValue(value);
         break;
       case 7:
         var value = /** @type {number} */ (reader.readFloat());
-        msg.setFloatvalue(value);
+        msg.setFloatValue(value);
         break;
       case 8:
         var value = /** @type {number} */ (reader.readDouble());
-        msg.setDoublevalue(value);
+        msg.setDoubleValue(value);
         break;
       case 9:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setObjecttypeid(value);
+        msg.setObjectTypeId(value);
         break;
       default:
         reader.skipField();
@@ -341,7 +341,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.serializeBinaryToWriter = f
   if (f != null) {
     writer.writeDouble(8, f);
   }
-  f = message.getObjecttypeid();
+  f = message.getObjectTypeId();
   if (f !== 0) {
     writer.writeInt32(9, f);
   }
@@ -386,15 +386,15 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setType = functio
 };
 
 /**
- * optional int32 intValue = 2;
+ * optional int32 int_value = 2;
  * @return {number}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getIntvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getIntValue = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setIntvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setIntValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -408,7 +408,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setIntvalue = fun
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearIntvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearIntValue = function() {
   jspb.Message.setOneofField(
     this,
     2,
@@ -421,20 +421,20 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearIntvalue = f
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasIntvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasIntValue = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
 /**
- * optional int64 longIntValue = 3;
+ * optional int64 long_int_value = 3;
  * @return {number}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getLongintvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getLongIntValue = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 /** @param {number} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setLongintvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setLongIntValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -448,7 +448,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setLongintvalue =
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearLongintvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearLongIntValue = function() {
   jspb.Message.setOneofField(
     this,
     3,
@@ -461,17 +461,17 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearLongintvalue
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasLongintvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasLongIntValue = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
 /**
- * optional bool boolValue = 4;
+ * optional bool bool_value = 4;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBoolvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBoolValue = function() {
   return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
     this,
     4,
@@ -480,7 +480,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBoolvalue = fu
 };
 
 /** @param {boolean} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBoolvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBoolValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -494,7 +494,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBoolvalue = fu
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBoolvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBoolValue = function() {
   jspb.Message.setOneofField(
     this,
     4,
@@ -507,20 +507,20 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBoolvalue = 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasBoolvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasBoolValue = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
 /**
- * optional string stringValue = 5;
+ * optional string string_value = 5;
  * @return {string}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getStringvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getStringValue = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ''));
 };
 
 /** @param {string} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setStringvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setStringValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -534,7 +534,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setStringvalue = 
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearStringvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearStringValue = function() {
   jspb.Message.setOneofField(
     this,
     5,
@@ -547,15 +547,15 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearStringvalue 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasStringvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasStringValue = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
 /**
- * optional bytes bytesValue = 6;
+ * optional bytes bytes_value = 6;
  * @return {!(string|Uint8Array)}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesValue = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(
     this,
     6,
@@ -564,29 +564,29 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesvalue = f
 };
 
 /**
- * optional bytes bytesValue = 6;
- * This is a type-conversion wrapper around `getBytesvalue()`
+ * optional bytes bytes_value = 6;
+ * This is a type-conversion wrapper around `getBytesValue()`
  * @return {string}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesvalue_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getBytesvalue()));
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesValue_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getBytesValue()));
 };
 
 /**
- * optional bytes bytesValue = 6;
+ * optional bytes bytes_value = 6;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getBytesvalue()`
+ * This is a type-conversion wrapper around `getBytesValue()`
  * @return {!Uint8Array}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesvalue_asU8 = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getBytesValue_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-    this.getBytesvalue()
+    this.getBytesValue()
   ));
 };
 
 /** @param {!(string|Uint8Array)} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBytesvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBytesValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -600,7 +600,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setBytesvalue = f
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBytesvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBytesValue = function() {
   jspb.Message.setOneofField(
     this,
     6,
@@ -613,15 +613,15 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearBytesvalue =
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasBytesvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasBytesValue = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
 /**
- * optional float floatValue = 7;
+ * optional float float_value = 7;
  * @return {number}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getFloatvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getFloatValue = function() {
   return /** @type {number} */ (+jspb.Message.getFieldWithDefault(
     this,
     7,
@@ -630,7 +630,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getFloatvalue = f
 };
 
 /** @param {number} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setFloatvalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setFloatValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -644,7 +644,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setFloatvalue = f
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearFloatvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearFloatValue = function() {
   jspb.Message.setOneofField(
     this,
     7,
@@ -657,15 +657,15 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearFloatvalue =
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasFloatvalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasFloatValue = function() {
   return jspb.Message.getField(this, 7) != null;
 };
 
 /**
- * optional double doubleValue = 8;
+ * optional double double_value = 8;
  * @return {number}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getDoublevalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getDoubleValue = function() {
   return /** @type {number} */ (+jspb.Message.getFieldWithDefault(
     this,
     8,
@@ -674,7 +674,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getDoublevalue = 
 };
 
 /** @param {number} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setDoublevalue = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setDoubleValue = function(
   value
 ) {
   jspb.Message.setOneofField(
@@ -688,7 +688,7 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setDoublevalue = 
 /**
  * Clears the field making it undefined.
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearDoublevalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearDoubleValue = function() {
   jspb.Message.setOneofField(
     this,
     8,
@@ -701,20 +701,20 @@ proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.clearDoublevalue 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasDoublevalue = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.hasDoubleValue = function() {
   return jspb.Message.getField(this, 8) != null;
 };
 
 /**
- * optional int32 objectTypeId = 9;
+ * optional int32 object_type_id = 9;
  * @return {number}
  */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getObjecttypeid = function() {
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.getObjectTypeId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
 /** @param {number} value */
-proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setObjecttypeid = function(
+proto.cn.leancloud.play.proto.GenericCollectionValue.prototype.setObjectTypeId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 9, value);
@@ -762,13 +762,13 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        listvalueList: jspb.Message.toObjectList(
-          msg.getListvalueList(),
+        listValueList: jspb.Message.toObjectList(
+          msg.getListValueList(),
           proto.cn.leancloud.play.proto.GenericCollectionValue.toObject,
           includeInstance
         ),
-        mapentryvalueList: jspb.Message.toObjectList(
-          msg.getMapentryvalueList(),
+        mapEntryValueList: jspb.Message.toObjectList(
+          msg.getMapEntryValueList(),
           proto.cn.leancloud.play.proto.GenericCollection.MapEntry.toObject,
           includeInstance
         ),
@@ -821,7 +821,7 @@ proto.cn.leancloud.play.proto.GenericCollection.deserializeBinaryFromReader = fu
           proto.cn.leancloud.play.proto.GenericCollectionValue
             .deserializeBinaryFromReader
         );
-        msg.addListvalue(value);
+        msg.addListValue(value);
         break;
       case 2:
         var value = new proto.cn.leancloud.play.proto.GenericCollection.MapEntry();
@@ -830,7 +830,7 @@ proto.cn.leancloud.play.proto.GenericCollection.deserializeBinaryFromReader = fu
           proto.cn.leancloud.play.proto.GenericCollection.MapEntry
             .deserializeBinaryFromReader
         );
-        msg.addMapentryvalue(value);
+        msg.addMapEntryValue(value);
         break;
       default:
         reader.skipField();
@@ -865,7 +865,7 @@ proto.cn.leancloud.play.proto.GenericCollection.serializeBinaryToWriter = functi
   writer
 ) {
   var f = undefined;
-  f = message.getListvalueList();
+  f = message.getListValueList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
@@ -874,7 +874,7 @@ proto.cn.leancloud.play.proto.GenericCollection.serializeBinaryToWriter = functi
         .serializeBinaryToWriter
     );
   }
-  f = message.getMapentryvalueList();
+  f = message.getMapEntryValueList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       2,
@@ -1080,10 +1080,10 @@ proto.cn.leancloud.play.proto.GenericCollection.MapEntry.prototype.hasVal = func
 };
 
 /**
- * repeated GenericCollectionValue listValue = 1;
+ * repeated GenericCollectionValue list_value = 1;
  * @return {!Array<!proto.cn.leancloud.play.proto.GenericCollectionValue>}
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.getListvalueList = function() {
+proto.cn.leancloud.play.proto.GenericCollection.prototype.getListValueList = function() {
   return /** @type{!Array<!proto.cn.leancloud.play.proto.GenericCollectionValue>} */ (jspb.Message.getRepeatedWrapperField(
     this,
     proto.cn.leancloud.play.proto.GenericCollectionValue,
@@ -1092,7 +1092,7 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.getListvalueList = fun
 };
 
 /** @param {!Array<!proto.cn.leancloud.play.proto.GenericCollectionValue>} value */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.setListvalueList = function(
+proto.cn.leancloud.play.proto.GenericCollection.prototype.setListValueList = function(
   value
 ) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
@@ -1103,7 +1103,7 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.setListvalueList = fun
  * @param {number=} opt_index
  * @return {!proto.cn.leancloud.play.proto.GenericCollectionValue}
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.addListvalue = function(
+proto.cn.leancloud.play.proto.GenericCollection.prototype.addListValue = function(
   opt_value,
   opt_index
 ) {
@@ -1119,15 +1119,15 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.addListvalue = functio
 /**
  * Clears the list making it empty but non-null.
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.clearListvalueList = function() {
-  this.setListvalueList([]);
+proto.cn.leancloud.play.proto.GenericCollection.prototype.clearListValueList = function() {
+  this.setListValueList([]);
 };
 
 /**
- * repeated MapEntry mapEntryValue = 2;
+ * repeated MapEntry map_entry_value = 2;
  * @return {!Array<!proto.cn.leancloud.play.proto.GenericCollection.MapEntry>}
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.getMapentryvalueList = function() {
+proto.cn.leancloud.play.proto.GenericCollection.prototype.getMapEntryValueList = function() {
   return /** @type{!Array<!proto.cn.leancloud.play.proto.GenericCollection.MapEntry>} */ (jspb.Message.getRepeatedWrapperField(
     this,
     proto.cn.leancloud.play.proto.GenericCollection.MapEntry,
@@ -1136,7 +1136,7 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.getMapentryvalueList =
 };
 
 /** @param {!Array<!proto.cn.leancloud.play.proto.GenericCollection.MapEntry>} value */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.setMapentryvalueList = function(
+proto.cn.leancloud.play.proto.GenericCollection.prototype.setMapEntryValueList = function(
   value
 ) {
   jspb.Message.setRepeatedWrapperField(this, 2, value);
@@ -1147,7 +1147,7 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.setMapentryvalueList =
  * @param {number=} opt_index
  * @return {!proto.cn.leancloud.play.proto.GenericCollection.MapEntry}
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.addMapentryvalue = function(
+proto.cn.leancloud.play.proto.GenericCollection.prototype.addMapEntryValue = function(
   opt_value,
   opt_index
 ) {
@@ -1163,8 +1163,8 @@ proto.cn.leancloud.play.proto.GenericCollection.prototype.addMapentryvalue = fun
 /**
  * Clears the list making it empty but non-null.
  */
-proto.cn.leancloud.play.proto.GenericCollection.prototype.clearMapentryvalueList = function() {
-  this.setMapentryvalueList([]);
+proto.cn.leancloud.play.proto.GenericCollection.prototype.clearMapEntryValueList = function() {
+  this.setMapEntryValueList([]);
 };
 
 goog.object.extend(exports, proto.cn.leancloud.play.proto);

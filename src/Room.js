@@ -5,29 +5,6 @@ import ReceiverGroup from './ReceiverGroup';
  * 房间类
  */
 export default class Room {
-  /* eslint no-param-reassign: ["error", { "props": false }] */
-  static _newFromJSONObject(roomJSONObject) {
-    const room = new Room();
-    room._name = roomJSONObject.cid;
-    room._open = roomJSONObject.open;
-    room._visible = roomJSONObject.visible;
-    room._maxPlayerCount = roomJSONObject.maxMembers;
-    room._masterActorId = roomJSONObject.masterActorId;
-    room._expectedUserIds = roomJSONObject.expectMembers;
-    room._players = {};
-    for (let i = 0; i < roomJSONObject.members.length; i += 1) {
-      const playerDTO = roomJSONObject.members[i];
-      const player = Player._newFromJSONObject(playerDTO);
-      room._players[player.actorId] = player;
-    }
-    if (roomJSONObject.attr) {
-      room._properties = roomJSONObject.attr;
-    } else {
-      room._properties = {};
-    }
-    return room;
-  }
-
   /**
    * 房间名称
    * @type {String}

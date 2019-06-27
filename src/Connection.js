@@ -6,6 +6,19 @@ import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import { tap } from './Utils';
+import { sdkVersion, protocolVersion } from './Config';
+
+const messages = require('./proto/messages_pb');
+
+const {
+  Command,
+  Body,
+  RoomOptions,
+  SessionOpenRequest,
+  RequestMessage,
+  CommandType,
+  OpType,
+} = messages;
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
@@ -36,11 +49,65 @@ export function convertRoomOptions(roomOptions) {
   return options;
 }
 
+export function convertToRoomOptions(roomName, options, expectedUserIds) {
+  const roomOptions = new RoomOptions();
+  if (roomName) {
+    roomOptions.setCid(roomName);
+  }
+  if (options) {
+    const {
+      open,
+      visible,
+      emptyRoomTtl,
+      playerTtl,
+      maxPlayerCount,
+      customRoomProperties,
+      customRoomPropertyKeysForLobby,
+      flag,
+      pluginName,
+    } = options;
+    if (open !== undefined) {
+      roomOptions.setOpen(open);
+    }
+    if (visible !== undefined) {
+      roomOptions.setVisible(visible);
+    }
+    if (emptyRoomTtl > 0) {
+      roomOptions.setEmptyRoomTtl(emptyRoomTtl);
+    }
+    if (playerTtl > 0) {
+      roomOptions.setPlayerTtl(playerTtl);
+    }
+    if (maxPlayerCount > 0 && maxPlayerCount < MAX_PLAYER_COUNT) {
+      roomOptions.setMaxMembers(maxPlayerCount);
+    }
+    if (customRoomProperties) {
+      // TODO Serialize
+
+      roomOptions.setAttr(customRoomProperties);
+    }
+    if (customRoomPropertyKeysForLobby) {
+      roomOptions.setLobbyAttrKeysList(customRoomPropertyKeysForLobby);
+    }
+    if (flag !== undefined) {
+      roomOptions.setFlag(flag);
+    }
+    if (pluginName) {
+      roomOptions.setPluginName(pluginName);
+    }
+  }
+  if (expectedUserIds) {
+    roomOptions.setExpectMembersList(expectedUserIds);
+  }
+  return roomOptions;
+}
+
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg"] }] */
 export default class Connection extends EventEmitter {
   constructor() {
     super();
     this._requests = {};
+    this._responses = {};
     this._msgId = 0;
     this._pingTimer = null;
     this._pongTimer = null;
@@ -81,12 +148,24 @@ export default class Connection extends EventEmitter {
           this._ws.close();
         }, this._getPingDuration());
       }, this._getPingDuration() * MAX_NO_PONG_TIMES);
-      const msg = JSON.parse(message.data);
-      debug(`${this._userId} : ${this._flag} <- ${msg.op} ${message.data}`);
+
+      const command = Command.deserializeBinary(message.data);
+      debug(
+        `${this._userId} : ${this._flag} <- ${JSON.stringify(
+          command.toObject()
+        )}`
+      );
+      const cmd = command.getCmd();
+      const op = command.getOp();
+      const body = Body.deserializeBinary(command.getBody());
       if (this._isMessageQueueRunning) {
-        this._handleMessage(msg);
+        this._handleCommand(cmd, op, body);
       } else {
-        this._messageQueue.push(msg);
+        this._pauseMessageQueue({
+          cmd,
+          op,
+          body,
+        });
       }
     };
     this._ws.onclose = () => {
@@ -94,6 +173,74 @@ export default class Connection extends EventEmitter {
       this._stopPong();
       this.emit(DISCONNECT_EVENT);
     };
+  }
+
+  async openSession(appId, userId, gameVersion) {
+    const sessionOpen = new SessionOpenRequest();
+    sessionOpen.setAppId(appId);
+    sessionOpen.setPeerId(userId);
+    sessionOpen.setSdkVersion(sdkVersion);
+    sessionOpen.setGameVersion(gameVersion);
+    sessionOpen.setProtocolVersion(protocolVersion);
+    const req = new RequestMessage();
+    debug(`req: ${JSON.stringify(req.toObject())}`);
+    req.setSessionOpen(sessionOpen);
+    await this.sendRequest(CommandType.SESSION, OpType.OPEN, req);
+  }
+
+  _handleCommand(cmd, op, body) {
+    const res = body.getResponse();
+    if (res) {
+      // 应答
+      const i = res.getI();
+      if (this._responses[i]) {
+        const { resolve, reject } = this._responses[i];
+        const errorInfo = res.getErrorInfo();
+        if (errorInfo) {
+          const code = errorInfo.getReasonCode();
+          const detail = errorInfo.getDetail();
+          reject(new PlayError(code, detail));
+        } else {
+          resolve({
+            cmd,
+            op,
+            res,
+          });
+        }
+      } else {
+        // 异常情况
+        error(`error response: ${JSON.stringify(res.toObject())}`);
+      }
+    } else {
+      // 通知
+      this._handleNotification(cmd, op, body);
+    }
+  }
+
+  async sendRequest(cmd, op, req) {
+    const msgId = this._getMsgId();
+    req.setI(msgId);
+    const body = new Body();
+    body.setRequest(req);
+    this.sendCommand(cmd, op, body);
+    return new Promise((resolve, reject) => {
+      this._responses[msgId] = {
+        resolve,
+        reject,
+      };
+    });
+  }
+
+  async sendCommand(cmd, op, body) {
+    const command = new Command();
+    command.setCmd(cmd);
+    command.setOp(op);
+    command.setBody(body.serializeBinary());
+    debug(
+      `${this._userId} : ${this._flag} -> ${JSON.stringify(command.toObject())}`
+    );
+    this._ws.send(command.serializeBinary());
+    // TODO ping
   }
 
   async send(msg, withIndex = true, ignoreServerError = true) {
@@ -227,7 +374,7 @@ export default class Connection extends EventEmitter {
   }
 
   _handleUnknownMsg(msg) {
-    error(`unknown msg: ${JSON.stringify(msg)}`);
+    error(`unknown msg: ${JSON.stringify(msg.toObject())}`);
   }
 
   _pauseMessageQueue() {

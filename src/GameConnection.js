@@ -1,9 +1,29 @@
-import { sdkVersion, protocolVersion } from './Config';
-import Connection, { convertRoomOptions } from './Connection';
+import Connection, { convertToRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
+import { debug } from './Logger';
+import ReceiverGroup from './ReceiverGroup';
 
 const GAME_KEEPALIVE_DURATION = 7000;
+
+const messages = require('./proto/messages_pb');
+
+const {
+  CommandType,
+  OpType,
+  RequestMessage,
+  CreateRoomRequest,
+  JoinRoomRequest,
+  RoomOptions,
+  UpdateSysPropertyRequest,
+  RoomSystemProperty,
+  UpdateMasterClientRequest,
+  KickMemberRequest,
+  AppInfo,
+  DirectCommand,
+  Body,
+  UpdatePropertyRequest,
+} = messages;
 
 // 游戏连接抛出的事件
 export const PLAYER_JOINED_EVENT = 'PLAYER_JOINED_EVENT';
@@ -21,6 +41,39 @@ export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
 
+function convertToPlayer(member) {
+  const player = new Player();
+  player._userId = member.getPid();
+  player._actorId = member.getActorId();
+  player.active = !member.getInactive();
+  // TODO 属性
+
+  return player;
+}
+
+function convertToRoom(roomOptions) {
+  const room = new Room();
+  room._name = roomOptions.getCid();
+  room._open = roomOptions.getOpen();
+  room._visible = roomOptions.getVisible();
+  room._maxPlayerCount = roomOptions.getMaxMembers();
+  room._masterActorId = roomOptions.getMasterActorId();
+  room._expectedUserIds = roomOptions.getExpectMembersList();
+  room._players = {};
+  roomOptions.getMembers.forEach(member => {
+    const player = convertToPlayer(member);
+    room._players[player.actorId] = player;
+  });
+  // TODO
+
+  // if (roomJSONObject.attr) {
+  //   room._properties = roomJSONObject.attr;
+  // } else {
+  //   room._properties = {};
+  // }
+  return room;
+}
+
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class GameConnection extends Connection {
   constructor() {
@@ -28,324 +81,311 @@ export default class GameConnection extends Connection {
     this._flag = 'game';
   }
 
-  async openSession(appId, userId, gameVersion) {
-    const msg = {
-      cmd: 'session',
-      op: 'open',
-      appId,
-      peerId: userId,
-      sdkVersion,
-      protocolVersion,
-      gameVersion,
-    };
-    await super.send(msg, undefined, false);
-  }
-
   async createRoom(roomId, roomOptions, expectedUserIds) {
-    let msg = {
-      cmd: 'conv',
-      op: 'start',
-    };
-    if (roomId) {
-      msg.cid = roomId;
-    }
-    // 拷贝房间属性（包括 系统属性和玩家定义属性）
-    if (roomOptions) {
-      msg = Object.assign(msg, convertRoomOptions(roomOptions));
-    }
-    if (expectedUserIds) {
-      msg.expectMembers = expectedUserIds;
-    }
-    const res = await super.send(msg, undefined, false);
-    return Room._newFromJSONObject(res);
+    const req = new RequestMessage();
+    const roomOpts = convertToRoomOptions(roomId, roomOptions, expectedUserIds);
+    const createRoomReq = new CreateRoomRequest();
+    createRoomReq.setRoomOptions(roomOpts);
+    req.setCreateRoom(createRoomReq);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.START,
+      req
+    );
+    return convertToRoom(res.getCreateRoom().getRoomOptions());
   }
 
   async joinRoom(roomName, matchProperties, expectedUserIds) {
-    const msg = {
-      cmd: 'conv',
-      op: 'add',
-      cid: roomName,
-    };
+    const req = new RequestMessage();
+    const roomOpts = new RoomOptions();
+    roomOpts.setCid(roomName);
     if (matchProperties) {
-      msg.expectAttr = matchProperties;
+      // TODO
     }
     if (expectedUserIds) {
-      msg.expectMembers = expectedUserIds;
+      roomOpts.setExpectMembersList(expectedUserIds);
     }
-    const res = await super.send(msg, undefined, false);
-    return Room._newFromJSONObject(res);
+    const joinRoomRequest = new JoinRoomRequest();
+    joinRoomRequest.setRoomOptions(roomOpts);
+    req.setJoinRoom(joinRoomRequest);
+    const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
+    return convertToRoom(res.getJoinRoom().getRoomOptions());
   }
 
   async leaveRoom() {
-    const msg = {
-      cmd: 'conv',
-      op: 'remove',
-    };
-    await super.send(msg, undefined, false);
+    const req = new RequestMessage();
+    await super.sendRequest(CommandType.CONV, OpType.REMOVE, req);
   }
 
-  setRoomOpen(open) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        open,
-      },
-    };
-    return super.send(msg, undefined, false);
+  async setRoomSystemProps(props) {
+    const req = new RequestMessage();
+    const updateSysPropertyReq = new UpdateSysPropertyRequest();
+    updateSysPropertyReq.setSysAttr(props);
+    req.setUpdateSysProperty(updateSysPropertyReq);
+    await super.sendRequest(
+      CommandType.CONV,
+      OpType.UPDATE_SYSTEM_PROPERTY,
+      req
+    );
   }
 
-  setRoomVisible(visible) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        visible,
-      },
-    };
-    return super.send(msg, undefined, false);
+  async setRoomOpen(open) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setOpen(open);
+    await this.setRoomSystemProps(sysProps);
   }
 
-  setRoomMaxPlayerCount(count) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        maxMembers: count,
-      },
-    };
-    return super.send(msg, undefined, false);
+  async setRoomVisible(visible) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setVisible(visible);
+    await this.setRoomSystemProps(sysProps);
   }
 
-  setRoomExpectedUserIds(expectedUserIds) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        expectMembers: {
-          $set: expectedUserIds,
-        },
-      },
-    };
-    return super.send(msg, undefined, false);
+  async setRoomMaxPlayerCount(count) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setMaxMembers(count);
+    await this.setRoomSystemProps(sysProps);
   }
 
-  clearRoomExpectedUserIds() {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        expectMembers: {
-          $drop: true,
-        },
-      },
-    };
-    return super.send(msg, undefined, false);
+  async setRoomExpectedUserIds(expectedUserIds) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setExpectMembers(
+      JSON.stringify({
+        $set: expectedUserIds,
+      })
+    );
+    await this.setRoomSystemProps(sysProps);
   }
 
-  addRoomExpectedUserIds(expectedUserIds) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        expectMembers: {
-          $add: expectedUserIds,
-        },
-      },
-    };
-    return super.send(msg, undefined, false);
+  async clearRoomExpectedUserIds() {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setExpectMembers(
+      JSON.stringify({
+        $drop: true,
+      })
+    );
+    await this.setRoomSystemProps(sysProps);
   }
 
-  removeRoomExpectedUserIds(expectedUserIds) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-system-property',
-      sysAttr: {
-        expectMembers: {
-          $remove: expectedUserIds,
-        },
-      },
-    };
-    return super.send(msg, undefined, false);
+  async addRoomExpectedUserIds(expectedUserIds) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setExpectMembers(
+      JSON.stringify({
+        $add: expectedUserIds,
+      })
+    );
+    await this.setRoomSystemProps(sysProps);
   }
 
-  setMaster(newMasterId) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-master-client',
-      masterActorId: newMasterId,
-    };
-    return super.send(msg, undefined, false);
+  async removeRoomExpectedUserIds(expectedUserIds) {
+    const sysProps = new RoomSystemProperty();
+    sysProps.setExpectMembers(
+      JSON.stringify({
+        $remove: expectedUserIds,
+      })
+    );
+    await this.setRoomSystemProps(sysProps);
   }
 
-  kickPlayer(actorId, code, msg) {
-    const req = {
-      cmd: 'conv',
-      op: 'kick',
-      i: this._getMsgId(),
-      targetActorId: actorId,
-      appCode: code,
-      appMsg: msg,
-    };
-    return super.send(req, undefined, false);
+  async setMaster(newMasterId) {
+    const req = new RequestMessage();
+    const updateMasterClientReq = new UpdateMasterClientRequest();
+    updateMasterClientReq.setMasterActorId(newMasterId);
+    req.setUpdateMasterClient(updateMasterClientReq);
+    await super.sendRequest(req);
+  }
+
+  async kickPlayer(actorId, code, msg) {
+    const req = new RequestMessage();
+    const kickReq = new KickMemberRequest();
+    kickReq.setTargetActorId(actorId);
+    const appInfo = new AppInfo();
+    appInfo.setAppCode(code);
+    appInfo.setAppMsg(msg);
+    kickReq.setAppInfo(appInfo);
+    await super.sendRequest(CommandType.CONV, OpType.KICK, req);
   }
 
   async sendEvent(eventId, eventData, options) {
-    const msg = {
-      cmd: 'direct',
-      eventId,
-      msg: eventData,
-      receiverGroup: options.receiverGroup,
-      toActorIds: options.targetActorIds,
-    };
-    await super.send(msg, false);
+    const direct = new DirectCommand();
+    direct.setEventId(eventId);
+    if (eventData) {
+      // TODO 序列化
+    }
+    if (options) {
+      direct.setReceiverGroup(options.receiverGroup);
+      direct.setToActorIds(options.targetActorIds);
+    } else {
+      direct.setReceiverGroup(ReceiverGroup.All);
+    }
+    const body = new Body();
+    body.setDirect(direct);
+    await super.sendCommand(CommandType.DIRECT, OpType.NONE, body);
   }
 
-  setRoomCustomProperties(properties, expectedValues) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update',
-      attr: properties,
-    };
+  async setRoomCustomProperties(properties, expectedValues) {
+    const req = new RequestMessage();
+    const updatePropsReq = new UpdatePropertyRequest();
+    // TODO 序列化属性
+
     if (expectedValues) {
-      msg.expectAttr = expectedValues;
+      // TODO 序列化 CAS 属性
     }
-    return super.send(msg, undefined, false);
+    req.setUpdateProperty(updatePropsReq);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.UPDATE,
+      req
+    );
+    // TODO 反序列化 props
+
+    return res;
   }
 
-  setPlayerCustomProperties(actorId, properties, expectedValues) {
-    const msg = {
-      cmd: 'conv',
-      op: 'update-player-prop',
-      targetActorId: actorId,
-      attr: properties,
-    };
+  async setPlayerCustomProperties(actorId, properties, expectedValues) {
+    const req = new RequestMessage();
+    const updatePropsReq = new UpdatePropertyRequest();
+    updatePropsReq.setTargetActorId(actorId);
+    // TODO 序列化属性
+
     if (expectedValues) {
-      msg.expectAttr = expectedValues;
+      // TODO 序列化 CAS 属性
     }
-    return super.send(msg, undefined, false);
+    req.setUpdateProperty(updatePropsReq);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.UPDATE_PLAYER_PROP,
+      req
+    );
+    // TODO 反序列化 actor Id 和属性
+
+    return res;
   }
 
   _getPingDuration() {
     return GAME_KEEPALIVE_DURATION;
   }
 
-  _handleNotification(msg) {
-    switch (msg.cmd) {
-      case 'conv':
-        switch (msg.op) {
-          case 'members-joined':
-            this._handlePlayerJoined(msg);
+  _handleNotification(cmd, op, body) {
+    switch (cmd) {
+      case CommandType.CONV:
+        switch (op) {
+          case OpType.MEMBERS_JOINED:
+            this._handlePlayerJoined(body.getRoomNotification().getJoinRoom());
             break;
-          case 'members-left':
-            this._handlePlayerLeftMsg(msg);
+          case OpType.MEMBERS_LEFT:
+            this._handlePlayerLeftMsg(body.getRoomNotification().getLeftRoom());
             break;
-          case 'master-client-changed':
-            this._handleMasterChangedMsg(msg);
+          case OpType.MASTER_CLIENT_CHANGED:
+            this._handleMasterChangedMsg(
+              body.getRoomNotification().getUpdateMasterClient()
+            );
             break;
-          case 'open-notify':
-            this._handleRoomOpenChangedMsg(msg);
+          case OpType.SYSTEM_PROPERTY_UPDATED_NOTIFY:
+            this._handleRoomSystemPropsChangedMsg(
+              body.getRoomNotification().getUpdateSysProperty()
+            );
             break;
-          case 'visible-notify':
-            this._handleRoomVisibleChangedMsg(msg);
+          case OpType.UPDATED_NOTIFY:
+            this._handleRoomPropertiesChangedMsg(
+              body.getRoomNotification().getUpdateProperty()
+            );
             break;
-          case 'updated-notify':
-            this._handleRoomPropertiesChangedMsg(msg);
+          case OpType.PLAYER_PROPS:
+            this._handlePlayerPropertiesChangedMsg(
+              body.getRoomNotification().getUpdateProperty()
+            );
             break;
-          case 'player-props':
-            this._handlePlayerPropertiesChangedMsg(msg);
+          case OpType.MEMBERS_OFFLINE:
+            // TODO
+            this._handlePlayerOfflineMsg();
             break;
-          case 'members-offline':
-            this._handlePlayerOfflineMsg(msg);
+          case OpType.MEMBERS_ONLINE:
+            // TODO
+            this._handlePlayerOnlineMsg();
             break;
-          case 'members-online':
-            this._handlePlayerOnlineMsg(msg);
+          case OpType.KICKED_NOTICE:
+            this._handleKickedMsg(body.getRoomNotification());
             break;
-          case 'kicked-notice':
-            this._handleKickedMsg(msg);
-            break;
-          case 'system-property-updated-notify':
-            this._handleRoomSystemPropsChangedMsg(msg);
-            break;
+
           default:
-            super._handleUnknownMsg(msg);
+            // super._handleUnknownMsg(msg);
             break;
         }
         break;
-      case 'events':
+      case CommandType.EVENTS:
         // 目前不作处理
         break;
-      case 'direct':
-        this._handleSendEventMsg(msg);
+      case CommandType.DIRECT:
+        this._handleSendEventMsg(body.getDirect());
         break;
-      case 'error':
-        super._handleErrorNotify(msg);
+      case CommandType.ERROR:
+        super._handleErrorNotify(body);
         break;
       default:
-        super._handleUnknownMsg(msg);
+        // super._handleUnknownMsg(msg);
         break;
     }
   }
 
-  _handlePlayerJoined(msg) {
-    // TODO 修改 Player 构造方法
-    const newPlayer = Player._newFromJSONObject(msg.member);
+  _handlePlayerJoined(joinRoomNotification) {
+    const newPlayer = convertToPlayer(joinRoomNotification.getMember());
     this.emit(PLAYER_JOINED_EVENT, newPlayer);
   }
 
-  _handlePlayerLeftMsg(msg) {
-    const { actorId } = msg;
+  _handlePlayerLeftMsg(leftRoomNotification) {
+    const actorId = leftRoomNotification.getActorId();
     this.emit(PLAYER_LEFT_EVENT, actorId);
   }
 
-  _handleMasterChangedMsg(msg) {
-    let { masterActorId: newMasterActorId } = msg;
-    if (newMasterActorId === null) newMasterActorId = -1;
-    this.emit(MASTER_CHANGED_EVENT, newMasterActorId);
+  _handleMasterChangedMsg(updateMasterCLientNotification) {
+    const newMasterId = updateMasterCLientNotification.getMasterActorId();
+    this.emit(MASTER_CHANGED_EVENT, newMasterId);
   }
 
-  _handleRoomOpenChangedMsg(msg) {
-    const { toggle: open } = msg;
-    this.emit(ROOM_OPEN_CHANGED_EVENT, open);
-  }
-
-  _handleRoomVisibleChangedMsg(msg) {
-    const { toggle: visible } = msg;
-    this.emit(ROOM_VISIBLE_CHANGED_EVENT, visible);
-  }
-
-  _handleRoomPropertiesChangedMsg(msg) {
-    const { attr: changedProps } = msg;
+  _handleRoomPropertiesChangedMsg(updatePropertyNotification) {
+    // TODO 反序列化
+    const changedProps = updatePropertyNotification.getAttr();
     this.emit(ROOM_PROPERTIES_CHANGED_EVENT, changedProps);
   }
 
-  _handlePlayerPropertiesChangedMsg(msg) {
-    const { actorId, attr: changedProps } = msg;
+  _handlePlayerPropertiesChangedMsg(updatePropertyNotification) {
+    // TODO 反序列化
+    const actorId = 0;
+    const changedProps = updatePropertyNotification.getAttr();
     this.emit(PLAYER_PROPERTIES_CHANGED_EVENT, actorId, changedProps);
   }
 
-  _handlePlayerOfflineMsg(msg) {
-    const { initByActor: actorId } = msg;
+  _handlePlayerOfflineMsg(roomNotification) {
+    const actorId = roomNotification.getInitByActor();
     this.emit(PLAYER_OFFLINE_EVENT, actorId);
   }
 
-  _handlePlayerOnlineMsg(msg) {
-    const player = Player._newFromJSONObject(msg.member);
-    this.emit(PLAYER_ONLINE_EVENT, player);
+  _handlePlayerOnlineMsg(roomNotification) {
+    const actorId = roomNotification.getInitByActor();
+    // TODO 更新 / 新建 Player
+    this.emit(PLAYER_ONLINE_EVENT, actorId);
   }
 
-  _handleSendEventMsg(msg) {
-    const { eventId, msg: eventData, fromActorId: senderId } = msg;
-    this.emit(SEND_CUSTOM_EVENT, eventId, eventData, senderId);
+  _handleSendEventMsg(directCommand) {
+    const eventId = directCommand.getEventId();
+    // TODO 反序列化
+
+    const senderId = directCommand.getFromActorId();
+    this.emit(SEND_CUSTOM_EVENT, eventId, null, senderId);
   }
 
-  _handleKickedMsg(msg) {
-    const { appCode, appMsg } = msg;
-    this.emit(ROOM_KICKED_EVENT, appCode, appMsg);
+  _handleKickedMsg(roomNotification) {
+    const appInfo = roomNotification.getAppInfo();
+    // TODO
+
+    this.emit(ROOM_KICKED_EVENT, appInfo);
   }
 
-  _handleRoomSystemPropsChangedMsg(msg) {
-    const { sysAttr } = msg;
+  _handleRoomSystemPropsChangedMsg(updateStsPropertyNotification) {
+    // TODO 反序列化
+
+    const { sysAttr } = updateStsPropertyNotification;
     const changedProps = {
       open: sysAttr.open,
       visible: sysAttr.visible,

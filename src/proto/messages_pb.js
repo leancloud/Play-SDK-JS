@@ -1414,8 +1414,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         visible:
           (f = msg.getVisible()) &&
           google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-        expectmembers: jspb.Message.getFieldWithDefault(msg, 3, ''),
-        maxmembers: jspb.Message.getFieldWithDefault(msg, 4, 0),
+        expectMembers: jspb.Message.getFieldWithDefault(msg, 3, ''),
+        maxMembers: jspb.Message.getFieldWithDefault(msg, 4, 0),
       };
 
     if (includeInstance) {
@@ -1476,11 +1476,11 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.deserializeBinary
         break;
       case 3:
         var value = /** @type {string} */ (reader.readString());
-        msg.setExpectmembers(value);
+        msg.setExpectMembers(value);
         break;
       case 4:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMaxmembers(value);
+        msg.setMaxMembers(value);
         break;
       default:
         reader.skipField();
@@ -1531,11 +1531,11 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.serializeBinaryTo
       google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
-  f = message.getExpectmembers();
+  f = message.getExpectMembers();
   if (f.length > 0) {
     writer.writeString(3, f);
   }
-  f = message.getMaxmembers();
+  f = message.getMaxMembers();
   if (f !== 0) {
     writer.writeInt32(4, f);
   }
@@ -1610,30 +1610,30 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.hasVisi
 };
 
 /**
- * optional string expectMembers = 3;
+ * optional string expect_members = 3;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getExpectmembers = function() {
+proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getExpectMembers = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setExpectmembers = function(
+proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setExpectMembers = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 3, value);
 };
 
 /**
- * optional int32 maxMembers = 4;
+ * optional int32 max_members = 4;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getMaxmembers = function() {
+proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getMaxMembers = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setMaxmembers = function(
+proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setMaxMembers = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 4, value);
@@ -1675,7 +1675,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         pid: jspb.Message.getFieldWithDefault(msg, 1, ''),
-        actorid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        actorId: jspb.Message.getFieldWithDefault(msg, 2, 0),
         attr: msg.getAttr_asB64(),
         inactive: jspb.Message.getFieldWithDefault(msg, 4, false),
       };
@@ -1726,7 +1726,7 @@ proto.game_protobuf_messages.proto.messages.RoomMember.deserializeBinaryFromRead
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setActorid(value);
+        msg.setActorId(value);
         break;
       case 3:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
@@ -1773,7 +1773,7 @@ proto.game_protobuf_messages.proto.messages.RoomMember.serializeBinaryToWriter =
   if (f.length > 0) {
     writer.writeString(1, f);
   }
-  f = message.getActorid();
+  f = message.getActorId();
   if (f !== 0) {
     writer.writeInt32(2, f);
   }
@@ -1803,15 +1803,15 @@ proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setPid = functi
 };
 
 /**
- * optional int32 actorId = 2;
+ * optional int32 actor_id = 2;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getActorid = function() {
+proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setActorid = function(
+proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 2, value);
@@ -1912,8 +1912,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        appcode: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        appmsg: jspb.Message.getFieldWithDefault(msg, 2, ''),
+        appCode: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        appMsg: jspb.Message.getFieldWithDefault(msg, 2, ''),
       };
 
     if (includeInstance) {
@@ -1958,11 +1958,11 @@ proto.game_protobuf_messages.proto.messages.AppInfo.deserializeBinaryFromReader 
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setAppcode(value);
+        msg.setAppCode(value);
         break;
       case 2:
         var value = /** @type {string} */ (reader.readString());
-        msg.setAppmsg(value);
+        msg.setAppMsg(value);
         break;
       default:
         reader.skipField();
@@ -1997,41 +1997,41 @@ proto.game_protobuf_messages.proto.messages.AppInfo.serializeBinaryToWriter = fu
   writer
 ) {
   var f = undefined;
-  f = message.getAppcode();
+  f = message.getAppCode();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getAppmsg();
+  f = message.getAppMsg();
   if (f.length > 0) {
     writer.writeString(2, f);
   }
 };
 
 /**
- * optional int32 appCode = 1;
+ * optional int32 app_code = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppcode = function() {
+proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppCode = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppcode = function(
+proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppCode = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
- * optional string appMsg = 2;
+ * optional string app_msg = 2;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppmsg = function() {
+proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppMsg = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppmsg = function(
+proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppMsg = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 2, value);
@@ -2072,10 +2072,10 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        reasoncode: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        reasonCode: jspb.Message.getFieldWithDefault(msg, 1, 0),
         detail: jspb.Message.getFieldWithDefault(msg, 2, ''),
-        appinfo:
-          (f = msg.getAppinfo()) &&
+        appInfo:
+          (f = msg.getAppInfo()) &&
           proto.game_protobuf_messages.proto.messages.AppInfo.toObject(
             includeInstance,
             f
@@ -2124,7 +2124,7 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.deserializeBinaryFromReade
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setReasoncode(value);
+        msg.setReasonCode(value);
         break;
       case 2:
         var value = /** @type {string} */ (reader.readString());
@@ -2137,7 +2137,7 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.deserializeBinaryFromReade
           proto.game_protobuf_messages.proto.messages.AppInfo
             .deserializeBinaryFromReader
         );
-        msg.setAppinfo(value);
+        msg.setAppInfo(value);
         break;
       default:
         reader.skipField();
@@ -2172,7 +2172,7 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.serializeBinaryToWriter = 
   writer
 ) {
   var f = undefined;
-  f = message.getReasoncode();
+  f = message.getReasonCode();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
@@ -2180,7 +2180,7 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.serializeBinaryToWriter = 
   if (f.length > 0) {
     writer.writeString(2, f);
   }
-  f = message.getAppinfo();
+  f = message.getAppInfo();
   if (f != null) {
     writer.writeMessage(
       3,
@@ -2192,15 +2192,15 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.serializeBinaryToWriter = 
 };
 
 /**
- * optional int32 reasonCode = 1;
+ * optional int32 reason_code = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getReasoncode = function() {
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getReasonCode = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setReasoncode = function(
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setReasonCode = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -2222,10 +2222,10 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setDetail = func
 };
 
 /**
- * optional AppInfo appInfo = 3;
+ * optional AppInfo app_info = 3;
  * @return {?proto.game_protobuf_messages.proto.messages.AppInfo}
  */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getAppInfo = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.AppInfo} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.AppInfo,
@@ -2234,7 +2234,7 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getAppinfo = fun
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setAppinfo = function(
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setAppInfo = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 3, value);
@@ -2243,15 +2243,15 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setAppinfo = fun
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.clearAppinfo = function() {
-  this.setAppinfo(undefined);
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.clearAppInfo = function() {
+  this.setAppInfo(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.hasAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.hasAppInfo = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -2308,21 +2308,21 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         open:
           (f = msg.getOpen()) &&
           google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-        emptyroomttl: jspb.Message.getFieldWithDefault(msg, 4, 0),
-        playerttl: jspb.Message.getFieldWithDefault(msg, 5, 0),
-        maxmembers: jspb.Message.getFieldWithDefault(msg, 6, 0),
+        emptyRoomTtl: jspb.Message.getFieldWithDefault(msg, 4, 0),
+        playerTtl: jspb.Message.getFieldWithDefault(msg, 5, 0),
+        maxMembers: jspb.Message.getFieldWithDefault(msg, 6, 0),
         flag: jspb.Message.getFieldWithDefault(msg, 7, 0),
-        pluginname: jspb.Message.getFieldWithDefault(msg, 8, ''),
+        pluginName: jspb.Message.getFieldWithDefault(msg, 8, ''),
         attr: msg.getAttr_asB64(),
-        expectmembersList: jspb.Message.getRepeatedField(msg, 10),
-        lobbyattrkeysList: jspb.Message.getRepeatedField(msg, 11),
+        expectMembersList: jspb.Message.getRepeatedField(msg, 10),
+        lobbyAttrKeysList: jspb.Message.getRepeatedField(msg, 11),
         membersList: jspb.Message.toObjectList(
           msg.getMembersList(),
           proto.game_protobuf_messages.proto.messages.RoomMember.toObject,
           includeInstance
         ),
-        membercount: jspb.Message.getFieldWithDefault(msg, 13, 0),
-        masteractorid: jspb.Message.getFieldWithDefault(msg, 14, 0),
+        memberCount: jspb.Message.getFieldWithDefault(msg, 13, 0),
+        masterActorId: jspb.Message.getFieldWithDefault(msg, 14, 0),
       };
 
     if (includeInstance) {
@@ -2387,15 +2387,15 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.deserializeBinaryFromRea
         break;
       case 4:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setEmptyroomttl(value);
+        msg.setEmptyRoomTtl(value);
         break;
       case 5:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setPlayerttl(value);
+        msg.setPlayerTtl(value);
         break;
       case 6:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMaxmembers(value);
+        msg.setMaxMembers(value);
         break;
       case 7:
         var value = /** @type {number} */ (reader.readInt64());
@@ -2403,7 +2403,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.deserializeBinaryFromRea
         break;
       case 8:
         var value = /** @type {string} */ (reader.readString());
-        msg.setPluginname(value);
+        msg.setPluginName(value);
         break;
       case 9:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
@@ -2411,11 +2411,11 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.deserializeBinaryFromRea
         break;
       case 10:
         var value = /** @type {string} */ (reader.readString());
-        msg.addExpectmembers(value);
+        msg.addExpectMembers(value);
         break;
       case 11:
         var value = /** @type {string} */ (reader.readString());
-        msg.addLobbyattrkeys(value);
+        msg.addLobbyAttrKeys(value);
         break;
       case 12:
         var value = new proto.game_protobuf_messages.proto.messages.RoomMember();
@@ -2428,11 +2428,11 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.deserializeBinaryFromRea
         break;
       case 13:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMembercount(value);
+        msg.setMemberCount(value);
         break;
       case 14:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMasteractorid(value);
+        msg.setMasterActorId(value);
         break;
       default:
         reader.skipField();
@@ -2487,15 +2487,15 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.serializeBinaryToWriter 
       google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
-  f = message.getEmptyroomttl();
+  f = message.getEmptyRoomTtl();
   if (f !== 0) {
     writer.writeInt32(4, f);
   }
-  f = message.getPlayerttl();
+  f = message.getPlayerTtl();
   if (f !== 0) {
     writer.writeInt32(5, f);
   }
-  f = message.getMaxmembers();
+  f = message.getMaxMembers();
   if (f !== 0) {
     writer.writeInt32(6, f);
   }
@@ -2503,7 +2503,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.serializeBinaryToWriter 
   if (f !== 0) {
     writer.writeInt64(7, f);
   }
-  f = message.getPluginname();
+  f = message.getPluginName();
   if (f.length > 0) {
     writer.writeString(8, f);
   }
@@ -2511,11 +2511,11 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.serializeBinaryToWriter 
   if (f.length > 0) {
     writer.writeBytes(9, f);
   }
-  f = message.getExpectmembersList();
+  f = message.getExpectMembersList();
   if (f.length > 0) {
     writer.writeRepeatedString(10, f);
   }
-  f = message.getLobbyattrkeysList();
+  f = message.getLobbyAttrKeysList();
   if (f.length > 0) {
     writer.writeRepeatedString(11, f);
   }
@@ -2528,11 +2528,11 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.serializeBinaryToWriter 
         .serializeBinaryToWriter
     );
   }
-  f = message.getMembercount();
+  f = message.getMemberCount();
   if (f !== 0) {
     writer.writeInt32(13, f);
   }
-  f = message.getMasteractorid();
+  f = message.getMasterActorId();
   if (f !== 0) {
     writer.writeInt32(14, f);
   }
@@ -2622,45 +2622,45 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.hasOpen = func
 };
 
 /**
- * optional int32 emptyRoomTtl = 4;
+ * optional int32 empty_room_ttl = 4;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getEmptyroomttl = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getEmptyRoomTtl = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setEmptyroomttl = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setEmptyRoomTtl = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 4, value);
 };
 
 /**
- * optional int32 playerTtl = 5;
+ * optional int32 player_ttl = 5;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPlayerttl = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPlayerTtl = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPlayerttl = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPlayerTtl = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 5, value);
 };
 
 /**
- * optional int32 maxMembers = 6;
+ * optional int32 max_members = 6;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMaxmembers = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMaxMembers = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMaxmembers = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMaxMembers = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 6, value);
@@ -2682,15 +2682,15 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setFlag = func
 };
 
 /**
- * optional string pluginName = 8;
+ * optional string plugin_name = 8;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPluginname = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPluginName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPluginname = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPluginName = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 8, value);
@@ -2736,10 +2736,10 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setAttr = func
 };
 
 /**
- * repeated string expectMembers = 10;
+ * repeated string expect_members = 10;
  * @return {!Array<string>}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getExpectmembersList = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getExpectMembersList = function() {
   return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(
     this,
     10
@@ -2747,7 +2747,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getExpectmembe
 };
 
 /** @param {!Array<string>} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setExpectmembersList = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setExpectMembersList = function(
   value
 ) {
   jspb.Message.setField(this, 10, value || []);
@@ -2757,7 +2757,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setExpectmembe
  * @param {string} value
  * @param {number=} opt_index
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addExpectmembers = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addExpectMembers = function(
   value,
   opt_index
 ) {
@@ -2767,15 +2767,15 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addExpectmembe
 /**
  * Clears the list making it empty but non-null.
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearExpectmembersList = function() {
-  this.setExpectmembersList([]);
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearExpectMembersList = function() {
+  this.setExpectMembersList([]);
 };
 
 /**
- * repeated string lobbyAttrKeys = 11;
+ * repeated string lobby_attr_keys = 11;
  * @return {!Array<string>}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getLobbyattrkeysList = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getLobbyAttrKeysList = function() {
   return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(
     this,
     11
@@ -2783,7 +2783,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getLobbyattrke
 };
 
 /** @param {!Array<string>} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setLobbyattrkeysList = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setLobbyAttrKeysList = function(
   value
 ) {
   jspb.Message.setField(this, 11, value || []);
@@ -2793,7 +2793,7 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setLobbyattrke
  * @param {string} value
  * @param {number=} opt_index
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addLobbyattrkeys = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addLobbyAttrKeys = function(
   value,
   opt_index
 ) {
@@ -2803,8 +2803,8 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addLobbyattrke
 /**
  * Clears the list making it empty but non-null.
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearLobbyattrkeysList = function() {
-  this.setLobbyattrkeysList([]);
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearLobbyAttrKeysList = function() {
+  this.setLobbyAttrKeysList([]);
 };
 
 /**
@@ -2852,30 +2852,30 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearMembersLi
 };
 
 /**
- * optional int32 memberCount = 13;
+ * optional int32 member_count = 13;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMembercount = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMemberCount = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 13, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMembercount = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMemberCount = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 13, value);
 };
 
 /**
- * optional int32 masterActorId = 14;
+ * optional int32 master_actor_id = 14;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMasteractorid = function() {
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMasterActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 14, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMasteractorid = function(
+proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMasterActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 14, value);
@@ -2916,15 +2916,15 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        appid: jspb.Message.getFieldWithDefault(msg, 1, ''),
-        peerid: jspb.Message.getFieldWithDefault(msg, 2, ''),
-        gameversion: jspb.Message.getFieldWithDefault(msg, 3, ''),
-        sdkversion: jspb.Message.getFieldWithDefault(msg, 4, ''),
-        protocolversion: jspb.Message.getFieldWithDefault(msg, 5, ''),
+        appId: jspb.Message.getFieldWithDefault(msg, 1, ''),
+        peerId: jspb.Message.getFieldWithDefault(msg, 2, ''),
+        gameVersion: jspb.Message.getFieldWithDefault(msg, 3, ''),
+        sdkVersion: jspb.Message.getFieldWithDefault(msg, 4, ''),
+        protocolVersion: jspb.Message.getFieldWithDefault(msg, 5, ''),
         t: jspb.Message.getFieldWithDefault(msg, 6, 0),
         n: jspb.Message.getFieldWithDefault(msg, 7, ''),
         s: jspb.Message.getFieldWithDefault(msg, 8, ''),
-        configbitmap: jspb.Message.getFieldWithDefault(msg, 9, 0),
+        configBitmap: jspb.Message.getFieldWithDefault(msg, 9, 0),
       };
 
     if (includeInstance) {
@@ -2969,23 +2969,23 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.deserializeBinary
     switch (field) {
       case 1:
         var value = /** @type {string} */ (reader.readString());
-        msg.setAppid(value);
+        msg.setAppId(value);
         break;
       case 2:
         var value = /** @type {string} */ (reader.readString());
-        msg.setPeerid(value);
+        msg.setPeerId(value);
         break;
       case 3:
         var value = /** @type {string} */ (reader.readString());
-        msg.setGameversion(value);
+        msg.setGameVersion(value);
         break;
       case 4:
         var value = /** @type {string} */ (reader.readString());
-        msg.setSdkversion(value);
+        msg.setSdkVersion(value);
         break;
       case 5:
         var value = /** @type {string} */ (reader.readString());
-        msg.setProtocolversion(value);
+        msg.setProtocolVersion(value);
         break;
       case 6:
         var value = /** @type {number} */ (reader.readInt64());
@@ -3001,7 +3001,7 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.deserializeBinary
         break;
       case 9:
         var value = /** @type {number} */ (reader.readInt64());
-        msg.setConfigbitmap(value);
+        msg.setConfigBitmap(value);
         break;
       default:
         reader.skipField();
@@ -3036,23 +3036,23 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.serializeBinaryTo
   writer
 ) {
   var f = undefined;
-  f = message.getAppid();
+  f = message.getAppId();
   if (f.length > 0) {
     writer.writeString(1, f);
   }
-  f = message.getPeerid();
+  f = message.getPeerId();
   if (f.length > 0) {
     writer.writeString(2, f);
   }
-  f = message.getGameversion();
+  f = message.getGameVersion();
   if (f.length > 0) {
     writer.writeString(3, f);
   }
-  f = message.getSdkversion();
+  f = message.getSdkVersion();
   if (f.length > 0) {
     writer.writeString(4, f);
   }
-  f = message.getProtocolversion();
+  f = message.getProtocolVersion();
   if (f.length > 0) {
     writer.writeString(5, f);
   }
@@ -3068,82 +3068,82 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.serializeBinaryTo
   if (f.length > 0) {
     writer.writeString(8, f);
   }
-  f = message.getConfigbitmap();
+  f = message.getConfigBitmap();
   if (f !== 0) {
     writer.writeInt64(9, f);
   }
 };
 
 /**
- * optional string appId = 1;
+ * optional string app_id = 1;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getAppid = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getAppId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setAppid = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setAppId = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
 /**
- * optional string peerId = 2;
+ * optional string peer_id = 2;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getPeerid = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getPeerId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setPeerid = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setPeerId = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 2, value);
 };
 
 /**
- * optional string gameVersion = 3;
+ * optional string game_version = 3;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getGameversion = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getGameVersion = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setGameversion = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setGameVersion = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 3, value);
 };
 
 /**
- * optional string sdkVersion = 4;
+ * optional string sdk_version = 4;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getSdkversion = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getSdkVersion = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setSdkversion = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setSdkVersion = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 4, value);
 };
 
 /**
- * optional string protocolVersion = 5;
+ * optional string protocol_version = 5;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getProtocolversion = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getProtocolVersion = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setProtocolversion = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setProtocolVersion = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 5, value);
@@ -3195,15 +3195,15 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setS = 
 };
 
 /**
- * optional int64 configBitmap = 9;
+ * optional int64 config_bitmap = 9;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getConfigbitmap = function() {
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getConfigBitmap = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setConfigbitmap = function(
+proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setConfigBitmap = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 9, value);
@@ -3244,8 +3244,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        roomoptions:
-          (f = msg.getRoomoptions()) &&
+        roomOptions:
+          (f = msg.getRoomOptions()) &&
           proto.game_protobuf_messages.proto.messages.RoomOptions.toObject(
             includeInstance,
             f
@@ -3299,7 +3299,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.deserializeBinaryF
           proto.game_protobuf_messages.proto.messages.RoomOptions
             .deserializeBinaryFromReader
         );
-        msg.setRoomoptions(value);
+        msg.setRoomOptions(value);
         break;
       default:
         reader.skipField();
@@ -3334,7 +3334,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.serializeBinaryToW
   writer
 ) {
   var f = undefined;
-  f = message.getRoomoptions();
+  f = message.getRoomOptions();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -3346,10 +3346,10 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.serializeBinaryToW
 };
 
 /**
- * optional RoomOptions roomOptions = 1;
+ * optional RoomOptions room_options = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomOptions}
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.getRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.getRoomOptions = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomOptions} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomOptions,
@@ -3358,7 +3358,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.getRoomo
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
-proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.setRoomoptions = function(
+proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.setRoomOptions = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -3367,15 +3367,15 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.setRoomo
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.clearRoomoptions = function() {
-  this.setRoomoptions(undefined);
+proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.clearRoomOptions = function() {
+  this.setRoomOptions(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.hasRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.hasRoomOptions = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -3414,8 +3414,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        roomoptions:
-          (f = msg.getRoomoptions()) &&
+        roomOptions:
+          (f = msg.getRoomOptions()) &&
           proto.game_protobuf_messages.proto.messages.RoomOptions.toObject(
             includeInstance,
             f
@@ -3470,7 +3470,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.deserializeBinary
           proto.game_protobuf_messages.proto.messages.RoomOptions
             .deserializeBinaryFromReader
         );
-        msg.setRoomoptions(value);
+        msg.setRoomOptions(value);
         break;
       case 2:
         var value = /** @type {string} */ (reader.readString());
@@ -3509,7 +3509,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.serializeBinaryTo
   writer
 ) {
   var f = undefined;
-  f = message.getRoomoptions();
+  f = message.getRoomOptions();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -3525,10 +3525,10 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.serializeBinaryTo
 };
 
 /**
- * optional RoomOptions roomOptions = 1;
+ * optional RoomOptions room_options = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomOptions}
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getRoomOptions = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomOptions} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomOptions,
@@ -3537,7 +3537,7 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getRoom
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
-proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setRoomoptions = function(
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setRoomOptions = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -3546,15 +3546,15 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setRoom
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.clearRoomoptions = function() {
-  this.setRoomoptions(undefined);
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.clearRoomOptions = function() {
+  this.setRoomOptions(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.hasRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.hasRoomOptions = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -3609,15 +3609,15 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         rejoin: jspb.Message.getFieldWithDefault(msg, 1, false),
-        roomoptions:
-          (f = msg.getRoomoptions()) &&
+        roomOptions:
+          (f = msg.getRoomOptions()) &&
           proto.game_protobuf_messages.proto.messages.RoomOptions.toObject(
             includeInstance,
             f
           ),
-        expectattr: msg.getExpectattr_asB64(),
-        piggybackpeerid: jspb.Message.getFieldWithDefault(msg, 4, ''),
-        createonnotfound: jspb.Message.getFieldWithDefault(msg, 5, false),
+        expectAttr: msg.getExpectAttr_asB64(),
+        piggybackPeerId: jspb.Message.getFieldWithDefault(msg, 4, ''),
+        createOnNotFound: jspb.Message.getFieldWithDefault(msg, 5, false),
       };
 
     if (includeInstance) {
@@ -3671,19 +3671,19 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.RoomOptions
             .deserializeBinaryFromReader
         );
-        msg.setRoomoptions(value);
+        msg.setRoomOptions(value);
         break;
       case 3:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
-        msg.setExpectattr(value);
+        msg.setExpectAttr(value);
         break;
       case 4:
         var value = /** @type {string} */ (reader.readString());
-        msg.setPiggybackpeerid(value);
+        msg.setPiggybackPeerId(value);
         break;
       case 5:
         var value = /** @type {boolean} */ (reader.readBool());
-        msg.setCreateonnotfound(value);
+        msg.setCreateOnNotFound(value);
         break;
       default:
         reader.skipField();
@@ -3722,7 +3722,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.serializeBinaryToWri
   if (f) {
     writer.writeBool(1, f);
   }
-  f = message.getRoomoptions();
+  f = message.getRoomOptions();
   if (f != null) {
     writer.writeMessage(
       2,
@@ -3731,15 +3731,15 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getExpectattr_asU8();
+  f = message.getExpectAttr_asU8();
   if (f.length > 0) {
     writer.writeBytes(3, f);
   }
-  f = message.getPiggybackpeerid();
+  f = message.getPiggybackPeerId();
   if (f.length > 0) {
     writer.writeString(4, f);
   }
-  f = message.getCreateonnotfound();
+  f = message.getCreateOnNotFound();
   if (f) {
     writer.writeBool(5, f);
   }
@@ -3767,10 +3767,10 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRejoin 
 };
 
 /**
- * optional RoomOptions roomOptions = 2;
+ * optional RoomOptions room_options = 2;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomOptions}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getRoomOptions = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomOptions} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomOptions,
@@ -3779,7 +3779,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getRoomopt
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRoomoptions = function(
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRoomOptions = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 2, value);
@@ -3788,23 +3788,23 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRoomopt
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.clearRoomoptions = function() {
-  this.setRoomoptions(undefined);
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.clearRoomOptions = function() {
+  this.setRoomOptions(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.hasRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.hasRoomOptions = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
 /**
- * optional bytes expectAttr = 3;
+ * optional bytes expect_attr = 3;
  * @return {!(string|Uint8Array)}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectattr = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectAttr = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(
     this,
     3,
@@ -3813,56 +3813,56 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpecta
 };
 
 /**
- * optional bytes expectAttr = 3;
- * This is a type-conversion wrapper around `getExpectattr()`
+ * optional bytes expect_attr = 3;
+ * This is a type-conversion wrapper around `getExpectAttr()`
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectattr_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getExpectattr()));
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectAttr_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getExpectAttr()));
 };
 
 /**
- * optional bytes expectAttr = 3;
+ * optional bytes expect_attr = 3;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getExpectattr()`
+ * This is a type-conversion wrapper around `getExpectAttr()`
  * @return {!Uint8Array}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectattr_asU8 = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectAttr_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-    this.getExpectattr()
+    this.getExpectAttr()
   ));
 };
 
 /** @param {!(string|Uint8Array)} value */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setExpectattr = function(
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setExpectAttr = function(
   value
 ) {
   jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 /**
- * optional string piggybackPeerId = 4;
+ * optional string piggyback_peer_id = 4;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getPiggybackpeerid = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getPiggybackPeerId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setPiggybackpeerid = function(
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setPiggybackPeerId = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 4, value);
 };
 
 /**
- * optional bool createOnNotFound = 5;
+ * optional bool create_on_not_found = 5;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getCreateonnotfound = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getCreateOnNotFound = function() {
   return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
     this,
     5,
@@ -3871,7 +3871,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getCreateo
 };
 
 /** @param {boolean} value */
-proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setCreateonnotfound = function(
+proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setCreateOnNotFound = function(
   value
 ) {
   jspb.Message.setProto3BooleanField(this, 5, value);
@@ -3912,8 +3912,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        roomoptions:
-          (f = msg.getRoomoptions()) &&
+        roomOptions:
+          (f = msg.getRoomOptions()) &&
           proto.game_protobuf_messages.proto.messages.RoomOptions.toObject(
             includeInstance,
             f
@@ -3968,7 +3968,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.RoomOptions
             .deserializeBinaryFromReader
         );
-        msg.setRoomoptions(value);
+        msg.setRoomOptions(value);
         break;
       case 2:
         var value = /** @type {string} */ (reader.readString());
@@ -4007,7 +4007,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.serializeBinaryToWr
   writer
 ) {
   var f = undefined;
-  f = message.getRoomoptions();
+  f = message.getRoomOptions();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -4023,10 +4023,10 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.serializeBinaryToWr
 };
 
 /**
- * optional RoomOptions roomOptions = 1;
+ * optional RoomOptions room_options = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomOptions}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.getRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.getRoomOptions = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomOptions} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomOptions,
@@ -4035,7 +4035,7 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.getRoomop
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
-proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.setRoomoptions = function(
+proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.setRoomOptions = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -4044,15 +4044,15 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.setRoomop
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.clearRoomoptions = function() {
-  this.setRoomoptions(undefined);
+proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.clearRoomOptions = function() {
+  this.setRoomOptions(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.hasRoomoptions = function() {
+proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.hasRoomOptions = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4276,7 +4276,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        actorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        actorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
       };
 
     if (includeInstance) {
@@ -4321,7 +4321,7 @@ proto.game_protobuf_messages.proto.messages.LeftRoomNotification.deserializeBina
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setActorid(value);
+        msg.setActorId(value);
         break;
       default:
         reader.skipField();
@@ -4356,22 +4356,22 @@ proto.game_protobuf_messages.proto.messages.LeftRoomNotification.serializeBinary
   writer
 ) {
   var f = undefined;
-  f = message.getActorid();
+  f = message.getActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
 };
 
 /**
- * optional int32 actorId = 1;
+ * optional int32 actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.getActorid = function() {
+proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.getActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.setActorid = function(
+proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.setActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -4412,9 +4412,9 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        targetactorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        appinfo:
-          (f = msg.getAppinfo()) &&
+        targetActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        appInfo:
+          (f = msg.getAppInfo()) &&
           proto.game_protobuf_messages.proto.messages.AppInfo.toObject(
             includeInstance,
             f
@@ -4463,7 +4463,7 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.deserializeBinaryF
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setTargetactorid(value);
+        msg.setTargetActorId(value);
         break;
       case 2:
         var value = new proto.game_protobuf_messages.proto.messages.AppInfo();
@@ -4472,7 +4472,7 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.deserializeBinaryF
           proto.game_protobuf_messages.proto.messages.AppInfo
             .deserializeBinaryFromReader
         );
-        msg.setAppinfo(value);
+        msg.setAppInfo(value);
         break;
       default:
         reader.skipField();
@@ -4507,11 +4507,11 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.serializeBinaryToW
   writer
 ) {
   var f = undefined;
-  f = message.getTargetactorid();
+  f = message.getTargetActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getAppinfo();
+  f = message.getAppInfo();
   if (f != null) {
     writer.writeMessage(
       2,
@@ -4523,25 +4523,25 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.serializeBinaryToW
 };
 
 /**
- * optional int32 targetActorId = 1;
+ * optional int32 target_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getTargetactorid = function() {
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getTargetActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setTargetactorid = function(
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setTargetActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
- * optional AppInfo appInfo = 2;
+ * optional AppInfo app_info = 2;
  * @return {?proto.game_protobuf_messages.proto.messages.AppInfo}
  */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getAppInfo = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.AppInfo} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.AppInfo,
@@ -4550,7 +4550,7 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getAppin
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setAppinfo = function(
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setAppInfo = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 2, value);
@@ -4559,15 +4559,15 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setAppin
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.clearAppinfo = function() {
-  this.setAppinfo(undefined);
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.clearAppInfo = function() {
+  this.setAppInfo(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.hasAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.hasAppInfo = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -4606,7 +4606,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        targetactorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        targetActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
       };
 
     if (includeInstance) {
@@ -4651,7 +4651,7 @@ proto.game_protobuf_messages.proto.messages.KickMemberResponse.deserializeBinary
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setTargetactorid(value);
+        msg.setTargetActorId(value);
         break;
       default:
         reader.skipField();
@@ -4686,22 +4686,22 @@ proto.game_protobuf_messages.proto.messages.KickMemberResponse.serializeBinaryTo
   writer
 ) {
   var f = undefined;
-  f = message.getTargetactorid();
+  f = message.getTargetActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
 };
 
 /**
- * optional int32 targetActorId = 1;
+ * optional int32 target_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.getTargetactorid = function() {
+proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.getTargetActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.setTargetactorid = function(
+proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.setTargetActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -4742,8 +4742,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        targetactorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        expectattr: msg.getExpectattr_asB64(),
+        targetActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        expectAttr: msg.getExpectAttr_asB64(),
         attr: msg.getAttr_asB64(),
       };
 
@@ -4789,11 +4789,11 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.deserializeBin
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setTargetactorid(value);
+        msg.setTargetActorId(value);
         break;
       case 2:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
-        msg.setExpectattr(value);
+        msg.setExpectAttr(value);
         break;
       case 3:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
@@ -4832,11 +4832,11 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.serializeBinar
   writer
 ) {
   var f = undefined;
-  f = message.getTargetactorid();
+  f = message.getTargetActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getExpectattr_asU8();
+  f = message.getExpectAttr_asU8();
   if (f.length > 0) {
     writer.writeBytes(2, f);
   }
@@ -4847,25 +4847,25 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.serializeBinar
 };
 
 /**
- * optional int32 targetActorId = 1;
+ * optional int32 target_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getTargetactorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getTargetActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setTargetactorid = function(
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setTargetActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
- * optional bytes expectAttr = 2;
+ * optional bytes expect_attr = 2;
  * @return {!(string|Uint8Array)}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectAttr = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(
     this,
     2,
@@ -4874,29 +4874,29 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getE
 };
 
 /**
- * optional bytes expectAttr = 2;
- * This is a type-conversion wrapper around `getExpectattr()`
+ * optional bytes expect_attr = 2;
+ * This is a type-conversion wrapper around `getExpectAttr()`
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectattr_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getExpectattr()));
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectAttr_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(this.getExpectAttr()));
 };
 
 /**
- * optional bytes expectAttr = 2;
+ * optional bytes expect_attr = 2;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getExpectattr()`
+ * This is a type-conversion wrapper around `getExpectAttr()`
  * @return {!Uint8Array}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectattr_asU8 = function() {
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getExpectAttr_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-    this.getExpectattr()
+    this.getExpectAttr()
   ));
 };
 
 /** @param {!(string|Uint8Array)} value */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setExpectattr = function(
+proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setExpectAttr = function(
   value
 ) {
   jspb.Message.setProto3BytesField(this, 2, value);
@@ -4977,7 +4977,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         attr: msg.getAttr_asB64(),
-        actorid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        actorId: jspb.Message.getFieldWithDefault(msg, 2, 0),
       };
 
     if (includeInstance) {
@@ -5026,7 +5026,7 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.deserializeBi
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setActorid(value);
+        msg.setActorId(value);
         break;
       default:
         reader.skipField();
@@ -5065,7 +5065,7 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.serializeBina
   if (f.length > 0) {
     writer.writeBytes(1, f);
   }
-  f = message.getActorid();
+  f = message.getActorId();
   if (f !== 0) {
     writer.writeInt32(2, f);
   }
@@ -5111,15 +5111,15 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.set
 };
 
 /**
- * optional int32 actorId = 2;
+ * optional int32 actor_id = 2;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.getActorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.getActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.setActorid = function(
+proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.setActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 2, value);
@@ -5161,7 +5161,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         attr: msg.getAttr_asB64(),
-        actorid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        actorId: jspb.Message.getFieldWithDefault(msg, 2, 0),
       };
 
     if (includeInstance) {
@@ -5210,7 +5210,7 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.deseriali
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setActorid(value);
+        msg.setActorId(value);
         break;
       default:
         reader.skipField();
@@ -5249,7 +5249,7 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.serialize
   if (f.length > 0) {
     writer.writeBytes(1, f);
   }
-  f = message.getActorid();
+  f = message.getActorId();
   if (f !== 0) {
     writer.writeInt32(2, f);
   }
@@ -5295,15 +5295,15 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype
 };
 
 /**
- * optional int32 actorId = 2;
+ * optional int32 actor_id = 2;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.getActorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.getActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.setActorid = function(
+proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.setActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 2, value);
@@ -5344,14 +5344,14 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        expectsysattr:
-          (f = msg.getExpectsysattr()) &&
+        expectSysAttr:
+          (f = msg.getExpectSysAttr()) &&
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty.toObject(
             includeInstance,
             f
           ),
-        sysattr:
-          (f = msg.getSysattr()) &&
+        sysAttr:
+          (f = msg.getSysAttr()) &&
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty.toObject(
             includeInstance,
             f
@@ -5405,7 +5405,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.deserialize
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty
             .deserializeBinaryFromReader
         );
-        msg.setExpectsysattr(value);
+        msg.setExpectSysAttr(value);
         break;
       case 2:
         var value = new proto.game_protobuf_messages.proto.messages.RoomSystemProperty();
@@ -5414,7 +5414,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.deserialize
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty
             .deserializeBinaryFromReader
         );
-        msg.setSysattr(value);
+        msg.setSysAttr(value);
         break;
       default:
         reader.skipField();
@@ -5449,7 +5449,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.serializeBi
   writer
 ) {
   var f = undefined;
-  f = message.getExpectsysattr();
+  f = message.getExpectSysAttr();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -5458,7 +5458,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.serializeBi
         .serializeBinaryToWriter
     );
   }
-  f = message.getSysattr();
+  f = message.getSysAttr();
   if (f != null) {
     writer.writeMessage(
       2,
@@ -5470,10 +5470,10 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.serializeBi
 };
 
 /**
- * optional RoomSystemProperty expectSysAttr = 1;
+ * optional RoomSystemProperty expect_sys_attr = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.getExpectsysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.getExpectSysAttr = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomSystemProperty} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomSystemProperty,
@@ -5482,7 +5482,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.g
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setExpectsysattr = function(
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setExpectSysAttr = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -5491,23 +5491,23 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.s
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearExpectsysattr = function() {
-  this.setExpectsysattr(undefined);
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearExpectSysAttr = function() {
+  this.setExpectSysAttr(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.hasExpectsysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.hasExpectSysAttr = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 /**
- * optional RoomSystemProperty sysAttr = 2;
+ * optional RoomSystemProperty sys_attr = 2;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.getSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.getSysAttr = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomSystemProperty} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomSystemProperty,
@@ -5516,7 +5516,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.g
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setSysattr = function(
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setSysAttr = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 2, value);
@@ -5525,15 +5525,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.s
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearSysattr = function() {
-  this.setSysattr(undefined);
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearSysAttr = function() {
+  this.setSysAttr(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.hasSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.hasSysAttr = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -5572,8 +5572,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        sysattr:
-          (f = msg.getSysattr()) &&
+        sysAttr:
+          (f = msg.getSysAttr()) &&
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty.toObject(
             includeInstance,
             f
@@ -5627,7 +5627,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.deserializ
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty
             .deserializeBinaryFromReader
         );
-        msg.setSysattr(value);
+        msg.setSysAttr(value);
         break;
       default:
         reader.skipField();
@@ -5662,7 +5662,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.serializeB
   writer
 ) {
   var f = undefined;
-  f = message.getSysattr();
+  f = message.getSysAttr();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -5674,10 +5674,10 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.serializeB
 };
 
 /**
- * optional RoomSystemProperty sysAttr = 1;
+ * optional RoomSystemProperty sys_attr = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.getSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.getSysAttr = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomSystemProperty} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomSystemProperty,
@@ -5686,7 +5686,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.setSysattr = function(
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.setSysAttr = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -5695,15 +5695,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.clearSysattr = function() {
-  this.setSysattr(undefined);
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.clearSysAttr = function() {
+  this.setSysAttr(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.hasSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.hasSysAttr = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -5742,8 +5742,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        sysattr:
-          (f = msg.getSysattr()) &&
+        sysAttr:
+          (f = msg.getSysAttr()) &&
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty.toObject(
             includeInstance,
             f
@@ -5797,7 +5797,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.deseri
           proto.game_protobuf_messages.proto.messages.RoomSystemProperty
             .deserializeBinaryFromReader
         );
-        msg.setSysattr(value);
+        msg.setSysAttr(value);
         break;
       default:
         reader.skipField();
@@ -5832,7 +5832,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.serial
   writer
 ) {
   var f = undefined;
-  f = message.getSysattr();
+  f = message.getSysAttr();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -5844,10 +5844,10 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.serial
 };
 
 /**
- * optional RoomSystemProperty sysAttr = 1;
+ * optional RoomSystemProperty sys_attr = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.getSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.getSysAttr = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomSystemProperty} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomSystemProperty,
@@ -5856,7 +5856,7 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.protot
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.setSysattr = function(
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.setSysAttr = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -5865,15 +5865,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.protot
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.clearSysattr = function() {
-  this.setSysattr(undefined);
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.clearSysAttr = function() {
+  this.setSysAttr(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.hasSysattr = function() {
+proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.hasSysAttr = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -5912,7 +5912,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        masteractorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        masterActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
       };
 
     if (includeInstance) {
@@ -5957,7 +5957,7 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.deserializ
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMasteractorid(value);
+        msg.setMasterActorId(value);
         break;
       default:
         reader.skipField();
@@ -5992,22 +5992,22 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.serializeB
   writer
 ) {
   var f = undefined;
-  f = message.getMasteractorid();
+  f = message.getMasterActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
 };
 
 /**
- * optional int32 masterActorId = 1;
+ * optional int32 master_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.getMasteractorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.getMasterActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.setMasteractorid = function(
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.setMasterActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -6048,7 +6048,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        masteractorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        masterActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
       };
 
     if (includeInstance) {
@@ -6093,7 +6093,7 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.deseriali
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMasteractorid(value);
+        msg.setMasterActorId(value);
         break;
       default:
         reader.skipField();
@@ -6128,22 +6128,22 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.serialize
   writer
 ) {
   var f = undefined;
-  f = message.getMasteractorid();
+  f = message.getMasterActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
 };
 
 /**
- * optional int32 masterActorId = 1;
+ * optional int32 master_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.getMasteractorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.getMasterActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.setMasteractorid = function(
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.setMasterActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -6184,7 +6184,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        masteractorid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        masterActorId: jspb.Message.getFieldWithDefault(msg, 1, 0),
       };
 
     if (includeInstance) {
@@ -6229,7 +6229,7 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.deser
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setMasteractorid(value);
+        msg.setMasterActorId(value);
         break;
       default:
         reader.skipField();
@@ -6264,22 +6264,22 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.seria
   writer
 ) {
   var f = undefined;
-  f = message.getMasteractorid();
+  f = message.getMasterActorId();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
 };
 
 /**
- * optional int32 masterActorId = 1;
+ * optional int32 master_actor_id = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.getMasteractorid = function() {
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.getMasterActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.setMasteractorid = function(
+proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.setMasterActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
@@ -6302,11 +6302,11 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.oneofGroups_ = [
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.NotificationCase = {
   NOTIFICATION_NOT_SET: 0,
-  JOINROOM: 20,
-  UPDATEPROPERTY: 21,
-  UPDATESYSPROPERTY: 22,
-  UPDATEMASTERCLIENT: 23,
-  LEFTROOM: 24,
+  JOIN_ROOM: 20,
+  UPDATE_PROPERTY: 21,
+  UPDATE_SYS_PROPERTY: 22,
+  UPDATE_MASTER_CLIENT: 23,
+  LEFT_ROOM: 24,
 };
 
 /**
@@ -6354,40 +6354,40 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        initbyactor: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        appinfo:
-          (f = msg.getAppinfo()) &&
+        initByActor: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        appInfo:
+          (f = msg.getAppInfo()) &&
           proto.game_protobuf_messages.proto.messages.AppInfo.toObject(
             includeInstance,
             f
           ),
-        bymaster: jspb.Message.getFieldWithDefault(msg, 4, false),
-        joinroom:
-          (f = msg.getJoinroom()) &&
+        byMaster: jspb.Message.getFieldWithDefault(msg, 4, false),
+        joinRoom:
+          (f = msg.getJoinRoom()) &&
           proto.game_protobuf_messages.proto.messages.JoinRoomNotification.toObject(
             includeInstance,
             f
           ),
-        updateproperty:
-          (f = msg.getUpdateproperty()) &&
+        updateProperty:
+          (f = msg.getUpdateProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.toObject(
             includeInstance,
             f
           ),
-        updatesysproperty:
-          (f = msg.getUpdatesysproperty()) &&
+        updateSysProperty:
+          (f = msg.getUpdateSysProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.toObject(
             includeInstance,
             f
           ),
-        updatemasterclient:
-          (f = msg.getUpdatemasterclient()) &&
+        updateMasterClient:
+          (f = msg.getUpdateMasterClient()) &&
           proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.toObject(
             includeInstance,
             f
           ),
-        leftroom:
-          (f = msg.getLeftroom()) &&
+        leftRoom:
+          (f = msg.getLeftRoom()) &&
           proto.game_protobuf_messages.proto.messages.LeftRoomNotification.toObject(
             includeInstance,
             f
@@ -6436,7 +6436,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setInitbyactor(value);
+        msg.setInitByActor(value);
         break;
       case 3:
         var value = new proto.game_protobuf_messages.proto.messages.AppInfo();
@@ -6445,11 +6445,11 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.AppInfo
             .deserializeBinaryFromReader
         );
-        msg.setAppinfo(value);
+        msg.setAppInfo(value);
         break;
       case 4:
         var value = /** @type {boolean} */ (reader.readBool());
-        msg.setBymaster(value);
+        msg.setByMaster(value);
         break;
       case 20:
         var value = new proto.game_protobuf_messages.proto.messages.JoinRoomNotification();
@@ -6458,7 +6458,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.JoinRoomNotification
             .deserializeBinaryFromReader
         );
-        msg.setJoinroom(value);
+        msg.setJoinRoom(value);
         break;
       case 21:
         var value = new proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification();
@@ -6467,7 +6467,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification
             .deserializeBinaryFromReader
         );
-        msg.setUpdateproperty(value);
+        msg.setUpdateProperty(value);
         break;
       case 22:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification();
@@ -6476,7 +6476,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages
             .UpdateSysPropertyNotification.deserializeBinaryFromReader
         );
-        msg.setUpdatesysproperty(value);
+        msg.setUpdateSysProperty(value);
         break;
       case 23:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification();
@@ -6485,7 +6485,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages
             .UpdateMasterClientNotification.deserializeBinaryFromReader
         );
-        msg.setUpdatemasterclient(value);
+        msg.setUpdateMasterClient(value);
         break;
       case 24:
         var value = new proto.game_protobuf_messages.proto.messages.LeftRoomNotification();
@@ -6494,7 +6494,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.LeftRoomNotification
             .deserializeBinaryFromReader
         );
-        msg.setLeftroom(value);
+        msg.setLeftRoom(value);
         break;
       default:
         reader.skipField();
@@ -6529,11 +6529,11 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
   writer
 ) {
   var f = undefined;
-  f = message.getInitbyactor();
+  f = message.getInitByActor();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getAppinfo();
+  f = message.getAppInfo();
   if (f != null) {
     writer.writeMessage(
       3,
@@ -6542,11 +6542,11 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
         .serializeBinaryToWriter
     );
   }
-  f = message.getBymaster();
+  f = message.getByMaster();
   if (f) {
     writer.writeBool(4, f);
   }
-  f = message.getJoinroom();
+  f = message.getJoinRoom();
   if (f != null) {
     writer.writeMessage(
       20,
@@ -6555,7 +6555,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdateproperty();
+  f = message.getUpdateProperty();
   if (f != null) {
     writer.writeMessage(
       21,
@@ -6564,7 +6564,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatesysproperty();
+  f = message.getUpdateSysProperty();
   if (f != null) {
     writer.writeMessage(
       22,
@@ -6573,7 +6573,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatemasterclient();
+  f = message.getUpdateMasterClient();
   if (f != null) {
     writer.writeMessage(
       23,
@@ -6582,7 +6582,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
         .serializeBinaryToWriter
     );
   }
-  f = message.getLeftroom();
+  f = message.getLeftRoom();
   if (f != null) {
     writer.writeMessage(
       24,
@@ -6594,25 +6594,25 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.serializeBinaryToWr
 };
 
 /**
- * optional int32 initByActor = 1;
+ * optional int32 init_by_actor = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getInitbyactor = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getInitByActor = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setInitbyactor = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setInitByActor = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
- * optional AppInfo appInfo = 3;
+ * optional AppInfo app_info = 3;
  * @return {?proto.game_protobuf_messages.proto.messages.AppInfo}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getAppInfo = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.AppInfo} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.AppInfo,
@@ -6621,7 +6621,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getAppinf
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setAppinfo = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setAppInfo = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 3, value);
@@ -6630,25 +6630,25 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setAppinf
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearAppinfo = function() {
-  this.setAppinfo(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearAppInfo = function() {
+  this.setAppInfo(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasAppinfo = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasAppInfo = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
 /**
- * optional bool byMaster = 4;
+ * optional bool by_master = 4;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getBymaster = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getByMaster = function() {
   return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
     this,
     4,
@@ -6657,17 +6657,17 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getBymast
 };
 
 /** @param {boolean} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setBymaster = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setByMaster = function(
   value
 ) {
   jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 /**
- * optional JoinRoomNotification joinRoom = 20;
+ * optional JoinRoomNotification join_room = 20;
  * @return {?proto.game_protobuf_messages.proto.messages.JoinRoomNotification}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getJoinRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.JoinRoomNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.JoinRoomNotification,
@@ -6676,7 +6676,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getJoinro
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setJoinroom = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setJoinRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -6691,23 +6691,23 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setJoinro
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearJoinroom = function() {
-  this.setJoinroom(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearJoinRoom = function() {
+  this.setJoinRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasJoinRoom = function() {
   return jspb.Message.getField(this, 20) != null;
 };
 
 /**
- * optional UpdatePropertyNotification updateProperty = 21;
+ * optional UpdatePropertyNotification update_property = 21;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdateProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification,
@@ -6716,7 +6716,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateproperty = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -6731,23 +6731,23 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateproperty = function() {
-  this.setUpdateproperty(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateProperty = function() {
+  this.setUpdateProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdateProperty = function() {
   return jspb.Message.getField(this, 21) != null;
 };
 
 /**
- * optional UpdateSysPropertyNotification updateSysProperty = 22;
+ * optional UpdateSysPropertyNotification update_sys_property = 22;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdateSysProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification,
@@ -6756,7 +6756,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdatesysproperty = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateSysProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -6771,23 +6771,23 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdatesysproperty = function() {
-  this.setUpdatesysproperty(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateSysProperty = function() {
+  this.setUpdateSysProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdateSysProperty = function() {
   return jspb.Message.getField(this, 22) != null;
 };
 
 /**
- * optional UpdateMasterClientNotification updateMasterClient = 23;
+ * optional UpdateMasterClientNotification update_master_client = 23;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdateMasterClient = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification,
@@ -6796,7 +6796,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdatemasterclient = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateMasterClient = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -6811,23 +6811,23 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdatemasterclient = function() {
-  this.setUpdatemasterclient(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateMasterClient = function() {
+  this.setUpdateMasterClient(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasUpdateMasterClient = function() {
   return jspb.Message.getField(this, 23) != null;
 };
 
 /**
- * optional LeftRoomNotification leftRoom = 24;
+ * optional LeftRoomNotification left_room = 24;
  * @return {?proto.game_protobuf_messages.proto.messages.LeftRoomNotification}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getLeftroom = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getLeftRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.LeftRoomNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.LeftRoomNotification,
@@ -6836,7 +6836,7 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getLeftro
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.LeftRoomNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setLeftroom = function(
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setLeftRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -6851,15 +6851,15 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setLeftro
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearLeftroom = function() {
-  this.setLeftroom(undefined);
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearLeftRoom = function() {
+  this.setLeftRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasLeftroom = function() {
+proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasLeftRoom = function() {
   return jspb.Message.getField(this, 24) != null;
 };
 
@@ -6906,14 +6906,14 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         cached: jspb.Message.getFieldWithDefault(msg, 1, false),
-        eventid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-        receivergroup: jspb.Message.getFieldWithDefault(msg, 3, 0),
-        cachingoption: jspb.Message.getFieldWithDefault(msg, 4, 0),
-        eventoptions: jspb.Message.getFieldWithDefault(msg, 5, 0),
-        toactoridsList: jspb.Message.getRepeatedField(msg, 6),
+        eventId: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        receiverGroup: jspb.Message.getFieldWithDefault(msg, 3, 0),
+        cachingOption: jspb.Message.getFieldWithDefault(msg, 4, 0),
+        eventOptions: jspb.Message.getFieldWithDefault(msg, 5, 0),
+        toActorIdsList: jspb.Message.getRepeatedField(msg, 6),
         msg: msg.getMsg_asB64(),
         timestamp: jspb.Message.getFieldWithDefault(msg, 8, 0),
-        fromactorid: jspb.Message.getFieldWithDefault(msg, 9, 0),
+        fromActorId: jspb.Message.getFieldWithDefault(msg, 9, 0),
         i: jspb.Message.getFieldWithDefault(msg, 10, 0),
       };
 
@@ -6963,23 +6963,23 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.deserializeBinaryFromR
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setEventid(value);
+        msg.setEventId(value);
         break;
       case 3:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setReceivergroup(value);
+        msg.setReceiverGroup(value);
         break;
       case 4:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setCachingoption(value);
+        msg.setCachingOption(value);
         break;
       case 5:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setEventoptions(value);
+        msg.setEventOptions(value);
         break;
       case 6:
         var value = /** @type {!Array<number>} */ (reader.readPackedInt32());
-        msg.setToactoridsList(value);
+        msg.setToActorIdsList(value);
         break;
       case 7:
         var value = /** @type {!Uint8Array} */ (reader.readBytes());
@@ -6991,7 +6991,7 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.deserializeBinaryFromR
         break;
       case 9:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setFromactorid(value);
+        msg.setFromActorId(value);
         break;
       case 10:
         var value = /** @type {number} */ (reader.readInt32());
@@ -7034,23 +7034,23 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.serializeBinaryToWrite
   if (f) {
     writer.writeBool(1, f);
   }
-  f = message.getEventid();
+  f = message.getEventId();
   if (f !== 0) {
     writer.writeInt32(2, f);
   }
-  f = message.getReceivergroup();
+  f = message.getReceiverGroup();
   if (f !== 0) {
     writer.writeInt32(3, f);
   }
-  f = message.getCachingoption();
+  f = message.getCachingOption();
   if (f !== 0) {
     writer.writeInt32(4, f);
   }
-  f = message.getEventoptions();
+  f = message.getEventOptions();
   if (f !== 0) {
     writer.writeInt32(5, f);
   }
-  f = message.getToactoridsList();
+  f = message.getToActorIdsList();
   if (f.length > 0) {
     writer.writePackedInt32(6, f);
   }
@@ -7062,7 +7062,7 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.serializeBinaryToWrite
   if (f !== 0) {
     writer.writeInt64(8, f);
   }
-  f = message.getFromactorid();
+  f = message.getFromActorId();
   if (f !== 0) {
     writer.writeInt32(9, f);
   }
@@ -7094,75 +7094,75 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setCached = 
 };
 
 /**
- * optional int32 eventId = 2;
+ * optional int32 event_id = 2;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventid = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventid = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 2, value);
 };
 
 /**
- * optional int32 receiverGroup = 3;
+ * optional int32 receiver_group = 3;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getReceivergroup = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getReceiverGroup = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setReceivergroup = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setReceiverGroup = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 3, value);
 };
 
 /**
- * optional int32 cachingOption = 4;
+ * optional int32 caching_option = 4;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getCachingoption = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getCachingOption = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setCachingoption = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setCachingOption = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 4, value);
 };
 
 /**
- * optional int32 eventOptions = 5;
+ * optional int32 event_options = 5;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventoptions = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventOptions = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventoptions = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventOptions = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 5, value);
 };
 
 /**
- * repeated int32 toActorIds = 6;
+ * repeated int32 to_actor_ids = 6;
  * @return {!Array<number>}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getToactoridsList = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getToActorIdsList = function() {
   return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 6));
 };
 
 /** @param {!Array<number>} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setToactoridsList = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setToActorIdsList = function(
   value
 ) {
   jspb.Message.setField(this, 6, value || []);
@@ -7172,7 +7172,7 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setToactorid
  * @param {number} value
  * @param {number=} opt_index
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.addToactorids = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.addToActorIds = function(
   value,
   opt_index
 ) {
@@ -7182,8 +7182,8 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.addToactorid
 /**
  * Clears the list making it empty but non-null.
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.clearToactoridsList = function() {
-  this.setToactoridsList([]);
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.clearToActorIdsList = function() {
+  this.setToActorIdsList([]);
 };
 
 /**
@@ -7241,15 +7241,15 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setTimestamp
 };
 
 /**
- * optional int32 fromActorId = 9;
+ * optional int32 from_actor_id = 9;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getFromactorid = function() {
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getFromActorId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setFromactorid = function(
+proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setFromActorId = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 9, value);
@@ -7651,7 +7651,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        lobbyid: jspb.Message.getFieldWithDefault(msg, 1, ''),
+        lobbyId: jspb.Message.getFieldWithDefault(msg, 1, ''),
       };
 
     if (includeInstance) {
@@ -7696,7 +7696,7 @@ proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.deserializeBinaryFr
     switch (field) {
       case 1:
         var value = /** @type {string} */ (reader.readString());
-        msg.setLobbyid(value);
+        msg.setLobbyId(value);
         break;
       default:
         reader.skipField();
@@ -7731,22 +7731,22 @@ proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.serializeBinaryToWr
   writer
 ) {
   var f = undefined;
-  f = message.getLobbyid();
+  f = message.getLobbyId();
   if (f.length > 0) {
     writer.writeString(1, f);
   }
 };
 
 /**
- * optional string lobbyId = 1;
+ * optional string lobby_id = 1;
  * @return {string}
  */
-proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.getLobbyid = function() {
+proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.getLobbyId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
 /** @param {string} value */
-proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.setLobbyid = function(
+proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.setLobbyId = function(
   value
 ) {
   jspb.Message.setProto3StringField(this, 1, value);
@@ -7975,10 +7975,10 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        countofrooms: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        countofplayersonrouter: jspb.Message.getFieldWithDefault(msg, 2, 0),
-        countofplayersinrooms: jspb.Message.getFieldWithDefault(msg, 3, 0),
-        countofplayers: jspb.Message.getFieldWithDefault(msg, 4, 0),
+        countOfRooms: jspb.Message.getFieldWithDefault(msg, 1, 0),
+        countOfPlayersOnRouter: jspb.Message.getFieldWithDefault(msg, 2, 0),
+        countOfPlayersInRooms: jspb.Message.getFieldWithDefault(msg, 3, 0),
+        countOfPlayers: jspb.Message.getFieldWithDefault(msg, 4, 0),
       };
 
     if (includeInstance) {
@@ -8023,19 +8023,19 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.deserializeBinaryFromRe
     switch (field) {
       case 1:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setCountofrooms(value);
+        msg.setCountOfRooms(value);
         break;
       case 2:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setCountofplayersonrouter(value);
+        msg.setCountOfPlayersOnRouter(value);
         break;
       case 3:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setCountofplayersinrooms(value);
+        msg.setCountOfPlayersInRooms(value);
         break;
       case 4:
         var value = /** @type {number} */ (reader.readInt32());
-        msg.setCountofplayers(value);
+        msg.setCountOfPlayers(value);
         break;
       default:
         reader.skipField();
@@ -8070,79 +8070,79 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.serializeBinaryToWriter
   writer
 ) {
   var f = undefined;
-  f = message.getCountofrooms();
+  f = message.getCountOfRooms();
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getCountofplayersonrouter();
+  f = message.getCountOfPlayersOnRouter();
   if (f !== 0) {
     writer.writeInt32(2, f);
   }
-  f = message.getCountofplayersinrooms();
+  f = message.getCountOfPlayersInRooms();
   if (f !== 0) {
     writer.writeInt32(3, f);
   }
-  f = message.getCountofplayers();
+  f = message.getCountOfPlayers();
   if (f !== 0) {
     writer.writeInt32(4, f);
   }
 };
 
 /**
- * optional int32 countOfRooms = 1;
+ * optional int32 count_of_rooms = 1;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountofrooms = function() {
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfRooms = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountofrooms = function(
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfRooms = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
- * optional int32 countOfPlayersOnRouter = 2;
+ * optional int32 count_of_players_on_router = 2;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountofplayersonrouter = function() {
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPlayersOnRouter = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountofplayersonrouter = function(
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayersOnRouter = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 2, value);
 };
 
 /**
- * optional int32 countOfPlayersInRooms = 3;
+ * optional int32 count_of_players_in_rooms = 3;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountofplayersinrooms = function() {
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPlayersInRooms = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountofplayersinrooms = function(
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayersInRooms = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 3, value);
 };
 
 /**
- * optional int32 countOfPlayers = 4;
+ * optional int32 count_of_players = 4;
  * @return {number}
  */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountofplayers = function() {
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPlayers = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 /** @param {number} value */
-proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountofplayers = function(
+proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayers = function(
   value
 ) {
   jspb.Message.setProto3IntField(this, 4, value);
@@ -8183,8 +8183,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        appstats:
-          (f = msg.getAppstats()) &&
+        appStats:
+          (f = msg.getAppStats()) &&
           proto.game_protobuf_messages.proto.messages.AppStatistic.toObject(
             includeInstance,
             f
@@ -8238,7 +8238,7 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.deserializeBinaryFr
           proto.game_protobuf_messages.proto.messages.AppStatistic
             .deserializeBinaryFromReader
         );
-        msg.setAppstats(value);
+        msg.setAppStats(value);
         break;
       default:
         reader.skipField();
@@ -8273,7 +8273,7 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.serializeBinaryToWr
   writer
 ) {
   var f = undefined;
-  f = message.getAppstats();
+  f = message.getAppStats();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -8285,10 +8285,10 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.serializeBinaryToWr
 };
 
 /**
- * optional AppStatistic appStats = 1;
+ * optional AppStatistic app_stats = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.AppStatistic}
  */
-proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.getAppstats = function() {
+proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.getAppStats = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.AppStatistic} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.AppStatistic,
@@ -8297,7 +8297,7 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.getAppsta
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.AppStatistic|undefined} value */
-proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.setAppstats = function(
+proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.setAppStats = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -8306,15 +8306,15 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.setAppsta
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.clearAppstats = function() {
-  this.setAppstats(undefined);
+proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.clearAppStats = function() {
+  this.setAppStats(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.hasAppstats = function() {
+proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.hasAppStats = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -8353,8 +8353,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        errorinfo:
-          (f = msg.getErrorinfo()) &&
+        errorInfo:
+          (f = msg.getErrorInfo()) &&
           proto.game_protobuf_messages.proto.messages.ErrorInfo.toObject(
             includeInstance,
             f
@@ -8408,7 +8408,7 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.deserializeBinaryFromRe
           proto.game_protobuf_messages.proto.messages.ErrorInfo
             .deserializeBinaryFromReader
         );
-        msg.setErrorinfo(value);
+        msg.setErrorInfo(value);
         break;
       default:
         reader.skipField();
@@ -8443,7 +8443,7 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.serializeBinaryToWriter
   writer
 ) {
   var f = undefined;
-  f = message.getErrorinfo();
+  f = message.getErrorInfo();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -8455,10 +8455,10 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.serializeBinaryToWriter
 };
 
 /**
- * optional ErrorInfo errorInfo = 1;
+ * optional ErrorInfo error_info = 1;
  * @return {?proto.game_protobuf_messages.proto.messages.ErrorInfo}
  */
-proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.getErrorinfo = function() {
+proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.getErrorInfo = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.ErrorInfo} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.ErrorInfo,
@@ -8467,7 +8467,7 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.getErrorinfo 
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value */
-proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.setErrorinfo = function(
+proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.setErrorInfo = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 1, value);
@@ -8476,15 +8476,15 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.setErrorinfo 
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.clearErrorinfo = function() {
-  this.setErrorinfo(undefined);
+proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.clearErrorInfo = function() {
+  this.setErrorInfo(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.hasErrorinfo = function() {
+proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.hasErrorInfo = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -8505,14 +8505,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_ = [
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.RequestCase = {
   REQUEST_NOT_SET: 0,
-  SESSIONOPEN: 20,
-  CREATEROOM: 21,
-  JOINROOM: 22,
-  UPDATEPROPERTY: 23,
-  UPDATESYSPROPERTY: 24,
-  UPDATEMASTERCLIENT: 25,
-  KICKMEMBER: 26,
-  JOINLOBBY: 54,
+  SESSION_OPEN: 20,
+  CREATE_ROOM: 21,
+  JOIN_ROOM: 22,
+  UPDATE_PROPERTY: 23,
+  UPDATE_SYS_PROPERTY: 24,
+  UPDATE_MASTER_CLIENT: 25,
+  KICK_MEMBER: 26,
+  JOIN_LOBBY: 54,
 };
 
 /**
@@ -8561,50 +8561,50 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         i: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        sessionopen:
-          (f = msg.getSessionopen()) &&
+        sessionOpen:
+          (f = msg.getSessionOpen()) &&
           proto.game_protobuf_messages.proto.messages.SessionOpenRequest.toObject(
             includeInstance,
             f
           ),
-        createroom:
-          (f = msg.getCreateroom()) &&
+        createRoom:
+          (f = msg.getCreateRoom()) &&
           proto.game_protobuf_messages.proto.messages.CreateRoomRequest.toObject(
             includeInstance,
             f
           ),
-        joinroom:
-          (f = msg.getJoinroom()) &&
+        joinRoom:
+          (f = msg.getJoinRoom()) &&
           proto.game_protobuf_messages.proto.messages.JoinRoomRequest.toObject(
             includeInstance,
             f
           ),
-        updateproperty:
-          (f = msg.getUpdateproperty()) &&
+        updateProperty:
+          (f = msg.getUpdateProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.toObject(
             includeInstance,
             f
           ),
-        updatesysproperty:
-          (f = msg.getUpdatesysproperty()) &&
+        updateSysProperty:
+          (f = msg.getUpdateSysProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.toObject(
             includeInstance,
             f
           ),
-        updatemasterclient:
-          (f = msg.getUpdatemasterclient()) &&
+        updateMasterClient:
+          (f = msg.getUpdateMasterClient()) &&
           proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.toObject(
             includeInstance,
             f
           ),
-        kickmember:
-          (f = msg.getKickmember()) &&
+        kickMember:
+          (f = msg.getKickMember()) &&
           proto.game_protobuf_messages.proto.messages.KickMemberRequest.toObject(
             includeInstance,
             f
           ),
-        joinlobby:
-          (f = msg.getJoinlobby()) &&
+        joinLobby:
+          (f = msg.getJoinLobby()) &&
           proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.toObject(
             includeInstance,
             f
@@ -8662,7 +8662,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.SessionOpenRequest
             .deserializeBinaryFromReader
         );
-        msg.setSessionopen(value);
+        msg.setSessionOpen(value);
         break;
       case 21:
         var value = new proto.game_protobuf_messages.proto.messages.CreateRoomRequest();
@@ -8671,7 +8671,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.CreateRoomRequest
             .deserializeBinaryFromReader
         );
-        msg.setCreateroom(value);
+        msg.setCreateRoom(value);
         break;
       case 22:
         var value = new proto.game_protobuf_messages.proto.messages.JoinRoomRequest();
@@ -8680,7 +8680,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.JoinRoomRequest
             .deserializeBinaryFromReader
         );
-        msg.setJoinroom(value);
+        msg.setJoinRoom(value);
         break;
       case 23:
         var value = new proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest();
@@ -8689,7 +8689,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest
             .deserializeBinaryFromReader
         );
-        msg.setUpdateproperty(value);
+        msg.setUpdateProperty(value);
         break;
       case 24:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest();
@@ -8698,7 +8698,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest
             .deserializeBinaryFromReader
         );
-        msg.setUpdatesysproperty(value);
+        msg.setUpdateSysProperty(value);
         break;
       case 25:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest();
@@ -8707,7 +8707,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest
             .deserializeBinaryFromReader
         );
-        msg.setUpdatemasterclient(value);
+        msg.setUpdateMasterClient(value);
         break;
       case 26:
         var value = new proto.game_protobuf_messages.proto.messages.KickMemberRequest();
@@ -8716,7 +8716,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.KickMemberRequest
             .deserializeBinaryFromReader
         );
-        msg.setKickmember(value);
+        msg.setKickMember(value);
         break;
       case 54:
         var value = new proto.game_protobuf_messages.proto.messages.JoinLobbyRequest();
@@ -8725,7 +8725,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.deserializeBinaryFrom
           proto.game_protobuf_messages.proto.messages.JoinLobbyRequest
             .deserializeBinaryFromReader
         );
-        msg.setJoinlobby(value);
+        msg.setJoinLobby(value);
         break;
       default:
         reader.skipField();
@@ -8764,7 +8764,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getSessionopen();
+  f = message.getSessionOpen();
   if (f != null) {
     writer.writeMessage(
       20,
@@ -8773,7 +8773,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getCreateroom();
+  f = message.getCreateRoom();
   if (f != null) {
     writer.writeMessage(
       21,
@@ -8782,7 +8782,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getJoinroom();
+  f = message.getJoinRoom();
   if (f != null) {
     writer.writeMessage(
       22,
@@ -8791,7 +8791,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdateproperty();
+  f = message.getUpdateProperty();
   if (f != null) {
     writer.writeMessage(
       23,
@@ -8800,7 +8800,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatesysproperty();
+  f = message.getUpdateSysProperty();
   if (f != null) {
     writer.writeMessage(
       24,
@@ -8809,7 +8809,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatemasterclient();
+  f = message.getUpdateMasterClient();
   if (f != null) {
     writer.writeMessage(
       25,
@@ -8818,7 +8818,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getKickmember();
+  f = message.getKickMember();
   if (f != null) {
     writer.writeMessage(
       26,
@@ -8827,7 +8827,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.serializeBinaryToWrit
         .serializeBinaryToWriter
     );
   }
-  f = message.getJoinlobby();
+  f = message.getJoinLobby();
   if (f != null) {
     writer.writeMessage(
       54,
@@ -8854,10 +8854,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setI = func
 };
 
 /**
- * optional SessionOpenRequest sessionOpen = 20;
+ * optional SessionOpenRequest session_open = 20;
  * @return {?proto.game_protobuf_messages.proto.messages.SessionOpenRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getSessionopen = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getSessionOpen = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.SessionOpenRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.SessionOpenRequest,
@@ -8866,7 +8866,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getSessiono
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.SessionOpenRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setSessionopen = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setSessionOpen = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -8880,23 +8880,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setSessiono
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearSessionopen = function() {
-  this.setSessionopen(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearSessionOpen = function() {
+  this.setSessionOpen(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasSessionopen = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasSessionOpen = function() {
   return jspb.Message.getField(this, 20) != null;
 };
 
 /**
- * optional CreateRoomRequest createRoom = 21;
+ * optional CreateRoomRequest create_room = 21;
  * @return {?proto.game_protobuf_messages.proto.messages.CreateRoomRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getCreateroom = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getCreateRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.CreateRoomRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.CreateRoomRequest,
@@ -8905,7 +8905,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getCreatero
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.CreateRoomRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setCreateroom = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setCreateRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -8919,23 +8919,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setCreatero
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearCreateroom = function() {
-  this.setCreateroom(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearCreateRoom = function() {
+  this.setCreateRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasCreateroom = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasCreateRoom = function() {
   return jspb.Message.getField(this, 21) != null;
 };
 
 /**
- * optional JoinRoomRequest joinRoom = 22;
+ * optional JoinRoomRequest join_room = 22;
  * @return {?proto.game_protobuf_messages.proto.messages.JoinRoomRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.JoinRoomRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.JoinRoomRequest,
@@ -8944,7 +8944,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinroom
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinroom = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -8958,23 +8958,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinroom
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinroom = function() {
-  this.setJoinroom(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinRoom = function() {
+  this.setJoinRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasJoinRoom = function() {
   return jspb.Message.getField(this, 22) != null;
 };
 
 /**
- * optional UpdatePropertyRequest updateProperty = 23;
+ * optional UpdatePropertyRequest update_property = 23;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest,
@@ -8983,7 +8983,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatepr
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateproperty = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -8997,23 +8997,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatepr
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateproperty = function() {
-  this.setUpdateproperty(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateProperty = function() {
+  this.setUpdateProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdateProperty = function() {
   return jspb.Message.getField(this, 23) != null;
 };
 
 /**
- * optional UpdateSysPropertyRequest updateSysProperty = 24;
+ * optional UpdateSysPropertyRequest update_sys_property = 24;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateSysProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest,
@@ -9022,7 +9022,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatesy
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatesysproperty = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateSysProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9036,23 +9036,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatesy
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdatesysproperty = function() {
-  this.setUpdatesysproperty(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateSysProperty = function() {
+  this.setUpdateSysProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdateSysProperty = function() {
   return jspb.Message.getField(this, 24) != null;
 };
 
 /**
- * optional UpdateMasterClientRequest updateMasterClient = 25;
+ * optional UpdateMasterClientRequest update_master_client = 25;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateMasterClient = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest,
@@ -9061,7 +9061,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatema
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatemasterclient = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateMasterClient = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9075,23 +9075,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatema
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdatemasterclient = function() {
-  this.setUpdatemasterclient(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateMasterClient = function() {
+  this.setUpdateMasterClient(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasUpdateMasterClient = function() {
   return jspb.Message.getField(this, 25) != null;
 };
 
 /**
- * optional KickMemberRequest kickMember = 26;
+ * optional KickMemberRequest kick_member = 26;
  * @return {?proto.game_protobuf_messages.proto.messages.KickMemberRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getKickmember = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getKickMember = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.KickMemberRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.KickMemberRequest,
@@ -9100,7 +9100,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getKickmemb
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.KickMemberRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setKickmember = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setKickMember = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9114,23 +9114,23 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setKickmemb
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearKickmember = function() {
-  this.setKickmember(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearKickMember = function() {
+  this.setKickMember(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasKickmember = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasKickMember = function() {
   return jspb.Message.getField(this, 26) != null;
 };
 
 /**
- * optional JoinLobbyRequest joinLobby = 54;
+ * optional JoinLobbyRequest join_lobby = 54;
  * @return {?proto.game_protobuf_messages.proto.messages.JoinLobbyRequest}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinlobby = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinLobby = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.JoinLobbyRequest} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.JoinLobbyRequest,
@@ -9139,7 +9139,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinlobb
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.JoinLobbyRequest|undefined} value */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinlobby = function(
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinLobby = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9153,15 +9153,15 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinlobb
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinlobby = function() {
-  this.setJoinlobby(undefined);
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinLobby = function() {
+  this.setJoinLobby(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasJoinlobby = function() {
+proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasJoinLobby = function() {
   return jspb.Message.getField(this, 54) != null;
 };
 
@@ -9182,12 +9182,12 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_ = [
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.ResponseCase = {
   RESPONSE_NOT_SET: 0,
-  CREATEROOM: 20,
-  JOINROOM: 21,
-  UPDATEPROPERTY: 22,
-  UPDATESYSPROPERTY: 23,
-  UPDATEMASTERCLIENT: 24,
-  KICKMEMBER: 25,
+  CREATE_ROOM: 20,
+  JOIN_ROOM: 21,
+  UPDATE_PROPERTY: 22,
+  UPDATE_SYS_PROPERTY: 23,
+  UPDATE_MASTER_CLIENT: 24,
+  KICK_MEMBER: 25,
   ACK: 26,
 };
 
@@ -9237,44 +9237,44 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
     var f,
       obj = {
         i: jspb.Message.getFieldWithDefault(msg, 1, 0),
-        errorinfo:
-          (f = msg.getErrorinfo()) &&
+        errorInfo:
+          (f = msg.getErrorInfo()) &&
           proto.game_protobuf_messages.proto.messages.ErrorInfo.toObject(
             includeInstance,
             f
           ),
-        createroom:
-          (f = msg.getCreateroom()) &&
+        createRoom:
+          (f = msg.getCreateRoom()) &&
           proto.game_protobuf_messages.proto.messages.CreateRoomResponse.toObject(
             includeInstance,
             f
           ),
-        joinroom:
-          (f = msg.getJoinroom()) &&
+        joinRoom:
+          (f = msg.getJoinRoom()) &&
           proto.game_protobuf_messages.proto.messages.JoinRoomResponse.toObject(
             includeInstance,
             f
           ),
-        updateproperty:
-          (f = msg.getUpdateproperty()) &&
+        updateProperty:
+          (f = msg.getUpdateProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.toObject(
             includeInstance,
             f
           ),
-        updatesysproperty:
-          (f = msg.getUpdatesysproperty()) &&
+        updateSysProperty:
+          (f = msg.getUpdateSysProperty()) &&
           proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.toObject(
             includeInstance,
             f
           ),
-        updatemasterclient:
-          (f = msg.getUpdatemasterclient()) &&
+        updateMasterClient:
+          (f = msg.getUpdateMasterClient()) &&
           proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.toObject(
             includeInstance,
             f
           ),
-        kickmember:
-          (f = msg.getKickmember()) &&
+        kickMember:
+          (f = msg.getKickMember()) &&
           proto.game_protobuf_messages.proto.messages.KickMemberResponse.toObject(
             includeInstance,
             f
@@ -9338,7 +9338,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.ErrorInfo
             .deserializeBinaryFromReader
         );
-        msg.setErrorinfo(value);
+        msg.setErrorInfo(value);
         break;
       case 20:
         var value = new proto.game_protobuf_messages.proto.messages.CreateRoomResponse();
@@ -9347,7 +9347,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.CreateRoomResponse
             .deserializeBinaryFromReader
         );
-        msg.setCreateroom(value);
+        msg.setCreateRoom(value);
         break;
       case 21:
         var value = new proto.game_protobuf_messages.proto.messages.JoinRoomResponse();
@@ -9356,7 +9356,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.JoinRoomResponse
             .deserializeBinaryFromReader
         );
-        msg.setJoinroom(value);
+        msg.setJoinRoom(value);
         break;
       case 22:
         var value = new proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse();
@@ -9365,7 +9365,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse
             .deserializeBinaryFromReader
         );
-        msg.setUpdateproperty(value);
+        msg.setUpdateProperty(value);
         break;
       case 23:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse();
@@ -9374,7 +9374,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse
             .deserializeBinaryFromReader
         );
-        msg.setUpdatesysproperty(value);
+        msg.setUpdateSysProperty(value);
         break;
       case 24:
         var value = new proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse();
@@ -9383,7 +9383,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse
             .deserializeBinaryFromReader
         );
-        msg.setUpdatemasterclient(value);
+        msg.setUpdateMasterClient(value);
         break;
       case 25:
         var value = new proto.game_protobuf_messages.proto.messages.KickMemberResponse();
@@ -9392,7 +9392,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
           proto.game_protobuf_messages.proto.messages.KickMemberResponse
             .deserializeBinaryFromReader
         );
-        msg.setKickmember(value);
+        msg.setKickMember(value);
         break;
       case 26:
         var value = new proto.game_protobuf_messages.proto.messages.AckCommand();
@@ -9440,7 +9440,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
   if (f !== 0) {
     writer.writeInt32(1, f);
   }
-  f = message.getErrorinfo();
+  f = message.getErrorInfo();
   if (f != null) {
     writer.writeMessage(
       2,
@@ -9449,7 +9449,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getCreateroom();
+  f = message.getCreateRoom();
   if (f != null) {
     writer.writeMessage(
       20,
@@ -9458,7 +9458,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getJoinroom();
+  f = message.getJoinRoom();
   if (f != null) {
     writer.writeMessage(
       21,
@@ -9467,7 +9467,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdateproperty();
+  f = message.getUpdateProperty();
   if (f != null) {
     writer.writeMessage(
       22,
@@ -9476,7 +9476,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatesysproperty();
+  f = message.getUpdateSysProperty();
   if (f != null) {
     writer.writeMessage(
       23,
@@ -9485,7 +9485,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getUpdatemasterclient();
+  f = message.getUpdateMasterClient();
   if (f != null) {
     writer.writeMessage(
       24,
@@ -9494,7 +9494,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getKickmember();
+  f = message.getKickMember();
   if (f != null) {
     writer.writeMessage(
       25,
@@ -9530,10 +9530,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setI = fun
 };
 
 /**
- * optional ErrorInfo errorInfo = 2;
+ * optional ErrorInfo error_info = 2;
  * @return {?proto.game_protobuf_messages.proto.messages.ErrorInfo}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getErrorinfo = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getErrorInfo = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.ErrorInfo} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.ErrorInfo,
@@ -9542,7 +9542,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getErrorin
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setErrorinfo = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setErrorInfo = function(
   value
 ) {
   jspb.Message.setWrapperField(this, 2, value);
@@ -9551,23 +9551,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setErrorin
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearErrorinfo = function() {
-  this.setErrorinfo(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearErrorInfo = function() {
+  this.setErrorInfo(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasErrorinfo = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasErrorInfo = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
 /**
- * optional CreateRoomResponse createRoom = 20;
+ * optional CreateRoomResponse create_room = 20;
  * @return {?proto.game_protobuf_messages.proto.messages.CreateRoomResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getCreateroom = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getCreateRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.CreateRoomResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.CreateRoomResponse,
@@ -9576,7 +9576,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getCreater
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.CreateRoomResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setCreateroom = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setCreateRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9590,23 +9590,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setCreater
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearCreateroom = function() {
-  this.setCreateroom(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearCreateRoom = function() {
+  this.setCreateRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasCreateroom = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasCreateRoom = function() {
   return jspb.Message.getField(this, 20) != null;
 };
 
 /**
- * optional JoinRoomResponse joinRoom = 21;
+ * optional JoinRoomResponse join_room = 21;
  * @return {?proto.game_protobuf_messages.proto.messages.JoinRoomResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getJoinRoom = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.JoinRoomResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.JoinRoomResponse,
@@ -9615,7 +9615,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getJoinroo
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setJoinroom = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setJoinRoom = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9629,23 +9629,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setJoinroo
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearJoinroom = function() {
-  this.setJoinroom(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearJoinRoom = function() {
+  this.setJoinRoom(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasJoinroom = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasJoinRoom = function() {
   return jspb.Message.getField(this, 21) != null;
 };
 
 /**
- * optional UpdatePropertyResponse updateProperty = 22;
+ * optional UpdatePropertyResponse update_property = 22;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse,
@@ -9654,7 +9654,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdatep
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateproperty = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9668,23 +9668,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdatep
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateproperty = function() {
-  this.setUpdateproperty(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateProperty = function() {
+  this.setUpdateProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdateproperty = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdateProperty = function() {
   return jspb.Message.getField(this, 22) != null;
 };
 
 /**
- * optional UpdateSysPropertyResponse updateSysProperty = 23;
+ * optional UpdateSysPropertyResponse update_sys_property = 23;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateSysProperty = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse,
@@ -9693,7 +9693,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdates
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdatesysproperty = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateSysProperty = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9707,23 +9707,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdates
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdatesysproperty = function() {
-  this.setUpdatesysproperty(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateSysProperty = function() {
+  this.setUpdateSysProperty(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdatesysproperty = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdateSysProperty = function() {
   return jspb.Message.getField(this, 23) != null;
 };
 
 /**
- * optional UpdateMasterClientResponse updateMasterClient = 24;
+ * optional UpdateMasterClientResponse update_master_client = 24;
  * @return {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateMasterClient = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse,
@@ -9732,7 +9732,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdatem
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdatemasterclient = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateMasterClient = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9746,23 +9746,23 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdatem
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdatemasterclient = function() {
-  this.setUpdatemasterclient(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateMasterClient = function() {
+  this.setUpdateMasterClient(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdatemasterclient = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasUpdateMasterClient = function() {
   return jspb.Message.getField(this, 24) != null;
 };
 
 /**
- * optional KickMemberResponse kickMember = 25;
+ * optional KickMemberResponse kick_member = 25;
  * @return {?proto.game_protobuf_messages.proto.messages.KickMemberResponse}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getKickmember = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getKickMember = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.KickMemberResponse} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.KickMemberResponse,
@@ -9771,7 +9771,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getKickmem
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.KickMemberResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setKickmember = function(
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setKickMember = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -9785,15 +9785,15 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setKickmem
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearKickmember = function() {
-  this.setKickmember(undefined);
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearKickMember = function() {
+  this.setKickMember(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasKickmember = function() {
+proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasKickMember = function() {
   return jspb.Message.getField(this, 25) != null;
 };
 
@@ -9856,10 +9856,10 @@ proto.game_protobuf_messages.proto.messages.Body.BodyCase = {
   REQUEST: 1,
   RESPONSE: 2,
   DIRECT: 3,
-  ROOMNOTIFICATION: 4,
+  ROOM_NOTIFICATION: 4,
   EVENTS: 5,
   STATISTIC: 50,
-  ROOMLIST: 51,
+  ROOM_LIST: 51,
   ERROR: 127,
 };
 
@@ -9926,8 +9926,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
             includeInstance,
             f
           ),
-        roomnotification:
-          (f = msg.getRoomnotification()) &&
+        roomNotification:
+          (f = msg.getRoomNotification()) &&
           proto.game_protobuf_messages.proto.messages.RoomNotification.toObject(
             includeInstance,
             f
@@ -9944,8 +9944,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
             includeInstance,
             f
           ),
-        roomlist:
-          (f = msg.getRoomlist()) &&
+        roomList:
+          (f = msg.getRoomList()) &&
           proto.game_protobuf_messages.proto.messages.RoomListCommand.toObject(
             includeInstance,
             f
@@ -10032,7 +10032,7 @@ proto.game_protobuf_messages.proto.messages.Body.deserializeBinaryFromReader = f
           proto.game_protobuf_messages.proto.messages.RoomNotification
             .deserializeBinaryFromReader
         );
-        msg.setRoomnotification(value);
+        msg.setRoomNotification(value);
         break;
       case 5:
         var value = new proto.game_protobuf_messages.proto.messages.EventsCommand();
@@ -10059,7 +10059,7 @@ proto.game_protobuf_messages.proto.messages.Body.deserializeBinaryFromReader = f
           proto.game_protobuf_messages.proto.messages.RoomListCommand
             .deserializeBinaryFromReader
         );
-        msg.setRoomlist(value);
+        msg.setRoomList(value);
         break;
       case 127:
         var value = new proto.game_protobuf_messages.proto.messages.ErrorCommand();
@@ -10130,7 +10130,7 @@ proto.game_protobuf_messages.proto.messages.Body.serializeBinaryToWriter = funct
         .serializeBinaryToWriter
     );
   }
-  f = message.getRoomnotification();
+  f = message.getRoomNotification();
   if (f != null) {
     writer.writeMessage(
       4,
@@ -10157,7 +10157,7 @@ proto.game_protobuf_messages.proto.messages.Body.serializeBinaryToWriter = funct
         .serializeBinaryToWriter
     );
   }
-  f = message.getRoomlist();
+  f = message.getRoomList();
   if (f != null) {
     writer.writeMessage(
       51,
@@ -10295,10 +10295,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.hasDirect = function(
 };
 
 /**
- * optional RoomNotification roomNotification = 4;
+ * optional RoomNotification room_notification = 4;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomNotification}
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomnotification = function() {
+proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomNotification = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomNotification} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomNotification,
@@ -10307,7 +10307,7 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomnotification =
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomNotification|undefined} value */
-proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomnotification = function(
+proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomNotification = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -10321,15 +10321,15 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomnotification =
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomnotification = function() {
-  this.setRoomnotification(undefined);
+proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomNotification = function() {
+  this.setRoomNotification(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.hasRoomnotification = function() {
+proto.game_protobuf_messages.proto.messages.Body.prototype.hasRoomNotification = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -10412,10 +10412,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.hasStatistic = functi
 };
 
 /**
- * optional RoomListCommand roomList = 51;
+ * optional RoomListCommand room_list = 51;
  * @return {?proto.game_protobuf_messages.proto.messages.RoomListCommand}
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomlist = function() {
+proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomList = function() {
   return /** @type{?proto.game_protobuf_messages.proto.messages.RoomListCommand} */ (jspb.Message.getWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.RoomListCommand,
@@ -10424,7 +10424,7 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomlist = functio
 };
 
 /** @param {?proto.game_protobuf_messages.proto.messages.RoomListCommand|undefined} value */
-proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomlist = function(
+proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomList = function(
   value
 ) {
   jspb.Message.setOneofWrapperField(
@@ -10438,15 +10438,15 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomlist = functio
 /**
  * Clears the message field making it undefined.
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomlist = function() {
-  this.setRoomlist(undefined);
+proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomList = function() {
+  this.setRoomList(undefined);
 };
 
 /**
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.game_protobuf_messages.proto.messages.Body.prototype.hasRoomlist = function() {
+proto.game_protobuf_messages.proto.messages.Body.prototype.hasRoomList = function() {
   return jspb.Message.getField(this, 51) != null;
 };
 

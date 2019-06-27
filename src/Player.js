@@ -7,18 +7,6 @@ export default class Player {
     this._actorId = -1;
   }
 
-  static _newFromJSONObject(playerJSONObject) {
-    const player = new Player();
-    player._userId = playerJSONObject.pid;
-    player._actorId = playerJSONObject.actorId;
-    if (playerJSONObject.attr) {
-      player.properties = playerJSONObject.attr;
-    } else {
-      player.properties = {};
-    }
-    return player;
-  }
-
   /**
    * 玩家 ID
    * @type {String}

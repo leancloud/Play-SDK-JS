@@ -1,12 +1,41 @@
-import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
-import Connection, { convertRoomOptions } from './Connection';
+import Connection, {
+  convertRoomOptions,
+  convertToRoomOptions,
+} from './Connection';
 import LobbyRoom from './LobbyRoom';
+import { debug } from './Logger';
+
+const messages = require('./proto/messages_pb');
+
+const {
+  CommandType,
+  OpType,
+  RequestMessage,
+  CreateRoomRequest,
+  JoinRoomRequest,
+  RoomOptions,
+} = messages;
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 
 // 大厅连接抛出的事件
 export const ROOM_LIST_UPDATED_EVENT = 'ROOM_LIST_UPDATED_EVENT';
+
+function convertToLobbyRoom(roomOptions) {
+  const lobbyRoom = new LobbyRoom();
+  lobbyRoom._roomName = roomOptions.getCid();
+  lobbyRoom._visible = roomOptions.getVisible();
+  lobbyRoom._open = roomOptions.getOpen();
+  lobbyRoom._maxPlayerCount = roomOptions.getMaxMembers();
+  lobbyRoom._expectedUserIds = roomOptions.getExpectMembersList();
+  lobbyRoom._emptyRoomTtl = roomOptions.getEmptyRoomTtl();
+  lobbyRoom._playerTtl = roomOptions.getPlayerTtl();
+  lobbyRoom._playerCount = roomOptions.getMemberCount();
+  // TODO
+  // lobbyRoom._customRoomProperties = lobbyRoomDTO.attr;
+  return lobbyRoom;
+}
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class LobbyConnection extends Connection {
@@ -15,227 +44,143 @@ export default class LobbyConnection extends Connection {
     this._flag = 'lobby';
   }
 
-  openSession(appId, userId, gameVersion) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'session',
-          op: 'open',
-          appId,
-          peerId: userId,
-          sdkVersion,
-          protocolVersion,
-          gameVersion,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async joinLobby() {
+    const req = new RequestMessage();
+    await super.sendRequest(CommandType.LOBBY, OpType.ADD, req);
   }
 
-  joinLobby() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'lobby',
-          op: 'add',
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async leaveLobby() {
+    const req = new RequestMessage();
+    await super.sendRequest(CommandType.LOBBY, OpType.REMOVE, req);
   }
 
-  leaveLobby() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'lobby',
-          op: 'remove',
-        };
-        await super.send(msg);
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async createRoom(roomName, roomOptions, expectedUserIds) {
+    const req = new RequestMessage();
+    const roomOpts = convertToRoomOptions(
+      roomName,
+      roomOptions,
+      expectedUserIds
+    );
+    const createRoomReq = new CreateRoomRequest();
+    createRoomReq.setRoomOptions(roomOpts);
+    req.setCreateRoom(createRoomReq);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.START,
+      req
+    );
+    const roomRes = res.getCreateRoom();
+    return {
+      cid: roomRes.getRoomOptions().getCid(),
+      addr: roomRes.getAddr(),
+    };
   }
 
-  createRoom(roomName, roomOptions, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let msg = {
-          cmd: 'conv',
-          op: 'start',
-        };
-        if (roomName) {
-          msg.cid = roomName;
-        }
-        // 拷贝房间属性（包括 系统属性和玩家定义属性）
-        if (roomOptions) {
-          msg = Object.assign(msg, convertRoomOptions(roomOptions));
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const { cid, addr, secureAddr } = res;
-          resolve({ cid, addr, secureAddr });
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async joinRoom(roomName, expectedUserIds) {
+    const req = new RequestMessage();
+    const roomOpts = new RoomOptions();
+    roomOpts.setCid(roomName);
+    if (expectedUserIds) {
+      roomOpts.setExpectMembers(expectedUserIds);
+    }
+    const joinRoomReq = new JoinRoomRequest();
+    joinRoomReq.setRoomOptions(roomOpts);
+    req.setJoinRoom(joinRoomReq);
+    const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
+    const roomRes = res.getJoinRoom();
+    return {
+      cid: roomRes.getRoomOptions().getCid(),
+      addr: roomRes.getAddr(),
+    };
   }
 
-  joinRoom(roomName, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'add',
-          cid: roomName,
-        };
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const { cid, addr, secureAddr } = res;
-          resolve({ cid, addr, secureAddr });
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
+    const req = new RequestMessage();
+    const joinRoomReq = new JoinRoomRequest();
+    const roomOpts = convertToRoomOptions(
+      roomName,
+      roomOptions,
+      expectedUserIds
+    );
+    joinRoomReq.setRoomOptions(roomOpts);
+    joinRoomReq.setCreateOnNotFound(true);
+    req.setJoinRoom(joinRoomReq);
+    const { op, res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.ADD,
+      req
+    );
+    if (op === OpType.STARTED) {
+      const roomRes = res.getCreateRoom();
+      return {
+        op,
+        cid: roomRes.getRoomOptions().getCid(),
+        addr: roomRes.getAddr(),
+      };
+    }
+    const roomRes = res.getJoinRoom();
+    return {
+      op,
+      cid: roomRes.getRoomOptions().getCid(),
+      addr: roomRes.getAddr(),
+    };
   }
 
-  joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let msg = {
-          cmd: 'conv',
-          op: 'add',
-          cid: roomName,
-          createOnNotFound: true,
-        };
-        if (roomOptions) {
-          msg = Object.assign(msg, convertRoomOptions(roomOptions));
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const { op, cid, addr, secureAddr } = res;
-          resolve({ op, cid, addr, secureAddr });
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async joinRandomRoom(matchProperties, expectedUserIds) {
+    const req = new RequestMessage();
+    const joinRoomReq = new JoinRoomRequest();
+    if (matchProperties) {
+      // TODO 序列化
+    }
+    if (expectedUserIds) {
+      const roomOpts = new RoomOptions();
+      roomOpts.setExpectMembers(expectedUserIds);
+      joinRoomReq.setRoomOptions(roomOpts);
+    }
+    const { res } = await this.sendRequest(
+      CommandType.CONV,
+      OpType.ADD_RANDOM,
+      req
+    );
+    const roomRes = res.getJoinRoom();
+    return {
+      cid: roomRes.getRoomOptions().getCid(),
+      addr: roomRes.getAddr(),
+    };
   }
 
-  joinRandomRoom(matchProperties, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'add-random',
-        };
-        if (matchProperties) {
-          msg.expectAttr = matchProperties;
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const { op, cid, addr, secureAddr } = res;
-          resolve({ op, cid, addr, secureAddr });
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async rejoinRoom(roomName) {
+    const req = new RequestMessage();
+    const joinRoomReq = new JoinRoomRequest();
+    joinRoomReq.setRejoin(true);
+    const roomOpts = new RoomOptions();
+    roomOpts.setCid(roomName);
+    joinRoomReq.setRoomOptions(roomOpts);
+    req.setJoinRoom(joinRoomReq);
+    const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
+    const roomRes = res.getJoinRoom();
+    return {
+      cid: roomRes.getRoomOptions().getCid(),
+      addr: roomRes.getAddr(),
+    };
   }
 
-  rejoinRoom(roomName) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'add',
-          cid: roomName,
-          rejoin: true,
-        };
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const { cid, addr, secureAddr } = res;
-          resolve({ cid, addr, secureAddr });
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
-  matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const msg = {
-          cmd: 'conv',
-          op: 'match-random',
-          piggybackPeerId,
-        };
-        if (matchProperties) {
-          msg.expectAttr = matchProperties;
-        }
-        if (expectedUserIds) {
-          msg.expectMembers = expectedUserIds;
-        }
-        const res = await super.send(msg);
-        if (res.reasonCode) {
-          const { reasonCode, detail } = res;
-          reject(new PlayError(reasonCode, detail));
-        } else {
-          const lobbyRoom = new LobbyRoom(res);
-          resolve(lobbyRoom);
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  async matchRandom(piggybackPeerId, matchProperties) {
+    const req = new RequestMessage();
+    const joinRoomReq = new JoinRoomRequest();
+    joinRoomReq.setPiggybackPeerId(piggybackPeerId);
+    if (matchProperties) {
+      // TODO 序列化
+    }
+    req.setJoinRoom(joinRoomReq);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.MATCH_RANDOM,
+      req
+    );
+    // TODO return
+    const roomRes = res.getJoinRoom();
+    return convertToLobbyRoom(roomRes.getRoomOptions());
   }
 
   _getPingDuration() {
@@ -243,49 +188,37 @@ export default class LobbyConnection extends Connection {
   }
 
   // 处理被动通知消息
-  _handleNotification(msg) {
-    switch (msg.cmd) {
-      case 'lobby':
-        switch (msg.op) {
-          case 'room-list':
-            this._handleRoomListMsg(msg);
+  _handleNotification(cmd, op, body) {
+    switch (cmd) {
+      case CommandType.LOBBY:
+        switch (op) {
+          case OpType.ROOM_LIST:
+            this._handleRoomListMsg(body);
             break;
           default:
-            super._handleUnknownMsg(msg);
+            super._handleUnknownMsg(cmd, op, body);
             break;
         }
         break;
-      case 'events':
+      case CommandType.STATISTIC:
         // 目前不作处理
         break;
-      case 'statistic':
-        // 目前不作处理
-        break;
-      case 'conv':
-        switch (msg.op) {
-          case 'results':
-            this._handleRoomListMsg(msg);
-            break;
-          default:
-            super._handleUnknownMsg(msg);
-            break;
-        }
-        break;
-      case 'error':
-        super._handleErrorNotify(msg);
+      case CommandType.ERROR:
+        super._handleErrorNotify(body);
         break;
       default:
-        super._handleUnknownMsg(msg);
+        super._handleUnknownMsg(cmd, op, body);
         break;
     }
   }
 
-  _handleRoomListMsg(msg) {
+  _handleRoomListMsg(body) {
     const roomList = [];
-    for (let i = 0; i < msg.list.length; i += 1) {
-      const lobbyRoomDTO = msg.list[i];
-      roomList.push(new LobbyRoom(lobbyRoomDTO));
-    }
+    const list = body.getRoomList().getList();
+    list.forEach(roomOptions => {
+      const lobbyRoom = convertToLobbyRoom(roomOptions);
+      roomList.push(lobbyRoom);
+    });
     this.emit(ROOM_LIST_UPDATED_EVENT, roomList);
   }
 }

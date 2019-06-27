@@ -260,7 +260,7 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(MASTER_CHANGED_EVENT, newMasterActorId => {
           let newMaster = null;
           this._play._room._masterActorId = newMasterActorId;
-          if (newMasterActorId > -1) {
+          if (newMasterActorId > 0) {
             newMaster = this._play._room.getPlayer(newMasterActorId);
           }
           this._play.emit(Event.MASTER_SWITCHED, {
@@ -758,8 +758,10 @@ const PlayFSM = machina.Fsm.extend({
       } = this._play;
       try {
         await this._lobbyConn.openSession(appId, userId, gameVersion);
+        debug('opened session');
         resolve(this._play);
       } catch (err) {
+        debug('open session failed');
         this._lobbyConn.close();
         reject(err);
       }
