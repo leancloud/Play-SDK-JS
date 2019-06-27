@@ -189,9 +189,9 @@ export default class Connection extends EventEmitter {
   }
 
   _handleCommand(cmd, op, body) {
-    const res = body.getResponse();
-    if (res) {
+    if (body.hasResponse()) {
       // 应答
+      const res = body.getResponse();
       const i = res.getI();
       if (this._responses[i]) {
         const { resolve, reject } = this._responses[i];
