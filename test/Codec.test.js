@@ -76,41 +76,72 @@ describe('test codec', () => {
   });
 
   it('custom type', () => {
+    class Weapon {
+      constructor(name, attack) {
+        this._name = name;
+        this._attack = attack;
+      }
+
+      static serialize(weapon) {
+        const obj = {
+          name: weapon._name,
+          attack: weapon._attack,
+        };
+        return serializeObject(obj);
+      }
+
+      static deserialize(bytes) {
+        const obj = deserializeObject(bytes);
+        const { name, attack } = obj;
+        const weapon = new Weapon(name, attack);
+        return weapon;
+      }
+
+      print() {
+        debug(`${this._name}, ${this._attack}`);
+      }
+    }
+
     class Hero {
-      constructor(name, score, hp, mp) {
+      constructor(name, score, hp, mp, weaponList) {
         this._name = name;
         this._score = score;
         this._hp = hp;
         this._mp = mp;
+        this._weaponList = weaponList;
+      }
+
+      static serialize(hero) {
+        // 可以筛选要序列化的字段
+        const obj = {
+          name: hero._name,
+          score: hero._score,
+          hp: hero._hp,
+          mp: hero._mp,
+          weaponList: hero._weaponList,
+        };
+        return serializeObject(obj);
+      }
+
+      static deserialize(bytes) {
+        const obj = deserializeObject(bytes);
+        const { name, score, hp, mp, weaponList } = obj;
+        const hero = new Hero(name, score, hp, mp, weaponList);
+        return hero;
       }
 
       print() {
         debug(`${this._name}, ${this._score}, ${this._hp}, ${this._mp}`);
+        this._weaponList.forEach(w => {
+          w.print();
+        });
       }
     }
 
-    Hero.serialize = hero => {
-      const obj = {
-        name: hero._name,
-        score: hero._score,
-        hp: hero._hp,
-        mp: hero._mp,
-      };
-      return serializeObject(obj);
-    };
-
-    Hero.deserialize = bytes => {
-      const obj = deserializeObject(bytes);
-      const hero = new Hero();
-      hero._name = obj.name;
-      hero._score = obj.score;
-      hero._hp = obj.hp;
-      hero._mp = obj.mp;
-      return hero;
-    };
-
     registerType(Hero, 10, Hero.serialize, Hero.deserialize);
-    const hero = new Hero('Li Lei', 99.9, 10, 8);
+    registerType(Weapon, 11, Weapon.serialize, Weapon.deserialize);
+    const weaponList = [new Weapon('pen', 100), new Weapon('erase', 200)];
+    const hero = new Hero('Li Lei', 99.9, 10, 8, weaponList);
     const genericVal = serialize(hero);
     debug(JSON.stringify(genericVal.toObject()));
     const newHero = deserialize(genericVal);
