@@ -1,39 +1,76 @@
-const { expect } = require('chai');
-const debug = require('debug')('Test:Codec');
-const messages = require('../src/proto/messages_pb');
-
-const {
+import {
   registerType,
   serialize,
   deserialize,
   serializeObject,
   deserializeObject,
-} = require('../src/CodecUtils');
+} from '../src/CodecUtils';
+
+import { convertToRoomOptions } from '../src/Connection';
+
+const { expect } = require('chai');
+const debug = require('debug')('Test:Codec');
+const protocol = require('../src/proto/messages_pb');
+
+const {
+  RequestMessage,
+  CreateRoomRequest,
+  CommandType,
+  OpType,
+  Command,
+  Body,
+} = protocol;
 
 describe('test codec', () => {
-  // it('test protobuf', async () => {
-  //   const sessionOpen = new messages.SessionOpenRequest();
-  //   sessionOpen.setAppId('123xxx');
-  //   sessionOpen.setPeerId('leancloud');
-  //   sessionOpen.setSdkVersion('v0.18.0');
-  //   sessionOpen.setGameVersion('1.0');
-  //   const request = new messages.RequestMessage();
-  //   request.setSessionOpen(sessionOpen);
-  //   const body = new messages.Body();
-  //   body.setRequest(request);
-  //   const command = new messages.Command();
-  //   command.setCmd(messages.CommandType.SESSION);
-  //   command.setOp(messages.OpType.OPEN);
-  //   command.setBody(body.serializeBinary());
-  //   debug(command.toObject());
-  //   const bytes = command.serializeBinary();
-  //   const newCommand = messages.Command.deserializeBinary(bytes);
-  //   debug(newCommand.toObject());
-  //   const newBody = messages.Body.deserializeBinary(newCommand.getBody());
-  //   const newRequest = newBody.getRequest();
-  //   const newSessionOpen = newRequest.getSessionOpen();
-  //   debug(newSessionOpen.toObject());
-  // });
+  it('protocol', async () => {
+    const request = new RequestMessage();
+    request.setI(123);
+    const opts = {
+      visible: false,
+      emptyRoomTtl: 60,
+      maxPlayerCount: 2,
+      playerTtl: 60,
+      customRoomProperties: {
+        title: 'leancloud',
+        level: 2,
+      },
+      customRoomPropertyKeysForLobby: ['level'],
+    };
+    const expectedUserIds = ['world'];
+    const roomOptions = convertToRoomOptions('abc', opts, expectedUserIds);
+    const createRoomReq = new CreateRoomRequest();
+    createRoomReq.setRoomOptions(roomOptions);
+    request.setCreateRoom(createRoomReq);
+    const body = new Body();
+    body.setRequest(request);
+    const command = new Command();
+    command.setCmd(CommandType.CONV);
+    command.setOp(OpType.START);
+    command.setBody(body.serializeBinary());
+    debug(JSON.stringify(command.toObject()));
+    const bytes = command.serializeBinary();
+    const newCommand = Command.deserializeBinary(bytes);
+    debug(JSON.stringify(newCommand.toObject()));
+    expect(newCommand.getCmd()).to.be.equal(CommandType.CONV);
+    expect(newCommand.getOp()).to.be.equal(OpType.START);
+    const newBody = Body.deserializeBinary(newCommand.getBody());
+    const newRequest = newBody.getRequest();
+    expect(newRequest.getI()).to.be.equal(123);
+    const newRoomOptions = newRequest.getCreateRoom().getRoomOptions();
+    expect(newRoomOptions.getVisible().getValue()).to.be.equal(false);
+    expect(newRoomOptions.getEmptyRoomTtl()).to.be.equal(60);
+    expect(newRoomOptions.getMaxMembers()).to.be.equal(2);
+    expect(newRoomOptions.getPlayerTtl()).to.be.equal(60);
+    const attrBytes = newRoomOptions.getAttr();
+    const newProps = deserializeObject(attrBytes);
+    const { title, level } = newProps;
+    expect(title).to.be.equal('leancloud');
+    expect(level).to.be.equal(2);
+    const lobbyKeyList = newRoomOptions.getLobbyAttrKeysList();
+    expect(lobbyKeyList[0]).to.be.equal('level');
+    const newExpectedUserIds = newRoomOptions.getExpectMembersList();
+    expect(newExpectedUserIds[0]).to.be.equal('world');
+  });
 
   it('play object', () => {
     const playObj = {

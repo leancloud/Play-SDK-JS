@@ -7,8 +7,15 @@ import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import { tap } from './Utils';
 import { sdkVersion, protocolVersion } from './Config';
+import { serializeObject } from './CodecUtils';
 
-const messages = require('./proto/messages_pb');
+// eslint-disable-next-line camelcase
+const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
+
+// eslint-disable-next-line camelcase
+const { BoolValue } = google_protobuf_wrappers_pb;
+
+const protocol = require('./proto/messages_pb');
 
 const {
   Command,
@@ -18,36 +25,13 @@ const {
   RequestMessage,
   CommandType,
   OpType,
-} = messages;
+} = protocol;
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
 
 export const ERROR_EVENT = 'ERROR_EVENT';
 export const DISCONNECT_EVENT = 'DISCONNECT_EVENT';
-
-export function convertRoomOptions(roomOptions) {
-  const options = {};
-  if (!roomOptions.open) options.open = roomOptions.open;
-  if (!roomOptions.visible) options.visible = roomOptions.visible;
-  if (roomOptions.emptyRoomTtl > 0)
-    options.emptyRoomTtl = roomOptions.emptyRoomTtl;
-  if (roomOptions.playerTtl > 0) options.playerTtl = roomOptions.playerTtl;
-  if (
-    roomOptions.maxPlayerCount > 0 &&
-    roomOptions.maxPlayerCount < MAX_PLAYER_COUNT
-  )
-    options.maxMembers = roomOptions.maxPlayerCount;
-  if (roomOptions.customRoomProperties)
-    options.attr = roomOptions.customRoomProperties;
-  if (roomOptions.customRoomPropertyKeysForLobby)
-    options.lobbyAttrKeys = roomOptions.customRoomPropertyKeysForLobby;
-  if (roomOptions.flag) options.flag = roomOptions.flag;
-  if (roomOptions.pluginName) {
-    options.pluginName = roomOptions.pluginName;
-  }
-  return options;
-}
 
 export function convertToRoomOptions(roomName, options, expectedUserIds) {
   const roomOptions = new RoomOptions();
@@ -70,7 +54,9 @@ export function convertToRoomOptions(roomName, options, expectedUserIds) {
       roomOptions.setOpen(open);
     }
     if (visible !== undefined) {
-      roomOptions.setVisible(visible);
+      const v = new BoolValue();
+      v.setValue(visible);
+      roomOptions.setVisible(v);
     }
     if (emptyRoomTtl > 0) {
       roomOptions.setEmptyRoomTtl(emptyRoomTtl);
@@ -82,9 +68,7 @@ export function convertToRoomOptions(roomName, options, expectedUserIds) {
       roomOptions.setMaxMembers(maxPlayerCount);
     }
     if (customRoomProperties) {
-      // TODO Serialize
-
-      roomOptions.setAttr(customRoomProperties);
+      roomOptions.setAttr(serializeObject(customRoomProperties));
     }
     if (customRoomPropertyKeysForLobby) {
       roomOptions.setLobbyAttrKeysList(customRoomPropertyKeysForLobby);

@@ -167,7 +167,7 @@ function deserializeObject(bytes) {
   return obj;
 }
 
-module.exports = {
+export {
   registerType,
   serialize,
   deserialize,

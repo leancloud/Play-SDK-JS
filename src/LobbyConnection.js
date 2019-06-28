@@ -1,8 +1,5 @@
 import PlayError from './PlayError';
-import Connection, {
-  convertRoomOptions,
-  convertToRoomOptions,
-} from './Connection';
+import Connection, { convertToRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
 import { debug } from './Logger';
 
