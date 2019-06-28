@@ -1,7 +1,3 @@
-import PlayObject from './PlayObject';
-import PlayArray from './PlayArray';
-import { object } from 'google-protobuf';
-
 const genericCollection = require('./proto/generic_collection_pb');
 
 const { GenericCollectionValue, GenericCollection } = genericCollection;
@@ -10,7 +6,7 @@ const _typeNameMap = {};
 const _typeIdMap = {};
 
 function registerType(type, typeId, serializeMethod, deserializeMethod) {
-  if (type === undefined || typeof type !== 'object') {
+  if (type === undefined || typeof type !== 'function') {
     throw new TypeError('type must be a class');
   }
   if (serializeMethod === undefined || typeof serializeMethod !== 'function') {
@@ -33,6 +29,7 @@ function registerType(type, typeId, serializeMethod, deserializeMethod) {
   _typeIdMap[typeId] = customType;
 }
 
+/* eslint no-use-before-define: ["error", { "functions": false }] */
 function serialize(val) {
   const genericVal = new GenericCollectionValue();
   if (val === null) {
@@ -54,32 +51,22 @@ function serialize(val) {
       vList.push(serialize(v));
     });
     const list = new GenericCollection();
-    list.setListValue(vList);
+    list.setListValueList(vList);
     genericVal.setBytesValue(list.serializeBinary());
-  } else if (val instanceof object) {
+  } else if (val instanceof Object) {
     const typeName = val.constructor.name;
     const customType = _typeNameMap[typeName];
     if (customType) {
       // 自定义类型
       genericVal.setType(GenericCollectionValue.Type.OBJECT);
-      const { serializeMethod } = customType;
+      const { typeId, serializeMethod } = customType;
+      genericVal.setObjectTypeId(typeId);
       genericVal.setBytesValue(serializeMethod(val));
     } else {
       // Map
       genericVal.setType(GenericCollectionValue.Type.MAP);
-      const entryList = [];
-      Object.keys(val).forEach(k => {
-        const entry = new GenericCollection.MapEntry();
-        entry.setKey(k);
-        entry.setVal(serialize(val[k]));
-        entryList.push(entry);
-      });
-      const map = new GenericCollection();
-      map.setMapEntryValueList(entryList);
-      genericVal.setBytesValue(map.serializeBinary());
+      genericVal.setBytesValue(serializeObject(val));
     }
-  } else if (val instanceof PlayObject) {
-    genericVal.setType(GenericCollectionValue.Type.MAP);
   } else {
     // TODO 自定义类型
     throw new TypeError(`${typeof val} is not supported`);
@@ -118,8 +105,33 @@ function deserialize(genericVal) {
       val = genericVal.getStringValue();
       break;
     case GenericCollectionValue.Type.MAP:
+      {
+        const bytes = genericVal.getBytesValue();
+        val = deserializeObject(bytes);
+      }
       break;
     case GenericCollectionValue.Type.ARRAY:
+      {
+        const bytes = genericVal.getBytesValue();
+        val = [];
+        const list = GenericCollection.deserializeBinary(bytes);
+        list.getListValueList().forEach(v => {
+          val.push(deserialize(v));
+        });
+      }
+      break;
+    case GenericCollectionValue.Type.OBJECT:
+      {
+        const typeId = genericVal.getObjectTypeId();
+        const customType = _typeIdMap[typeId];
+        if (customType) {
+          const bytes = genericVal.getBytesValue();
+          const { deserializeMethod } = customType;
+          val = deserializeMethod(bytes);
+        } else {
+          throw new TypeError(`type id: ${typeId} is not supported`);
+        }
+      }
       break;
     default:
       break;
@@ -127,8 +139,38 @@ function deserialize(genericVal) {
   return val;
 }
 
-export default {
+function serializeObject(obj) {
+  if (obj === undefined) {
+    return null;
+  }
+  const entryList = [];
+  Object.keys(obj).forEach(k => {
+    const entry = new GenericCollection.MapEntry();
+    entry.setKey(k);
+    entry.setVal(serialize(obj[k]));
+    entryList.push(entry);
+  });
+  const map = new GenericCollection();
+  map.setMapEntryValueList(entryList);
+  return map.serializeBinary();
+}
+
+function deserializeObject(bytes) {
+  if (bytes === undefined) {
+    return null;
+  }
+  const map = GenericCollection.deserializeBinary(bytes);
+  const obj = {};
+  map.getMapEntryValueList().forEach(entry => {
+    obj[entry.getKey()] = deserialize(entry.getVal());
+  });
+  return obj;
+}
+
+module.exports = {
   registerType,
   serialize,
   deserialize,
+  serializeObject,
+  deserializeObject,
 };
