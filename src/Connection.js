@@ -126,22 +126,16 @@ export default class Connection extends EventEmitter {
     this._isMessageQueueRunning = true;
     this._messageQueue = [];
     this._ws.onmessage = message => {
-      this._stopPong();
-      this._pongTimer = setTimeout(() => {
-        this._pingTimer = setTimeout(() => {
-          this._ws.close();
-        }, this._getPingDuration());
-      }, this._getPingDuration() * MAX_NO_PONG_TIMES);
-
+      this._pong();
       const command = Command.deserializeBinary(message.data);
-      debug(
-        `${this._userId} : ${this._flag} <- ${JSON.stringify(
-          command.toObject()
-        )}`
-      );
       const cmd = command.getCmd();
       const op = command.getOp();
       const body = Body.deserializeBinary(command.getBody());
+      debug(
+        `${this._userId} : ${this._flag} <- ${cmd}/${op}: ${JSON.stringify(
+          body.toObject()
+        )}`
+      );
       if (this._isMessageQueueRunning) {
         this._handleCommand(cmd, op, body);
       } else {
@@ -153,8 +147,7 @@ export default class Connection extends EventEmitter {
       }
     };
     this._ws.onclose = () => {
-      this._stopPing();
-      this._stopPong();
+      this._stopKeppAlive();
       this.emit(DISCONNECT_EVENT);
     };
   }
@@ -173,7 +166,6 @@ export default class Connection extends EventEmitter {
   }
 
   _handleCommand(cmd, op, body) {
-    debug(`body: ${JSON.stringify(body.toObject())}`);
     if (body.hasResponse()) {
       // 应答
       const res = body.getResponse();
@@ -227,7 +219,8 @@ export default class Connection extends EventEmitter {
       )}`
     );
     this._ws.send(command.serializeBinary());
-    // TODO ping
+    // ping
+    this._ping();
   }
 
   async send(msg, withIndex = true, ignoreServerError = true) {
@@ -249,7 +242,6 @@ export default class Connection extends EventEmitter {
     }
     this._ws.send(msgData);
     // 处理心跳包
-    this._stopPing();
     this._pingTimer = setTimeout(() => {
       const ping = {};
       this.send(ping, false);
@@ -277,8 +269,7 @@ export default class Connection extends EventEmitter {
   }
 
   close() {
-    this._stopPing();
-    this._stopPong();
+    this._stopKeppAlive();
     return new Promise((resolve, reject) => {
       if (this._ws) {
         this._ws.onopen = null;
@@ -307,14 +298,33 @@ export default class Connection extends EventEmitter {
     return this._msgId;
   }
 
-  _stopPing() {
+  _ping() {
     if (this._pingTimer) {
       clearTimeout(this._pingTimer);
       this._pingTimer = null;
     }
+    setTimeout(() => {
+      this._ws.send('{}');
+    }, this._getPingDuration());
   }
 
-  _stopPong() {
+  _pong() {
+    if (this._pongTimer) {
+      clearTimeout(this._pongTimer);
+      this._pongTimer = null;
+    }
+    this._pongTimer = setTimeout(() => {
+      this._pingTimer = setTimeout(() => {
+        this._ws.close();
+      }, this._getPingDuration());
+    }, this._getPingDuration() * MAX_NO_PONG_TIMES);
+  }
+
+  _stopKeppAlive() {
+    if (this._pingTimer) {
+      clearTimeout(this._pingTimer);
+      this._pingTimer = null;
+    }
     if (this._pongTimer) {
       clearTimeout(this._pongTimer);
       this._pongTimer = null;

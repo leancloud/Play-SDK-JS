@@ -3,6 +3,7 @@ import Room from './Room';
 import Player from './Player';
 import { debug } from './Logger';
 import ReceiverGroup from './ReceiverGroup';
+import { deserializeObject } from './CodecUtils';
 
 const GAME_KEEPALIVE_DURATION = 7000;
 
@@ -54,8 +55,8 @@ function convertToPlayer(member) {
 function convertToRoom(roomOptions) {
   const room = new Room();
   room._name = roomOptions.getCid();
-  room._open = roomOptions.getOpen();
-  room._visible = roomOptions.getVisible();
+  room._open = roomOptions.getOpen().getValue();
+  room._visible = roomOptions.getVisible().getValue();
   room._maxPlayerCount = roomOptions.getMaxMembers();
   room._masterActorId = roomOptions.getMasterActorId();
   room._expectedUserIds = roomOptions.getExpectMembersList();
@@ -64,13 +65,12 @@ function convertToRoom(roomOptions) {
     const player = convertToPlayer(member);
     room._players[player.actorId] = player;
   });
-  // TODO
-
-  // if (roomJSONObject.attr) {
-  //   room._properties = roomJSONObject.attr;
-  // } else {
-  //   room._properties = {};
-  // }
+  // 属性
+  if (roomOptions.getAttr()) {
+    room._properties = deserializeObject(roomOptions.getAttr());
+  } else {
+    room._properties = {};
+  }
   return room;
 }
 
@@ -297,12 +297,10 @@ export default class GameConnection extends Connection {
             );
             break;
           case OpType.MEMBERS_OFFLINE:
-            // TODO
-            this._handlePlayerOfflineMsg();
+            this._handlePlayerOfflineMsg(body.getRoomNotification());
             break;
           case OpType.MEMBERS_ONLINE:
-            // TODO
-            this._handlePlayerOnlineMsg();
+            this._handlePlayerOnlineMsg(body.getRoomNotification());
             break;
           case OpType.KICKED_NOTICE:
             this._handleKickedMsg(body.getRoomNotification());
@@ -345,14 +343,18 @@ export default class GameConnection extends Connection {
 
   _handleRoomPropertiesChangedMsg(updatePropertyNotification) {
     // TODO 反序列化
-    const changedProps = updatePropertyNotification.getAttr();
+    const changedProps = deserializeObject(
+      updatePropertyNotification.getAttr()
+    );
     this.emit(ROOM_PROPERTIES_CHANGED_EVENT, changedProps);
   }
 
   _handlePlayerPropertiesChangedMsg(updatePropertyNotification) {
     // TODO 反序列化
     const actorId = 0;
-    const changedProps = updatePropertyNotification.getAttr();
+    const changedProps = deserializeObject(
+      updatePropertyNotification.getAttr()
+    );
     this.emit(PLAYER_PROPERTIES_CHANGED_EVENT, actorId, changedProps);
   }
 
@@ -362,9 +364,10 @@ export default class GameConnection extends Connection {
   }
 
   _handlePlayerOnlineMsg(roomNotification) {
-    const actorId = roomNotification.getInitByActor();
+    const joinRoom = roomNotification.getJoinRoom();
+    const member = joinRoom.getMember();
     // TODO 更新 / 新建 Player
-    this.emit(PLAYER_ONLINE_EVENT, actorId);
+    this.emit(PLAYER_ONLINE_EVENT, member);
   }
 
   _handleSendEventMsg(directCommand) {

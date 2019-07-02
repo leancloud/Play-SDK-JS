@@ -2,6 +2,7 @@ import PlayError from './PlayError';
 import Connection, { convertToRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
 import { debug } from './Logger';
+import { serializeObject } from './CodecUtils';
 
 const messages = require('./proto/messages_pb');
 
@@ -110,14 +111,14 @@ export default class LobbyConnection extends Connection {
     if (op === OpType.STARTED) {
       const roomRes = res.getCreateRoom();
       return {
-        op,
+        op: 'create',
         cid: roomRes.getRoomOptions().getCid(),
         addr: roomRes.getAddr(),
       };
     }
     const roomRes = res.getJoinRoom();
     return {
-      op,
+      op: 'join',
       cid: roomRes.getRoomOptions().getCid(),
       addr: roomRes.getAddr(),
     };
@@ -126,14 +127,16 @@ export default class LobbyConnection extends Connection {
   async joinRandomRoom(matchProperties, expectedUserIds) {
     const req = new RequestMessage();
     const joinRoomReq = new JoinRoomRequest();
+    const roomOpts = new RoomOptions();
     if (matchProperties) {
-      // TODO 序列化
+      // 序列化
+      joinRoomReq.setExpectAttr(serializeObject(matchProperties));
     }
     if (expectedUserIds) {
-      const roomOpts = new RoomOptions();
       roomOpts.setExpectMembers(expectedUserIds);
-      joinRoomReq.setRoomOptions(roomOpts);
     }
+    joinRoomReq.setRoomOptions(roomOpts);
+    req.setJoinRoom(joinRoomReq);
     const { res } = await this.sendRequest(
       CommandType.CONV,
       OpType.ADD_RANDOM,

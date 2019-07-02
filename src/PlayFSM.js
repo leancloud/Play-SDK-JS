@@ -23,6 +23,7 @@ import PlayRouter from './PlayRouter';
 import { tap } from './Utils';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
+import { deserializeObject } from './CodecUtils';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -312,12 +313,12 @@ const PlayFSM = machina.Fsm.extend({
             player,
           });
         });
-        this._gameConn.on(PLAYER_ONLINE_EVENT, player => {
-          const p = this._play._room.getPlayer(player.actorId);
-          Object.assign(p, player);
-          p._setActive(true);
+        this._gameConn.on(PLAYER_ONLINE_EVENT, member => {
+          const player = this._play._room.getPlayer(member.getActorId());
+          player._mergeProperties(deserializeObject(member.getAttr()));
+          player._setActive(true);
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
-            player: p,
+            player,
           });
         });
         this._gameConn.on(SEND_CUSTOM_EVENT, (eventId, eventData, senderId) => {
@@ -676,7 +677,7 @@ const PlayFSM = machina.Fsm.extend({
         const { op, cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         let gameRoom = null;
-        if (op === 'started') {
+        if (op === 'create') {
           gameRoom = await this._createGameRoom(
             cid,
             roomOptions,
