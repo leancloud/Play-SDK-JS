@@ -173,6 +173,7 @@ export default class Connection extends EventEmitter {
   }
 
   _handleCommand(cmd, op, body) {
+    debug(`body: ${JSON.stringify(body.toObject())}`);
     if (body.hasResponse()) {
       // 应答
       const res = body.getResponse();
@@ -221,7 +222,9 @@ export default class Connection extends EventEmitter {
     command.setOp(op);
     command.setBody(body.serializeBinary());
     debug(
-      `${this._userId} : ${this._flag} -> ${JSON.stringify(command.toObject())}`
+      `${this._userId} : ${this._flag} -> ${cmd}/${op}: ${JSON.stringify(
+        body.toObject()
+      )}`
     );
     this._ws.send(command.serializeBinary());
     // TODO ping

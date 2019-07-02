@@ -60,7 +60,7 @@ function convertToRoom(roomOptions) {
   room._masterActorId = roomOptions.getMasterActorId();
   room._expectedUserIds = roomOptions.getExpectMembersList();
   room._players = {};
-  roomOptions.getMembers.forEach(member => {
+  roomOptions.getMembersList().forEach(member => {
     const player = convertToPlayer(member);
     room._players[player.actorId] = player;
   });
@@ -214,7 +214,7 @@ export default class GameConnection extends Connection {
     }
     if (options) {
       direct.setReceiverGroup(options.receiverGroup);
-      direct.setToActorIds(options.targetActorIds);
+      direct.setToActorIdsList(options.targetActorIds);
     } else {
       direct.setReceiverGroup(ReceiverGroup.All);
     }
