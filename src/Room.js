@@ -1,5 +1,6 @@
 import Player from './Player';
 import ReceiverGroup from './ReceiverGroup';
+import { debug } from './Logger';
 
 /**
  * 房间类
@@ -77,7 +78,7 @@ export default class Room {
     if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
-    if (actorId === -1) return null;
+    if (actorId === 0) return null;
     const player = this._players[actorId];
     if (player === null) {
       throw new Error(`player with id:${actorId} not found`);
@@ -227,18 +228,18 @@ export default class Room {
   }
 
   _mergeSystemProps(changedProps) {
-    const { open, visible, maxMembers, expectMembers } = changedProps;
+    const { open, visible, maxPlayerCount, expectedUserIds } = changedProps;
     if (open !== undefined) {
       this._open = open;
     }
     if (visible !== undefined) {
       this._visible = visible;
     }
-    if (maxMembers !== undefined) {
-      this._maxPlayerCount = maxMembers;
+    if (maxPlayerCount) {
+      this._maxPlayerCount = maxPlayerCount;
     }
-    if (expectMembers !== undefined) {
-      this._expectedUserIds = expectMembers;
+    if (expectedUserIds) {
+      this._expectedUserIds = expectedUserIds;
     }
   }
 }

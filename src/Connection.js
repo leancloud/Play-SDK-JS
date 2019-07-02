@@ -51,6 +51,8 @@ export function convertToRoomOptions(roomName, options, expectedUserIds) {
       pluginName,
     } = options;
     if (open !== undefined) {
+      const o = new BoolValue();
+      o.setValue(open);
       roomOptions.setOpen(open);
     }
     if (visible !== undefined) {

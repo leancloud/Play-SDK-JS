@@ -5,6 +5,8 @@ export default class Player {
   constructor() {
     this._userId = '';
     this._actorId = -1;
+    this._active = true;
+    this._properties = {};
   }
 
   /**
@@ -51,7 +53,7 @@ export default class Player {
    * @readonly
    */
   get isActive() {
-    return this.active;
+    return this._active;
   }
 
   /**
@@ -74,15 +76,10 @@ export default class Player {
    * @readonly
    */
   get customProperties() {
-    return this.properties;
-  }
-
-  // 设置活跃状态
-  _setActive(active) {
-    this.active = active;
+    return this._properties;
   }
 
   _mergeProperties(changedProperties) {
-    this.properties = Object.assign(this.properties, changedProperties);
+    this._properties = Object.assign(this._properties, changedProperties);
   }
 }

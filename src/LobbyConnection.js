@@ -214,7 +214,7 @@ export default class LobbyConnection extends Connection {
 
   _handleRoomListMsg(body) {
     const roomList = [];
-    const list = body.getRoomList().getList();
+    const list = body.getRoomList().getListList();
     list.forEach(roomOptions => {
       const lobbyRoom = convertToLobbyRoom(roomOptions);
       roomList.push(lobbyRoom);

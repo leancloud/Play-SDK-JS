@@ -3,7 +3,12 @@ import Room from './Room';
 import Player from './Player';
 import { debug } from './Logger';
 import ReceiverGroup from './ReceiverGroup';
-import { deserializeObject } from './CodecUtils';
+import { deserializeObject, serializeObject } from './CodecUtils';
+
+// eslint-disable-next-line camelcase
+const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
+// eslint-disable-next-line camelcase
+const { BoolValue } = google_protobuf_wrappers_pb;
 
 const GAME_KEEPALIVE_DURATION = 7000;
 
@@ -47,8 +52,7 @@ function convertToPlayer(member) {
   player._userId = member.getPid();
   player._actorId = member.getActorId();
   player.active = !member.getInactive();
-  // TODO 属性
-
+  player._properties = deserializeObject(member.getAttr());
   return player;
 }
 
@@ -122,29 +126,37 @@ export default class GameConnection extends Connection {
     const updateSysPropertyReq = new UpdateSysPropertyRequest();
     updateSysPropertyReq.setSysAttr(props);
     req.setUpdateSysProperty(updateSysPropertyReq);
-    await super.sendRequest(
+    const { res } = await super.sendRequest(
       CommandType.CONV,
       OpType.UPDATE_SYSTEM_PROPERTY,
       req
     );
+    return res.getUpdateSysProperty().getSysAttr();
   }
 
   async setRoomOpen(open) {
     const sysProps = new RoomSystemProperty();
-    sysProps.setOpen(open);
-    await this.setRoomSystemProps(sysProps);
+    const o = new BoolValue();
+    o.setValue(open);
+    sysProps.setOpen(o);
+    const res = await this.setRoomSystemProps(sysProps);
+    return res.getOpen().getValue();
   }
 
   async setRoomVisible(visible) {
     const sysProps = new RoomSystemProperty();
-    sysProps.setVisible(visible);
-    await this.setRoomSystemProps(sysProps);
+    const v = new BoolValue();
+    v.setValue(visible);
+    sysProps.setVisible(v);
+    const res = await this.setRoomSystemProps(sysProps);
+    return res.getVisible().getValue();
   }
 
   async setRoomMaxPlayerCount(count) {
     const sysProps = new RoomSystemProperty();
     sysProps.setMaxMembers(count);
-    await this.setRoomSystemProps(sysProps);
+    const res = await this.setRoomSystemProps(sysProps);
+    return res.getMaxMembers();
   }
 
   async setRoomExpectedUserIds(expectedUserIds) {
@@ -154,7 +166,8 @@ export default class GameConnection extends Connection {
         $set: expectedUserIds,
       })
     );
-    await this.setRoomSystemProps(sysProps);
+    const res = await this.setRoomSystemProps(sysProps);
+    return JSON.parse(res.getExpectMembers());
   }
 
   async clearRoomExpectedUserIds() {
@@ -164,7 +177,8 @@ export default class GameConnection extends Connection {
         $drop: true,
       })
     );
-    await this.setRoomSystemProps(sysProps);
+    const res = await this.setRoomSystemProps(sysProps);
+    return JSON.parse(res.getExpectMembers());
   }
 
   async addRoomExpectedUserIds(expectedUserIds) {
@@ -174,7 +188,8 @@ export default class GameConnection extends Connection {
         $add: expectedUserIds,
       })
     );
-    await this.setRoomSystemProps(sysProps);
+    const res = await this.setRoomSystemProps(sysProps);
+    return JSON.parse(res.getExpectMembers());
   }
 
   async removeRoomExpectedUserIds(expectedUserIds) {
@@ -184,7 +199,8 @@ export default class GameConnection extends Connection {
         $remove: expectedUserIds,
       })
     );
-    await this.setRoomSystemProps(sysProps);
+    const res = await this.setRoomSystemProps(sysProps);
+    return JSON.parse(res.getExpectMembers());
   }
 
   async setMaster(newMasterId) {
@@ -192,7 +208,7 @@ export default class GameConnection extends Connection {
     const updateMasterClientReq = new UpdateMasterClientRequest();
     updateMasterClientReq.setMasterActorId(newMasterId);
     req.setUpdateMasterClient(updateMasterClientReq);
-    await super.sendRequest(req);
+    await super.sendRequest(CommandType.CONV, OpType.UPDATE_MASTER_CLIENT, req);
   }
 
   async kickPlayer(actorId, code, msg) {
@@ -203,7 +219,9 @@ export default class GameConnection extends Connection {
     appInfo.setAppCode(code);
     appInfo.setAppMsg(msg);
     kickReq.setAppInfo(appInfo);
-    await super.sendRequest(CommandType.CONV, OpType.KICK, req);
+    req.setKickMember(kickReq);
+    const { res } = await super.sendRequest(CommandType.CONV, OpType.KICK, req);
+    return res.getKickMember().getTargetActorId();
   }
 
   async sendEvent(eventId, eventData, options) {
@@ -226,10 +244,11 @@ export default class GameConnection extends Connection {
   async setRoomCustomProperties(properties, expectedValues) {
     const req = new RequestMessage();
     const updatePropsReq = new UpdatePropertyRequest();
-    // TODO 序列化属性
-
+    // 序列化属性
+    updatePropsReq.setAttr(serializeObject(properties));
     if (expectedValues) {
-      // TODO 序列化 CAS 属性
+      // 序列化 CAS 属性
+      updatePropsReq.setExpectAttr(serializeObject(expectedValues));
     }
     req.setUpdateProperty(updatePropsReq);
     const { res } = await super.sendRequest(
@@ -237,19 +256,20 @@ export default class GameConnection extends Connection {
       OpType.UPDATE,
       req
     );
-    // TODO 反序列化 props
-
-    return res;
+    // 反序列化 props
+    const changedProps = deserializeObject(res.getUpdateProperty().getAttr());
+    return changedProps;
   }
 
   async setPlayerCustomProperties(actorId, properties, expectedValues) {
     const req = new RequestMessage();
     const updatePropsReq = new UpdatePropertyRequest();
     updatePropsReq.setTargetActorId(actorId);
-    // TODO 序列化属性
-
+    // 序列化属性
+    updatePropsReq.setAttr(serializeObject(properties));
     if (expectedValues) {
-      // TODO 序列化 CAS 属性
+      // 序列化 CAS 属性
+      updatePropsReq.setExpectAttr(serializeObject(expectedValues));
     }
     req.setUpdateProperty(updatePropsReq);
     const { res } = await super.sendRequest(
@@ -257,9 +277,13 @@ export default class GameConnection extends Connection {
       OpType.UPDATE_PLAYER_PROP,
       req
     );
-    // TODO 反序列化 actor Id 和属性
-
-    return res;
+    // 反序列化 actor Id 和属性
+    const aId = res.getUpdateProperty().getActorId();
+    const changedProps = res.getUpdateProperty().getAttr();
+    return {
+      actorId: aId,
+      changedProps,
+    };
   }
 
   _getPingDuration() {
@@ -342,7 +366,7 @@ export default class GameConnection extends Connection {
   }
 
   _handleRoomPropertiesChangedMsg(updatePropertyNotification) {
-    // TODO 反序列化
+    // 反序列化
     const changedProps = deserializeObject(
       updatePropertyNotification.getAttr()
     );
@@ -350,8 +374,8 @@ export default class GameConnection extends Connection {
   }
 
   _handlePlayerPropertiesChangedMsg(updatePropertyNotification) {
-    // TODO 反序列化
-    const actorId = 0;
+    // 反序列化
+    const actorId = updatePropertyNotification.getActorId();
     const changedProps = deserializeObject(
       updatePropertyNotification.getAttr()
     );
@@ -380,21 +404,31 @@ export default class GameConnection extends Connection {
 
   _handleKickedMsg(roomNotification) {
     const appInfo = roomNotification.getAppInfo();
-    // TODO
-
-    this.emit(ROOM_KICKED_EVENT, appInfo);
+    if (appInfo) {
+      this.emit(ROOM_KICKED_EVENT, {
+        code: appInfo.getAppCode(),
+        msg: appInfo.getAppMsg(),
+      });
+    } else {
+      this.emit(ROOM_KICKED_EVENT);
+    }
   }
 
   _handleRoomSystemPropsChangedMsg(updateStsPropertyNotification) {
-    // TODO 反序列化
-
-    const { sysAttr } = updateStsPropertyNotification;
-    const changedProps = {
-      open: sysAttr.open,
-      visible: sysAttr.visible,
-      maxPlayerCount: sysAttr.maxMembers,
-      expectedUserIds: sysAttr.expectMembers,
-    };
+    const attr = updateStsPropertyNotification.getSysAttr();
+    const changedProps = {};
+    if (attr.getOpen()) {
+      changedProps.open = attr.getOpen().getValue();
+    }
+    if (attr.getVisible()) {
+      changedProps.visible = attr.getVisible().getValue();
+    }
+    if (attr.getMaxMembers()) {
+      changedProps.maxPlayerCount = attr.getMaxMembers();
+    }
+    if (attr.getExpectMembers()) {
+      changedProps.expectedUserIds = JSON.parse(attr.getExpectMembers());
+    }
     this.emit(ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT, changedProps);
   }
 }
