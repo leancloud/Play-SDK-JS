@@ -305,7 +305,7 @@ export default class Connection extends EventEmitter {
       clearTimeout(this._pingTimer);
       this._pingTimer = null;
     }
-    setTimeout(() => {
+    this._pingTimer = setTimeout(() => {
       this._ws.send('{}');
     }, this._getPingDuration());
   }

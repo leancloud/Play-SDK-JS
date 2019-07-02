@@ -247,6 +247,8 @@ const PlayFSM = machina.Fsm.extend({
         });
         this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
           this._play._room._addPlayer(newPlayer);
+          newPlayer._play = this._play;
+          newPlayer._room = this._play._room;
           this._play.emit(Event.PLAYER_ROOM_JOINED, {
             newPlayer,
           });
@@ -310,7 +312,7 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._gameConn.on(PLAYER_OFFLINE_EVENT, actorId => {
           const player = this._play._room.getPlayer(actorId);
-          player._active(false);
+          player._active = false;
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
             player,
           });
@@ -318,7 +320,7 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(PLAYER_ONLINE_EVENT, member => {
           const player = this._play._room.getPlayer(member.getActorId());
           player._mergeProperties(deserializeObject(member.getAttr()));
-          player._active(true);
+          player._active = true;
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
             player,
           });
@@ -333,12 +335,16 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(DISCONNECT_EVENT, () => {
           this.handle('onTransition', 'disconnect');
         });
-        this._gameConn.on(ROOM_KICKED_EVENT, async ({ code, msg }) => {
+        this._gameConn.on(ROOM_KICKED_EVENT, async info => {
           this.handle('onTransition', 'gameToLobby');
           this._gameConn.close();
           await this._connectLobby();
           this.handle('onTransition', 'lobby');
-          this._play.emit(Event.ROOM_KICKED, { code, msg });
+          if (info) {
+            this._play.emit(Event.ROOM_KICKED, info);
+          } else {
+            this._play.emit(Event.ROOM_KICKED);
+          }
         });
       },
 

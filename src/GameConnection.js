@@ -1,7 +1,6 @@
 import Connection, { convertToRoomOptions } from './Connection';
 import Room from './Room';
 import Player from './Player';
-import { debug } from './Logger';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
 
@@ -228,7 +227,8 @@ export default class GameConnection extends Connection {
     const direct = new DirectCommand();
     direct.setEventId(eventId);
     if (eventData) {
-      // TODO 序列化
+      // 序列化
+      direct.setMsg(serializeObject(eventData));
     }
     if (options) {
       direct.setReceiverGroup(options.receiverGroup);
@@ -396,10 +396,13 @@ export default class GameConnection extends Connection {
 
   _handleSendEventMsg(directCommand) {
     const eventId = directCommand.getEventId();
-    // TODO 反序列化
-
+    // 反序列化
+    let eventData = null;
+    if (directCommand.getMsg()) {
+      eventData = deserializeObject(directCommand.getMsg());
+    }
     const senderId = directCommand.getFromActorId();
-    this.emit(SEND_CUSTOM_EVENT, eventId, null, senderId);
+    this.emit(SEND_CUSTOM_EVENT, eventId, eventData, senderId);
   }
 
   _handleKickedMsg(roomNotification) {
