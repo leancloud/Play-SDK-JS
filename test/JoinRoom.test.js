@@ -1,4 +1,4 @@
-import { newPlay, newQCloudPlay } from './Utils';
+import { newPlay } from './Utils';
 import Event from '../src/Event';
 
 const { expect } = require('chai');
@@ -38,7 +38,6 @@ describe('test join room', () => {
     const p0 = newPlay('jr2_0');
     const p1 = newPlay('jr2_1');
     const p2 = newPlay('jr2_2');
-
     await p0.connect();
     const options = {
       maxPlayerCount: 2,
@@ -48,7 +47,6 @@ describe('test join room', () => {
       roomOptions: options,
       expectedUserIds: ['jr2_2'],
     });
-
     await p1.connect();
     try {
       await p1.joinRoom(roomName);
@@ -67,7 +65,6 @@ describe('test join room', () => {
       const roomName = 'jr3_r';
       const p0 = newPlay('jr3_0');
       const p1 = newPlay('jr3_1');
-
       await p0.connect();
       const p0Room = await p0.createRoom({ roomName });
       await p1.connect();
@@ -84,7 +81,6 @@ describe('test join room', () => {
     const roomName = 'jr4_r';
     const p0 = newPlay('jr4_0');
     let p1 = newPlay('jr4_1');
-
     await p0.connect();
     const options = {
       playerTtl: 600,
@@ -97,16 +93,13 @@ describe('test join room', () => {
       const { player } = data;
       debug(`${player.userId}'s activity is ${player.isActive}`);
     });
-
     await p1.connect();
     await p1.joinRoom(roomName);
     await p1.close();
-
     p1 = newPlay('jr4_1');
     await p1.connect();
     const room = await p1.rejoinRoom(roomName);
     expect(room.name).to.be.equal(roomName);
-
     await p0.close();
     await p1.close();
   });
@@ -115,7 +108,6 @@ describe('test join room', () => {
     const roomName = 'jr5_r';
     const p0 = newPlay('jr5_0');
     const p1 = newPlay('jr5_1');
-
     await p0.connect();
     const options = {
       playerTtl: 600,
@@ -124,7 +116,6 @@ describe('test join room', () => {
       roomName,
       roomOptions: options,
     });
-
     await p1.connect();
     await p1.joinRoom(roomName);
     p1.on(Event.DISCONNECTED, async () => {
@@ -141,10 +132,8 @@ describe('test join room', () => {
     const roomName2 = 'jr6_r1';
     const p0 = newPlay('jr6_0');
     const p1 = newPlay('jr6_1');
-
     await p0.connect();
     await p0.createRoom({ roomName });
-
     await p1.connect();
     try {
       await p1.joinRoom(roomName2);
@@ -160,7 +149,6 @@ describe('test join room', () => {
     const p0 = newPlay('jr7_0');
     const p1 = newPlay('jr7_1');
     const p2 = newPlay('jr7_2');
-
     await p0.connect();
     const matchProps = {
       lv: 2,
@@ -173,7 +161,6 @@ describe('test join room', () => {
       roomName,
       roomOptions: options,
     });
-
     await p1.connect();
     const mp = {
       lv: 2,
@@ -181,7 +168,7 @@ describe('test join room', () => {
     await p1.joinRandomRoom({
       matchProperties: mp,
     });
-
+    // 模拟条件不匹配情况
     await p2.connect();
     try {
       const mp1 = {
@@ -191,11 +178,12 @@ describe('test join room', () => {
         matchProperties: mp1,
       });
     } catch (err) {
-      debug(err);
-      await p0.close();
-      await p1.close();
+      const { code } = err;
+      expect(code).to.be.equal(code);
       await p2.close();
     }
+    await p0.close();
+    await p1.close();
   });
 
   it('test join room concurrently', async () => {
@@ -203,19 +191,16 @@ describe('test join room', () => {
     const p0 = newPlay('jr8_0');
     const p1 = newPlay('jr8_1');
     const p2 = newPlay('jr8_2');
-
     await p0.connect();
     await p0.createRoom({ roomName });
     p0.on(Event.PLAYER_ROOM_JOINED, data => {
       const { newPlayer } = data;
       debug(`${newPlayer.userId} joined`);
     });
-
     await p1.connect();
     await p2.connect();
     await p1.joinRoom(roomName);
     await p2.joinRoom(roomName);
-
     await p0.close();
     await p1.close();
     await p2.close();
@@ -223,8 +208,8 @@ describe('test join room', () => {
 
   it('test match random', async () => {
     const roomName = 'jr9_r';
-    const p0 = newQCloudPlay('jr9_0');
-    const p1 = newQCloudPlay('jr9_1');
+    const p0 = newPlay('jr9_0');
+    const p1 = newPlay('jr9_1');
     try {
       await p0.connect();
       const props = {
