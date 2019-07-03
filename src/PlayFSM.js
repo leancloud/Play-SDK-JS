@@ -247,7 +247,6 @@ const PlayFSM = machina.Fsm.extend({
         });
         this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
           this._play._room._addPlayer(newPlayer);
-          newPlayer._play = this._play;
           newPlayer._room = this._play._room;
           this._play.emit(Event.PLAYER_ROOM_JOINED, {
             newPlayer,
@@ -835,7 +834,7 @@ const PlayFSM = machina.Fsm.extend({
     gameRoom._play = this._play;
     /* eslint no-param-reassign: ["error", { "props": false }] */
     _.forEach(gameRoom.playerList, player => {
-      player._play = this._play;
+      player._room = gameRoom;
       if (player.userId === this._play._userId) {
         this._play._player = player;
       }
