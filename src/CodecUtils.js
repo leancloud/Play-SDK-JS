@@ -68,7 +68,7 @@ function serialize(val) {
       genericVal.setBytesValue(serializeObject(val));
     }
   } else {
-    // TODO 自定义类型
+    // 其他类型
     throw new TypeError(`${typeof val} is not supported`);
   }
   return genericVal;

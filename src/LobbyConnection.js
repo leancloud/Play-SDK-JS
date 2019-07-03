@@ -1,8 +1,6 @@
-import PlayError from './PlayError';
 import Connection, { convertToRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
-import { debug } from './Logger';
-import { serializeObject } from './CodecUtils';
+import { serializeObject, deserializeObject } from './CodecUtils';
 
 const messages = require('./proto/messages_pb');
 
@@ -30,8 +28,7 @@ function convertToLobbyRoom(roomOptions) {
   lobbyRoom._emptyRoomTtl = roomOptions.getEmptyRoomTtl();
   lobbyRoom._playerTtl = roomOptions.getPlayerTtl();
   lobbyRoom._playerCount = roomOptions.getMemberCount();
-  // TODO
-  // lobbyRoom._customRoomProperties = lobbyRoomDTO.attr;
+  lobbyRoom._customRoomProperties = deserializeObject(roomOptions.getAttr());
   return lobbyRoom;
 }
 
@@ -170,7 +167,7 @@ export default class LobbyConnection extends Connection {
     const joinRoomReq = new JoinRoomRequest();
     joinRoomReq.setPiggybackPeerId(piggybackPeerId);
     if (matchProperties) {
-      // TODO 序列化
+      joinRoomReq.setExpectAttr(serializeObject(matchProperties));
     }
     req.setJoinRoom(joinRoomReq);
     const { res } = await super.sendRequest(
@@ -178,7 +175,7 @@ export default class LobbyConnection extends Connection {
       OpType.MATCH_RANDOM,
       req
     );
-    // TODO return
+    // return
     const roomRes = res.getJoinRoom();
     return convertToLobbyRoom(roomRes.getRoomOptions());
   }

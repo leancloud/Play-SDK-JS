@@ -100,17 +100,17 @@ export default class GameConnection extends Connection {
 
   async joinRoom(roomName, matchProperties, expectedUserIds) {
     const req = new RequestMessage();
+    const joinRoomReq = new JoinRoomRequest();
     const roomOpts = new RoomOptions();
     roomOpts.setCid(roomName);
     if (matchProperties) {
-      // TODO
+      joinRoomReq.setExpectAttr(serializeObject(matchProperties));
     }
     if (expectedUserIds) {
       roomOpts.setExpectMembersList(expectedUserIds);
     }
-    const joinRoomRequest = new JoinRoomRequest();
-    joinRoomRequest.setRoomOptions(roomOpts);
-    req.setJoinRoom(joinRoomRequest);
+    joinRoomReq.setRoomOptions(roomOpts);
+    req.setJoinRoom(joinRoomReq);
     const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
     return convertToRoom(res.getJoinRoom().getRoomOptions());
   }
