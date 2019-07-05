@@ -23,7 +23,6 @@ import PlayRouter from './PlayRouter';
 import { tap } from './Utils';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
-import { deserializeObject } from './CodecUtils';
 
 const PlayFSM = machina.Fsm.extend({
   initialize(opts) {
@@ -316,9 +315,9 @@ const PlayFSM = machina.Fsm.extend({
             player,
           });
         });
-        this._gameConn.on(PLAYER_ONLINE_EVENT, member => {
-          const player = this._play._room.getPlayer(member.getActorId());
-          player._mergeProperties(deserializeObject(member.getAttr()));
+        this._gameConn.on(PLAYER_ONLINE_EVENT, (actorId, props) => {
+          const player = this._play._room.getPlayer(actorId);
+          player._mergeProperties(props);
           player._active = true;
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
             player,

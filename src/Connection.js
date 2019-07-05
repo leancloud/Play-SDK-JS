@@ -165,7 +165,6 @@ export default class Connection extends EventEmitter {
     sessionOpen.setGameVersion(gameVersion);
     sessionOpen.setProtocolVersion(protocolVersion);
     const req = new RequestMessage();
-    debug(`req: ${JSON.stringify(req.toObject())}`);
     req.setSessionOpen(sessionOpen);
     await this.sendRequest(CommandType.SESSION, OpType.OPEN, req);
   }
@@ -295,43 +294,24 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  _handleMessage(msg) {
-    const { i } = msg;
-    if (!_.isNull(i) && this._requests[i]) {
-      // 如果有对应 resolve，则返回
-      const { resolve, reject } = this._requests[i];
-      if (msg.cmd === 'error') {
-        this._handleErrorMsg(msg);
-        const { reasonCode, detail } = msg;
-        reject(new PlayError(reasonCode, detail));
-      } else {
-        resolve(msg);
-      }
-    } else if (_.isEmpty(msg)) {
-      debug('pong');
-    } else {
-      // 通知类消息交由子类处理事件
-      this._handleNotification(msg);
-    }
-  }
-
   /* eslint no-unused-vars: ["error", { "args": "none" }] */
-  _handleNotification(msg) {
+  _handleNotification(cmd, op, body) {
     throw new Error('must implement the method');
   }
 
-  _handleErrorMsg(msg) {
-    error(JSON.stringify(msg));
-  }
-
-  _handleErrorNotify(msg) {
-    this._handleErrorMsg(msg);
-    const { reasonCode: code, detail } = msg;
+  _handleErrorNotify(body) {
+    const errorInfo = body.getErrorInfo();
+    const code = errorInfo.getRaseonCode();
+    const detail = errorInfo.getDetail();
     this.emit(ERROR_EVENT, { code, detail });
   }
 
-  _handleUnknownMsg(msg) {
-    error(`unknown msg: ${JSON.stringify(msg.toObject())}`);
+  _handleUnknownMsg(cmd, op, body) {
+    error(
+      `[UNKNOWN COMMAND] ${this._userId} : ${
+        this._flag
+      } -> ${cmd}/${op}: ${JSON.stringify(body.toObject())}`
+    );
   }
 
   _pauseMessageQueue() {

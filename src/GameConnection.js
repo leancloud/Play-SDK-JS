@@ -50,7 +50,7 @@ function convertToPlayer(member) {
   const player = new Player();
   player._userId = member.getPid();
   player._actorId = member.getActorId();
-  player.active = !member.getInactive();
+  player._active = !member.getInactive();
   player._properties = deserializeObject(member.getAttr());
   return player;
 }
@@ -214,10 +214,12 @@ export default class GameConnection extends Connection {
     const req = new RequestMessage();
     const kickReq = new KickMemberRequest();
     kickReq.setTargetActorId(actorId);
-    const appInfo = new AppInfo();
-    appInfo.setAppCode(code);
-    appInfo.setAppMsg(msg);
-    kickReq.setAppInfo(appInfo);
+    if (code !== null || msg !== null) {
+      const appInfo = new AppInfo();
+      appInfo.setAppCode(code);
+      appInfo.setAppMsg(msg);
+      kickReq.setAppInfo(appInfo);
+    }
     req.setKickMember(kickReq);
     const { res } = await super.sendRequest(CommandType.CONV, OpType.KICK, req);
     return res.getKickMember().getTargetActorId();
@@ -390,8 +392,10 @@ export default class GameConnection extends Connection {
   _handlePlayerOnlineMsg(roomNotification) {
     const joinRoom = roomNotification.getJoinRoom();
     const member = joinRoom.getMember();
-    // TODO 更新 / 新建 Player
-    this.emit(PLAYER_ONLINE_EVENT, member);
+    // 更新 Player
+    const actorId = member.getActorId();
+    const props = deserializeObject(member.getAttr());
+    this.emit(PLAYER_ONLINE_EVENT, actorId, props);
   }
 
   _handleSendEventMsg(directCommand) {
