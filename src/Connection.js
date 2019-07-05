@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import _ from 'lodash';
 
 import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
