@@ -139,7 +139,12 @@ export default class Connection extends EventEmitter {
       if (this._isMessageQueueRunning) {
         this._handleCommand(cmd, op, body);
       } else {
-        this._pauseMessageQueue({
+        debug(
+          `[DELAY] ${this._userId} : ${
+            this._flag
+          } <- ${cmd}/${op}: ${JSON.stringify(body.toObject())}`
+        );
+        this._messageQueue.push({
           cmd,
           op,
           body,
@@ -337,7 +342,13 @@ export default class Connection extends EventEmitter {
     this._isMessageQueueRunning = true;
     while (this._messageQueue.length > 0) {
       const msg = this._messageQueue.shift();
-      this._handleMessage(msg);
+      const { cmd, op, body } = msg;
+      debug(
+        `[DELAY HANDLE] ${this._userId} : ${
+          this._flag
+        } <- ${cmd}/${op}: ${JSON.stringify(body.toObject())}`
+      );
+      this._handleCommand(cmd, op, body);
     }
   }
 }
