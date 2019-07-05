@@ -5,7 +5,6 @@ import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
-import { tap } from './Utils';
 import { sdkVersion, protocolVersion } from './Config';
 import { serializeObject } from './CodecUtils';
 
@@ -223,51 +222,6 @@ export default class Connection extends EventEmitter {
     this._ws.send(command.serializeBinary());
     // ping
     this._ping();
-  }
-
-  async send(msg, withIndex = true, ignoreServerError = true) {
-    const msgId = this._getMsgId();
-    if (withIndex) {
-      Object.assign(msg, {
-        i: msgId,
-      });
-    }
-    // 输出日志
-    const msgData = JSON.stringify(msg);
-    debug(`${this._userId} : ${this._flag} -> ${msg.op} ${msgData}`);
-    const { WebSocket } = adapters;
-    if (this._ws.readyState !== WebSocket.OPEN) {
-      throw new PlayError(
-        PlayErrorCode.SEND_MESSAGE_STATE_ERROR,
-        `Websocket send message error state: ${this._ws.readyState}`
-      );
-    }
-    this._ws.send(msgData);
-    // 处理心跳包
-    this._pingTimer = setTimeout(() => {
-      const ping = {};
-      this.send(ping, false);
-    }, this._getPingDuration());
-
-    if (!withIndex) {
-      return undefined;
-    }
-    return new Promise((resolve, reject) => {
-      this._requests[msgId] = {
-        msg,
-        resolve,
-        reject,
-      };
-    }).then(
-      ignoreServerError
-        ? undefined
-        : tap(res => {
-            if (res.reasonCode) {
-              const { reasonCode, detail } = res;
-              throw new PlayError(reasonCode, detail);
-            }
-          })
-    );
   }
 
   close() {
