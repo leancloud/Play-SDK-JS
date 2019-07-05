@@ -5,6 +5,13 @@ const { GenericCollectionValue, GenericCollection } = genericCollection;
 const _typeNameMap = {};
 const _typeIdMap = {};
 
+/**
+ * 注册自定义类型的序列化
+ * @param {*} type 类型
+ * @param {number} typeId 类型 Id
+ * @param {function} serializeMethod 序列化方法
+ * @param {function} deserializeMethod 反序列化方法
+ */
 function registerType(type, typeId, serializeMethod, deserializeMethod) {
   if (type === undefined || typeof type !== 'function') {
     throw new TypeError('type must be a class');
@@ -139,6 +146,10 @@ function deserialize(genericVal) {
   return val;
 }
 
+/**
+ * 序列化 object
+ * @param {*} obj 要序列化的 object
+ */
 function serializeObject(obj) {
   if (obj === undefined) {
     return null;
@@ -155,6 +166,10 @@ function serializeObject(obj) {
   return map.serializeBinary();
 }
 
+/**
+ * 反序列化 object
+ * @param {*} bytes 字节数组
+ */
 function deserializeObject(bytes) {
   if (bytes === undefined) {
     return null;

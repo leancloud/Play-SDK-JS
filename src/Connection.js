@@ -92,7 +92,6 @@ export default class Connection extends EventEmitter {
   constructor() {
     super();
     this._requests = {};
-    this._responses = {};
     this._msgId = 0;
     this._pingTimer = null;
     this._pongTimer = null;
@@ -171,8 +170,8 @@ export default class Connection extends EventEmitter {
       // 应答
       const res = body.getResponse();
       const i = res.getI();
-      if (this._responses[i]) {
-        const { resolve, reject } = this._responses[i];
+      if (this._requests[i]) {
+        const { resolve, reject } = this._requests[i];
         const errorInfo = res.getErrorInfo();
         if (errorInfo) {
           const code = errorInfo.getReasonCode();
@@ -202,7 +201,7 @@ export default class Connection extends EventEmitter {
     body.setRequest(req);
     this.sendCommand(cmd, op, body);
     return new Promise((resolve, reject) => {
-      this._responses[msgId] = {
+      this._requests[msgId] = {
         resolve,
         reject,
       };

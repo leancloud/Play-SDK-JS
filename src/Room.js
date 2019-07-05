@@ -233,10 +233,10 @@ export default class Room {
     if (visible !== undefined) {
       this._visible = visible;
     }
-    if (maxPlayerCount) {
+    if (maxPlayerCount !== undefined) {
       this._maxPlayerCount = maxPlayerCount;
     }
-    if (expectedUserIds) {
+    if (expectedUserIds !== undefined) {
       this._expectedUserIds = expectedUserIds;
     }
   }
