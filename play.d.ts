@@ -335,3 +335,12 @@ export enum PlayErrorCode {
   OPEN_WEBSOCKET_ERROR = 10001,
   SEND_MESSAGE_STATE_ERROR = 10002,
 }
+
+export function registerType<T>(
+  type: T,
+  typeId: number,
+  serializeMethod: (obj: T) => Uint8Array,
+  deserializeMethod: (bytes: Uint8Array) => T
+);
+export function serializeObject(obj: Object);
+export function deserializeObject(bytes: Uint8Array);
