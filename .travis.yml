@@ -16,6 +16,7 @@ deploy:
       - './dist/play-weapp.js'
       - './dist/play-laya.js'
       - './play-egret.zip'
+      - './play.d.ts'
     skip_cleanup: true
     on:
       tags: true
