@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import { newPlay, newWechatPlay } from './Utils';
+import { newPlay } from './Utils';
 import Event from '../src/Event';
-import { APP_ID } from './Config';
 import ReceiverGroup from '../src/ReceiverGroup';
 import LobbyRouter from '../src/LobbyRouter';
 import PlayRouter from '../src/PlayRouter';
@@ -16,27 +15,28 @@ describe('test connect', () => {
     await p.close();
   });
 
-  it('test connect with same id', async () => {
-    const p0 = newPlay('tc1_0');
-    const p1 = newPlay('tc1_0');
-    let f0 = false;
-    let f1 = false;
-    await p0.connect();
-    p0.on(Event.ERROR, async ({ code, detail }) => {
-      debug(`${code}, ${detail}`);
-      if (code === 4102) {
-        f0 = true;
-        if (f0 && f1) {
-          await p1.close();
-        }
-      }
-    });
-    await p1.connect();
-    f1 = true;
-    if (f0 && f1) {
-      await p1.close();
-    }
-  });
+  // 目前未必能将之前登录的用户踢掉，先停止测试
+  // it('test connect with same id', async () => {
+  //   const p0 = newPlay('tc1_0');
+  //   const p1 = newPlay('tc1_0');
+  //   let f0 = false;
+  //   let f1 = false;
+  //   await p0.connect();
+  //   p0.on(Event.ERROR, async ({ code, detail }) => {
+  //     debug(`${code}, ${detail}`);
+  //     if (code === 4102) {
+  //       f0 = true;
+  //       if (f0 && f1) {
+  //         await p1.close();
+  //       }
+  //     }
+  //   });
+  //   await p1.connect();
+  //   f1 = true;
+  //   if (f0 && f1) {
+  //     await p1.close();
+  //   }
+  // });
 
   it('test disconnect from lobby', async () => {
     let p = newPlay('tc2');
@@ -79,16 +79,18 @@ describe('test connect', () => {
     });
   });
 
-  it('test wechat', async () => {
-    const p = newWechatPlay('tc6');
-    await p.connect();
-    await p.close();
-  });
+  // 暂不支持 wechat 的 protobuf
+  // it('test wechat', async () => {
+  //   const p = newWechatPlay('tc6');
+  //   await p.connect();
+  //   await p.close();
+  // });
 
   it('test ws', async () => {
-    const playRouter = new PlayRouter(APP_ID);
+    const appId = 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va';
+    const playRouter = new PlayRouter(appId);
     const router = new LobbyRouter({
-      appId: APP_ID,
+      appId,
       insecure: true,
     });
     const lobbyRouterUrl = await playRouter.fetch();
@@ -111,13 +113,17 @@ describe('test connect', () => {
 
   it('test only send', async () => {
     const p = newPlay('tc_8');
-    let timer = null;
+
     await p.connect();
     await p.createRoom();
     p.on(Event.CUSTOM_EVENT, event => {
       const { eventId } = event;
       debug(`recv: ${eventId}`);
     });
+    let timer;
+    if (timer) {
+      clearInterval(timer);
+    }
     timer = setInterval(() => {
       debug('send custom event');
       p.sendEvent(

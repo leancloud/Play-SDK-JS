@@ -246,6 +246,7 @@ const PlayFSM = machina.Fsm.extend({
         });
         this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
           this._play._room._addPlayer(newPlayer);
+          newPlayer._room = this._play._room;
           this._play.emit(Event.PLAYER_ROOM_JOINED, {
             newPlayer,
           });
@@ -260,7 +261,7 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(MASTER_CHANGED_EVENT, newMasterActorId => {
           let newMaster = null;
           this._play._room._masterActorId = newMasterActorId;
-          if (newMasterActorId > -1) {
+          if (newMasterActorId > 0) {
             newMaster = this._play._room.getPlayer(newMasterActorId);
           }
           this._play.emit(Event.MASTER_SWITCHED, {
@@ -297,6 +298,8 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(
           PLAYER_PROPERTIES_CHANGED_EVENT,
           (actorId, changedProps) => {
+            debug(`actorId: ${actorId}`);
+            debug(`changedProps: ${JSON.stringify(changedProps)}`);
             const player = this._play._room.getPlayer(actorId);
             player._mergeProperties(changedProps);
             this._play.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
@@ -307,17 +310,17 @@ const PlayFSM = machina.Fsm.extend({
         );
         this._gameConn.on(PLAYER_OFFLINE_EVENT, actorId => {
           const player = this._play._room.getPlayer(actorId);
-          player._setActive(false);
+          player._active = false;
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
             player,
           });
         });
-        this._gameConn.on(PLAYER_ONLINE_EVENT, player => {
-          const p = this._play._room.getPlayer(player.actorId);
-          Object.assign(p, player);
-          p._setActive(true);
+        this._gameConn.on(PLAYER_ONLINE_EVENT, (actorId, props) => {
+          const player = this._play._room.getPlayer(actorId);
+          player._mergeProperties(props);
+          player._active = true;
           this._play.emit(Event.PLAYER_ACTIVITY_CHANGED, {
-            player: p,
+            player,
           });
         });
         this._gameConn.on(SEND_CUSTOM_EVENT, (eventId, eventData, senderId) => {
@@ -330,12 +333,16 @@ const PlayFSM = machina.Fsm.extend({
         this._gameConn.on(DISCONNECT_EVENT, () => {
           this.handle('onTransition', 'disconnect');
         });
-        this._gameConn.on(ROOM_KICKED_EVENT, async (code, msg) => {
+        this._gameConn.on(ROOM_KICKED_EVENT, async info => {
           this.handle('onTransition', 'gameToLobby');
           this._gameConn.close();
           await this._connectLobby();
           this.handle('onTransition', 'lobby');
-          this._play.emit(Event.ROOM_KICKED, { code, msg });
+          if (info) {
+            this._play.emit(Event.ROOM_KICKED, info);
+          } else {
+            this._play.emit(Event.ROOM_KICKED);
+          }
         });
       },
 
@@ -375,63 +382,56 @@ const PlayFSM = machina.Fsm.extend({
 
       setRoomOpen(open) {
         return this._gameConn.setRoomOpen(open).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(o => {
+            this._play._room._mergeSystemProps({ open: o });
           })
         );
       },
 
       setRoomVisible(visible) {
         return this._gameConn.setRoomVisible(visible).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(v => {
+            this._play._room._mergeSystemProps({ visible: v });
           })
         );
       },
 
       setRoomMaxPlayerCount(count) {
         return this._gameConn.setRoomMaxPlayerCount(count).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(c => {
+            this._play._room._mergeSystemProps({ maxPlayerCount: c });
           })
         );
       },
 
       setRoomExpectedUserIds(expectedUserIds) {
         return this._gameConn.setRoomExpectedUserIds(expectedUserIds).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(ids => {
+            this._play._room._mergeSystemProps({ expectedUserIds: ids });
           })
         );
       },
 
       clearRoomExpectedUserIds() {
         return this._gameConn.clearRoomExpectedUserIds().then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(ids => {
+            this._play._room._mergeSystemProps({ expectedUserIds: ids });
           })
         );
       },
 
       addRoomExpectedUserIds(expectedUserIds) {
         return this._gameConn.addRoomExpectedUserIds(expectedUserIds).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(ids => {
+            this._play._room._mergeSystemProps({ expectedUserIds: ids });
           })
         );
       },
 
       removeRoomExpectedUserIds(expectedUserIds) {
         return this._gameConn.removeRoomExpectedUserIds(expectedUserIds).then(
-          tap(res => {
-            const { sysAttr } = res;
-            this._play._room._mergeSystemProps(sysAttr);
+          tap(ids => {
+            this._play._room._mergeSystemProps({ expectedUserIds: ids });
           })
         );
       },
@@ -447,9 +447,8 @@ const PlayFSM = machina.Fsm.extend({
 
       kickPlayer(actorId, code, msg) {
         return this._gameConn.kickPlayer(actorId, code, msg).then(
-          tap(res => {
-            const { targetActorId } = res;
-            this._play._room._removePlayer(targetActorId);
+          tap(aId => {
+            this._play._room._removePlayer(aId);
           })
         );
       },
@@ -676,7 +675,7 @@ const PlayFSM = machina.Fsm.extend({
         const { op, cid, addr, secureAddr } = roomInfo;
         await this._connectGame(addr, secureAddr);
         let gameRoom = null;
-        if (op === 'started') {
+        if (op === 'create') {
           gameRoom = await this._createGameRoom(
             cid,
             roomOptions,
@@ -758,8 +757,10 @@ const PlayFSM = machina.Fsm.extend({
       } = this._play;
       try {
         await this._lobbyConn.openSession(appId, userId, gameVersion);
+        debug('opened session');
         resolve(this._play);
       } catch (err) {
+        debug('open session failed');
         this._lobbyConn.close();
         reject(err);
       }
@@ -832,7 +833,7 @@ const PlayFSM = machina.Fsm.extend({
     gameRoom._play = this._play;
     /* eslint no-param-reassign: ["error", { "props": false }] */
     _.forEach(gameRoom.playerList, player => {
-      player._play = this._play;
+      player._room = gameRoom;
       if (player.userId === this._play._userId) {
         this._play._player = player;
       }

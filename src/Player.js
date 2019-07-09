@@ -4,19 +4,9 @@
 export default class Player {
   constructor() {
     this._userId = '';
-    this._actorId = -1;
-  }
-
-  static _newFromJSONObject(playerJSONObject) {
-    const player = new Player();
-    player._userId = playerJSONObject.pid;
-    player._actorId = playerJSONObject.actorId;
-    if (playerJSONObject.attr) {
-      player.properties = playerJSONObject.attr;
-    } else {
-      player.properties = {};
-    }
-    return player;
+    this._actorId = 0;
+    this._active = true;
+    this._properties = {};
   }
 
   /**
@@ -43,9 +33,7 @@ export default class Player {
    * @readonly
    */
   get isLocal() {
-    return (
-      this._actorId !== -1 && this._play._player._actorId === this._actorId
-    );
+    return this._actorId !== 0 && this._room._play.userId === this._userId;
   }
 
   /**
@@ -54,7 +42,7 @@ export default class Player {
    * @readonly
    */
   get isMaster() {
-    return this._actorId !== -1 && this._play._room.masterId === this._actorId;
+    return this._actorId !== 0 && this._room.masterId === this._actorId;
   }
 
   /**
@@ -63,7 +51,7 @@ export default class Player {
    * @readonly
    */
   get isActive() {
-    return this.active;
+    return this._active;
   }
 
   /**
@@ -73,7 +61,7 @@ export default class Player {
    * @param {Object} [opts.expectedValues] 期望属性，用于 CAS 检测
    */
   async setCustomProperties(properties, { expectedValues = null } = {}) {
-    return this._play._setPlayerCustomProperties(
+    return this._room._play._setPlayerCustomProperties(
       this._actorId,
       properties,
       expectedValues
@@ -86,15 +74,10 @@ export default class Player {
    * @readonly
    */
   get customProperties() {
-    return this.properties;
-  }
-
-  // 设置活跃状态
-  _setActive(active) {
-    this.active = active;
+    return this._properties;
   }
 
   _mergeProperties(changedProperties) {
-    this.properties = Object.assign(this.properties, changedProperties);
+    this._properties = Object.assign(this._properties, changedProperties);
   }
 }

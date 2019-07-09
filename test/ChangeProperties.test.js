@@ -2,7 +2,7 @@ import d from 'debug';
 import Event from '../src/Event';
 
 // import CreateRoomFlag from '../src/CreateRoomFlag';
-import { newPlay, newQCloudPlay } from './Utils';
+import { newPlay } from './Utils';
 
 const { expect } = require('chai');
 
@@ -12,8 +12,8 @@ describe('test change properties', () => {
   it('test change room properties', () =>
     new Promise(async resolve => {
       const roomName = 'tcp0_r';
-      const p0 = newQCloudPlay('tcp0_0');
-      const p1 = newQCloudPlay('tcp0_1');
+      const p0 = newPlay('tcp0_0');
+      const p1 = newPlay('tcp0_1');
       let f0 = false;
       let f1 = false;
       await p0.connect();
@@ -113,8 +113,8 @@ describe('test change properties', () => {
   it('test change player properties', () =>
     new Promise(async resolve => {
       const roomName = 'tcp2_r';
-      const p0 = newQCloudPlay('tcp2_0');
-      const p1 = newQCloudPlay('tcp2_1');
+      const p0 = newPlay('tcp2_0');
+      const p1 = newPlay('tcp2_1');
       let f0 = false;
       let f1 = false;
 
@@ -250,15 +250,10 @@ describe('test change properties', () => {
       ready: true,
     };
     await p0.player.setCustomProperties(props);
-    debug('p0 set props done');
-
     await p1.connect();
     await p1.joinRoom(roomName);
     expect(p1.room.name).to.be.equal(roomName);
     const { master } = p1.room;
-    debug(master);
-    const me = p1.room.getPlayer(p1.player.actorId);
-    debug(me);
     expect(master.customProperties.ready).to.be.equal(true);
     await p0.close();
     await p1.close();

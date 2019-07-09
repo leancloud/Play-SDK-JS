@@ -1,4 +1,4 @@
-import { newQCloudPlay } from './Utils';
+import { newPlay } from './Utils';
 import Event from '../src/Event';
 
 const { expect } = require('chai');
@@ -7,7 +7,7 @@ const debug = require('debug')('Test:CreateRoom');
 describe('test room system props', () => {
   it('test room open', async () =>
     new Promise(async resolve => {
-      const p = newQCloudPlay('rsp_0');
+      const p = newPlay('rsp_0');
       await p.connect();
       const pRoom = await p.createRoom();
       p.on(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, async ({ changedProps }) => {
@@ -24,7 +24,7 @@ describe('test room system props', () => {
 
   it('test room visible', async () =>
     new Promise(async resolve => {
-      const p = newQCloudPlay('rsp_1');
+      const p = newPlay('rsp_1');
       await p.connect();
       const pRoom = await p.createRoom();
       p.on(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, async ({ changedProps }) => {
@@ -41,7 +41,7 @@ describe('test room system props', () => {
 
   it('test room max player count', async () =>
     new Promise(async resolve => {
-      const p = newQCloudPlay('rsp_2');
+      const p = newPlay('rsp_2');
       await p.connect();
       const pRoom = await p.createRoom();
       p.on(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, async ({ changedProps }) => {
@@ -60,7 +60,7 @@ describe('test room system props', () => {
     new Promise(async resolve => {
       let f1 = false;
       let f2 = false;
-      const p = newQCloudPlay('rsp_3');
+      const p = newPlay('rsp_3');
       await p.connect();
       const room = await p.createRoom();
       p.on(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, async ({ changedProps }) => {
@@ -92,7 +92,7 @@ describe('test room system props', () => {
       let f1 = false;
       let f2 = false;
       let f3 = false;
-      const p = newQCloudPlay('rsp_4');
+      const p = newPlay('rsp_4');
       await p.connect();
       const room = await p.createRoom();
 

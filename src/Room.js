@@ -5,29 +5,6 @@ import ReceiverGroup from './ReceiverGroup';
  * 房间类
  */
 export default class Room {
-  /* eslint no-param-reassign: ["error", { "props": false }] */
-  static _newFromJSONObject(roomJSONObject) {
-    const room = new Room();
-    room._name = roomJSONObject.cid;
-    room._open = roomJSONObject.open;
-    room._visible = roomJSONObject.visible;
-    room._maxPlayerCount = roomJSONObject.maxMembers;
-    room._masterActorId = roomJSONObject.masterActorId;
-    room._expectedUserIds = roomJSONObject.expectMembers;
-    room._players = {};
-    for (let i = 0; i < roomJSONObject.members.length; i += 1) {
-      const playerDTO = roomJSONObject.members[i];
-      const player = Player._newFromJSONObject(playerDTO);
-      room._players[player.actorId] = player;
-    }
-    if (roomJSONObject.attr) {
-      room._properties = roomJSONObject.attr;
-    } else {
-      room._properties = {};
-    }
-    return room;
-  }
-
   /**
    * 房间名称
    * @type {String}
@@ -100,7 +77,7 @@ export default class Room {
     if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
-    if (actorId === -1) return null;
+    if (actorId === 0) return null;
     const player = this._players[actorId];
     if (player === null) {
       throw new Error(`player with id:${actorId} not found`);
@@ -238,7 +215,6 @@ export default class Room {
       throw new TypeError(`${newPlayer} is not a Player`);
     }
     this._players[newPlayer.actorId] = newPlayer;
-    newPlayer._play = this._play;
   }
 
   _removePlayer(actorId) {
@@ -250,18 +226,18 @@ export default class Room {
   }
 
   _mergeSystemProps(changedProps) {
-    const { open, visible, maxMembers, expectMembers } = changedProps;
+    const { open, visible, maxPlayerCount, expectedUserIds } = changedProps;
     if (open !== undefined) {
       this._open = open;
     }
     if (visible !== undefined) {
       this._visible = visible;
     }
-    if (maxMembers !== undefined) {
-      this._maxPlayerCount = maxMembers;
+    if (maxPlayerCount !== undefined) {
+      this._maxPlayerCount = maxPlayerCount;
     }
-    if (expectMembers !== undefined) {
-      this._expectedUserIds = expectMembers;
+    if (expectedUserIds !== undefined) {
+      this._expectedUserIds = expectedUserIds;
     }
   }
 }
