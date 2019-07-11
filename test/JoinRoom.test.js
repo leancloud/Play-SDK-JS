@@ -149,11 +149,14 @@ describe('test join room', () => {
     const p0 = newPlay('jr7_0');
     const p1 = newPlay('jr7_1');
     const p2 = newPlay('jr7_2');
+    const p3 = newPlay('jr7_3');
+    const p4 = newPlay('jr7_2');
     await p0.connect();
     const matchProps = {
       lv: 2,
     };
     const options = {
+      maxPlayerCount: 3,
       customRoomProperties: matchProps,
       customRoomPropertyKeysForLobby: ['lv'],
     };
@@ -167,6 +170,7 @@ describe('test join room', () => {
     };
     await p1.joinRandomRoom({
       matchProperties: mp,
+      expectedUserIds: ['jr7_2'],
     });
     // 模拟条件不匹配情况
     await p2.connect();
@@ -178,12 +182,27 @@ describe('test join room', () => {
         matchProperties: mp1,
       });
     } catch (err) {
+      debug(err);
       const { code } = err;
-      expect(code).to.be.equal(code);
-      await p2.close();
+      expect(code).to.be.equal(4301);
+      p2.close();
     }
-    await p0.close();
-    await p1.close();
+    // 模拟占坑不匹配情况
+    await p3.connect();
+    try {
+      await p3.joinRandomRoom({ matchProperties: mp });
+    } catch (err) {
+      debug(err);
+      const { code } = err;
+      expect(code).to.be.equal(4301);
+      p3.close();
+    }
+    // 模拟条件和占坑都满足的情况
+    await p4.connect();
+    await p4.joinRandomRoom({ matchProperties: mp });
+    p0.close();
+    p1.close();
+    p4.close();
   });
 
   it('test join room concurrently', async () => {
@@ -239,5 +258,54 @@ describe('test join room', () => {
       p0.close();
       p1.close();
     }
+  });
+
+  it('test match random with expected users', async () => {
+    const roomName = 'jr10_r';
+    const p0 = newPlay('jr10_0');
+    const p1 = newPlay('jr10_1');
+    const p2 = newPlay('jr10_2');
+    const p3 = newPlay('jr10_xxx');
+    await p0.connect();
+    const props = {
+      name: roomName,
+    };
+    const options = {
+      maxPlayerCount: 3,
+      customRoomProperties: props,
+      customRoomPropertyKeysForLobby: ['name'],
+    };
+    await p0.createRoom({
+      roomName,
+      roomOptions: options,
+    });
+    await p1.connect();
+    const matchProps = {
+      name: roomName,
+    };
+    await p1.matchRandom('jr10_1', {
+      matchProperties: matchProps,
+      expectedUserIds: ['jr10_xxx'],
+    });
+    try {
+      await p2.connect();
+      // 预期失败
+      await p2.joinRandomRoom({
+        matchProperties: matchProps,
+      });
+    } catch (err) {
+      debug(err);
+      const { code } = err;
+      expect(code).to.be.equal(4301);
+      p2.close();
+    }
+    await p3.connect();
+    // 预期成功
+    await p3.joinRandomRoom({
+      matchProperties: matchProps,
+    });
+    p0.close();
+    p1.close();
+    p3.close();
   });
 });
