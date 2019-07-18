@@ -130,7 +130,7 @@ export default class LobbyConnection extends Connection {
       joinRoomReq.setExpectAttr(serializeObject(matchProperties));
     }
     if (expectedUserIds) {
-      roomOpts.setExpectMembers(expectedUserIds);
+      roomOpts.setExpectMembersList(expectedUserIds);
     }
     joinRoomReq.setRoomOptions(roomOpts);
     req.setJoinRoom(joinRoomReq);
@@ -162,12 +162,17 @@ export default class LobbyConnection extends Connection {
     };
   }
 
-  async matchRandom(piggybackPeerId, matchProperties) {
+  async matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
     const req = new RequestMessage();
     const joinRoomReq = new JoinRoomRequest();
     joinRoomReq.setPiggybackPeerId(piggybackPeerId);
     if (matchProperties) {
       joinRoomReq.setExpectAttr(serializeObject(matchProperties));
+    }
+    if (expectedUserIds) {
+      const roomOpts = new RoomOptions();
+      roomOpts.setExpectMembersList(expectedUserIds);
+      joinRoomReq.setRoomOptions(roomOpts);
     }
     req.setJoinRoom(joinRoomReq);
     const { res } = await super.sendRequest(

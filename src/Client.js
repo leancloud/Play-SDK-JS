@@ -216,11 +216,17 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    */
-  async joinRandomRoom({ matchProperties = null } = {}) {
+  async joinRandomRoom({
+    matchProperties = null,
+    expectedUserIds = null,
+  } = {}) {
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
-    return this._fsm.handle('joinRandomRoom', matchProperties, null);
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
+    }
+    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
   }
 
   /**
@@ -228,18 +234,24 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    */
-  async matchRandom(piggybackPeerId, { matchProperties = null } = {}) {
+  async matchRandom(
+    piggybackPeerId,
+    { matchProperties = null, expectedUserIds = null } = {}
+  ) {
     if (typeof piggybackPeerId !== 'string') {
       throw new Error(`${piggybackPeerId} is not a string`);
     }
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
     }
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
+    }
     return this._fsm.handle(
       'matchRandom',
       piggybackPeerId,
       matchProperties,
-      null
+      expectedUserIds
     );
   }
 
