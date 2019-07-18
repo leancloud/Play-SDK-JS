@@ -26,20 +26,25 @@ export default class LobbyRouter {
     if (now < this._nextConnectTimestamp) {
       // 判断连接间隔，如果在间隔内，则延迟连接
       const delayTime = this._nextConnectTimestamp - now;
-      return this._delayFetch(delayTime);
+      return this._delayFetch(url, delayTime);
     }
     // 直接获取
     return this._fetch(url);
   }
 
-  _delayFetch(delay) {
+  _delayFetch(url, delay) {
     return new Promise((resolve, reject) => {
       debug(`delay: ${delay} for connect`);
-      this._connectTimer = setTimeout(() => {
+      this._connectTimer = setTimeout(async () => {
         debug('connect time out');
         clearTimeout(this._connectTimer);
         this._connectTimer = null;
-        this._fetch(resolve, reject);
+        try {
+          const res = await this._fetch(url);
+          resolve(res);
+        } catch (err) {
+          reject(err);
+        }
       }, delay);
     });
   }
