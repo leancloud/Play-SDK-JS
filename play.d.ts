@@ -106,7 +106,7 @@ declare interface PlayEvent {
     changedProps: CustomProperties;
   };
   customEvent: {
-    eventId: number | string;
+    eventId: number;
     eventData: CustomEventData;
     senderId: number;
   };
