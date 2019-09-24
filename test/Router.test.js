@@ -1,6 +1,8 @@
 import { newPlay } from './Utils';
 import Client from '../src/Client';
 import { getFallbackRouter } from '../src/PlayRouter';
+import LobbyClient from '../src/LobbyClient';
+import { LogLevel, setLogger } from '../src/Logger';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Codec');
@@ -38,5 +40,20 @@ describe('test router', () => {
       'https://bmyv4rks.play.lncld.com/1/multiplayer/router/route'
     );
     done();
+  });
+
+  it('test http lobby', async () => {
+    setLogger({
+      [LogLevel.Debug]: debug,
+      [LogLevel.Error]: debug,
+    });
+    const client = new LobbyClient({
+      appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
+      appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
+      userId: 'tar1',
+      server: 'https://fqr8l8ll.lc-cn-e1-shared.com',
+    });
+    await client.authorize();
+    await client.createRoom('leancloud');
   });
 });
