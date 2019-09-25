@@ -156,13 +156,14 @@ export default class Connection extends EventEmitter {
     };
   }
 
-  async openSession(appId, userId, gameVersion) {
+  async openSession(appId, userId, gameVersion, sessionToken) {
     const sessionOpen = new SessionOpenRequest();
     sessionOpen.setAppId(appId);
     sessionOpen.setPeerId(userId);
     sessionOpen.setSdkVersion(sdkVersion);
     sessionOpen.setGameVersion(gameVersion);
-    sessionOpen.setProtocolVersion(protocolVersion);
+    sessionOpen.setProtocolVersion(`${protocolVersion}`);
+    sessionOpen.setSessionToken(sessionToken);
     const req = new RequestMessage();
     req.setSessionOpen(sessionOpen);
     await this.sendRequest(CommandType.SESSION, OpType.OPEN, req);

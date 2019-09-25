@@ -1,7 +1,7 @@
 import machina from 'machina';
 import _ from 'lodash';
 import { debug } from './Logger';
-import LobbyRouter from './LobbyRouter';
+import GameRouter from './GameRouter';
 import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import GameConnection, {
@@ -19,7 +19,7 @@ import GameConnection, {
   ROOM_KICKED_EVENT,
 } from './GameConnection';
 import Event from './Event';
-import PlayRouter from './PlayRouter';
+import LobbyClient from './LobbyService';
 import { tap } from './Utils';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
@@ -37,11 +37,19 @@ const PlayFSM = machina.Fsm.extend({
     init: {
       _onEnter() {
         debug('init _onEnter()');
-        const { _appId, _insecure, _feature, _playServer } = this._play;
-        this._playRouter = new PlayRouter(_appId, _playServer);
-        this._router = new LobbyRouter({
+        const {
+          _appId,
+          _appKey,
+          _userId,
+          _insecure,
+          _feature,
+          _playServer,
+        } = this._play;
+        this._lobbyClient = new LobbyClient({
           appId: _appId,
-          insecure: _insecure,
+          appKey: _appKey,
+          userId: _userId,
+          server: _playServer,
           feature: _feature,
         });
       },
@@ -738,14 +746,14 @@ const PlayFSM = machina.Fsm.extend({
     return new Promise(async (resolve, reject) => {
       try {
         // 先获取大厅路由地址
-        const lobbyRouterUrl = await this._playRouter.fetch();
+        await this._lobbyClient.authorize();
         // 再获取大厅服务器地址
-        const lobbyServerInfo = await this._router.fetch(lobbyRouterUrl);
-        const { primaryServer, secondaryServer } = lobbyServerInfo;
-        this._primaryServer = primaryServer;
-        this._secondaryServer = secondaryServer;
-        // 与大厅服务器建立连接
-        await this._lobbyConn.connect(this._primaryServer, this._play._userId);
+        // const lobbyServerInfo = await this._router.fetch(lobbyRouterUrl);
+        // const { primaryServer, secondaryServer } = lobbyServerInfo;
+        // this._primaryServer = primaryServer;
+        // this._secondaryServer = secondaryServer;
+        // // 与大厅服务器建立连接
+        // await this._lobbyConn.connect(this._primaryServer, this._play._userId);
       } catch (err) {
         reject(err);
       }

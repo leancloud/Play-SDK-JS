@@ -5,6 +5,22 @@ import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 import ReceiverGroup from './ReceiverGroup';
 
+import LobbyService from './LobbyService';
+import GameConnection, {
+  PLAYER_JOINED_EVENT,
+  PLAYER_LEFT_EVENT,
+  MASTER_CHANGED_EVENT,
+  ROOM_OPEN_CHANGED_EVENT,
+  ROOM_VISIBLE_CHANGED_EVENT,
+  ROOM_PROPERTIES_CHANGED_EVENT,
+  ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
+  PLAYER_PROPERTIES_CHANGED_EVENT,
+  PLAYER_OFFLINE_EVENT,
+  PLAYER_ONLINE_EVENT,
+  SEND_CUSTOM_EVENT,
+  ROOM_KICKED_EVENT,
+} from './GameConnection';
+
 /**
  * 多人对战游戏服务的客户端
  * @param {Object} opts
@@ -45,6 +61,7 @@ export default class Client extends EventEmitter {
     ) {
       throw new TypeError(`${opts.playServer} is not a string`);
     }
+    this._opts = opts;
     this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
@@ -67,19 +84,20 @@ export default class Client extends EventEmitter {
   /**
    * 建立连接
    */
-  async connect() {
-    return this._fsm.handle('connect');
+  connect() {
+    this._lobbyService = new LobbyService(this._opts);
+    return this._lobbyService.authorize();
   }
 
   /**
    * 重新连接
    */
   async reconnect() {
-    return this._fsm.handle('reconnect');
+    return this._lobbyService.authorize();
   }
 
   /**
-   * 重新连接并自动加入房间
+   * TODO 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
     if (_.isNull(this._lastRoomId)) {
@@ -89,7 +107,7 @@ export default class Client extends EventEmitter {
   }
 
   /**
-   * 关闭
+   * TODO 关闭
    */
   async close() {
     debug('close');
@@ -98,14 +116,14 @@ export default class Client extends EventEmitter {
   }
 
   /**
-   * 加入大厅
+   * TODO 加入大厅
    */
   async joinLobby() {
     return this._fsm.handle('joinLobby');
   }
 
   /**
-   * 离开大厅
+   * TODO 离开大厅
    */
   async leaveLobby() {
     return this._fsm.handle('leaveLobby');
@@ -140,13 +158,17 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    debug('create room');
-    return this._fsm.handle(
-      'createRoom',
-      roomName,
-      roomOptions,
-      expectedUserIds
+    const { cid, addr } = await this._lobbyService.createRoom(roomName);
+    this._gameConnection = new GameConnection();
+    const { sessionToken } = await this._lobbyService.authorize();
+    await this._gameConnection.connect(addr, this._userId);
+    await this._gameConnection.openSession(
+      this._appId,
+      this._userId,
+      this._gameVersion,
+      sessionToken
     );
+    await this._gameConnection.createRoom(cid, roomOptions, expectedUserIds);
   }
 
   /**
@@ -161,7 +183,15 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle('joinRoom', roomName, expectedUserIds);
+    const { cid, addr } = await this._lobbyService.joinRoom(roomName);
+    this._gameConnection = new GameConnection();
+    await this._gameConnection.connect(addr, this._userId);
+    await this._gameConnection.openSession(
+      this._appId,
+      this._userId,
+      this._gameVersion
+    );
+    await this._gameConnection.joinRoom(cid, null, expectedUserIds);
   }
 
   /**

@@ -20,7 +20,7 @@ export function getFallbackRouter(appId) {
   }
 }
 
-export default class PlayRouter {
+export default class AppRouter {
   constructor({ appId, server }) {
     this._appId = appId;
     this._playServer = server;
