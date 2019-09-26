@@ -25,6 +25,17 @@ const {
   OpType,
 } = protocol;
 
+const CommandTypeSwap = Object.keys(CommandType).reduce(
+  (obj, key) => Object.assign({}, obj, { [CommandType[key]]: key }),
+  {}
+);
+debug(JSON.stringify(CommandTypeSwap));
+const OpTypeSwap = Object.keys(OpType).reduce(
+  (obj, key) => Object.assign({}, obj, { [OpType[key]]: key }),
+  {}
+);
+debug(JSON.stringify(OpTypeSwap));
+
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
 
@@ -99,15 +110,16 @@ export default class Connection extends EventEmitter {
     this._messageQueue = null;
   }
 
-  connect(server, userId) {
+  connect(appId, server, gameVersion, userId) {
     this._userId = userId;
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      this._ws = new WebSocket(server, 'protobuf.1');
+      const url = `${server}session?app=${appId}&c=${userId}&gv=${gameVersion}&pv=${protocolVersion}&sv=${sdkVersion}`;
+      debug(`------------ url: ${url}`);
+      this._ws = new WebSocket(url, 'protobuf.1');
       this._ws.onopen = () => {
         debug(`${this._userId} : ${this._flag} connection open`);
         this._connected();
-        resolve();
       };
       this._ws.onclose = () => {
         reject(
@@ -116,6 +128,11 @@ export default class Connection extends EventEmitter {
       };
       this._ws.onerror = err => {
         reject(err);
+      };
+      // 标记
+      this._requests[0] = {
+        resolve,
+        reject,
       };
     });
   }
@@ -131,17 +148,17 @@ export default class Connection extends EventEmitter {
       const op = command.getOp();
       const body = Body.deserializeBinary(command.getBody());
       debug(
-        `${this._userId} : ${this._flag} <- ${cmd}/${op}: ${JSON.stringify(
-          body.toObject()
-        )}`
+        `${this._userId} : ${this._flag} <- ${CommandTypeSwap[cmd]}/${
+          OpTypeSwap[op]
+        }: ${JSON.stringify(body.toObject())}`
       );
       if (this._isMessageQueueRunning) {
         this._handleCommand(cmd, op, body);
       } else {
         debug(
-          `[DELAY] ${this._userId} : ${
-            this._flag
-          } <- ${cmd}/${op}: ${JSON.stringify(body.toObject())}`
+          `[DELAY] ${this._userId} : ${this._flag} <- ${CommandTypeSwap[cmd]}/${
+            OpTypeSwap[op]
+          }: ${JSON.stringify(body.toObject())}`
         );
         this._messageQueue.push({
           cmd,
@@ -162,7 +179,7 @@ export default class Connection extends EventEmitter {
     sessionOpen.setPeerId(userId);
     sessionOpen.setSdkVersion(sdkVersion);
     sessionOpen.setGameVersion(gameVersion);
-    sessionOpen.setProtocolVersion(`${protocolVersion}`);
+    sessionOpen.setProtocolVersion(protocolVersion);
     sessionOpen.setSessionToken(sessionToken);
     const req = new RequestMessage();
     req.setSessionOpen(sessionOpen);
@@ -217,11 +234,13 @@ export default class Connection extends EventEmitter {
     command.setCmd(cmd);
     command.setOp(op);
     command.setBody(body.serializeBinary());
-    debug(
-      `${this._userId} : ${this._flag} -> ${cmd}/${op}: ${JSON.stringify(
-        body.toObject()
-      )}`
-    );
+    if (debug) {
+      debug(
+        `${this._userId} : ${this._flag} -> ${CommandTypeSwap[cmd]}/${
+          OpTypeSwap[op]
+        }: ${JSON.stringify(body.toObject())}`
+      );
+    }
     this._ws.send(command.serializeBinary());
     // ping
     this._ping();
