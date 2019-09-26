@@ -55,15 +55,16 @@ describe('test router', () => {
       playServer: 'https://fqr8l8ll.play.lncldapi.com',
     });
     await c1.connect();
-    await c1.createRoom({ roomName });
+    await c1.joinOrCreateRoom(roomName);
+    // await c1.createRoom({ roomName });
 
-    const c2 = new Client({
-      appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
-      appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
-      userId: 'cloud',
-      playServer: 'https://fqr8l8ll.play.lncldapi.com',
-    });
-    await c2.connect();
-    await c2.joinRoom(roomName);
+    // const c2 = new Client({
+    //   appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
+    //   appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
+    //   userId: 'cloud',
+    //   playServer: 'https://fqr8l8ll.play.lncldapi.com',
+    // });
+    // await c2.connect();
+    // await c2.joinRoom(roomName);
   });
 });

@@ -62,7 +62,7 @@ export default class LobbyService {
     });
   }
 
-  joinRoom(roomName, expectedUserIds) {
+  joinRoom({ roomName, expectedUserIds, rejoin, createOnNotFound }) {
     return new Promise(async (resolve, reject) => {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
@@ -76,6 +76,12 @@ export default class LobbyService {
         };
         if (expectedUserIds) {
           data.expectMembers = expectedUserIds;
+        }
+        if (rejoin !== undefined) {
+          data.rejoin = rejoin;
+        }
+        if (createOnNotFound !== undefined) {
+          data.createOnNotFound = createOnNotFound;
         }
         debug(JSON.stringify(data));
         const fullUrl = `${url}${path}`;
@@ -95,5 +101,68 @@ export default class LobbyService {
     });
   }
 
-  async joinRandomRoom(matchProperties, expectedUserIds) {}
+  joinRandomRoom(matchProperties, expectedUserIds) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { url, sessionToken } = await this._gameRouter.authorize();
+        const path = '/1/multiplayer/lobby/room/match';
+        const data = {
+          gameVersion: '0.0.1',
+          sdkVersion,
+          protocolVersion,
+        };
+        if (matchProperties) {
+          data.expectAttr = matchProperties;
+        }
+        if (expectedUserIds) {
+          data.expectMembers = expectedUserIds;
+        }
+        const fullUrl = `${url}${path}`;
+        const res = await request
+          .post(fullUrl)
+          .set(this._headers)
+          .set(SESSION_TOKEN_KEY, sessionToken)
+          .send(data);
+        debug(res.text);
+        const { cid, addr } = JSON.parse(res.text);
+        resolve({ cid, addr });
+      } catch (e) {
+        error(JSON.stringify(e));
+        reject(e);
+      }
+    });
+  }
+
+  matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { url, sessionToken } = await this._gameRouter.authorize();
+        const path = '/1/multiplayer/lobby/room/match';
+        const data = {
+          gameVersion: '0.0.1',
+          sdkVersion,
+          protocolVersion,
+          piggybackPeerId,
+        };
+        if (matchProperties) {
+          data.expectAttr = matchProperties;
+        }
+        if (expectedUserIds) {
+          data.expectMembers = expectedUserIds;
+        }
+        const fullUrl = `${url}${path}`;
+        const res = await request
+          .post(fullUrl)
+          .set(this._headers)
+          .set(SESSION_TOKEN_KEY, sessionToken)
+          .send(data);
+        debug(res.text);
+        const { cid, addr } = JSON.parse(res.text);
+        resolve({ cid, addr });
+      } catch (e) {
+        error(JSON.stringify(e));
+        reject(e);
+      }
+    });
+  }
 }

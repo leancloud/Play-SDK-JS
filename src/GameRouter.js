@@ -63,7 +63,7 @@ export default class GameRouter {
   _isValid() {
     return (
       this._sessionToken != null &&
-      this.url != null &&
+      this._url != null &&
       Date.now() < this._serverValidTimeStamp
     );
   }

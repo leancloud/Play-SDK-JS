@@ -159,13 +159,14 @@ export default class Client extends EventEmitter {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
     const { cid, addr } = await this._lobbyService.createRoom(roomName);
-    this._gameConnection = new GameConnection();
     const { sessionToken } = await this._lobbyService.authorize();
-    await this._gameConnection.connect(addr, this._userId);
-    await this._gameConnection.openSession(
+    // TODO 合并
+    this._gameConnection = new GameConnection();
+    await this._gameConnection.connect(
       this._appId,
-      this._userId,
+      addr,
       this._gameVersion,
+      this._userId,
       sessionToken
     );
     await this._gameConnection.createRoom(cid, roomOptions, expectedUserIds);
@@ -183,13 +184,16 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    const { cid, addr } = await this._lobbyService.joinRoom(roomName);
+    const { cid, addr } = await this._lobbyService.joinRoom({ roomName });
+    const { sessionToken } = await this._lobbyService.authorize();
+    // TODO 合并
     this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(addr, this._userId);
-    await this._gameConnection.openSession(
+    await this._gameConnection.connect(
       this._appId,
+      addr,
+      this._gameVersion,
       this._userId,
-      this._gameVersion
+      sessionToken
     );
     await this._gameConnection.joinRoom(cid, null, expectedUserIds);
   }
@@ -202,7 +206,11 @@ export default class Client extends EventEmitter {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    return this._fsm.handle('rejoinRoom', roomName);
+    const { cid, addr } = await this._lobbyService.joinRoom({
+      roomName,
+      rejoin: true,
+    });
+    // TODO
   }
 
   /**
@@ -233,12 +241,11 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle(
-      'joinOrCreateRoom',
+    const { cid, addr } = await this._lobbyService.joinRoom({
       roomName,
-      roomOptions,
-      expectedUserIds
-    );
+      createOnNotFound: true,
+    });
+    // TODO
   }
 
   /**
@@ -256,7 +263,11 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
+    const { cid, addr } = await this._lobbyService.joinRandomRoom(
+      matchProperties,
+      expectedUserIds
+    );
+    // TODO
   }
 
   /**
@@ -264,7 +275,7 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    */
-  async matchRandom(
+  matchRandom(
     piggybackPeerId,
     { matchProperties = null, expectedUserIds = null } = {}
   ) {
@@ -277,8 +288,7 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    return this._fsm.handle(
-      'matchRandom',
+    return this._lobbyService.matchRandom(
       piggybackPeerId,
       matchProperties,
       expectedUserIds

@@ -29,12 +29,10 @@ const CommandTypeSwap = Object.keys(CommandType).reduce(
   (obj, key) => Object.assign({}, obj, { [CommandType[key]]: key }),
   {}
 );
-debug(JSON.stringify(CommandTypeSwap));
 const OpTypeSwap = Object.keys(OpType).reduce(
   (obj, key) => Object.assign({}, obj, { [OpType[key]]: key }),
   {}
 );
-debug(JSON.stringify(OpTypeSwap));
 
 const MAX_NO_PONG_TIMES = 2;
 const MAX_PLAYER_COUNT = 10;
@@ -110,11 +108,11 @@ export default class Connection extends EventEmitter {
     this._messageQueue = null;
   }
 
-  connect(appId, server, gameVersion, userId) {
+  connect(appId, server, gameVersion, userId, sessionToken) {
     this._userId = userId;
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      const url = `${server}session?app=${appId}&c=${userId}&gv=${gameVersion}&pv=${protocolVersion}&sv=${sdkVersion}`;
+      const url = `${server}session?app=${appId}&c=${userId}&gv=${gameVersion}&pv=${protocolVersion}&sv=${sdkVersion}&st=${sessionToken}`;
       debug(`------------ url: ${url}`);
       this._ws = new WebSocket(url, 'protobuf.1');
       this._ws.onopen = () => {
