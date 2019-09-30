@@ -108,33 +108,6 @@ export default class Connection extends EventEmitter {
     this._messageQueue = null;
   }
 
-  connect(appId, server, gameVersion, userId, sessionToken) {
-    this._userId = userId;
-    return new Promise((resolve, reject) => {
-      const { WebSocket } = adapters;
-      const url = `${server}session?app=${appId}&c=${userId}&gv=${gameVersion}&pv=${protocolVersion}&sv=${sdkVersion}&st=${sessionToken}`;
-      debug(`------------ url: ${url}`);
-      this._ws = new WebSocket(url, 'protobuf.1');
-      this._ws.onopen = () => {
-        debug(`${this._userId} : ${this._flag} connection open`);
-        this._connected();
-      };
-      this._ws.onclose = () => {
-        reject(
-          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
-        );
-      };
-      this._ws.onerror = err => {
-        reject(err);
-      };
-      // 标记
-      this._requests[0] = {
-        resolve,
-        reject,
-      };
-    });
-  }
-
   _connected() {
     // 每次连接成功后将会得到最新快照，之前的缓存没有意义了
     this._isMessageQueueRunning = true;

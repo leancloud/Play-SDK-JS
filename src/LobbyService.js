@@ -91,8 +91,8 @@ export default class LobbyService {
           .set(SESSION_TOKEN_KEY, sessionToken)
           .send(data);
         debug(res.text);
-        const { cid, addr } = JSON.parse(res.text);
-        resolve({ cid, addr });
+        const { cid, addr, roomCreated } = JSON.parse(res.text);
+        resolve({ cid, addr, roomCreated });
       } catch (e) {
         error(JSON.stringify(e));
         // TODO 统一处理业务错误情况

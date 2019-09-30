@@ -57,6 +57,7 @@ describe('test router', () => {
     await c1.connect();
     await c1.joinOrCreateRoom(roomName);
     // await c1.createRoom({ roomName });
+    // await c1.joinLobby();
 
     // const c2 = new Client({
     //   appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',

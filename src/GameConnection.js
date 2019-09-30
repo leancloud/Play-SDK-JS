@@ -3,6 +3,11 @@ import Room from './Room';
 import Player from './Player';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
+import { adapters } from './PlayAdapter';
+import { debug, error } from './Logger';
+import { sdkVersion, protocolVersion } from './Config';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 // eslint-disable-next-line camelcase
 const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
@@ -82,6 +87,33 @@ export default class GameConnection extends Connection {
   constructor() {
     super();
     this._flag = 'game';
+  }
+
+  connect(appId, server, gameVersion, userId, sessionToken) {
+    this._userId = userId;
+    return new Promise((resolve, reject) => {
+      const { WebSocket } = adapters;
+      const url = `${server}session?appId=${appId}&userId=${userId}&gameVersion=${gameVersion}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&sessionToken=${sessionToken}`;
+      debug(`url: ${url}`);
+      this._ws = new WebSocket(url, 'protobuf.1');
+      this._ws.onopen = () => {
+        debug(`${this._userId} : ${this._flag} connection open`);
+        this._connected();
+      };
+      this._ws.onclose = () => {
+        reject(
+          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
+        );
+      };
+      this._ws.onerror = err => {
+        reject(err);
+      };
+      // 标记
+      this._requests[0] = {
+        resolve,
+        reject,
+      };
+    });
   }
 
   async createRoom(roomId, roomOptions, expectedUserIds) {

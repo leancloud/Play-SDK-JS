@@ -1,6 +1,11 @@
 import Connection, { convertToRoomOptions } from './Connection';
 import LobbyRoom from './LobbyRoom';
 import { serializeObject, deserializeObject } from './CodecUtils';
+import { adapters } from './PlayAdapter';
+import { debug, error } from './Logger';
+import { sdkVersion, protocolVersion } from './Config';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 const messages = require('./proto/messages_pb');
 
@@ -37,6 +42,33 @@ export default class LobbyConnection extends Connection {
   constructor() {
     super();
     this._flag = 'lobby';
+  }
+
+  connect(appId, server, gameVersion, userId, sessionToken) {
+    this._userId = userId;
+    return new Promise((resolve, reject) => {
+      const { WebSocket } = adapters;
+      const url = `${server}/1/multiplayer/lobby/websocket?appId=${appId}&userId=${userId}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&sessionToken=${sessionToken}`;
+      debug(`url: ${url}`);
+      this._ws = new WebSocket(url, 'protobuf.1');
+      this._ws.onopen = () => {
+        debug(`${this._userId} : ${this._flag} connection open`);
+        this._connected();
+      };
+      this._ws.onclose = () => {
+        reject(
+          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
+        );
+      };
+      this._ws.onerror = err => {
+        reject(err);
+      };
+      // 标记
+      this._requests[0] = {
+        resolve,
+        reject,
+      };
+    });
   }
 
   async joinLobby() {

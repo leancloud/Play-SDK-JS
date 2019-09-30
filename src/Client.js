@@ -5,7 +5,10 @@ import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
 import ReceiverGroup from './ReceiverGroup';
 
+import { tap } from './Utils';
+
 import LobbyService from './LobbyService';
+import LobbyConnection from './LobbyConnection';
 import GameConnection, {
   PLAYER_JOINED_EVENT,
   PLAYER_LEFT_EVENT,
@@ -119,14 +122,23 @@ export default class Client extends EventEmitter {
    * TODO 加入大厅
    */
   async joinLobby() {
-    return this._fsm.handle('joinLobby');
+    this._lobbyConnection = new LobbyConnection();
+    const { sessionToken } = await this._lobbyService.authorize();
+    await this._lobbyConnection.connect(
+      this._appId,
+      this._playServer,
+      this._gameVersion,
+      this._userId,
+      sessionToken
+    );
+    await this._lobbyConnection.joinLobby();
   }
 
   /**
    * TODO 离开大厅
    */
   async leaveLobby() {
-    return this._fsm.handle('leaveLobby');
+    await this._lobbyConnection.close();
   }
 
   /**
@@ -210,7 +222,16 @@ export default class Client extends EventEmitter {
       roomName,
       rejoin: true,
     });
-    // TODO
+    const { sessionToken } = await this._lobbyService.authorize();
+    this._gameConnection = new GameConnection();
+    await this._gameConnection.connect(
+      this._appId,
+      addr,
+      this._gameVersion,
+      this._userId,
+      sessionToken
+    );
+    await this._gameConnection.joinRoom(cid);
   }
 
   /**
@@ -241,11 +262,25 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    const { cid, addr } = await this._lobbyService.joinRoom({
+    const { cid, addr, roomCreated } = await this._lobbyService.joinRoom({
       roomName,
       createOnNotFound: true,
     });
-    // TODO
+    const { sessionToken } = await this._lobbyService.authorize();
+    this._gameConnection = new GameConnection();
+    await this._gameConnection.connect(
+      this._appId,
+      addr,
+      this._gameVersion,
+      this._userId,
+      sessionToken
+    );
+    // 根据返回确定是创建还是加入房间
+    if (roomCreated) {
+      await this._gameConnection.createRoom(cid);
+    } else {
+      await this._gameConnection.joinRoom(cid);
+    }
   }
 
   /**
@@ -267,7 +302,16 @@ export default class Client extends EventEmitter {
       matchProperties,
       expectedUserIds
     );
-    // TODO
+    const { sessionToken } = await this._lobbyService.authorize();
+    this._gameConnection = new GameConnection();
+    await this._gameConnection.connect(
+      this._appId,
+      addr,
+      this._gameVersion,
+      this._userId,
+      sessionToken
+    );
+    await this._gameConnection.joinRoom(cid, matchProperties, expectedUserIds);
   }
 
   /**
@@ -306,7 +350,11 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    return this._fsm.handle('setRoomOpen', open);
+    return this._gameConn.setRoomOpen(open).then(
+      tap(o => {
+        this._room._mergeSystemProps({ open: o });
+      })
+    );
   }
 
   /**
@@ -320,7 +368,11 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    return this._fsm.handle('setRoomVisible', visible);
+    return this._gameConn.setRoomVisible(visible).then(
+      tap(v => {
+        this._room._mergeSystemProps({ visible: v });
+      })
+    );
   }
 
   /**
@@ -331,7 +383,11 @@ export default class Client extends EventEmitter {
     if (!(typeof count === 'number') || count < 1) {
       throw new TypeError(`${count} is not a positive number`);
     }
-    return this._fsm.handle('setRoomMaxPlayerCount', count);
+    return this._gameConn.setRoomMaxPlayerCount(count).then(
+      tap(c => {
+        this._room._mergeSystemProps({ maxPlayerCount: c });
+      })
+    );
   }
 
   /**
@@ -342,14 +398,22 @@ export default class Client extends EventEmitter {
     if (!Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array`);
     }
-    return this._fsm.handle('setRoomExpectedUserIds', expectedUserIds);
+    return this._gameConn.setRoomExpectedUserIds(expectedUserIds).then(
+      tap(ids => {
+        this._room._mergeSystemProps({ expectedUserIds: ids });
+      })
+    );
   }
 
   /**
    * 清空房间占位玩家 Id 列表
    */
   async clearRoomExpectedUserIds() {
-    return this._fsm.handle('clearRoomExpectedUserIds');
+    return this._gameConn.clearRoomExpectedUserIds().then(
+      tap(ids => {
+        this._room._mergeSystemProps({ expectedUserIds: ids });
+      })
+    );
   }
 
   /**
@@ -360,7 +424,11 @@ export default class Client extends EventEmitter {
     if (!Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array`);
     }
-    return this._fsm.handle('addRoomExpectedUserIds', expectedUserIds);
+    return this._gameConn.addRoomExpectedUserIds(expectedUserIds).then(
+      tap(ids => {
+        this._room._mergeSystemProps({ expectedUserIds: ids });
+      })
+    );
   }
 
   /**
@@ -371,7 +439,11 @@ export default class Client extends EventEmitter {
     if (!Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array`);
     }
-    return this._fsm.handle('removeRoomExpectedUserIds', expectedUserIds);
+    return this._gameConn.removeRoomExpectedUserIds(expectedUserIds).then(
+      tap(ids => {
+        this._room._mergeSystemProps({ expectedUserIds: ids });
+      })
+    );
   }
 
   /**
@@ -385,7 +457,12 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
-    return this._fsm.handle('setMaster', newMasterId);
+    return this._gameConn.setMaster(newMasterId).then(
+      tap(res => {
+        const { masterActorId } = res;
+        this._room._masterActorId = masterActorId;
+      })
+    );
   }
 
   /**
@@ -432,7 +509,7 @@ export default class Client extends EventEmitter {
    * 离开房间
    */
   async leaveRoom() {
-    return this._fsm.handle('leaveRoom');
+    // TODO
   }
 
   /**
@@ -452,7 +529,11 @@ export default class Client extends EventEmitter {
     if (!_.isNull(msg) && !_.isString(msg)) {
       throw new TypeError(`${msg} is not a string`);
     }
-    return this._fsm.handle('kickPlayer', actorId, code, msg);
+    return this._gameConn.kickPlayer(actorId, code, msg).then(
+      tap(aId => {
+        this._room._removePlayer(aId);
+      })
+    );
   }
 
   /**
@@ -506,11 +587,17 @@ export default class Client extends EventEmitter {
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
     }
-    return this._fsm.handle(
-      'setRoomCustomProperties',
-      properties,
-      expectedValues
-    );
+    return this._gameConn
+      .setRoomCustomProperties(properties, expectedValues)
+      .then(
+        tap(res => {
+          const { attr } = res;
+          if (attr) {
+            // 如果属性没变化，服务端则不会下发 attr 属性
+            this._room._mergeProperties(attr);
+          }
+        })
+      );
   }
 
   // 设置玩家属性
@@ -524,12 +611,17 @@ export default class Client extends EventEmitter {
     if (expectedValues && !(typeof expectedValues === 'object')) {
       throw new TypeError(`${expectedValues} is not an object`);
     }
-    return this._fsm.handle(
-      'setPlayerCustomProperties',
-      actorId,
-      properties,
-      expectedValues
-    );
+    return this._gameConn
+      .setPlayerCustomProperties(actorId, properties, expectedValues)
+      .then(
+        tap(res => {
+          const { actorId: aId, attr } = res;
+          if (aId && attr) {
+            const player = this._room.getPlayer(aId);
+            player._mergeProperties(attr);
+          }
+        })
+      );
   }
 
   // 清理内存数据
