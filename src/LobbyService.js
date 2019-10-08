@@ -67,6 +67,7 @@ export default class LobbyService {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = `/1/multiplayer/lobby/room/${roomName}`;
+        const fullUrl = `${url}${path}`;
         debug(`opts: ${JSON.stringify(this._opts)}`);
         const data = {
           cid: roomName,
@@ -84,7 +85,6 @@ export default class LobbyService {
           data.createOnNotFound = createOnNotFound;
         }
         debug(JSON.stringify(data));
-        const fullUrl = `${url}${path}`;
         const res = await request
           .post(fullUrl)
           .set(this._headers)
@@ -106,6 +106,7 @@ export default class LobbyService {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/room/match';
+        const fullUrl = `${url}${path}`;
         const data = {
           gameVersion: '0.0.1',
           sdkVersion,
@@ -117,7 +118,6 @@ export default class LobbyService {
         if (expectedUserIds) {
           data.expectMembers = expectedUserIds;
         }
-        const fullUrl = `${url}${path}`;
         const res = await request
           .post(fullUrl)
           .set(this._headers)
@@ -138,6 +138,7 @@ export default class LobbyService {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/room/match';
+        const fullUrl = `${url}${path}`;
         const data = {
           gameVersion: '0.0.1',
           sdkVersion,
@@ -150,7 +151,6 @@ export default class LobbyService {
         if (expectedUserIds) {
           data.expectMembers = expectedUserIds;
         }
-        const fullUrl = `${url}${path}`;
         const res = await request
           .post(fullUrl)
           .set(this._headers)
