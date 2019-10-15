@@ -56,6 +56,7 @@ describe('test router', () => {
     });
     await c1.connect();
     await c1.joinOrCreateRoom(roomName);
+    await c1.close();
     // await c1.createRoom({ roomName });
     // await c1.joinLobby();
 

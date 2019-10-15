@@ -2,8 +2,6 @@ import _ from 'lodash';
 import { newPlay } from './Utils';
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
-import LobbyRouter from '../src/LobbyRouter';
-import PlayRouter from '../src/PlayRouter';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -12,7 +10,7 @@ describe('test connect', () => {
   it('test connect', async () => {
     const p = newPlay('tc0');
     await p.connect();
-    await p.close();
+    // await p.close();
   });
 
   // 目前未必能将之前登录的用户踢掉，先停止测试
@@ -38,14 +36,14 @@ describe('test connect', () => {
   //   }
   // });
 
-  it('test disconnect from lobby', async () => {
-    let p = newPlay('tc2');
-    await p.connect();
-    await p.close();
-    p = newPlay('tc2');
-    await p.connect();
-    await p.close();
-  });
+  // it('test disconnect from lobby', async () => {
+  //   let p = newPlay('tc2');
+  //   await p.connect();
+  //   await p.close();
+  //   p = newPlay('tc2');
+  //   await p.connect();
+  //   await p.close();
+  // });
 
   it('test disconnect from game', async () => {
     const p = newPlay('tc3');
@@ -86,19 +84,19 @@ describe('test connect', () => {
   //   await p.close();
   // });
 
-  it('test ws', async () => {
-    const appId = 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va';
-    const playRouter = new PlayRouter(appId);
-    const router = new LobbyRouter({
-      appId,
-      insecure: true,
-    });
-    const lobbyRouterUrl = await playRouter.fetch();
-    const serverInfo = await router.fetch(lobbyRouterUrl);
-    const { primaryServer, secondaryServer } = serverInfo;
-    expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
-    expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
-  });
+  // it('test ws', async () => {
+  //   const appId = 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va';
+  //   const playRouter = new PlayRouter(appId);
+  //   const router = new LobbyRouter({
+  //     appId,
+  //     insecure: true,
+  //   });
+  //   const lobbyRouterUrl = await playRouter.fetch();
+  //   const serverInfo = await router.fetch(lobbyRouterUrl);
+  //   const { primaryServer, secondaryServer } = serverInfo;
+  //   expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
+  //   expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
+  // });
 
   it('test connect repeatedly', done => {
     const p = newPlay('tc_7');

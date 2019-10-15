@@ -41,7 +41,7 @@ export default class GameRouter {
           data.feature = this._feature;
         }
         const res = await request
-          .get(gameRouterUrl)
+          .post(gameRouterUrl)
           .set(this._getHeaders())
           .send(data);
         debug(res.text);

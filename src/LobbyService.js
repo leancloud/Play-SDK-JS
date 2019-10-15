@@ -10,10 +10,6 @@ export default class LobbyService {
   constructor(opts) {
     this._opts = opts;
     const { appId, appKey, userId, playServer, feature } = opts;
-    this._appId = appId;
-    this._appKey = appKey;
-    this._userId = userId;
-    this._feature = feature;
 
     this._gameRouter = new GameRouter({
       appId,
@@ -23,7 +19,7 @@ export default class LobbyService {
       feature,
     });
 
-    this._headers = {
+    this._defaultHeaders = {
       'X-LC-ID': appId,
       'X-LC-KEY': appKey,
       'X-LC-PLAY-USER-ID': userId,
@@ -42,13 +38,18 @@ export default class LobbyService {
         const path = `/1/multiplayer/lobby/room`;
         const fullUrl = `${url}${path}`;
         debug(fullUrl);
-        const data = {};
+        const { gameVersion } = this._opts;
+        const data = {
+          gameVersion,
+          sdkVersion,
+          protocolVersion,
+        };
         if (roomName) {
           data.cid = roomName;
         }
         const res = await request
           .post(fullUrl)
-          .set(this._headers)
+          .set(this._defaultHeaders)
           .set(SESSION_TOKEN_KEY, sessionToken)
           .send(data);
         debug(res.text);
@@ -68,10 +69,10 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = `/1/multiplayer/lobby/room/${roomName}`;
         const fullUrl = `${url}${path}`;
-        debug(`opts: ${JSON.stringify(this._opts)}`);
+        const { gameVersion } = this._opts;
         const data = {
           cid: roomName,
-          gameVersion: '0.0.1',
+          gameVersion,
           sdkVersion,
           protocolVersion,
         };
@@ -87,7 +88,7 @@ export default class LobbyService {
         debug(JSON.stringify(data));
         const res = await request
           .post(fullUrl)
-          .set(this._headers)
+          .set(this._defaultHeaders)
           .set(SESSION_TOKEN_KEY, sessionToken)
           .send(data);
         debug(res.text);
@@ -107,8 +108,9 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/room/match';
         const fullUrl = `${url}${path}`;
+        const { gameVersion } = this._opts;
         const data = {
-          gameVersion: '0.0.1',
+          gameVersion,
           sdkVersion,
           protocolVersion,
         };
@@ -120,7 +122,7 @@ export default class LobbyService {
         }
         const res = await request
           .post(fullUrl)
-          .set(this._headers)
+          .set(this._defaultHeaders)
           .set(SESSION_TOKEN_KEY, sessionToken)
           .send(data);
         debug(res.text);
@@ -139,8 +141,9 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/room/match';
         const fullUrl = `${url}${path}`;
+        const { gameVersion } = this._opts;
         const data = {
-          gameVersion: '0.0.1',
+          gameVersion,
           sdkVersion,
           protocolVersion,
           piggybackPeerId,
@@ -153,7 +156,7 @@ export default class LobbyService {
         }
         const res = await request
           .post(fullUrl)
-          .set(this._headers)
+          .set(this._defaultHeaders)
           .set(SESSION_TOKEN_KEY, sessionToken)
           .send(data);
         debug(res.text);

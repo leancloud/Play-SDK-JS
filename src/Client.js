@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import _ from 'lodash';
+import StateMachine from 'javascript-state-machine';
 
 import { debug } from './Logger';
 import PlayFSM from './PlayFSM';
@@ -23,6 +23,22 @@ import GameConnection, {
   SEND_CUSTOM_EVENT,
   ROOM_KICKED_EVENT,
 } from './GameConnection';
+
+const STATE_INIT = 'init';
+const STATE_JOINING = 'joining';
+const STATE_GAME = 'game';
+const STATE_DISCONNECTED = 'disconnected';
+
+const TRANS_CREATE = 'create';
+const TRANS_JOIN = 'join';
+const TRANS_CREATED = 'created';
+const TRANS_JOINED = 'joined';
+const TRANS_CREATE_FAILED = 'createFailed';
+const TRANS_JOIN_FAILED = 'joinFailed';
+const TRANS_LEAVE = 'leave';
+const TRANS_KICKED = 'kicked';
+const TRANS_DISCONNECTED = 'disconnected';
+const TRANS_REJOIN = 'rejoin';
 
 /**
  * 多人对战游戏服务的客户端
@@ -79,8 +95,14 @@ export default class Client extends EventEmitter {
     }
     this._playServer = opts.playServer;
     // fsm
-    this._fsm = new PlayFSM({
-      play: this,
+    this._fsm = new StateMachine({
+      init: 'init',
+      transitions: [
+        { name: 'create', from: 'init', to: 'room' },
+        { name: 'join', from: 'init', to: 'room' },
+        { name: 'rejoin', from: 'disconnected', to: 'room' },
+        { name: 'close', from: '*', to: 'init' },
+      ],
     });
   }
 
@@ -103,7 +125,7 @@ export default class Client extends EventEmitter {
    * TODO 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
-    if (_.isNull(this._lastRoomId)) {
+    if (this._lastRoomId == null || this._lastRoomId == undefined) {
       throw new Error('There is not room name for rejoin');
     }
     return this._fsm.handle('reconnectAndRejoin');
@@ -115,30 +137,32 @@ export default class Client extends EventEmitter {
   async close() {
     debug('close');
     this._clear();
-    return this._fsm.handle('close');
+    if (this._fsm.is('game')) {
+      await this._gameConn.close();
+    }
   }
 
   /**
    * TODO 加入大厅
    */
   async joinLobby() {
-    this._lobbyConnection = new LobbyConnection();
+    this._lobbyConn = new LobbyConnection();
     const { sessionToken } = await this._lobbyService.authorize();
-    await this._lobbyConnection.connect(
+    await this._lobbyConn.connect(
       this._appId,
       this._playServer,
       this._gameVersion,
       this._userId,
       sessionToken
     );
-    await this._lobbyConnection.joinLobby();
+    await this._lobbyConn.joinLobby();
   }
 
   /**
    * TODO 离开大厅
    */
   async leaveLobby() {
-    await this._lobbyConnection.close();
+    await this._lobbyConn.close();
   }
 
   /**
@@ -170,18 +194,28 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    const { cid, addr } = await this._lobbyService.createRoom(roomName);
-    const { sessionToken } = await this._lobbyService.authorize();
-    // TODO 合并
-    this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(
-      this._appId,
-      addr,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    await this._gameConnection.createRoom(cid, roomOptions, expectedUserIds);
+    if (this._fsm.cannot('create')) {
+      throw new Error(`error state: ${this._fsm.state}`);
+    }
+    this._fsm.create();
+    try {
+      const { cid, addr } = await this._lobbyService.createRoom(roomName);
+      const { sessionToken } = await this._lobbyService.authorize();
+      // TODO 合并
+      this._gameConn = new GameConnection();
+      await this._gameConn.connect(
+        this._appId,
+        addr,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      await this._gameConn.createRoom(cid, roomOptions, expectedUserIds);
+      this._fsm.created();
+    } catch (err) {
+      this._fsm.createFailed();
+      throw err;
+    }
   }
 
   /**
@@ -196,18 +230,28 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    const { cid, addr } = await this._lobbyService.joinRoom({ roomName });
-    const { sessionToken } = await this._lobbyService.authorize();
-    // TODO 合并
-    this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(
-      this._appId,
-      addr,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    await this._gameConnection.joinRoom(cid, null, expectedUserIds);
+    if (this._fsm.cannot('join')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.join();
+    try {
+      const { cid, addr } = await this._lobbyService.joinRoom({ roomName });
+      const { sessionToken } = await this._lobbyService.authorize();
+      // TODO 合并
+      this._gameConn = new GameConnection();
+      await this._gameConn.connect(
+        this._appId,
+        addr,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      await this._gameConn.joinRoom(cid, null, expectedUserIds);
+      this._fsm.joined();
+    } catch (err) {
+      this._fsm.joinFailed();
+      throw err;
+    }
   }
 
   /**
@@ -222,16 +266,26 @@ export default class Client extends EventEmitter {
       roomName,
       rejoin: true,
     });
-    const { sessionToken } = await this._lobbyService.authorize();
-    this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(
-      this._appId,
-      addr,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    await this._gameConnection.joinRoom(cid);
+    if (this._fsm.cannot('join')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.join();
+    try {
+      const { sessionToken } = await this._lobbyService.authorize();
+      this._gameConn = new GameConnection();
+      await this._gameConn.connect(
+        this._appId,
+        addr,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      await this._gameConn.joinRoom(cid);
+      this._fsm.joined();
+    } catch (err) {
+      this._fsm.joinFailed();
+      throw err;
+    }
   }
 
   /**
@@ -262,24 +316,34 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    const { cid, addr, roomCreated } = await this._lobbyService.joinRoom({
-      roomName,
-      createOnNotFound: true,
-    });
-    const { sessionToken } = await this._lobbyService.authorize();
-    this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(
-      this._appId,
-      addr,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    // 根据返回确定是创建还是加入房间
-    if (roomCreated) {
-      await this._gameConnection.createRoom(cid);
-    } else {
-      await this._gameConnection.joinRoom(cid);
+    if (this._fsm.cannot('join')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.join();
+    try {
+      const { cid, addr, roomCreated } = await this._lobbyService.joinRoom({
+        roomName,
+        createOnNotFound: true,
+      });
+      const { sessionToken } = await this._lobbyService.authorize();
+      this._gameConn = new GameConnection();
+      await this._gameConn.connect(
+        this._appId,
+        addr,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      // 根据返回确定是创建还是加入房间
+      if (roomCreated) {
+        await this._gameConn.createRoom(cid);
+      } else {
+        await this._gameConn.joinRoom(cid);
+      }
+      this._fsm.joined();
+    } catch (err) {
+      this._fsm.joinFailed();
+      throw err;
     }
   }
 
@@ -298,20 +362,30 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
-    const { cid, addr } = await this._lobbyService.joinRandomRoom(
-      matchProperties,
-      expectedUserIds
-    );
-    const { sessionToken } = await this._lobbyService.authorize();
-    this._gameConnection = new GameConnection();
-    await this._gameConnection.connect(
-      this._appId,
-      addr,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    await this._gameConnection.joinRoom(cid, matchProperties, expectedUserIds);
+    if (this._fsm.cannot('join')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.join();
+    try {
+      const { cid, addr } = await this._lobbyService.joinRandomRoom(
+        matchProperties,
+        expectedUserIds
+      );
+      const { sessionToken } = await this._lobbyService.authorize();
+      this._gameConn = new GameConnection();
+      await this._gameConn.connect(
+        this._appId,
+        addr,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      await this._gameConn.joinRoom(cid, matchProperties, expectedUserIds);
+      this._fsm.joined();
+    } catch (err) {
+      this._fsm.joinFailed();
+      throw err;
+    }
   }
 
   /**
@@ -349,6 +423,9 @@ export default class Client extends EventEmitter {
     }
     if (this._room === null) {
       throw new Error('room is null');
+    }
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
     }
     return this._gameConn.setRoomOpen(open).then(
       tap(o => {
@@ -520,13 +597,13 @@ export default class Client extends EventEmitter {
    * @param {String} [opts.msg] 附带信息
    */
   async kickPlayer(actorId, { code = null, msg = null } = {}) {
-    if (!_.isNumber(actorId)) {
+    if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
-    if (!_.isNull(code) && !_.isNumber(code)) {
+    if (!(typeof code === 'number')) {
       throw new TypeError(`${code} is not a number`);
     }
-    if (!_.isNull(msg) && !_.isString(msg)) {
+    if (!(typeof msg === 'string')) {
       throw new TypeError(`${msg} is not a string`);
     }
     return this._gameConn.kickPlayer(actorId, code, msg).then(
