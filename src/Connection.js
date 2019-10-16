@@ -1,9 +1,7 @@
 import EventEmitter from 'eventemitter3';
 
-import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 import { sdkVersion, protocolVersion } from './Config';
 import { serializeObject } from './CodecUtils';
 

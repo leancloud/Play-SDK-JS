@@ -3,8 +3,19 @@ import { debug, error } from './Logger';
 
 import GameRouter from './GameRouter';
 import { sdkVersion, protocolVersion } from './Config';
+import PlayError from './PlayError';
 
 const SESSION_TOKEN_KEY = 'X-LC-PLAY-MULTIPLAYER-SESSION-TOKEN';
+
+function _tapError(e) {
+  error(JSON.stringify(e));
+  if (e.response.text) {
+    const err = JSON.parse(e.response.text);
+    const { reasonCode, detail } = err;
+    return new PlayError(reasonCode, detail);
+  }
+  return e;
+}
 
 export default class LobbyService {
   constructor(opts) {
@@ -56,9 +67,7 @@ export default class LobbyService {
         const { cid, addr } = JSON.parse(res.text);
         resolve({ cid, addr });
       } catch (e) {
-        error(JSON.stringify(e));
-        // TODO 统一处理业务错误情况
-        reject(e);
+        reject(_tapError(e));
       }
     });
   }
@@ -95,9 +104,7 @@ export default class LobbyService {
         const { cid, addr, roomCreated } = JSON.parse(res.text);
         resolve({ cid, addr, roomCreated });
       } catch (e) {
-        error(JSON.stringify(e));
-        // TODO 统一处理业务错误情况
-        reject(e);
+        reject(_tapError(e));
       }
     });
   }
@@ -106,7 +113,7 @@ export default class LobbyService {
     return new Promise(async (resolve, reject) => {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
-        const path = '/1/multiplayer/lobby/room/match';
+        const path = '/1/multiplayer/lobby/match/room';
         const fullUrl = `${url}${path}`;
         const { gameVersion } = this._opts;
         const data = {
@@ -129,8 +136,7 @@ export default class LobbyService {
         const { cid, addr } = JSON.parse(res.text);
         resolve({ cid, addr });
       } catch (e) {
-        error(JSON.stringify(e));
-        reject(e);
+        reject(_tapError(e));
       }
     });
   }
@@ -163,8 +169,7 @@ export default class LobbyService {
         const { cid, addr } = JSON.parse(res.text);
         resolve({ cid, addr });
       } catch (e) {
-        error(JSON.stringify(e));
-        reject(e);
+        reject(_tapError(e));
       }
     });
   }

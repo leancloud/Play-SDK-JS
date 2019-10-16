@@ -2,13 +2,13 @@ import EventEmitter from 'eventemitter3';
 import StateMachine from 'javascript-state-machine';
 
 import { debug } from './Logger';
-import PlayFSM from './PlayFSM';
 import ReceiverGroup from './ReceiverGroup';
 
 import { tap } from './Utils';
 
 import LobbyService from './LobbyService';
 import LobbyConnection from './LobbyConnection';
+import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
 import GameConnection, {
   PLAYER_JOINED_EVENT,
   PLAYER_LEFT_EVENT,
@@ -23,22 +23,9 @@ import GameConnection, {
   SEND_CUSTOM_EVENT,
   ROOM_KICKED_EVENT,
 } from './GameConnection';
+import Event from './Event';
 
-const STATE_INIT = 'init';
-const STATE_JOINING = 'joining';
-const STATE_GAME = 'game';
-const STATE_DISCONNECTED = 'disconnected';
-
-const TRANS_CREATE = 'create';
-const TRANS_JOIN = 'join';
-const TRANS_CREATED = 'created';
-const TRANS_JOINED = 'joined';
-const TRANS_CREATE_FAILED = 'createFailed';
-const TRANS_JOIN_FAILED = 'joinFailed';
-const TRANS_LEAVE = 'leave';
-const TRANS_KICKED = 'kicked';
-const TRANS_DISCONNECTED = 'disconnected';
-const TRANS_REJOIN = 'rejoin';
+const DEFAULT_GAME_VERSION = '0.0.1';
 
 /**
  * 多人对战游戏服务的客户端
@@ -91,18 +78,144 @@ export default class Client extends EventEmitter {
     if (opts.gameVersion) {
       this._gameVersion = opts.gameVersion;
     } else {
-      this._gameVersion = '0.0.1';
+      this._gameVersion = DEFAULT_GAME_VERSION;
     }
+    this._opts.gameVersion = this._gameVersion;
     this._playServer = opts.playServer;
     // fsm
     this._fsm = new StateMachine({
       init: 'init',
       transitions: [
-        { name: 'create', from: 'init', to: 'room' },
-        { name: 'join', from: 'init', to: 'room' },
-        { name: 'rejoin', from: 'disconnected', to: 'room' },
+        { name: 'join', from: 'init', to: 'joining' },
+        { name: 'joined', from: 'joining', to: 'game' },
+        { name: 'joinFailed', from: 'joining', to: 'init' },
+        { name: 'rejoin', from: 'disconnected', to: 'joining' },
+        { name: 'leave', from: 'game', to: 'leaving' },
+        { name: 'left', from: 'leaving', to: 'init' },
+        { name: 'disconnect', from: 'game', to: 'disconnected' },
         { name: 'close', from: '*', to: 'init' },
       ],
+      methods: {
+        onEnterGame: () => {
+          debug('******************* onEnterGame');
+          // 为 reconnectAndRejoin() 保存房间 id
+          this._lastRoomId = this.room.name;
+          // 注册事件
+          this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
+            this._gameConn.close();
+            this.emit(Event.ERROR, {
+              code,
+              detail,
+            });
+          });
+          this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
+            this._room._addPlayer(newPlayer);
+            newPlayer._room = this._room;
+            this.emit(Event.PLAYER_ROOM_JOINED, {
+              newPlayer,
+            });
+          });
+          this._gameConn.on(PLAYER_LEFT_EVENT, actorId => {
+            const leftPlayer = this._room.getPlayer(actorId);
+            this._room._removePlayer(actorId);
+            this.emit(Event.PLAYER_ROOM_LEFT, {
+              leftPlayer,
+            });
+          });
+          this._gameConn.on(MASTER_CHANGED_EVENT, newMasterActorId => {
+            let newMaster = null;
+            this._room._masterActorId = newMasterActorId;
+            if (newMasterActorId > 0) {
+              newMaster = this._room.getPlayer(newMasterActorId);
+            }
+            this.emit(Event.MASTER_SWITCHED, {
+              newMaster,
+            });
+          });
+          this._gameConn.on(ROOM_OPEN_CHANGED_EVENT, open => {
+            this._room._open = open;
+            this.emit(Event.ROOM_OPEN_CHANGED, {
+              open,
+            });
+          });
+          this._gameConn.on(ROOM_VISIBLE_CHANGED_EVENT, visible => {
+            this._room._visible = visible;
+            this.emit(Event.ROOM_VISIBLE_CHANGED, {
+              visible,
+            });
+          });
+          this._gameConn.on(ROOM_PROPERTIES_CHANGED_EVENT, changedProps => {
+            this._room._mergeProperties(changedProps);
+            this.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, {
+              changedProps,
+            });
+          });
+          this._gameConn.on(
+            ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
+            changedProps => {
+              this._room._mergeSystemProps(changedProps);
+              this.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+                changedProps,
+              });
+            }
+          );
+          this._gameConn.on(
+            PLAYER_PROPERTIES_CHANGED_EVENT,
+            (actorId, changedProps) => {
+              debug(`actorId: ${actorId}`);
+              debug(`changedProps: ${JSON.stringify(changedProps)}`);
+              const player = this._room.getPlayer(actorId);
+              player._mergeProperties(changedProps);
+              this.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
+                player,
+                changedProps,
+              });
+            }
+          );
+          this._gameConn.on(PLAYER_OFFLINE_EVENT, actorId => {
+            const player = this._room.getPlayer(actorId);
+            player._active = false;
+            this.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+              player,
+            });
+          });
+          this._gameConn.on(PLAYER_ONLINE_EVENT, (actorId, props) => {
+            const player = this._room.getPlayer(actorId);
+            player._mergeProperties(props);
+            player._active = true;
+            this.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+              player,
+            });
+          });
+          this._gameConn.on(
+            SEND_CUSTOM_EVENT,
+            (eventId, eventData, senderId) => {
+              this.emit(Event.CUSTOM_EVENT, {
+                eventId,
+                eventData,
+                senderId,
+              });
+            }
+          );
+          this._gameConn.on(DISCONNECT_EVENT, () => {
+            this.handle('onTransition', 'disconnect');
+          });
+          this._gameConn.on(ROOM_KICKED_EVENT, async info => {
+            this.handle('onTransition', 'gameToLobby');
+            this._gameConn.close();
+            await this._connectLobby();
+            this.handle('onTransition', 'lobby');
+            if (info) {
+              this.emit(Event.ROOM_KICKED, info);
+            } else {
+              this.emit(Event.ROOM_KICKED);
+            }
+          });
+        },
+        onExitGame: () => {
+          this._gameConn.removeAllListeners();
+        },
+      },
     });
   }
 
@@ -125,14 +238,14 @@ export default class Client extends EventEmitter {
    * TODO 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
-    if (this._lastRoomId == null || this._lastRoomId == undefined) {
+    if (this._lastRoomId === null || this._lastRoomId === undefined) {
       throw new Error('There is not room name for rejoin');
     }
     return this._fsm.handle('reconnectAndRejoin');
   }
 
   /**
-   * TODO 关闭
+   * 关闭
    */
   async close() {
     debug('close');
@@ -194,10 +307,10 @@ export default class Client extends EventEmitter {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
-    if (this._fsm.cannot('create')) {
+    if (this._fsm.cannot('join')) {
       throw new Error(`error state: ${this._fsm.state}`);
     }
-    this._fsm.create();
+    this._fsm.join();
     try {
       const { cid, addr } = await this._lobbyService.createRoom(roomName);
       const { sessionToken } = await this._lobbyService.authorize();
@@ -210,16 +323,23 @@ export default class Client extends EventEmitter {
         this._userId,
         sessionToken
       );
-      await this._gameConn.createRoom(cid, roomOptions, expectedUserIds);
-      this._fsm.created();
+      const room = await this._gameConn.createRoom(
+        cid,
+        roomOptions,
+        expectedUserIds
+      );
+      this._initGame(room);
+      this._fsm.joined();
+      return this.room;
     } catch (err) {
-      this._fsm.createFailed();
+      debug(err.message);
+      this._fsm.joinFailed();
       throw err;
     }
   }
 
   /**
-   * 加入房间
+   * 加入房间sss
    * @param {String} roomName 房间名称
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
@@ -246,8 +366,10 @@ export default class Client extends EventEmitter {
         this._userId,
         sessionToken
       );
-      await this._gameConn.joinRoom(cid, null, expectedUserIds);
+      const room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
+      this._initGame(room);
       this._fsm.joined();
+      return this.room;
     } catch (err) {
       this._fsm.joinFailed();
       throw err;
@@ -280,8 +402,10 @@ export default class Client extends EventEmitter {
         this._userId,
         sessionToken
       );
-      await this._gameConn.joinRoom(cid);
+      const room = await this._gameConn.joinRoom(cid);
+      this._initGame(room);
       this._fsm.joined();
+      return this.room;
     } catch (err) {
       this._fsm.joinFailed();
       throw err;
@@ -335,12 +459,19 @@ export default class Client extends EventEmitter {
         sessionToken
       );
       // 根据返回确定是创建还是加入房间
+      let room = null;
       if (roomCreated) {
-        await this._gameConn.createRoom(cid);
+        room = await this._gameConn.createRoom(
+          cid,
+          roomOptions,
+          expectedUserIds
+        );
       } else {
-        await this._gameConn.joinRoom(cid);
+        room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
       }
+      this._initGame(room);
       this._fsm.joined();
+      return this.room;
     } catch (err) {
       this._fsm.joinFailed();
       throw err;
@@ -380,8 +511,14 @@ export default class Client extends EventEmitter {
         this._userId,
         sessionToken
       );
-      await this._gameConn.joinRoom(cid, matchProperties, expectedUserIds);
+      const room = await this._gameConn.joinRoom(
+        cid,
+        matchProperties,
+        expectedUserIds
+      );
+      this._initGame(room);
       this._fsm.joined();
+      return this.room;
     } catch (err) {
       this._fsm.joinFailed();
       throw err;
@@ -445,6 +582,9 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
     return this._gameConn.setRoomVisible(visible).then(
       tap(v => {
         this._room._mergeSystemProps({ visible: v });
@@ -459,6 +599,9 @@ export default class Client extends EventEmitter {
   async setRoomMaxPlayerCount(count) {
     if (!(typeof count === 'number') || count < 1) {
       throw new TypeError(`${count} is not a positive number`);
+    }
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
     }
     return this._gameConn.setRoomMaxPlayerCount(count).then(
       tap(c => {
@@ -475,6 +618,9 @@ export default class Client extends EventEmitter {
     if (!Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an array`);
     }
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
     return this._gameConn.setRoomExpectedUserIds(expectedUserIds).then(
       tap(ids => {
         this._room._mergeSystemProps({ expectedUserIds: ids });
@@ -486,6 +632,9 @@ export default class Client extends EventEmitter {
    * 清空房间占位玩家 Id 列表
    */
   async clearRoomExpectedUserIds() {
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
     return this._gameConn.clearRoomExpectedUserIds().then(
       tap(ids => {
         this._room._mergeSystemProps({ expectedUserIds: ids });
@@ -534,6 +683,9 @@ export default class Client extends EventEmitter {
     if (this._room === null) {
       throw new Error('room is null');
     }
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
     return this._gameConn.setMaster(newMasterId).then(
       tap(res => {
         const { masterActorId } = res;
@@ -579,14 +731,28 @@ export default class Client extends EventEmitter {
     if (this._player === null) {
       throw new Error('player is null');
     }
-    return this._fsm.handle('sendEvent', eventId, eventData, options);
+    if (!this._fsm.is('game')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+
+    return this._gameConn.sendEvent(eventId, eventData, options);
   }
 
   /**
    * 离开房间
    */
   async leaveRoom() {
-    // TODO
+    if (this._fsm.cannot('leave')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.leave();
+    try {
+      await this._gameConn.leaveRoom();
+      await this._gameConn.close();
+      this._fsm.left();
+    } catch (err) {
+      this._fsm.leaveFailed();
+    }
   }
 
   /**
@@ -600,11 +766,14 @@ export default class Client extends EventEmitter {
     if (!(typeof actorId === 'number')) {
       throw new TypeError(`${actorId} is not a number`);
     }
-    if (!(typeof code === 'number')) {
+    if (code !== null && !(typeof code === 'number')) {
       throw new TypeError(`${code} is not a number`);
     }
-    if (!(typeof msg === 'string')) {
+    if (msg != null && !(typeof msg === 'string')) {
       throw new TypeError(`${msg} is not a string`);
+    }
+    if (!this._fsm.cannot('kick')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
     }
     return this._gameConn.kickPlayer(actorId, code, msg).then(
       tap(aId => {
@@ -713,7 +882,22 @@ export default class Client extends EventEmitter {
 
   // 模拟断线
   _simulateDisconnection() {
-    this._fsm.handle('_simulateDisconnection');
+    if (this._fsm.cannot('disconnect')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._gameConn._simulateDisconnection();
+  }
+
+  _initGame(gameRoom) {
+    this._room = gameRoom;
+    /* eslint no-param-reassign: ["error", { "props": false }] */
+    gameRoom._play = this;
+    gameRoom.playerList.forEach(player => {
+      player._room = gameRoom;
+      if (player.userId === this._userId) {
+        this._player = player;
+      }
+    });
   }
 
   /**

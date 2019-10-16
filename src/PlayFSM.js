@@ -1,7 +1,6 @@
 import machina from 'machina';
 import _ from 'lodash';
 import { debug } from './Logger';
-import GameRouter from './GameRouter';
 import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import GameConnection, {
@@ -37,14 +36,7 @@ const PlayFSM = machina.Fsm.extend({
     init: {
       _onEnter() {
         debug('init _onEnter()');
-        const {
-          _appId,
-          _appKey,
-          _userId,
-          _insecure,
-          _feature,
-          _playServer,
-        } = this._play;
+        const { _appId, _appKey, _userId, _feature, _playServer } = this._play;
         this._lobbyClient = new LobbyClient({
           appId: _appId,
           appKey: _appKey,

@@ -19,7 +19,6 @@ describe('test join room', () => {
     await p0.close();
     await p1.close();
   });
-
   it('test join random room', async () => {
     const roomName = 'jr1_r';
     const p0 = newPlay('jr1_0');
@@ -32,7 +31,6 @@ describe('test join room', () => {
     await p0.close();
     await p1.close();
   });
-
   it('test join with expected userIds', async () => {
     const roomName = 'jr2_r';
     const p0 = newPlay('jr2_0');
@@ -59,7 +57,6 @@ describe('test join room', () => {
       await p2.close();
     }
   });
-
   it('test leave room', () =>
     new Promise(async resolve => {
       const roomName = 'jr3_r';
@@ -76,7 +73,6 @@ describe('test join room', () => {
       });
       await p0Room.leave();
     }));
-
   it('test rejoin room', async () => {
     const roomName = 'jr4_r';
     const p0 = newPlay('jr4_0');
@@ -103,7 +99,6 @@ describe('test join room', () => {
     await p0.close();
     await p1.close();
   });
-
   it('test reconnectAndRejoin room', async () => {
     const roomName = 'jr5_r';
     const p0 = newPlay('jr5_0');
@@ -126,7 +121,6 @@ describe('test join room', () => {
     });
     p1._simulateDisconnection();
   });
-
   it('test join name room failed', async () => {
     const roomName = 'jr6_r0';
     const roomName2 = 'jr6_r1';
@@ -143,7 +137,6 @@ describe('test join room', () => {
       await p1.close();
     }
   });
-
   it('test join random room with match properties', async () => {
     const roomName = 'jr7_r';
     const p0 = newPlay('jr7_0');
@@ -204,7 +197,6 @@ describe('test join room', () => {
     p1.close();
     p4.close();
   });
-
   it('test join room concurrently', async () => {
     const roomName = 'jr8_r';
     const p0 = newPlay('jr8_0');
@@ -224,7 +216,6 @@ describe('test join room', () => {
     await p1.close();
     await p2.close();
   });
-
   it('test match random', async () => {
     const roomName = 'jr9_r';
     const p0 = newPlay('jr9_0');
@@ -259,7 +250,6 @@ describe('test join room', () => {
       p1.close();
     }
   });
-
   it('test match random with expected users', async () => {
     const roomName = 'jr10_r';
     const p0 = newPlay('jr10_0');

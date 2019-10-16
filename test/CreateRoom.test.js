@@ -12,7 +12,6 @@ describe('test create room', () => {
     await p.createRoom();
     await p.close();
   });
-
   it('test create simple room', async () => {
     const roomName = 'cr2_r';
     const p = newPlay('cr2');
@@ -23,7 +22,6 @@ describe('test create room', () => {
     expect(room.name).to.be.equal(roomName);
     await p.close();
   });
-
   it('test create custom room', async () => {
     const roomName = 'cr3_r';
     const p = newPlay('cr3');
@@ -48,13 +46,12 @@ describe('test create room', () => {
     expect(room.name).to.be.equal(roomName);
     expect(room.visible).to.be.equal(false);
     expect(room.maxPlayerCount).to.be.equal(2);
-    const props = p.room.customProperties;
+    const props = room.customProperties;
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
     expect(room.expectedUserIds).to.be.deep.equal(['world']);
     await p.close();
   });
-
   it('test create room failed', async () => {
     const roomName = 'cr4_r';
     const p0 = newPlay('cr4_0');
@@ -71,14 +68,12 @@ describe('test create room', () => {
       await p1.close();
     }
   });
-
   it('test isMaster or isLocal', async () => {
     const roomName = 'cr5_r';
     const p0 = newPlay('cr5_0');
     const p1 = newPlay('cr5_1');
     let f0 = false;
     let f1 = false;
-
     return new Promise(async resolve => {
       await p0.connect();
       await p0.createRoom({ roomName });
@@ -108,7 +103,6 @@ describe('test create room', () => {
       }
     });
   });
-
   it('test catch state error when create room', done => {
     const p = newPlay('cr7');
     p.createRoom().catch(err => {

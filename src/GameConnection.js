@@ -93,9 +93,7 @@ export default class GameConnection extends Connection {
     this._userId = userId;
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      const url = `${server}session?
-        appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&
-        userId=${userId}&sessionToken=${sessionToken}`;
+      const url = `${server}session?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
       debug(`url: ${url}`);
       this._ws = new WebSocket(url, 'protobuf.1');
       this._ws.onopen = () => {

@@ -9,28 +9,28 @@ describe('test lobby', () => {
     await p.close();
   });
 
-  it('test room list update', async () =>
-    new Promise(async resolve => {
-      const p0 = newPlay('tl1_0');
-      const p1 = newPlay('tl1_1');
-      const p2 = newPlay('tl1_2');
-      const p3 = newPlay('tl1_3');
-      await p0.connect();
-      await p0.createRoom({ roomName: p0.userId });
-      await p1.connect();
-      await p1.createRoom({ roomName: p1.userId });
-      await p2.connect();
-      await p2.createRoom({ roomName: p2.userId });
-      await p3.connect();
-      await p3.joinLobby();
-      p3.on(Event.LOBBY_ROOM_LIST_UPDATED, async () => {
-        if (p3.lobbyRoomList.length >= 3) {
-          await p0.close();
-          await p1.close();
-          await p2.close();
-          await p3.close();
-          resolve();
-        }
-      });
-    }));
+  // it('test room list update', async () =>
+  //   new Promise(async resolve => {
+  //     const p0 = newPlay('tl1_0');
+  //     const p1 = newPlay('tl1_1');
+  //     const p2 = newPlay('tl1_2');
+  //     const p3 = newPlay('tl1_3');
+  //     await p0.connect();
+  //     await p0.createRoom({ roomName: p0.userId });
+  //     await p1.connect();
+  //     await p1.createRoom({ roomName: p1.userId });
+  //     await p2.connect();
+  //     await p2.createRoom({ roomName: p2.userId });
+  //     await p3.connect();
+  //     await p3.joinLobby();
+  //     p3.on(Event.LOBBY_ROOM_LIST_UPDATED, async () => {
+  //       if (p3.lobbyRoomList.length >= 3) {
+  //         await p0.close();
+  //         await p1.close();
+  //         await p2.close();
+  //         await p3.close();
+  //         resolve();
+  //       }
+  //     });
+  //   }));
 });
