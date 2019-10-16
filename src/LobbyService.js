@@ -145,7 +145,7 @@ export default class LobbyService {
     return new Promise(async (resolve, reject) => {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();
-        const path = '/1/multiplayer/lobby/room/match';
+        const path = '/1/multiplayer/lobby/match/room';
         const fullUrl = `${url}${path}`;
         const { gameVersion } = this._opts;
         const data = {

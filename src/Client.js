@@ -92,6 +92,7 @@ export default class Client extends EventEmitter {
         { name: 'rejoin', from: 'disconnected', to: 'joining' },
         { name: 'leave', from: 'game', to: 'leaving' },
         { name: 'left', from: 'leaving', to: 'init' },
+        { name: 'kicked', from: 'game', to: 'init' },
         { name: 'disconnect', from: 'game', to: 'disconnected' },
         { name: 'close', from: '*', to: 'init' },
       ],
@@ -198,13 +199,11 @@ export default class Client extends EventEmitter {
             }
           );
           this._gameConn.on(DISCONNECT_EVENT, () => {
-            this.handle('onTransition', 'disconnect');
+            this._fsm.disconnect();
           });
           this._gameConn.on(ROOM_KICKED_EVENT, async info => {
-            this.handle('onTransition', 'gameToLobby');
+            this._fsm.kicked();
             this._gameConn.close();
-            await this._connectLobby();
-            this.handle('onTransition', 'lobby');
             if (info) {
               this.emit(Event.ROOM_KICKED, info);
             } else {
