@@ -7,7 +7,7 @@ import ReceiverGroup from './ReceiverGroup';
 import { tap } from './Utils';
 
 import LobbyService from './LobbyService';
-import LobbyConnection from './LobbyConnection';
+import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
 import GameConnection, {
   PLAYER_JOINED_EVENT,
@@ -86,19 +86,40 @@ export default class Client extends EventEmitter {
     this._fsm = new StateMachine({
       init: 'init',
       transitions: [
-        { name: 'join', from: 'init', to: 'joining' },
-        { name: 'joined', from: 'joining', to: 'game' },
-        { name: 'joinFailed', from: 'joining', to: 'init' },
-        { name: 'rejoin', from: 'disconnected', to: 'joining' },
-        { name: 'leave', from: 'game', to: 'leaving' },
-        { name: 'left', from: 'leaving', to: 'init' },
-        { name: 'kicked', from: 'game', to: 'init' },
+        {
+          name: 'joinLobby',
+          from: ['init', 'disconnected'],
+          to: 'joiningLobby',
+        },
+        { name: 'joinedLobby', from: 'joiningLobby', to: 'lobby' },
+        { name: 'joinLobbyFailed', from: 'joiningLobby', to: 'init' },
+        { name: 'leaveLobby', from: 'lobby', to: 'leavingLobby' },
+        { name: 'leftLobby', from: 'leavingLobby', to: 'init' },
+        { name: 'joinGame', from: ['init', 'lobby'], to: 'joiningGame' },
+        { name: 'joinedGame', from: 'joiningGame', to: 'game' },
+        { name: 'joinFailed', from: 'joiningGame', to: 'init' },
+        { name: 'rejoinGame', from: 'disconnected', to: 'joining' },
+        { name: 'leaveGame', from: 'game', to: 'leavingGame' },
+        { name: 'leftGame', from: 'leavingGame', to: 'init' },
+        { name: 'kickedFromGame', from: 'game', to: 'init' },
         { name: 'disconnect', from: 'game', to: 'disconnected' },
         { name: 'close', from: '*', to: 'init' },
       ],
       methods: {
+        onEnterLobby: () => {
+          debug('------------------- onEnterLobby');
+          this._lobbyConn.on(ROOM_LIST_UPDATED_EVENT, roomList => {
+            this._lobbyRoomList = roomList;
+            this.emit(Event.LOBBY_ROOM_LIST_UPDATED);
+          });
+        },
+        onExitLobby: () => {
+          debug('------------------- onExitLobby');
+          // TODO 关闭 Lobby 连接
+          this._lobbyConn.removeAllListeners();
+        },
         onEnterGame: () => {
-          debug('******************* onEnterGame');
+          debug('------------------- onEnterGame');
           // 为 reconnectAndRejoin() 保存房间 id
           this._lastRoomId = this.room.name;
           // 注册事件
@@ -212,6 +233,7 @@ export default class Client extends EventEmitter {
           });
         },
         onExitGame: () => {
+          debug('------------------- onExitGame');
           this._gameConn.removeAllListeners();
         },
       },
@@ -249,32 +271,60 @@ export default class Client extends EventEmitter {
   async close() {
     debug('close');
     this._clear();
+    if (this._fsm.is('lobby')) {
+      await this._lobbyConn.close();
+    }
     if (this._fsm.is('game')) {
       await this._gameConn.close();
+    }
+    this._fsm.close();
+  }
+
+  /**
+   * 加入大厅
+   */
+  async joinLobby() {
+    if (this._fsm.is('joiningLobby')) {
+      return;
+    }
+    if (this._fsm.cannot('joinLobby')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.joinLobby();
+    try {
+      this._lobbyConn = new LobbyConnection();
+      const { sessionToken } = await this._lobbyService.authorize();
+      await this._lobbyConn.connect(
+        this._appId,
+        this._playServer,
+        this._gameVersion,
+        this._userId,
+        sessionToken
+      );
+      await this._lobbyConn.joinLobby();
+      this._fsm.joinedLobby();
+    } catch (e) {
+      this._fsm.joinLobbyFailed();
+      throw e;
     }
   }
 
   /**
-   * TODO 加入大厅
-   */
-  async joinLobby() {
-    this._lobbyConn = new LobbyConnection();
-    const { sessionToken } = await this._lobbyService.authorize();
-    await this._lobbyConn.connect(
-      this._appId,
-      this._playServer,
-      this._gameVersion,
-      this._userId,
-      sessionToken
-    );
-    await this._lobbyConn.joinLobby();
-  }
-
-  /**
-   * TODO 离开大厅
+   * 离开大厅
    */
   async leaveLobby() {
-    await this._lobbyConn.close();
+    if (this._fsm.is('leavingLobby')) {
+      return;
+    }
+    if (this._fsm.cannot('leaveLobby')) {
+      throw new Error(`Error state: ${this._fsm.state}`);
+    }
+    this._fsm.leaveLobby();
+    try {
+      await this._lobbyConn.close();
+    } finally {
+      this._fsm.leftLobby();
+    }
   }
 
   /**
@@ -553,144 +603,63 @@ export default class Client extends EventEmitter {
    * 设置房间开启 / 关闭
    * @param {Boolean} open 是否开启
    */
-  async setRoomOpen(open) {
-    if (!(typeof open === 'boolean')) {
-      throw new TypeError(`${open} is not a boolean value`);
-    }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.setRoomOpen(open).then(
-      tap(o => {
-        this._room._mergeSystemProps({ open: o });
-      })
-    );
+  setRoomOpen(open) {
+    return this._room.setOpen(open);
   }
 
   /**
    * 设置房间可见 / 不可见
    * @param {Boolean} visible 是否可见
    */
-  async setRoomVisible(visible) {
-    if (!(typeof visible === 'boolean')) {
-      throw new TypeError(`${visible} is not a boolean value`);
-    }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.setRoomVisible(visible).then(
-      tap(v => {
-        this._room._mergeSystemProps({ visible: v });
-      })
-    );
+  setRoomVisible(visible) {
+    return this._room.setVisible(visible);
   }
 
   /**
    * 设置房间允许的最大玩家数量
    * @param {*} count 数量
    */
-  async setRoomMaxPlayerCount(count) {
-    if (!(typeof count === 'number') || count < 1) {
-      throw new TypeError(`${count} is not a positive number`);
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.setRoomMaxPlayerCount(count).then(
-      tap(c => {
-        this._room._mergeSystemProps({ maxPlayerCount: c });
-      })
-    );
+  setRoomMaxPlayerCount(count) {
+    return this._room.setMaxPlayerCount(count);
   }
 
   /**
    * 设置房间占位玩家 Id 列表
    * @param {*} expectedUserIds 玩家 Id 列表
    */
-  async setRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.setRoomExpectedUserIds(expectedUserIds).then(
-      tap(ids => {
-        this._room._mergeSystemProps({ expectedUserIds: ids });
-      })
-    );
+  setRoomExpectedUserIds(expectedUserIds) {
+    return this._room.setExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 清空房间占位玩家 Id 列表
    */
-  async clearRoomExpectedUserIds() {
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.clearRoomExpectedUserIds().then(
-      tap(ids => {
-        this._room._mergeSystemProps({ expectedUserIds: ids });
-      })
-    );
+  clearRoomExpectedUserIds() {
+    return this._room.clearExpectedUserIds();
   }
 
   /**
    * 增加房间占位玩家 Id 列表
    * @param {*} expectedUserIds 增加的玩家 Id 列表
    */
-  async addRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
-    }
-    return this._gameConn.addRoomExpectedUserIds(expectedUserIds).then(
-      tap(ids => {
-        this._room._mergeSystemProps({ expectedUserIds: ids });
-      })
-    );
+  addRoomExpectedUserIds(expectedUserIds) {
+    return this._room.addExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 移除房间占位玩家 Id 列表
    * @param {*} expectedUserIds 移除的玩家 Id 列表
    */
-  async removeRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
-    }
-    return this._gameConn.removeRoomExpectedUserIds(expectedUserIds).then(
-      tap(ids => {
-        this._room._mergeSystemProps({ expectedUserIds: ids });
-      })
-    );
+  removeRoomExpectedUserIds(expectedUserIds) {
+    return this._room.removeExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 设置房主
    * @param {Number} newMasterId 新房主 ID
    */
-  async setMaster(newMasterId) {
-    if (!(typeof newMasterId === 'number')) {
-      throw new TypeError(`${newMasterId} is not a number`);
-    }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.setMaster(newMasterId).then(
-      tap(res => {
-        const { masterActorId } = res;
-        this._room._masterActorId = masterActorId;
-      })
-    );
+  setMaster(newMasterId) {
+    return this._room.setMaster(newMasterId);
   }
 
   /**
@@ -701,40 +670,12 @@ export default class Client extends EventEmitter {
    * @param {ReceiverGroup} options.receiverGroup 接收组
    * @param {Array.<Number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
-  async sendEvent(
+  sendEvent(
     eventId,
     eventData = {},
     options = { receiverGroup: ReceiverGroup.All }
   ) {
-    if (!(typeof eventId === 'number')) {
-      throw new TypeError(`${eventId} is not a number`);
-    }
-    if (eventId < -128 || eventId > 127) {
-      throw new Error('eventId must be [-128, 127]');
-    }
-    if (!(typeof eventData === 'object')) {
-      throw new TypeError(`${eventData} is not an object`);
-    }
-    if (!(options instanceof Object)) {
-      throw new TypeError(`${options} is not a Object`);
-    }
-    if (
-      options.receiverGroup === undefined &&
-      options.targetActorIds === undefined
-    ) {
-      throw new TypeError(`receiverGroup and targetActorIds are null`);
-    }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    if (this._player === null) {
-      throw new Error('player is null');
-    }
-    if (!this._fsm.is('game')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-
-    return this._gameConn.sendEvent(eventId, eventData, options);
+    return this._room.sendEvent(eventId, eventData, options);
   }
 
   /**
@@ -761,24 +702,8 @@ export default class Client extends EventEmitter {
    * @param {Number} [opts.code] 编码
    * @param {String} [opts.msg] 附带信息
    */
-  async kickPlayer(actorId, { code = null, msg = null } = {}) {
-    if (!(typeof actorId === 'number')) {
-      throw new TypeError(`${actorId} is not a number`);
-    }
-    if (code !== null && !(typeof code === 'number')) {
-      throw new TypeError(`${code} is not a number`);
-    }
-    if (msg != null && !(typeof msg === 'string')) {
-      throw new TypeError(`${msg} is not a string`);
-    }
-    if (!this._fsm.cannot('kick')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    return this._gameConn.kickPlayer(actorId, code, msg).then(
-      tap(aId => {
-        this._room._removePlayer(aId);
-      })
-    );
+  kickPlayer(actorId, { code = null, msg = null } = {}) {
+    return this._room.kickPlayer(actorId, code, msg);
   }
 
   /**
@@ -824,51 +749,6 @@ export default class Client extends EventEmitter {
     return this._lobbyRoomList;
   }
 
-  // 设置房间属性
-  _setRoomCustomProperties(properties, expectedValues) {
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    return this._gameConn
-      .setRoomCustomProperties(properties, expectedValues)
-      .then(
-        tap(res => {
-          const { attr } = res;
-          if (attr) {
-            // 如果属性没变化，服务端则不会下发 attr 属性
-            this._room._mergeProperties(attr);
-          }
-        })
-      );
-  }
-
-  // 设置玩家属性
-  _setPlayerCustomProperties(actorId, properties, expectedValues) {
-    if (!(typeof actorId === 'number')) {
-      throw new TypeError(`${actorId} is not a number`);
-    }
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    return this._gameConn
-      .setPlayerCustomProperties(actorId, properties, expectedValues)
-      .then(
-        tap(res => {
-          const { actorId: aId, attr } = res;
-          if (aId && attr) {
-            const player = this._room.getPlayer(aId);
-            player._mergeProperties(attr);
-          }
-        })
-      );
-  }
-
   // 清理内存数据
   _clear() {
     this.removeAllListeners();
@@ -885,18 +765,6 @@ export default class Client extends EventEmitter {
       throw new Error(`Error state: ${this._fsm.state}`);
     }
     this._gameConn._simulateDisconnection();
-  }
-
-  _initGame(gameRoom) {
-    this._room = gameRoom;
-    /* eslint no-param-reassign: ["error", { "props": false }] */
-    gameRoom._play = this;
-    gameRoom.playerList.forEach(player => {
-      player._room = gameRoom;
-      if (player.userId === this._userId) {
-        this._player = player;
-      }
-    });
   }
 
   /**

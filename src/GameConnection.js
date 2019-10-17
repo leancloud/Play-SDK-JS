@@ -1,6 +1,4 @@
 import Connection, { convertToRoomOptions } from './Connection';
-import Room from './Room';
-import Player from './Player';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
 import { adapters } from './PlayAdapter';
@@ -51,37 +49,6 @@ export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
 
-function convertToPlayer(member) {
-  const player = new Player();
-  player._userId = member.getPid();
-  player._actorId = member.getActorId();
-  player._active = !member.getInactive();
-  player._properties = deserializeObject(member.getAttr());
-  return player;
-}
-
-function convertToRoom(roomOptions) {
-  const room = new Room();
-  room._name = roomOptions.getCid();
-  room._open = roomOptions.getOpen().getValue();
-  room._visible = roomOptions.getVisible().getValue();
-  room._maxPlayerCount = roomOptions.getMaxMembers();
-  room._masterActorId = roomOptions.getMasterActorId();
-  room._expectedUserIds = roomOptions.getExpectMembersList();
-  room._players = {};
-  roomOptions.getMembersList().forEach(member => {
-    const player = convertToPlayer(member);
-    room._players[player.actorId] = player;
-  });
-  // 属性
-  if (roomOptions.getAttr()) {
-    room._properties = deserializeObject(roomOptions.getAttr());
-  } else {
-    room._properties = {};
-  }
-  return room;
-}
-
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
 export default class GameConnection extends Connection {
   constructor() {
@@ -127,7 +94,7 @@ export default class GameConnection extends Connection {
       OpType.START,
       req
     );
-    return convertToRoom(res.getCreateRoom().getRoomOptions());
+    return res.getCreateRoom().getRoomOptions();
   }
 
   async joinRoom(roomName, matchProperties, expectedUserIds) {
@@ -144,7 +111,7 @@ export default class GameConnection extends Connection {
     joinRoomReq.setRoomOptions(roomOpts);
     req.setJoinRoom(joinRoomReq);
     const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
-    return convertToRoom(res.getJoinRoom().getRoomOptions());
+    return res.getJoinRoom().getRoomOptions();
   }
 
   async leaveRoom() {
