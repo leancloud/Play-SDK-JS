@@ -122,14 +122,13 @@ export default class Client extends EventEmitter {
    */
   async close() {
     debug('close');
+    if (this._lobby) {
+      await this._lobby.close();
+    }
+    if (this._room) {
+      await this._room.close();
+    }
     this._clear();
-    if (this._fsm.is('lobby')) {
-      await this._lobbyConn.close();
-    }
-    if (this._fsm.is('game')) {
-      await this._gameConn.close();
-    }
-    this._fsm.close();
   }
 
   /**
@@ -236,7 +235,7 @@ export default class Client extends EventEmitter {
       throw new Error();
     }
     this._room = new Room(this);
-    this._room.joinOrCreate(roomName, roomOptions, expectedUserIds);
+    await this._room.joinOrCreate(roomName, roomOptions, expectedUserIds);
     return this._room;
   }
 
@@ -439,6 +438,7 @@ export default class Client extends EventEmitter {
     this._lobbyRoomList = null;
     this._masterServer = null;
     this._gameServer = null;
+    this._lobby = null;
     this._room = null;
     this._player = null;
   }

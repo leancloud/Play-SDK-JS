@@ -341,6 +341,10 @@ export default class Room {
     }
   }
 
+  close() {
+    return this._gameConn.close();
+  }
+
   /**
    * 设置房间开启 / 关闭
    * @param {Boolean} open 是否开启

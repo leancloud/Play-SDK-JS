@@ -1,5 +1,7 @@
 import StateMachine from 'javascript-state-machine';
 
+import { debug } from './Logger';
+
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import Event from './Event';
 
