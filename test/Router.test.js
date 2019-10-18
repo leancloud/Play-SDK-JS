@@ -47,7 +47,7 @@ describe('test router', () => {
       [LogLevel.Debug]: debug,
       [LogLevel.Error]: debug,
     });
-    const roomName = 'leancloud';
+    const roomName = 'leancloud1';
     const c1 = new Client({
       appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
       appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',

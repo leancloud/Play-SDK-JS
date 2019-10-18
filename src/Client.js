@@ -140,7 +140,7 @@ export default class Client extends EventEmitter {
       // TODO 已经存在 Lobby 对象
       throw new Error();
     }
-    this._lobby = new Lobby();
+    this._lobby = new Lobby(this);
     return this._lobby.join();
   }
 
@@ -179,7 +179,7 @@ export default class Client extends EventEmitter {
       // TODO 判断当前处于游戏中
       throw new Error();
     }
-    this._room = new Room();
+    this._room = new Room(this);
     this._room.create(roomName, roomOptions, expectedUserIds);
     return this._room;
   }
@@ -194,7 +194,7 @@ export default class Client extends EventEmitter {
       // TODO 判断当前处于游戏中
       throw new Error();
     }
-    this._room = new Room();
+    this._room = new Room(this);
     this._room.join(roomName, expectedUserIds);
     return this._room;
   }
@@ -235,8 +235,8 @@ export default class Client extends EventEmitter {
       // TODO 判断当前处于游戏中
       throw new Error();
     }
-    this._room = new Room();
-    this._room.joinOrCreateRoom(roomName, roomOptions, expectedUserIds);
+    this._room = new Room(this);
+    this._room.joinOrCreate(roomName, roomOptions, expectedUserIds);
     return this._room;
   }
 
@@ -253,7 +253,7 @@ export default class Client extends EventEmitter {
       // TODO 判断当前处于游戏中
       throw new Error();
     }
-    this._room = new Room();
+    this._room = new Room(this);
     this._room.joinRandomRoom(matchProperties, expectedUserIds);
     return this._room;
   }

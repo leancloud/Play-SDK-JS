@@ -180,11 +180,12 @@ export default class Room {
       const { sessionToken } = await this._lobbyService.authorize();
       // 合并
       this._gameConn = new GameConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
-        this._appId,
+        _appId,
         addr,
-        this._gameVersion,
-        this._userId,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       const room = await this._gameConn.createRoom(
@@ -213,11 +214,12 @@ export default class Room {
       const { sessionToken } = await this._lobbyService.authorize();
       // TODO 合并
       this._gameConn = new GameConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
-        this._appId,
+        _appId,
         addr,
-        this._gameVersion,
-        this._userId,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       const room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
@@ -239,11 +241,12 @@ export default class Room {
       const { sessionToken } = await this._lobbyService.authorize();
       // TODO 合并
       this._gameConn = new GameConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
-        this._appId,
+        _appId,
         addr,
-        this._gameVersion,
-        this._userId,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       const room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
@@ -264,11 +267,12 @@ export default class Room {
     try {
       const { sessionToken } = await this._lobbyService.authorize();
       this._gameConn = new GameConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
-        this._appId,
+        _appId,
         addr,
-        this._gameVersion,
-        this._userId,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       const room = await this._gameConn.joinRoom(cid);
@@ -289,17 +293,19 @@ export default class Room {
       throw new TypeError(`${expectedUserIds} is not an array with string`);
     }
     try {
-      const { cid, addr, roomCreated } = await this._lobbyService.joinRoom({
+      const { _lobbyService } = this._client;
+      const { cid, addr, roomCreated } = await _lobbyService.joinRoom({
         roomName,
         createOnNotFound: true,
       });
-      const { sessionToken } = await this._lobbyService.authorize();
+      const { sessionToken } = await _lobbyService.authorize();
       this._gameConn = new GameConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
-        this._appId,
+        _appId,
         addr,
-        this._gameVersion,
-        this._userId,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       // 根据返回确定是创建还是加入房间
