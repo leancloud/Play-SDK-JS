@@ -1,23 +1,170 @@
-import LobbyService from './LobbyService';
-import GameConnection from './GameConnection';
-import Player from './Player';
-import ReceiverGroup from './ReceiverGroup';
+import StateMachine from 'javascript-state-machine';
 
 import { debug, error } from './Logger';
-import { deserializeObject, serializeObject } from './CodecUtils';
+import { deserializeObject } from './CodecUtils';
 import { tap } from './Utils';
+
+import Player from './Player';
+import ReceiverGroup from './ReceiverGroup';
+import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
+import GameConnection, {
+  PLAYER_JOINED_EVENT,
+  PLAYER_LEFT_EVENT,
+  MASTER_CHANGED_EVENT,
+  ROOM_OPEN_CHANGED_EVENT,
+  ROOM_VISIBLE_CHANGED_EVENT,
+  ROOM_PROPERTIES_CHANGED_EVENT,
+  ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
+  PLAYER_PROPERTIES_CHANGED_EVENT,
+  PLAYER_OFFLINE_EVENT,
+  PLAYER_ONLINE_EVENT,
+  SEND_CUSTOM_EVENT,
+  ROOM_KICKED_EVENT,
+} from './GameConnection';
+import Event from './Event';
 
 /**
  * 房间类
  */
 export default class Room {
-  constructor(opts) {}
+  constructor(client) {
+    this._client = client;
+    this._fsm = new StateMachine({
+      init: 'init',
+      transitions: [
+        { name: 'join', from: 'init', to: 'joining' },
+        { name: 'joined', from: 'joining', to: 'game' },
+        { name: 'joinFailed', from: 'joining', to: 'init' },
+        { name: 'leave', from: 'game', to: 'leaving' },
+        { name: 'left', from: 'leaving', to: 'init' },
+        { name: 'kicked', from: 'game', to: 'leaving' },
+        { name: 'disconnect', from: 'game', to: 'disconnected' },
+        { name: 'rejoin', from: 'disconnected', to: 'joining' },
+      ],
+      methods: {
+        onEnterGame: () => {
+          // 为 reconnectAndRejoin() 保存房间 id
+          this._lastRoomId = this.room.name;
+          // 注册事件
+          this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
+            this._gameConn.close();
+            this._client.emit(Event.ERROR, {
+              code,
+              detail,
+            });
+          });
+          this._gameConn.on(PLAYER_JOINED_EVENT, newPlayerData => {
+            const newPlayer = new Player();
+            newPlayer._init(newPlayerData);
+            this._addPlayer(newPlayer);
+            newPlayer._room = this._room;
+            this._client.emit(Event.PLAYER_ROOM_JOINED, {
+              newPlayer,
+            });
+          });
+          this._gameConn.on(PLAYER_LEFT_EVENT, actorId => {
+            const leftPlayer = this._room.getPlayer(actorId);
+            this._room._removePlayer(actorId);
+            this._client.emit(Event.PLAYER_ROOM_LEFT, {
+              leftPlayer,
+            });
+          });
+          this._gameConn.on(MASTER_CHANGED_EVENT, newMasterActorId => {
+            let newMaster = null;
+            this._room._masterActorId = newMasterActorId;
+            if (newMasterActorId > 0) {
+              newMaster = this._room.getPlayer(newMasterActorId);
+            }
+            this._client.emit(Event.MASTER_SWITCHED, {
+              newMaster,
+            });
+          });
+          this._gameConn.on(ROOM_OPEN_CHANGED_EVENT, open => {
+            this._room._open = open;
+            this._client.emit(Event.ROOM_OPEN_CHANGED, {
+              open,
+            });
+          });
+          this._gameConn.on(ROOM_VISIBLE_CHANGED_EVENT, visible => {
+            this._room._visible = visible;
+            this._client.emit(Event.ROOM_VISIBLE_CHANGED, {
+              visible,
+            });
+          });
+          this._gameConn.on(ROOM_PROPERTIES_CHANGED_EVENT, changedProps => {
+            this._room._mergeProperties(changedProps);
+            this._client.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, {
+              changedProps,
+            });
+          });
+          this._gameConn.on(
+            ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
+            changedProps => {
+              this._room._mergeSystemProps(changedProps);
+              this._client.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
+                changedProps,
+              });
+            }
+          );
+          this._gameConn.on(
+            PLAYER_PROPERTIES_CHANGED_EVENT,
+            (actorId, changedProps) => {
+              debug(`actorId: ${actorId}`);
+              debug(`changedProps: ${JSON.stringify(changedProps)}`);
+              const player = this._room.getPlayer(actorId);
+              player._mergeProperties(changedProps);
+              this._client.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
+                player,
+                changedProps,
+              });
+            }
+          );
+          this._gameConn.on(PLAYER_OFFLINE_EVENT, actorId => {
+            const player = this._room.getPlayer(actorId);
+            player._active = false;
+            this._client.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+              player,
+            });
+          });
+          this._gameConn.on(PLAYER_ONLINE_EVENT, (actorId, props) => {
+            const player = this._room.getPlayer(actorId);
+            player._mergeProperties(props);
+            player._active = true;
+            this._client.emit(Event.PLAYER_ACTIVITY_CHANGED, {
+              player,
+            });
+          });
+          this._gameConn.on(
+            SEND_CUSTOM_EVENT,
+            (eventId, eventData, senderId) => {
+              this._client.emit(Event.CUSTOM_EVENT, {
+                eventId,
+                eventData,
+                senderId,
+              });
+            }
+          );
+          this._gameConn.on(DISCONNECT_EVENT, () => {
+            this._client.emit(Event.DISCONNECT_EVENT);
+          });
+          this._gameConn.on(ROOM_KICKED_EVENT, async info => {
+            this._fsm.kicked();
+            this._gameConn.close();
+            if (info) {
+              this._client.emit(Event.ROOM_KICKED, info);
+            } else {
+              this._client.emit(Event.ROOM_KICKED);
+            }
+          });
+        },
+        onExitGame: () => {
+          this._gameConn.removeAllListeners();
+        },
+      },
+    });
+  }
 
-  async create({
-    roomName = null,
-    roomOptions = null,
-    expectedUserIds = null,
-  }) {
+  async create(roomName, roomOptions, expectedUserIds) {
     if (roomName !== null && !(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -27,6 +174,7 @@ export default class Room {
     if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
       throw new TypeError(`${expectedUserIds} is not an Array with string`);
     }
+    this._fsm.join();
     try {
       const { cid, addr } = await this._lobbyService.createRoom(roomName);
       const { sessionToken } = await this._lobbyService.authorize();
@@ -45,13 +193,15 @@ export default class Room {
         expectedUserIds
       );
       this._init(room);
+      this._fsm.joined();
     } catch (err) {
       debug(err.message);
+      this._fsm.joinFailed();
       throw err;
     }
   }
 
-  async join(roomName, { expectedUserIds = null }) {
+  async join(roomName, expectedUserIds) {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
@@ -474,6 +624,23 @@ export default class Room {
           }
         })
       );
+  }
+
+  _setPlayerProperties(actorId, properties, { expectedValues = null } = {}) {
+    if (!(typeof actorId === 'number')) {
+      throw new TypeError(`${actorId} is not a number`);
+    }
+    if (!(typeof properties === 'object')) {
+      throw new TypeError(`${properties} is not an object`);
+    }
+    if (expectedValues && !(typeof expectedValues === 'object')) {
+      throw new TypeError(`${expectedValues} is not an object`);
+    }
+    return this._gameConn.setPlayerCustomProperties(
+      actorId,
+      properties,
+      expectedValues
+    );
   }
 
   /**

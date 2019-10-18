@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import StateMachine from 'javascript-state-machine';
 
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
@@ -104,6 +105,16 @@ export default class Connection extends EventEmitter {
     // 消息处理及缓存
     this._isMessageQueueRunning = false;
     this._messageQueue = null;
+    this._fsm = new StateMachine({
+      init: 'init',
+      transitions: [
+        { name: 'connect', from: 'init', to: 'connecting' },
+        { name: 'connected', from: 'connecting', to: 'connected' },
+        { name: 'connectFailed', from: 'connecting', to: 'init' },
+        { name: 'disconnect', from: 'connected', to: 'disconnected' },
+        { name: 'close', from: 'connected', to: 'init' },
+      ],
+    });
   }
 
   _connected() {

@@ -4,26 +4,10 @@ import StateMachine from 'javascript-state-machine';
 import { debug } from './Logger';
 import ReceiverGroup from './ReceiverGroup';
 
-import { tap } from './Utils';
-
 import LobbyService from './LobbyService';
-import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
-import { ERROR_EVENT, DISCONNECT_EVENT } from './Connection';
-import GameConnection, {
-  PLAYER_JOINED_EVENT,
-  PLAYER_LEFT_EVENT,
-  MASTER_CHANGED_EVENT,
-  ROOM_OPEN_CHANGED_EVENT,
-  ROOM_VISIBLE_CHANGED_EVENT,
-  ROOM_PROPERTIES_CHANGED_EVENT,
-  ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
-  PLAYER_PROPERTIES_CHANGED_EVENT,
-  PLAYER_OFFLINE_EVENT,
-  PLAYER_ONLINE_EVENT,
-  SEND_CUSTOM_EVENT,
-  ROOM_KICKED_EVENT,
-} from './GameConnection';
-import Event from './Event';
+
+import Room from './Room';
+import Lobby from './Lobby';
 
 const DEFAULT_GAME_VERSION = '0.0.1';
 
@@ -105,138 +89,6 @@ export default class Client extends EventEmitter {
         { name: 'disconnect', from: 'game', to: 'disconnected' },
         { name: 'close', from: '*', to: 'init' },
       ],
-      methods: {
-        onEnterLobby: () => {
-          debug('------------------- onEnterLobby');
-          this._lobbyConn.on(ROOM_LIST_UPDATED_EVENT, roomList => {
-            this._lobbyRoomList = roomList;
-            this.emit(Event.LOBBY_ROOM_LIST_UPDATED);
-          });
-        },
-        onExitLobby: () => {
-          debug('------------------- onExitLobby');
-          // TODO 关闭 Lobby 连接
-          this._lobbyConn.removeAllListeners();
-        },
-        onEnterGame: () => {
-          debug('------------------- onEnterGame');
-          // 为 reconnectAndRejoin() 保存房间 id
-          this._lastRoomId = this.room.name;
-          // 注册事件
-          this._gameConn.on(ERROR_EVENT, async ({ code, detail }) => {
-            this._gameConn.close();
-            this.emit(Event.ERROR, {
-              code,
-              detail,
-            });
-          });
-          this._gameConn.on(PLAYER_JOINED_EVENT, newPlayer => {
-            this._room._addPlayer(newPlayer);
-            newPlayer._room = this._room;
-            this.emit(Event.PLAYER_ROOM_JOINED, {
-              newPlayer,
-            });
-          });
-          this._gameConn.on(PLAYER_LEFT_EVENT, actorId => {
-            const leftPlayer = this._room.getPlayer(actorId);
-            this._room._removePlayer(actorId);
-            this.emit(Event.PLAYER_ROOM_LEFT, {
-              leftPlayer,
-            });
-          });
-          this._gameConn.on(MASTER_CHANGED_EVENT, newMasterActorId => {
-            let newMaster = null;
-            this._room._masterActorId = newMasterActorId;
-            if (newMasterActorId > 0) {
-              newMaster = this._room.getPlayer(newMasterActorId);
-            }
-            this.emit(Event.MASTER_SWITCHED, {
-              newMaster,
-            });
-          });
-          this._gameConn.on(ROOM_OPEN_CHANGED_EVENT, open => {
-            this._room._open = open;
-            this.emit(Event.ROOM_OPEN_CHANGED, {
-              open,
-            });
-          });
-          this._gameConn.on(ROOM_VISIBLE_CHANGED_EVENT, visible => {
-            this._room._visible = visible;
-            this.emit(Event.ROOM_VISIBLE_CHANGED, {
-              visible,
-            });
-          });
-          this._gameConn.on(ROOM_PROPERTIES_CHANGED_EVENT, changedProps => {
-            this._room._mergeProperties(changedProps);
-            this.emit(Event.ROOM_CUSTOM_PROPERTIES_CHANGED, {
-              changedProps,
-            });
-          });
-          this._gameConn.on(
-            ROOM_SYSTEM_PROPERTIES_CHANGED_EVENT,
-            changedProps => {
-              this._room._mergeSystemProps(changedProps);
-              this.emit(Event.ROOM_SYSTEM_PROPERTIES_CHANGED, {
-                changedProps,
-              });
-            }
-          );
-          this._gameConn.on(
-            PLAYER_PROPERTIES_CHANGED_EVENT,
-            (actorId, changedProps) => {
-              debug(`actorId: ${actorId}`);
-              debug(`changedProps: ${JSON.stringify(changedProps)}`);
-              const player = this._room.getPlayer(actorId);
-              player._mergeProperties(changedProps);
-              this.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
-                player,
-                changedProps,
-              });
-            }
-          );
-          this._gameConn.on(PLAYER_OFFLINE_EVENT, actorId => {
-            const player = this._room.getPlayer(actorId);
-            player._active = false;
-            this.emit(Event.PLAYER_ACTIVITY_CHANGED, {
-              player,
-            });
-          });
-          this._gameConn.on(PLAYER_ONLINE_EVENT, (actorId, props) => {
-            const player = this._room.getPlayer(actorId);
-            player._mergeProperties(props);
-            player._active = true;
-            this.emit(Event.PLAYER_ACTIVITY_CHANGED, {
-              player,
-            });
-          });
-          this._gameConn.on(
-            SEND_CUSTOM_EVENT,
-            (eventId, eventData, senderId) => {
-              this.emit(Event.CUSTOM_EVENT, {
-                eventId,
-                eventData,
-                senderId,
-              });
-            }
-          );
-          this._gameConn.on(DISCONNECT_EVENT, () => {
-            this._fsm.disconnect();
-          });
-          this._gameConn.on(ROOM_KICKED_EVENT, async info => {
-            this._fsm.kicked();
-            this._gameConn.close();
-            if (info) {
-              this.emit(Event.ROOM_KICKED, info);
-            } else {
-              this.emit(Event.ROOM_KICKED);
-            }
-          });
-        },
-        onExitGame: () => {
-          debug('------------------- onExitGame');
-          this._gameConn.removeAllListeners();
-        },
-      },
     });
   }
 
@@ -283,48 +135,24 @@ export default class Client extends EventEmitter {
   /**
    * 加入大厅
    */
-  async joinLobby() {
-    if (this._fsm.is('joiningLobby')) {
-      return;
+  joinLobby() {
+    if (this._lobby) {
+      // TODO 已经存在 Lobby 对象
+      throw new Error();
     }
-    if (this._fsm.cannot('joinLobby')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.joinLobby();
-    try {
-      this._lobbyConn = new LobbyConnection();
-      const { sessionToken } = await this._lobbyService.authorize();
-      await this._lobbyConn.connect(
-        this._appId,
-        this._playServer,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      await this._lobbyConn.joinLobby();
-      this._fsm.joinedLobby();
-    } catch (e) {
-      this._fsm.joinLobbyFailed();
-      throw e;
-    }
+    this._lobby = new Lobby();
+    return this._lobby.join();
   }
 
   /**
    * 离开大厅
    */
-  async leaveLobby() {
-    if (this._fsm.is('leavingLobby')) {
-      return;
+  leaveLobby() {
+    if (!this._lobby) {
+      // TODO 不存在 Lobby 对象
+      throw new Error();
     }
-    if (this._fsm.cannot('leaveLobby')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.leaveLobby();
-    try {
-      await this._lobbyConn.close();
-    } finally {
-      this._fsm.leftLobby();
-    }
+    return this._lobby.leave();
   }
 
   /**
@@ -347,44 +175,13 @@ export default class Client extends EventEmitter {
     roomOptions = null,
     expectedUserIds = null,
   } = {}) {
-    if (roomName !== null && !(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this._room !== undefined) {
+      // TODO 判断当前处于游戏中
+      throw new Error();
     }
-    if (roomOptions !== null && !(roomOptions instanceof Object)) {
-      throw new TypeError(`${roomOptions} is not a Object`);
-    }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an Array with string`);
-    }
-    if (this._fsm.cannot('join')) {
-      throw new Error(`error state: ${this._fsm.state}`);
-    }
-    this._fsm.join();
-    try {
-      const { cid, addr } = await this._lobbyService.createRoom(roomName);
-      const { sessionToken } = await this._lobbyService.authorize();
-      // TODO 合并
-      this._gameConn = new GameConnection();
-      await this._gameConn.connect(
-        this._appId,
-        addr,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      const room = await this._gameConn.createRoom(
-        cid,
-        roomOptions,
-        expectedUserIds
-      );
-      this._initGame(room);
-      this._fsm.joined();
-      return this.room;
-    } catch (err) {
-      debug(err.message);
-      this._fsm.joinFailed();
-      throw err;
-    }
+    this._room = new Room();
+    this._room.create(roomName, roomOptions, expectedUserIds);
+    return this._room;
   }
 
   /**
@@ -393,36 +190,13 @@ export default class Client extends EventEmitter {
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinRoom(roomName, { expectedUserIds = null } = {}) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this._room !== undefined) {
+      // TODO 判断当前处于游戏中
+      throw new Error();
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    if (this._fsm.cannot('join')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.join();
-    try {
-      const { cid, addr } = await this._lobbyService.joinRoom({ roomName });
-      const { sessionToken } = await this._lobbyService.authorize();
-      // TODO 合并
-      this._gameConn = new GameConnection();
-      await this._gameConn.connect(
-        this._appId,
-        addr,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      const room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
-      this._initGame(room);
-      this._fsm.joined();
-      return this.room;
-    } catch (err) {
-      this._fsm.joinFailed();
-      throw err;
-    }
+    this._room = new Room();
+    this._room.join(roomName, expectedUserIds);
+    return this._room;
   }
 
   /**
@@ -430,35 +204,12 @@ export default class Client extends EventEmitter {
    * @param {String} roomName 房间名称
    */
   async rejoinRoom(roomName) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this._room === undefined) {
+      // 没有房间可以返回
+      throw new Error();
     }
-    const { cid, addr } = await this._lobbyService.joinRoom({
-      roomName,
-      rejoin: true,
-    });
-    if (this._fsm.cannot('join')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.join();
-    try {
-      const { sessionToken } = await this._lobbyService.authorize();
-      this._gameConn = new GameConnection();
-      await this._gameConn.connect(
-        this._appId,
-        addr,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      const room = await this._gameConn.joinRoom(cid);
-      this._initGame(room);
-      this._fsm.joined();
-      return this.room;
-    } catch (err) {
-      this._fsm.joinFailed();
-      throw err;
-    }
+    this._room.rejoin(roomName);
+    return this._room;
   }
 
   /**
@@ -480,51 +231,13 @@ export default class Client extends EventEmitter {
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this._room !== undefined) {
+      // TODO 判断当前处于游戏中
+      throw new Error();
     }
-    if (roomOptions !== null && !(roomOptions instanceof Object)) {
-      throw new TypeError(`${roomOptions} is not a Object`);
-    }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    if (this._fsm.cannot('join')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.join();
-    try {
-      const { cid, addr, roomCreated } = await this._lobbyService.joinRoom({
-        roomName,
-        createOnNotFound: true,
-      });
-      const { sessionToken } = await this._lobbyService.authorize();
-      this._gameConn = new GameConnection();
-      await this._gameConn.connect(
-        this._appId,
-        addr,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      // 根据返回确定是创建还是加入房间
-      let room = null;
-      if (roomCreated) {
-        room = await this._gameConn.createRoom(
-          cid,
-          roomOptions,
-          expectedUserIds
-        );
-      } else {
-        room = await this._gameConn.joinRoom(cid, null, expectedUserIds);
-      }
-      this._initGame(room);
-      this._fsm.joined();
-      return this.room;
-    } catch (err) {
-      this._fsm.joinFailed();
-      throw err;
-    }
+    this._room = new Room();
+    this._room.joinOrCreateRoom(roomName, roomOptions, expectedUserIds);
+    return this._room;
   }
 
   /**
@@ -536,42 +249,13 @@ export default class Client extends EventEmitter {
     matchProperties = null,
     expectedUserIds = null,
   } = {}) {
-    if (matchProperties !== null && !(typeof matchProperties === 'object')) {
-      throw new TypeError(`${matchProperties} is not an object`);
+    if (this._room !== undefined) {
+      // TODO 判断当前处于游戏中
+      throw new Error();
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    if (this._fsm.cannot('join')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
-    }
-    this._fsm.join();
-    try {
-      const { cid, addr } = await this._lobbyService.joinRandomRoom(
-        matchProperties,
-        expectedUserIds
-      );
-      const { sessionToken } = await this._lobbyService.authorize();
-      this._gameConn = new GameConnection();
-      await this._gameConn.connect(
-        this._appId,
-        addr,
-        this._gameVersion,
-        this._userId,
-        sessionToken
-      );
-      const room = await this._gameConn.joinRoom(
-        cid,
-        matchProperties,
-        expectedUserIds
-      );
-      this._initGame(room);
-      this._fsm.joined();
-      return this.room;
-    } catch (err) {
-      this._fsm.joinFailed();
-      throw err;
-    }
+    this._room = new Room();
+    this._room.joinRandomRoom(matchProperties, expectedUserIds);
+    return this._room;
   }
 
   /**

@@ -2,7 +2,7 @@ import Connection, { convertToRoomOptions } from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
 import { adapters } from './PlayAdapter';
-import { debug, error } from './Logger';
+import { debug } from './Logger';
 import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
@@ -352,8 +352,7 @@ export default class GameConnection extends Connection {
   }
 
   _handlePlayerJoined(joinRoomNotification) {
-    const newPlayer = convertToPlayer(joinRoomNotification.getMember());
-    this.emit(PLAYER_JOINED_EVENT, newPlayer);
+    this.emit(PLAYER_JOINED_EVENT, joinRoomNotification.getMember());
   }
 
   _handlePlayerLeftMsg(leftRoomNotification) {

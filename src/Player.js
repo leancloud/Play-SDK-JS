@@ -1,4 +1,4 @@
-import { deserializeObject, serializeObject } from './CodecUtils';
+import { deserializeObject } from './CodecUtils';
 import { tap } from './Utils';
 
 /**
@@ -63,24 +63,14 @@ export default class Player {
    * @param {Object} [opts] 设置选项
    * @param {Object} [opts.expectedValues] 期望属性，用于 CAS 检测
    */
-  async setCustomProperties(properties, { expectedValues = null } = {}) {
-    if (!(typeof actorId === 'number')) {
-      throw new TypeError(`${this._actorId} is not a number`);
-    }
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    return this._gameConn
-      .setPlayerCustomProperties(this._actorId, properties, expectedValues)
+  setCustomProperties(properties, { expectedValues = null } = {}) {
+    return this._room
+      .setPlayerProperties(this.actorId, properties, expectedValues)
       .then(
         tap(res => {
           const { actorId: aId, attr } = res;
-          if (aId && attr) {
-            const player = this._room.getPlayer(aId);
-            player._mergeProperties(attr);
+          if (aId === this.actorId && attr) {
+            this._mergeProperties(attr);
           }
         })
       );
