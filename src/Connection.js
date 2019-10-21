@@ -3,8 +3,10 @@ import StateMachine from 'javascript-state-machine';
 
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 import { sdkVersion, protocolVersion } from './Config';
 import { serializeObject } from './CodecUtils';
+import { adapters } from './PlayAdapter';
 
 // eslint-disable-next-line camelcase
 const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
@@ -94,7 +96,7 @@ export function convertToRoomOptions(roomName, options, expectedUserIds) {
   return roomOptions;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg", "_getFastOpenUrl"] }] */
 export default class Connection extends EventEmitter {
   constructor() {
     super();
@@ -114,6 +116,42 @@ export default class Connection extends EventEmitter {
         { name: 'disconnect', from: 'connected', to: 'disconnected' },
         { name: 'close', from: 'connected', to: 'init' },
       ],
+    });
+  }
+
+  connect(appId, server, gameVersion, userId, sessionToken) {
+    this._userId = userId;
+    this._fsm.connect();
+    return new Promise((resolve, reject) => {
+      const { WebSocket } = adapters;
+      const url = this._getFastOpenUrl(
+        server,
+        appId,
+        gameVersion,
+        userId,
+        sessionToken
+      );
+      debug(`url: ${url}`);
+      this._ws = new WebSocket(url, 'protobuf.1');
+      this._ws.onopen = () => {
+        debug(`${this._userId} : ${this._flag} connection open`);
+        this._connected();
+      };
+      this._ws.onclose = () => {
+        this._fsm.connectFailed();
+        reject(
+          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
+        );
+      };
+      this._ws.onerror = err => {
+        this._fsm.connectFailed();
+        reject(err);
+      };
+      // 标记
+      this._requests[0] = {
+        resolve,
+        reject,
+      };
     });
   }
 
@@ -149,8 +187,10 @@ export default class Connection extends EventEmitter {
     };
     this._ws.onclose = () => {
       this._stopKeppAlive();
+      this._fsm.disconnect();
       this.emit(DISCONNECT_EVENT);
     };
+    this._fsm.connected();
   }
 
   async openSession(appId, userId, gameVersion, sessionToken) {
@@ -227,6 +267,9 @@ export default class Connection extends EventEmitter {
   }
 
   close() {
+    if (this._fsm.cannot('close')) {
+      throw new Error(`no close: ${this._fsm.state}`);
+    }
     this._stopKeppAlive();
     return new Promise((resolve, reject) => {
       if (this._ws) {
@@ -247,8 +290,14 @@ export default class Connection extends EventEmitter {
     });
   }
 
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    throw new Error('must implement the method');
+  }
+
   _simulateDisconnection() {
-    this._ws.close();
+    this.close();
+    this.emit(DISCONNECT_EVENT);
+    return Promise.resolve();
   }
 
   _getMsgId() {

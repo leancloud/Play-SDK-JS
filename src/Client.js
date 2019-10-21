@@ -66,30 +66,6 @@ export default class Client extends EventEmitter {
     }
     this._opts.gameVersion = this._gameVersion;
     this._playServer = opts.playServer;
-    // fsm
-    this._fsm = new StateMachine({
-      init: 'init',
-      transitions: [
-        {
-          name: 'joinLobby',
-          from: ['init', 'disconnected'],
-          to: 'joiningLobby',
-        },
-        { name: 'joinedLobby', from: 'joiningLobby', to: 'lobby' },
-        { name: 'joinLobbyFailed', from: 'joiningLobby', to: 'init' },
-        { name: 'leaveLobby', from: 'lobby', to: 'leavingLobby' },
-        { name: 'leftLobby', from: 'leavingLobby', to: 'init' },
-        { name: 'joinGame', from: ['init', 'lobby'], to: 'joiningGame' },
-        { name: 'joinedGame', from: 'joiningGame', to: 'game' },
-        { name: 'joinFailed', from: 'joiningGame', to: 'init' },
-        { name: 'rejoinGame', from: 'disconnected', to: 'joining' },
-        { name: 'leaveGame', from: 'game', to: 'leavingGame' },
-        { name: 'leftGame', from: 'leavingGame', to: 'init' },
-        { name: 'kickedFromGame', from: 'game', to: 'init' },
-        { name: 'disconnect', from: 'game', to: 'disconnected' },
-        { name: 'close', from: '*', to: 'init' },
-      ],
-    });
   }
 
   /**
@@ -111,17 +87,13 @@ export default class Client extends EventEmitter {
    * TODO 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
-    if (this._lastRoomId === null || this._lastRoomId === undefined) {
-      throw new Error('There is not room name for rejoin');
-    }
-    return this._fsm.handle('reconnectAndRejoin');
+    return this.rejoinRoom(this._room.name);
   }
 
   /**
    * 关闭
    */
   async close() {
-    debug('close');
     if (this._lobby) {
       await this._lobby.close();
     }
@@ -179,7 +151,7 @@ export default class Client extends EventEmitter {
       throw new Error();
     }
     this._room = new Room(this);
-    this._room.create(roomName, roomOptions, expectedUserIds);
+    await this._room.create(roomName, roomOptions, expectedUserIds);
     return this._room;
   }
 
@@ -194,7 +166,7 @@ export default class Client extends EventEmitter {
       throw new Error();
     }
     this._room = new Room(this);
-    this._room.join(roomName, expectedUserIds);
+    await this._room.join(roomName, expectedUserIds);
     return this._room;
   }
 
@@ -207,7 +179,7 @@ export default class Client extends EventEmitter {
       // 没有房间可以返回
       throw new Error();
     }
-    this._room.rejoin(roomName);
+    await this._room.rejoin(roomName);
     return this._room;
   }
 
@@ -253,7 +225,7 @@ export default class Client extends EventEmitter {
       throw new Error();
     }
     this._room = new Room(this);
-    this._room.joinRandomRoom(matchProperties, expectedUserIds);
+    await this._room.joinRandom(matchProperties, expectedUserIds);
     return this._room;
   }
 
@@ -365,17 +337,10 @@ export default class Client extends EventEmitter {
    * 离开房间
    */
   async leaveRoom() {
-    if (this._fsm.cannot('leave')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
+    if (!this._room) {
+      throw new Error();
     }
-    this._fsm.leave();
-    try {
-      await this._gameConn.leaveRoom();
-      await this._gameConn.close();
-      this._fsm.left();
-    } catch (err) {
-      this._fsm.leaveFailed();
-    }
+    await this._room.leave();
   }
 
   /**
@@ -394,7 +359,10 @@ export default class Client extends EventEmitter {
    * @return {void}
    */
   pauseMessageQueue() {
-    this._fsm.handle('pauseMessageQueue');
+    if (!this.room) {
+      throw new Error();
+    }
+    this.room.pauseMessageQueue();
   }
 
   /**
@@ -402,7 +370,10 @@ export default class Client extends EventEmitter {
    * @return {void}
    */
   resumeMessageQueue() {
-    this._fsm.handle('resumeMessageQueue');
+    if (!this.room) {
+      throw new Error();
+    }
+    this.room.resumeMessageQueue();
   }
 
   /**
@@ -420,7 +391,7 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get player() {
-    return this._player;
+    return this._room._player;
   }
 
   /**
@@ -429,7 +400,7 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get lobbyRoomList() {
-    return this._lobbyRoomList;
+    return this._lobby._lobbyRoomList;
   }
 
   // 清理内存数据
@@ -440,15 +411,14 @@ export default class Client extends EventEmitter {
     this._gameServer = null;
     this._lobby = null;
     this._room = null;
-    this._player = null;
   }
 
   // 模拟断线
   _simulateDisconnection() {
-    if (this._fsm.cannot('disconnect')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
+    if (this._room === null) {
+      throw new Error();
     }
-    this._gameConn._simulateDisconnection();
+    return this._room._simulateDisconnection();
   }
 
   /**

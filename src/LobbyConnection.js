@@ -30,38 +30,11 @@ function convertToLobbyRoom(roomOptions) {
   return lobbyRoom;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_getFastOpenUrl"] }] */
 export default class LobbyConnection extends Connection {
   constructor() {
     super();
     this._flag = 'lobby';
-  }
-
-  connect(appId, server, gameVersion, userId, sessionToken) {
-    this._userId = userId;
-    return new Promise((resolve, reject) => {
-      const { WebSocket } = adapters;
-      const url = `${server}/1/multiplayer/lobby/websocket?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
-      debug(`url: ${url}`);
-      this._ws = new WebSocket(url, 'protobuf.1');
-      this._ws.onopen = () => {
-        debug(`${this._userId} : ${this._flag} connection open`);
-        this._connected();
-      };
-      this._ws.onclose = () => {
-        reject(
-          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
-        );
-      };
-      this._ws.onerror = err => {
-        reject(err);
-      };
-      // 标记
-      this._requests[0] = {
-        resolve,
-        reject,
-      };
-    });
   }
 
   async joinLobby() {
@@ -72,6 +45,10 @@ export default class LobbyConnection extends Connection {
   async leaveLobby() {
     const req = new RequestMessage();
     await super.sendRequest(CommandType.LOBBY, OpType.REMOVE, req);
+  }
+
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    return `${server}/1/multiplayer/lobby/websocket?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
   }
 
   _getPingDuration() {

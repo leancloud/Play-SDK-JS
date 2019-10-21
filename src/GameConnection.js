@@ -49,38 +49,11 @@ export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_getFastOpenUrl"] }] */
 export default class GameConnection extends Connection {
   constructor() {
     super();
     this._flag = 'game';
-  }
-
-  connect(appId, server, gameVersion, userId, sessionToken) {
-    this._userId = userId;
-    return new Promise((resolve, reject) => {
-      const { WebSocket } = adapters;
-      const url = `${server}session?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
-      debug(`url: ${url}`);
-      this._ws = new WebSocket(url, 'protobuf.1');
-      this._ws.onopen = () => {
-        debug(`${this._userId} : ${this._flag} connection open`);
-        this._connected();
-      };
-      this._ws.onclose = () => {
-        reject(
-          new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
-        );
-      };
-      this._ws.onerror = err => {
-        reject(err);
-      };
-      // 标记
-      this._requests[0] = {
-        resolve,
-        reject,
-      };
-    });
   }
 
   async createRoom(roomId, roomOptions, expectedUserIds) {
@@ -201,12 +174,16 @@ export default class GameConnection extends Connection {
     return JSON.parse(res.getExpectMembers());
   }
 
-  async setMaster(newMasterId) {
+  setMaster(newMasterId) {
     const req = new RequestMessage();
     const updateMasterClientReq = new UpdateMasterClientRequest();
     updateMasterClientReq.setMasterActorId(newMasterId);
     req.setUpdateMasterClient(updateMasterClientReq);
-    await super.sendRequest(CommandType.CONV, OpType.UPDATE_MASTER_CLIENT, req);
+    return super.sendRequest(
+      CommandType.CONV,
+      OpType.UPDATE_MASTER_CLIENT,
+      req
+    );
   }
 
   async kickPlayer(actorId, code, msg) {
@@ -289,6 +266,10 @@ export default class GameConnection extends Connection {
 
   _getPingDuration() {
     return GAME_KEEPALIVE_DURATION;
+  }
+
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    return `${server}session?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
   }
 
   _handleNotification(cmd, op, body) {

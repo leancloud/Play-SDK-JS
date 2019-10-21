@@ -1,9 +1,8 @@
 import StateMachine from 'javascript-state-machine';
 
-import { debug } from './Logger';
-
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import Event from './Event';
+import { debug, error } from './Logger';
 
 /**
  * 大厅类，用来请求和接收大厅相关事件
@@ -42,24 +41,27 @@ export default class Lobby {
     this._fsm.join();
     let lobbyInfo = null;
     try {
-      lobbyInfo = await this._lobbyService.authorize();
+      const { _lobbyService } = this._client;
+      lobbyInfo = await _lobbyService.authorize();
     } catch (e) {
       this._fsm.joinFailed();
       throw e;
     }
     try {
-      const { sessionToken } = lobbyInfo;
+      const { url, sessionToken } = lobbyInfo;
       this._lobbyConn = new LobbyConnection();
+      const { _appId, _gameVersion, _userId } = this._client;
       await this._lobbyConn.connect(
-        this._appId,
-        this._playServer,
-        this._gameVersion,
-        this._userId,
+        _appId,
+        url,
+        _gameVersion,
+        _userId,
         sessionToken
       );
       await this._lobbyConn.joinLobby();
       this._fsm.joined();
     } catch (e) {
+      debug(JSON.stringify(e));
       if (this._lobbyConn) {
         await this._lobbyConn.close();
       }

@@ -5,11 +5,12 @@ import { tap } from './Utils';
  * 玩家类
  */
 export default class Player {
-  constructor() {
+  constructor(room) {
     this._userId = '';
     this._actorId = 0;
     this._active = true;
     this._properties = {};
+    this._room = room;
   }
 
   /**
@@ -36,7 +37,7 @@ export default class Player {
    * @readonly
    */
   get isLocal() {
-    return this._actorId !== 0 && this._room._play.userId === this._userId;
+    return this._actorId !== 0 && this._room._client.userId === this._userId;
   }
 
   /**
