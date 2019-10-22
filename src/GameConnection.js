@@ -1,11 +1,7 @@
-import Connection, { convertToRoomOptions } from './Connection';
+import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
-import { adapters } from './PlayAdapter';
-import { debug } from './Logger';
 import { sdkVersion, protocolVersion } from './Config';
-import PlayError from './PlayError';
-import PlayErrorCode from './PlayErrorCode';
 
 // eslint-disable-next-line camelcase
 const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
@@ -48,6 +44,63 @@ export const PLAYER_OFFLINE_EVENT = 'PLAYER_OFFLINE_EVENT';
 export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
+
+const MAX_PLAYER_COUNT = 10;
+
+export function convertToRoomOptions(roomName, options, expectedUserIds) {
+  const roomOptions = new RoomOptions();
+  if (roomName) {
+    roomOptions.setCid(roomName);
+  }
+  if (options) {
+    const {
+      open,
+      visible,
+      emptyRoomTtl,
+      playerTtl,
+      maxPlayerCount,
+      customRoomProperties,
+      customRoomPropertyKeysForLobby,
+      flag,
+      pluginName,
+    } = options;
+    if (open !== undefined) {
+      const o = new BoolValue();
+      o.setValue(open);
+      roomOptions.setOpen(open);
+    }
+    if (visible !== undefined) {
+      const v = new BoolValue();
+      v.setValue(visible);
+      roomOptions.setVisible(v);
+    }
+    if (emptyRoomTtl > 0) {
+      roomOptions.setEmptyRoomTtl(emptyRoomTtl);
+    }
+    if (playerTtl > 0) {
+      roomOptions.setPlayerTtl(playerTtl);
+    }
+    if (maxPlayerCount > 0 && maxPlayerCount < MAX_PLAYER_COUNT) {
+      roomOptions.setMaxMembers(maxPlayerCount);
+    }
+    if (customRoomProperties) {
+      roomOptions.setAttr(serializeObject(customRoomProperties));
+    }
+    if (customRoomPropertyKeysForLobby) {
+      roomOptions.setLobbyAttrKeysList(customRoomPropertyKeysForLobby);
+    }
+    if (flag !== undefined) {
+      roomOptions.setFlag(flag);
+    }
+    if (pluginName) {
+      roomOptions.setPluginName(pluginName);
+    }
+  }
+  if (expectedUserIds) {
+    roomOptions.setExpectMembersList(expectedUserIds);
+  }
+  return roomOptions;
+}
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_getFastOpenUrl"] }] */
 export default class GameConnection extends Connection {
@@ -174,16 +227,17 @@ export default class GameConnection extends Connection {
     return JSON.parse(res.getExpectMembers());
   }
 
-  setMaster(newMasterId) {
+  async setMaster(newMasterId) {
     const req = new RequestMessage();
     const updateMasterClientReq = new UpdateMasterClientRequest();
     updateMasterClientReq.setMasterActorId(newMasterId);
     req.setUpdateMasterClient(updateMasterClientReq);
-    return super.sendRequest(
+    const { res } = await super.sendRequest(
       CommandType.CONV,
       OpType.UPDATE_MASTER_CLIENT,
       req
     );
+    return res.getUpdateMasterClient().getMasterActorId();
   }
 
   async kickPlayer(actorId, code, msg) {

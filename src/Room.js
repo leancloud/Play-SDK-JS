@@ -529,9 +529,8 @@ export default class Room {
       );
     }
     return this._gameConn.setMaster(newMasterId).then(
-      tap(res => {
-        const { masterActorId } = res;
-        this._masterActorId = masterActorId;
+      tap(masterId => {
+        this._masterActorId = masterId;
       })
     );
   }
@@ -760,7 +759,7 @@ export default class Room {
    * @param {Number} [opts.code] 编码
    * @param {String} [opts.msg] 附带信息
    */
-  async kickPlayer(actorId, { code = null, msg = null } = {}) {
+  kickPlayer(actorId, { code = null, msg = null } = {}) {
     if (typeof actorId !== 'number') {
       throw new TypeError(`${actorId} is not a number`);
     }
@@ -776,7 +775,11 @@ export default class Room {
         `Error state: ${this._fsm.state}`
       );
     }
-    return this._gameConn.kickPlayer(actorId, code, msg);
+    return this._gameConn.kickPlayer(actorId, code, msg).then(
+      tap(aId => {
+        this._removePlayer(aId);
+      })
+    );
   }
 
   pauseMessageQueue() {

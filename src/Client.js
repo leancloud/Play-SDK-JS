@@ -1,7 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import StateMachine from 'javascript-state-machine';
 
-import { debug } from './Logger';
 import ReceiverGroup from './ReceiverGroup';
 
 import LobbyService from './LobbyService';

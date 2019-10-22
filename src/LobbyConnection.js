@@ -1,8 +1,6 @@
-import Connection, { convertToRoomOptions } from './Connection';
+import Connection from './Connection';
 import LobbyRoom from './LobbyRoom';
-import { serializeObject, deserializeObject } from './CodecUtils';
-import { adapters } from './PlayAdapter';
-import { debug, error } from './Logger';
+import { deserializeObject } from './CodecUtils';
 import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
@@ -38,11 +36,23 @@ export default class LobbyConnection extends Connection {
   }
 
   async joinLobby() {
+    if (!this._fsm.is('connected')) {
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
+    }
     const req = new RequestMessage();
     await super.sendRequest(CommandType.LOBBY, OpType.ADD, req);
   }
 
   async leaveLobby() {
+    if (!this._fsm.is('connected')) {
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
+    }
     const req = new RequestMessage();
     await super.sendRequest(CommandType.LOBBY, OpType.REMOVE, req);
   }

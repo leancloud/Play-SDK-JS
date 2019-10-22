@@ -2,7 +2,6 @@ import StateMachine from 'javascript-state-machine';
 
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import Event from './Event';
-import { debug, error } from './Logger';
 
 /**
  * 大厅类，用来请求和接收大厅相关事件
@@ -12,12 +11,18 @@ export default class Lobby {
     this._client = client;
     this._fsm = new StateMachine({
       init: 'init',
+      final: 'closed',
       transitions: [
         { name: 'join', from: 'init', to: 'joining' },
         { name: 'joined', from: 'joining', to: 'lobby' },
         { name: 'joinFailed', from: 'joining', to: 'init' },
         { name: 'leave', from: 'lobby', to: 'leaving' },
         { name: 'left', from: 'leaving', to: 'init' },
+        {
+          name: 'close',
+          from: ['init', 'joining', 'lobby', 'leaving'],
+          to: 'closed',
+        },
       ],
       methods: {
         onEnterLobby: () => {
@@ -49,8 +54,8 @@ export default class Lobby {
     }
     try {
       const { url, sessionToken } = lobbyInfo;
-      this._lobbyConn = new LobbyConnection();
       const { _appId, _gameVersion, _userId } = this._client;
+      this._lobbyConn = new LobbyConnection();
       await this._lobbyConn.connect(
         _appId,
         url,
@@ -61,7 +66,6 @@ export default class Lobby {
       await this._lobbyConn.joinLobby();
       this._fsm.joined();
     } catch (e) {
-      debug(JSON.stringify(e));
       if (this._lobbyConn) {
         await this._lobbyConn.close();
       }
@@ -79,6 +83,8 @@ export default class Lobby {
   }
 
   async close() {
-    await this._lobbyConn.close();
+    if (this._fsm.can('close')) {
+      await this._lobbyConn.close();
+    }
   }
 }
