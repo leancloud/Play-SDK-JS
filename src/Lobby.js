@@ -2,6 +2,8 @@ import StateMachine from 'javascript-state-machine';
 
 import LobbyConnection, { ROOM_LIST_UPDATED_EVENT } from './LobbyConnection';
 import Event from './Event';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 /**
  * 大厅类，用来请求和接收大厅相关事件
@@ -41,7 +43,10 @@ export default class Lobby {
 
   async join() {
     if (this._fsm.cannot('join')) {
-      throw new Error(`Error state: ${this._fsm.state}`);
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
     }
     this._fsm.join();
     let lobbyInfo = null;

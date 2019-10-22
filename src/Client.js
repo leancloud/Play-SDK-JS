@@ -106,8 +106,8 @@ export default class Client extends EventEmitter {
    */
   joinLobby() {
     if (this._lobby) {
-      // TODO 已经存在 Lobby 对象
-      throw new Error();
+      // 已经存在 Lobby 对象
+      throw new Error('You are already in lobby.');
     }
     this._lobby = new Lobby(this);
     return this._lobby.join();
@@ -118,8 +118,8 @@ export default class Client extends EventEmitter {
    */
   leaveLobby() {
     if (!this._lobby) {
-      // TODO 不存在 Lobby 对象
-      throw new Error();
+      // 不存在 Lobby 对象
+      throw new Error('You are not in lobby yet');
     }
     return this._lobby.leave();
   }
@@ -144,13 +144,13 @@ export default class Client extends EventEmitter {
     roomOptions = null,
     expectedUserIds = null,
   } = {}) {
-    if (this._room !== undefined) {
-      // TODO 判断当前处于游戏中
-      throw new Error();
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
     this._room = new Room(this);
-    await this._room.create(roomName, roomOptions, expectedUserIds);
-    return this._room;
+    await this.room.create(roomName, roomOptions, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -159,13 +159,13 @@ export default class Client extends EventEmitter {
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinRoom(roomName, { expectedUserIds = null } = {}) {
-    if (this._room !== undefined) {
-      // TODO 判断当前处于游戏中
-      throw new Error();
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
     this._room = new Room(this);
-    await this._room.join(roomName, expectedUserIds);
-    return this._room;
+    await this.room.join(roomName, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -173,12 +173,12 @@ export default class Client extends EventEmitter {
    * @param {String} roomName 房间名称
    */
   async rejoinRoom(roomName) {
-    if (this._room === undefined) {
+    if (!this.room) {
       // 没有房间可以返回
-      throw new Error();
+      throw new Error('You are not in room yet.');
     }
-    await this._room.rejoin(roomName);
-    return this._room;
+    await this.room.rejoin(roomName);
+    return this.room;
   }
 
   /**
@@ -200,13 +200,13 @@ export default class Client extends EventEmitter {
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
-    if (this._room !== undefined) {
-      // TODO 判断当前处于游戏中
-      throw new Error();
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
     this._room = new Room(this);
-    await this._room.joinOrCreate(roomName, roomOptions, expectedUserIds);
-    return this._room;
+    await this.room.joinOrCreate(roomName, roomOptions, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -218,13 +218,13 @@ export default class Client extends EventEmitter {
     matchProperties = null,
     expectedUserIds = null,
   } = {}) {
-    if (this._room !== undefined) {
-      // TODO 判断当前处于游戏中
-      throw new Error();
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
     this._room = new Room(this);
-    await this._room.joinRandom(matchProperties, expectedUserIds);
-    return this._room;
+    await this.room.joinRandom(matchProperties, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -237,7 +237,7 @@ export default class Client extends EventEmitter {
     { matchProperties = null, expectedUserIds = null } = {}
   ) {
     if (typeof piggybackPeerId !== 'string') {
-      throw new Error(`${piggybackPeerId} is not a string`);
+      throw new TypeError(`${piggybackPeerId} is not a string`);
     }
     if (matchProperties !== null && !(typeof matchProperties === 'object')) {
       throw new TypeError(`${matchProperties} is not an object`);
@@ -257,7 +257,10 @@ export default class Client extends EventEmitter {
    * @param {Boolean} open 是否开启
    */
   setRoomOpen(open) {
-    return this._room.setOpen(open);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.setOpen(open);
   }
 
   /**
@@ -265,7 +268,10 @@ export default class Client extends EventEmitter {
    * @param {Boolean} visible 是否可见
    */
   setRoomVisible(visible) {
-    return this._room.setVisible(visible);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.setVisible(visible);
   }
 
   /**
@@ -273,7 +279,10 @@ export default class Client extends EventEmitter {
    * @param {*} count 数量
    */
   setRoomMaxPlayerCount(count) {
-    return this._room.setMaxPlayerCount(count);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.setMaxPlayerCount(count);
   }
 
   /**
@@ -281,14 +290,20 @@ export default class Client extends EventEmitter {
    * @param {*} expectedUserIds 玩家 Id 列表
    */
   setRoomExpectedUserIds(expectedUserIds) {
-    return this._room.setExpectedUserIds(expectedUserIds);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.setExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 清空房间占位玩家 Id 列表
    */
   clearRoomExpectedUserIds() {
-    return this._room.clearExpectedUserIds();
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.clearExpectedUserIds();
   }
 
   /**
@@ -296,7 +311,10 @@ export default class Client extends EventEmitter {
    * @param {*} expectedUserIds 增加的玩家 Id 列表
    */
   addRoomExpectedUserIds(expectedUserIds) {
-    return this._room.addExpectedUserIds(expectedUserIds);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.addExpectedUserIds(expectedUserIds);
   }
 
   /**
@@ -304,7 +322,10 @@ export default class Client extends EventEmitter {
    * @param {*} expectedUserIds 移除的玩家 Id 列表
    */
   removeRoomExpectedUserIds(expectedUserIds) {
-    return this._room.removeExpectedUserIds(expectedUserIds);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.removeExpectedUserIds(expectedUserIds);
   }
 
   /**
@@ -312,7 +333,10 @@ export default class Client extends EventEmitter {
    * @param {Number} newMasterId 新房主 ID
    */
   setMaster(newMasterId) {
-    return this._room.setMaster(newMasterId);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.setMaster(newMasterId);
   }
 
   /**
@@ -328,17 +352,20 @@ export default class Client extends EventEmitter {
     eventData = {},
     options = { receiverGroup: ReceiverGroup.All }
   ) {
-    return this._room.sendEvent(eventId, eventData, options);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.sendEvent(eventId, eventData, options);
   }
 
   /**
    * 离开房间
    */
   async leaveRoom() {
-    if (!this._room) {
-      throw new Error();
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    await this._room.leave();
+    await this.room.leave();
   }
 
   /**
@@ -349,7 +376,10 @@ export default class Client extends EventEmitter {
    * @param {String} [opts.msg] 附带信息
    */
   kickPlayer(actorId, { code = null, msg = null } = {}) {
-    return this._room.kickPlayer(actorId, code, msg);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.kickPlayer(actorId, code, msg);
   }
 
   /**
@@ -358,7 +388,7 @@ export default class Client extends EventEmitter {
    */
   pauseMessageQueue() {
     if (!this.room) {
-      throw new Error();
+      throw new Error('You are not in room yet.');
     }
     this.room.pauseMessageQueue();
   }
@@ -369,7 +399,7 @@ export default class Client extends EventEmitter {
    */
   resumeMessageQueue() {
     if (!this.room) {
-      throw new Error();
+      throw new Error('You are not in room yet.');
     }
     this.room.resumeMessageQueue();
   }
@@ -389,7 +419,10 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get player() {
-    return this._room._player;
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room._player;
   }
 
   /**
@@ -398,6 +431,9 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get lobbyRoomList() {
+    if (!this._lobby) {
+      throw new Error('You are not in lobby yet.s');
+    }
     return this._lobby._lobbyRoomList;
   }
 
@@ -413,10 +449,10 @@ export default class Client extends EventEmitter {
 
   // 模拟断线
   _simulateDisconnection() {
-    if (this._room === null) {
-      throw new Error();
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    return this._room._simulateDisconnection();
+    return this.room._simulateDisconnection();
   }
 
   /**

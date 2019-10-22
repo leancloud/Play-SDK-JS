@@ -152,7 +152,8 @@ export default class Room {
           });
           this._gameConn.on(ROOM_KICKED_EVENT, async info => {
             this._fsm.kicked();
-            this._gameConn.close();
+            this._client._room = null;
+            await this._gameConn.close();
             if (info) {
               this._client.emit(Event.ROOM_KICKED, info);
             } else {
@@ -352,6 +353,7 @@ export default class Room {
    * 离开房间
    */
   async leave() {
+    this._client._room = null;
     try {
       await this._gameConn.leaveRoom();
     } catch (e) {

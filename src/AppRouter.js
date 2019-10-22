@@ -6,7 +6,7 @@ const US_SUFFIX = '-MdYXbMMI';
 
 export function getFallbackRouter(appId) {
   if (typeof appId !== 'string') {
-    throw new Error(`${appId} is not a string`);
+    throw new TypeError(`${appId} is not a string`);
   }
   const prefix = appId.slice(0, 8).toLowerCase();
   const suffix = appId.slice(-9);
