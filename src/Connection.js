@@ -37,6 +37,7 @@ export default class Connection extends EventEmitter {
     this._messageQueue = null;
     this._fsm = new StateMachine({
       init: 'init',
+      final: 'closed',
       transitions: [
         { name: 'connect', from: 'init', to: 'connecting' },
         { name: 'connected', from: 'connecting', to: 'connected' },

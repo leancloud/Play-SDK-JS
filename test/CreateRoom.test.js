@@ -12,6 +12,7 @@ describe('test create room', () => {
     await p.createRoom();
     await p.close();
   });
+
   it('test create simple room', async () => {
     const roomName = 'cr2_r';
     const p = newPlay('cr2');
@@ -22,6 +23,7 @@ describe('test create room', () => {
     expect(room.name).to.be.equal(roomName);
     await p.close();
   });
+
   it('test create custom room', async () => {
     const roomName = 'cr3_r';
     const p = newPlay('cr3');
@@ -52,6 +54,7 @@ describe('test create room', () => {
     expect(room.expectedUserIds).to.be.deep.equal(['world']);
     await p.close();
   });
+
   it('test create room failed', async () => {
     const roomName = 'cr4_r';
     const p0 = newPlay('cr4_0');
@@ -68,6 +71,7 @@ describe('test create room', () => {
       await p1.close();
     }
   });
+
   it('test isMaster or isLocal', async () => {
     const roomName = 'cr5_r';
     const p0 = newPlay('cr5_0');
@@ -103,6 +107,7 @@ describe('test create room', () => {
       }
     });
   });
+
   it('test catch state error when create room', done => {
     const p = newPlay('cr7');
     p.createRoom().catch(err => {

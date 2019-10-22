@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { newPlay } from './Utils';
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
@@ -10,7 +9,7 @@ describe('test connect', () => {
   it('test connect', async () => {
     const p = newPlay('tc0');
     await p.connect();
-    // await p.close();
+    await p.close();
   });
 
   // 目前未必能将之前登录的用户踢掉，先停止测试
@@ -36,14 +35,14 @@ describe('test connect', () => {
   //   }
   // });
 
-  // it('test disconnect from lobby', async () => {
-  //   let p = newPlay('tc2');
-  //   await p.connect();
-  //   await p.close();
-  //   p = newPlay('tc2');
-  //   await p.connect();
-  //   await p.close();
-  // });
+  it('test disconnect from lobby', async () => {
+    let p = newPlay('tc2');
+    await p.connect();
+    await p.close();
+    p = newPlay('tc2');
+    await p.connect();
+    await p.close();
+  });
 
   it('test disconnect from game', async () => {
     const p = newPlay('tc3');
