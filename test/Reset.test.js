@@ -1,4 +1,5 @@
 import { newPlay } from './Utils';
+import { debug } from '../src/Logger';
 
 describe('test close', () => {
   it('test close', async () => {
@@ -24,8 +25,12 @@ describe('test close', () => {
   it('test game connecting close', async () => {
     let p = newPlay('tr3_0');
     await p.connect();
-    p.createRoom();
-    await p.close();
+    try {
+      p.createRoom();
+      await p.close();
+    } catch (e) {
+      debug(JSON.stringify(e));
+    }
     p = newPlay('tr3_0');
     await p.connect();
     await p.createRoom();

@@ -33,16 +33,20 @@ export default class Room {
     this._client = client;
     this._fsm = new StateMachine({
       init: 'init',
+      final: 'closed',
       transitions: [
         { name: 'join', from: 'init', to: 'joining' },
         { name: 'joined', from: 'joining', to: 'game' },
         { name: 'joinFailed', from: 'joining', to: 'init' },
         { name: 'leave', from: 'game', to: 'leaving' },
-        { name: 'left', from: 'leaving', to: 'init' },
-        { name: 'kicked', from: 'game', to: 'leaving' },
+        { name: 'leaveFailed', from: 'leaving', to: 'game' },
         { name: 'disconnect', from: 'game', to: 'disconnected' },
         { name: 'rejoin', from: 'disconnected', to: 'joining' },
-        { name: 'close', from: 'game', to: 'init' },
+        {
+          name: 'close',
+          from: ['init', 'joining', 'game', 'leaving', 'disconnected'],
+          to: 'closed',
+        },
       ],
       methods: {
         onEnterGame: () => {
@@ -151,7 +155,7 @@ export default class Room {
             this._client.emit(Event.DISCONNECTED);
           });
           this._gameConn.on(ROOM_KICKED_EVENT, async info => {
-            this._fsm.kicked();
+            this._fsm.close();
             this._client._room = null;
             await this._gameConn.close();
             if (info) {
@@ -162,7 +166,6 @@ export default class Room {
           });
         },
         onExitGame: () => {
-          debug('------------------------------ onExitGame');
           this._gameConn.removeAllListeners();
         },
       },
@@ -354,23 +357,36 @@ export default class Room {
    */
   async leave() {
     this._client._room = null;
+    this._fsm.leave();
     try {
       await this._gameConn.leaveRoom();
     } catch (e) {
+      this._fsm.leaveFailed();
       throw e;
     }
     try {
       await this._gameConn.close();
     } catch (e) {
       error(JSON.stringify(e));
+    } finally {
+      this._fsm.close();
     }
   }
 
-  close() {
-    if (this._fsm.can('close')) {
-      return this._gameConn.close();
+  /**
+   * 关闭
+   */
+  async close() {
+    if (this._fsm.cannot('close')) {
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
     }
-    return Promise.resolve();
+    if (this._gameConn) {
+      await this._gameConn.close();
+    }
+    this._fsm.close();
   }
 
   /**
