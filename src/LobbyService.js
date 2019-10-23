@@ -180,7 +180,7 @@ export default class LobbyService {
           .send(data);
         debug(res.text);
         const { cid, addr } = JSON.parse(res.text);
-        resolve({ cid, addr });
+        resolve({ roomName: cid, addr });
       } catch (e) {
         reject(_tapError(e));
       }
