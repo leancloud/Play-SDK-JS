@@ -31,7 +31,7 @@ describe('test close', () => {
     } catch (e) {
       debug(JSON.stringify(e));
     }
-    p = newPlay('tr3_0');
+    p = newPlay('tr3_1');
     await p.connect();
     await p.createRoom();
     await p.close();

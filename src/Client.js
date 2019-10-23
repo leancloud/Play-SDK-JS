@@ -49,7 +49,6 @@ export default class Client extends EventEmitter {
     ) {
       throw new TypeError(`${opts.playServer} is not a string`);
     }
-    this._opts = opts;
     this._userId = opts.userId;
     this._appId = opts.appId;
     this._appKey = opts.appKey;
@@ -62,7 +61,6 @@ export default class Client extends EventEmitter {
     } else {
       this._gameVersion = DEFAULT_GAME_VERSION;
     }
-    this._opts.gameVersion = this._gameVersion;
     this._playServer = opts.playServer;
   }
 
@@ -70,7 +68,7 @@ export default class Client extends EventEmitter {
    * 建立连接
    */
   connect() {
-    this._lobbyService = new LobbyService(this._opts);
+    this._lobbyService = new LobbyService(this);
     return this._lobbyService.authorize();
   }
 

@@ -18,22 +18,22 @@ function _tapError(e) {
 }
 
 export default class LobbyService {
-  constructor(opts) {
-    this._opts = opts;
-    const { appId, appKey, userId, playServer, feature } = opts;
+  constructor(client) {
+    this._client = client;
+    const { _appId, _appKey, _userId, _playServer, _feature } = this._client;
 
-    this._gameRouter = new GameRouter({
-      appId,
-      appKey,
-      userId,
-      server: playServer,
-      feature,
-    });
+    this._gameRouter = new GameRouter(
+      _appId,
+      _appKey,
+      _userId,
+      _playServer,
+      _feature
+    );
 
     this._defaultHeaders = {
-      'X-LC-ID': appId,
-      'X-LC-KEY': appKey,
-      'X-LC-PLAY-USER-ID': userId,
+      'X-LC-ID': _appId,
+      'X-LC-KEY': _appKey,
+      'X-LC-PLAY-USER-ID': _userId,
       'Content-Type': 'application/json',
     };
   }
@@ -49,11 +49,12 @@ export default class LobbyService {
         const path = `/1/multiplayer/lobby/room`;
         const fullUrl = `${url}${path}`;
         debug(fullUrl);
-        const { gameVersion } = this._opts;
+        const { _gameVersion, _insecure } = this._client;
         const data = {
-          gameVersion,
+          gameVersion: _gameVersion,
           sdkVersion,
           protocolVersion,
+          useInsecureAddr: _insecure,
         };
         if (roomName) {
           data.cid = roomName;
@@ -78,12 +79,13 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = `/1/multiplayer/lobby/room/${roomName}`;
         const fullUrl = `${url}${path}`;
-        const { gameVersion } = this._opts;
+        const { _gameVersion, _insecure } = this._client;
         const data = {
           cid: roomName,
-          gameVersion,
+          gameVersion: _gameVersion,
           sdkVersion,
           protocolVersion,
+          useInsecureAddr: _insecure,
         };
         if (expectedUserIds) {
           data.expectMembers = expectedUserIds;
@@ -115,11 +117,12 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/match/room';
         const fullUrl = `${url}${path}`;
-        const { gameVersion } = this._opts;
+        const { _gameVersion, _insecure } = this._client;
         const data = {
-          gameVersion,
+          gameVersion: _gameVersion,
           sdkVersion,
           protocolVersion,
+          useInsecureAddr: _insecure,
         };
         if (matchProperties) {
           data.expectAttr = matchProperties;
@@ -156,12 +159,13 @@ export default class LobbyService {
         const { url, sessionToken } = await this._gameRouter.authorize();
         const path = '/1/multiplayer/lobby/match/room';
         const fullUrl = `${url}${path}`;
-        const { gameVersion } = this._opts;
+        const { _gameVersion, _insecure } = this._client;
         const data = {
-          gameVersion,
+          gameVersion: _gameVersion,
           sdkVersion,
           protocolVersion,
           piggybackPeerId,
+          useInsecureAddr: _insecure,
         };
         if (matchProperties) {
           data.expectAttr = matchProperties;

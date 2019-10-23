@@ -4,7 +4,7 @@ import isWeapp from './Utils';
 import AppRouter from './AppRouter';
 
 export default class GameRouter {
-  constructor({ appId, appKey, userId, server, feature }) {
+  constructor(appId, appKey, userId, server, feature) {
     this._appId = appId;
     this._appKey = appKey;
     this._userId = userId;
