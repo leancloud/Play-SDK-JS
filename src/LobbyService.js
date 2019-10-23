@@ -142,6 +142,15 @@ export default class LobbyService {
   }
 
   matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
+    if (typeof piggybackPeerId !== 'string') {
+      throw new TypeError(`${piggybackPeerId} is not a string`);
+    }
+    if (matchProperties !== null && typeof matchProperties !== 'object') {
+      throw new TypeError(`${matchProperties} is not an object`);
+    }
+    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
+      throw new TypeError(`${expectedUserIds} is not an array with string`);
+    }
     return new Promise(async (resolve, reject) => {
       try {
         const { url, sessionToken } = await this._gameRouter.authorize();

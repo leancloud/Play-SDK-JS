@@ -1,6 +1,5 @@
 import StateMachine from 'javascript-state-machine';
 
-import { debug, error } from './Logger';
 import { deserializeObject } from './CodecUtils';
 import { tap } from './Utils';
 
@@ -115,8 +114,6 @@ export default class Room {
           this._gameConn.on(
             PLAYER_PROPERTIES_CHANGED_EVENT,
             (actorId, changedProps) => {
-              debug(`actorId: ${actorId}`);
-              debug(`changedProps: ${JSON.stringify(changedProps)}`);
               const player = this.getPlayer(actorId);
               player._mergeProperties(changedProps);
               this._client.emit(Event.PLAYER_CUSTOM_PROPERTIES_CHANGED, {
@@ -155,9 +152,7 @@ export default class Room {
             this._client.emit(Event.DISCONNECTED);
           });
           this._gameConn.on(ROOM_KICKED_EVENT, async info => {
-            this._fsm.close();
-            this._client._room = null;
-            await this._gameConn.close();
+            await this.close();
             if (info) {
               this._client.emit(Event.ROOM_KICKED, info);
             } else {
@@ -205,8 +200,7 @@ export default class Room {
       this._init(room);
       this._fsm.joined();
     } catch (err) {
-      debug(err.message);
-      this._fsm.joinFailed();
+      await this.close();
       throw err;
     }
   }
@@ -223,7 +217,6 @@ export default class Room {
       const { _lobbyService } = this._client;
       const { cid, addr } = await _lobbyService.joinRoom({ roomName });
       const { sessionToken } = await _lobbyService.authorize();
-      // TODO 合并
       this._gameConn = new GameConnection();
       const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
@@ -237,7 +230,7 @@ export default class Room {
       this._init(room);
       this._fsm.joined();
     } catch (err) {
-      this._fsm.joinFailed();
+      await this.close();
       throw err;
     }
   }
@@ -257,7 +250,6 @@ export default class Room {
         expectedUserIds
       );
       const { sessionToken } = await _lobbyService.authorize();
-      // TODO 合并
       this._gameConn = new GameConnection();
       const { _appId, _gameVersion, _userId } = this._client;
       await this._gameConn.connect(
@@ -271,7 +263,7 @@ export default class Room {
       this._init(room);
       this._fsm.joined();
     } catch (err) {
-      this._fsm.joinFailed();
+      await this.close();
       throw err;
     }
   }
@@ -301,7 +293,7 @@ export default class Room {
       this._init(room);
       this._fsm.joined();
     } catch (err) {
-      this._fsm.joinFailed();
+      await this.close();
       throw err;
     }
   }
@@ -347,7 +339,7 @@ export default class Room {
       this._init(room);
       this._fsm.joined();
     } catch (err) {
-      this._fsm.joinFailed();
+      await this.close();
       throw err;
     }
   }
@@ -364,13 +356,7 @@ export default class Room {
       this._fsm.leaveFailed();
       throw e;
     }
-    try {
-      await this._gameConn.close();
-    } catch (e) {
-      error(JSON.stringify(e));
-    } finally {
-      this._fsm.close();
-    }
+    await this.close();
   }
 
   /**
@@ -386,6 +372,7 @@ export default class Room {
     if (this._gameConn) {
       await this._gameConn.close();
     }
+    this._client._room = null;
     this._fsm.close();
   }
 

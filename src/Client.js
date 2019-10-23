@@ -148,6 +148,9 @@ export default class Client extends EventEmitter {
       // 判断当前处于游戏中
       throw new Error('You are already in room.');
     }
+    if (this._lobby) {
+      this._lobby.close();
+    }
     this._room = new Room(this);
     await this.room.create(roomName, roomOptions, expectedUserIds);
     return this.room;
@@ -163,6 +166,9 @@ export default class Client extends EventEmitter {
       // 判断当前处于游戏中
       throw new Error('You are already in room.');
     }
+    if (this._lobby) {
+      this._lobby.close();
+    }
     this._room = new Room(this);
     await this.room.join(roomName, expectedUserIds);
     return this.room;
@@ -176,6 +182,9 @@ export default class Client extends EventEmitter {
     if (!this.room) {
       // 没有房间可以返回
       throw new Error('You are not in room yet.');
+    }
+    if (this._lobby) {
+      this._lobby.close();
     }
     await this.room.rejoin(roomName);
     return this.room;
@@ -204,6 +213,9 @@ export default class Client extends EventEmitter {
       // 判断当前处于游戏中
       throw new Error('You are already in room.');
     }
+    if (this._lobby) {
+      this._lobby.close();
+    }
     this._room = new Room(this);
     await this.room.joinOrCreate(roomName, roomOptions, expectedUserIds);
     return this.room;
@@ -222,6 +234,9 @@ export default class Client extends EventEmitter {
       // 判断当前处于游戏中
       throw new Error('You are already in room.');
     }
+    if (this._lobby) {
+      this._lobby.close();
+    }
     this._room = new Room(this);
     await this.room.joinRandom(matchProperties, expectedUserIds);
     return this.room;
@@ -236,15 +251,6 @@ export default class Client extends EventEmitter {
     piggybackPeerId,
     { matchProperties = null, expectedUserIds = null } = {}
   ) {
-    if (typeof piggybackPeerId !== 'string') {
-      throw new TypeError(`${piggybackPeerId} is not a string`);
-    }
-    if (matchProperties !== null && !(typeof matchProperties === 'object')) {
-      throw new TypeError(`${matchProperties} is not an object`);
-    }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
     return this._lobbyService.matchRandom(
       piggybackPeerId,
       matchProperties,

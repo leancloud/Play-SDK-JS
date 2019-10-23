@@ -77,6 +77,7 @@ export default class Connection extends EventEmitter {
           return;
         }
         this._connected();
+        this._fsm.connected();
       };
       this._ws.onclose = () => {
         this._fsm.connectFailed();
@@ -131,7 +132,6 @@ export default class Connection extends EventEmitter {
       this._fsm.disconnect();
       this.emit(DISCONNECT_EVENT);
     };
-    this._fsm.connected();
   }
 
   _handleCommand(cmd, op, body) {

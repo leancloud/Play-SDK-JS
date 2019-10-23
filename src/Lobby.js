@@ -19,7 +19,6 @@ export default class Lobby {
         { name: 'joined', from: 'joining', to: 'lobby' },
         { name: 'joinFailed', from: 'joining', to: 'init' },
         { name: 'leave', from: 'lobby', to: 'leaving' },
-        { name: 'left', from: 'leaving', to: 'init' },
         {
           name: 'close',
           from: ['init', 'joining', 'lobby', 'leaving'],
