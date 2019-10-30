@@ -80,10 +80,13 @@ export default class Client extends EventEmitter {
   }
 
   /**
-   * TODO 重新连接并自动加入房间
+   * 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
-    return this.rejoinRoom(this._room.name);
+    if (!this.room) {
+      throw new Error('You have no room.');
+    }
+    return this.rejoinRoom(this.room.name);
   }
 
   /**
@@ -93,8 +96,8 @@ export default class Client extends EventEmitter {
     if (this._lobby) {
       await this._lobby.close();
     }
-    if (this._room) {
-      await this._room.close();
+    if (this.room) {
+      await this.room.close();
     }
     this._clear();
   }
@@ -177,13 +180,10 @@ export default class Client extends EventEmitter {
    * @param {String} roomName 房间名称
    */
   async rejoinRoom(roomName) {
-    if (!this.room) {
-      // 没有房间可以返回
-      throw new Error('You are not in room yet.');
-    }
     if (this._lobby) {
       this._lobby.close();
     }
+    this._room = new Room(this);
     await this.room.rejoin(roomName);
     return this.room;
   }
