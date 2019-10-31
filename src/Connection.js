@@ -57,13 +57,15 @@ export default class Connection extends EventEmitter {
     this._fsm.connect();
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      const url = this._getFastOpenUrl(
+      const i = this._getMsgId();
+      let url = this._getFastOpenUrl(
         server,
         appId,
         gameVersion,
         userId,
         sessionToken
       );
+      url = `${url}&i=${i}`;
       debug(`url: ${url}`);
       this._ws = new WebSocket(url, 'protobuf.1');
       this._ws.onopen = () => {
@@ -90,7 +92,7 @@ export default class Connection extends EventEmitter {
         reject(err);
       };
       // 标记
-      this._requests[0] = {
+      this._requests[i] = {
         resolve,
         reject,
       };

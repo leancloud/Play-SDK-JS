@@ -40,7 +40,6 @@ export default class Room {
         { name: 'leave', from: 'game', to: 'leaving' },
         { name: 'leaveFailed', from: 'leaving', to: 'game' },
         { name: 'disconnect', from: 'game', to: 'disconnected' },
-        { name: 'rejoin', from: 'disconnected', to: 'joining' },
         {
           name: 'close',
           from: ['init', 'joining', 'game', 'leaving', 'disconnected'],
@@ -272,7 +271,7 @@ export default class Room {
     if (!(typeof roomName === 'string')) {
       throw new TypeError(`${roomName} is not a string`);
     }
-    this._fsm.rejoin();
+    this._fsm.join();
     try {
       const { _lobbyService } = this._client;
       const { cid, addr } = await _lobbyService.joinRoom({
