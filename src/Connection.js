@@ -1,92 +1,30 @@
 import EventEmitter from 'eventemitter3';
+import StateMachine from 'javascript-state-machine';
 
-import { adapters } from './PlayAdapter';
 import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
-import { sdkVersion, protocolVersion } from './Config';
-import { serializeObject } from './CodecUtils';
-
-// eslint-disable-next-line camelcase
-const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
-
-// eslint-disable-next-line camelcase
-const { BoolValue } = google_protobuf_wrappers_pb;
+import { adapters } from './PlayAdapter';
 
 const protocol = require('./proto/messages_pb');
 
-const {
-  Command,
-  Body,
-  RoomOptions,
-  SessionOpenRequest,
-  RequestMessage,
-  CommandType,
-  OpType,
-} = protocol;
+const { Command, Body, CommandType, OpType } = protocol;
+
+const CommandTypeSwap = Object.keys(CommandType).reduce(
+  (obj, key) => Object.assign({}, obj, { [CommandType[key]]: key }),
+  {}
+);
+const OpTypeSwap = Object.keys(OpType).reduce(
+  (obj, key) => Object.assign({}, obj, { [OpType[key]]: key }),
+  {}
+);
 
 const MAX_NO_PONG_TIMES = 2;
-const MAX_PLAYER_COUNT = 10;
 
 export const ERROR_EVENT = 'ERROR_EVENT';
 export const DISCONNECT_EVENT = 'DISCONNECT_EVENT';
 
-export function convertToRoomOptions(roomName, options, expectedUserIds) {
-  const roomOptions = new RoomOptions();
-  if (roomName) {
-    roomOptions.setCid(roomName);
-  }
-  if (options) {
-    const {
-      open,
-      visible,
-      emptyRoomTtl,
-      playerTtl,
-      maxPlayerCount,
-      customRoomProperties,
-      customRoomPropertyKeysForLobby,
-      flag,
-      pluginName,
-    } = options;
-    if (open !== undefined) {
-      const o = new BoolValue();
-      o.setValue(open);
-      roomOptions.setOpen(open);
-    }
-    if (visible !== undefined) {
-      const v = new BoolValue();
-      v.setValue(visible);
-      roomOptions.setVisible(v);
-    }
-    if (emptyRoomTtl > 0) {
-      roomOptions.setEmptyRoomTtl(emptyRoomTtl);
-    }
-    if (playerTtl > 0) {
-      roomOptions.setPlayerTtl(playerTtl);
-    }
-    if (maxPlayerCount > 0 && maxPlayerCount < MAX_PLAYER_COUNT) {
-      roomOptions.setMaxMembers(maxPlayerCount);
-    }
-    if (customRoomProperties) {
-      roomOptions.setAttr(serializeObject(customRoomProperties));
-    }
-    if (customRoomPropertyKeysForLobby) {
-      roomOptions.setLobbyAttrKeysList(customRoomPropertyKeysForLobby);
-    }
-    if (flag !== undefined) {
-      roomOptions.setFlag(flag);
-    }
-    if (pluginName) {
-      roomOptions.setPluginName(pluginName);
-    }
-  }
-  if (expectedUserIds) {
-    roomOptions.setExpectMembersList(expectedUserIds);
-  }
-  return roomOptions;
-}
-
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_handleNotification", "_handleErrorMsg", "_handleUnknownMsg", "_getFastOpenUrl"] }] */
 export default class Connection extends EventEmitter {
   constructor() {
     super();
@@ -97,25 +35,66 @@ export default class Connection extends EventEmitter {
     // 消息处理及缓存
     this._isMessageQueueRunning = false;
     this._messageQueue = null;
+    this._fsm = new StateMachine({
+      init: 'init',
+      final: 'closed',
+      transitions: [
+        { name: 'connect', from: 'init', to: 'connecting' },
+        { name: 'connected', from: 'connecting', to: 'connected' },
+        { name: 'connectFailed', from: 'connecting', to: 'init' },
+        { name: 'disconnect', from: 'connected', to: 'disconnected' },
+        {
+          name: 'close',
+          from: ['init', 'connecting', 'connected', 'disconnected'],
+          to: 'closed',
+        },
+      ],
+    });
   }
 
-  connect(server, userId) {
+  connect(appId, server, gameVersion, userId, sessionToken) {
     this._userId = userId;
+    this._fsm.connect();
     return new Promise((resolve, reject) => {
       const { WebSocket } = adapters;
-      this._ws = new WebSocket(server, 'protobuf.1');
+      const i = this._getMsgId();
+      let url = this._getFastOpenUrl(
+        server,
+        appId,
+        gameVersion,
+        userId,
+        sessionToken
+      );
+      url = `${url}&i=${i}`;
+      debug(`url: ${url}`);
+      this._ws = new WebSocket(url, 'protobuf.1');
       this._ws.onopen = () => {
         debug(`${this._userId} : ${this._flag} connection open`);
+        if (this._fsm.is('closed')) {
+          this._ws.onopen = null;
+          this._ws.onmessage = null;
+          this._ws.onclose = null;
+          this._ws.onerror = null;
+          this._ws.close();
+          return;
+        }
         this._connected();
-        resolve();
+        this._fsm.connected();
       };
       this._ws.onclose = () => {
+        this._fsm.connectFailed();
         reject(
           new PlayError(PlayErrorCode.OPEN_WEBSOCKET_ERROR, 'websocket closed')
         );
       };
       this._ws.onerror = err => {
+        this._fsm.connectFailed();
         reject(err);
+      };
+      // 标记
+      this._requests[i] = {
+        resolve,
+        reject,
       };
     });
   }
@@ -131,17 +110,17 @@ export default class Connection extends EventEmitter {
       const op = command.getOp();
       const body = Body.deserializeBinary(command.getBody());
       debug(
-        `${this._userId} : ${this._flag} <- ${cmd}/${op}: ${JSON.stringify(
-          body.toObject()
-        )}`
+        `${this._userId} : ${this._flag} <- ${CommandTypeSwap[cmd]}/${
+          OpTypeSwap[op]
+        }: ${JSON.stringify(body.toObject())}`
       );
       if (this._isMessageQueueRunning) {
         this._handleCommand(cmd, op, body);
       } else {
         debug(
-          `[DELAY] ${this._userId} : ${
-            this._flag
-          } <- ${cmd}/${op}: ${JSON.stringify(body.toObject())}`
+          `[DELAY] ${this._userId} : ${this._flag} <- ${CommandTypeSwap[cmd]}/${
+            OpTypeSwap[op]
+          }: ${JSON.stringify(body.toObject())}`
         );
         this._messageQueue.push({
           cmd,
@@ -152,20 +131,9 @@ export default class Connection extends EventEmitter {
     };
     this._ws.onclose = () => {
       this._stopKeppAlive();
+      this._fsm.disconnect();
       this.emit(DISCONNECT_EVENT);
     };
-  }
-
-  async openSession(appId, userId, gameVersion) {
-    const sessionOpen = new SessionOpenRequest();
-    sessionOpen.setAppId(appId);
-    sessionOpen.setPeerId(userId);
-    sessionOpen.setSdkVersion(sdkVersion);
-    sessionOpen.setGameVersion(gameVersion);
-    sessionOpen.setProtocolVersion(protocolVersion);
-    const req = new RequestMessage();
-    req.setSessionOpen(sessionOpen);
-    await this.sendRequest(CommandType.SESSION, OpType.OPEN, req);
   }
 
   _handleCommand(cmd, op, body) {
@@ -197,7 +165,7 @@ export default class Connection extends EventEmitter {
     }
   }
 
-  async sendRequest(cmd, op, req) {
+  sendRequest(cmd, op, req) {
     const msgId = this._getMsgId();
     req.setI(msgId);
     const body = new Body();
@@ -211,15 +179,15 @@ export default class Connection extends EventEmitter {
     });
   }
 
-  async sendCommand(cmd, op, body) {
+  sendCommand(cmd, op, body) {
     const command = new Command();
     command.setCmd(cmd);
     command.setOp(op);
     command.setBody(body.serializeBinary());
     debug(
-      `${this._userId} : ${this._flag} -> ${cmd}/${op}: ${JSON.stringify(
-        body.toObject()
-      )}`
+      `${this._userId} : ${this._flag} -> ${CommandTypeSwap[cmd]}/${
+        OpTypeSwap[op]
+      }: ${JSON.stringify(body.toObject())}`
     );
     this._ws.send(command.serializeBinary());
     // ping
@@ -227,6 +195,9 @@ export default class Connection extends EventEmitter {
   }
 
   close() {
+    if (this._fsm.cannot('close')) {
+      throw new Error(`no close: ${this._fsm.state}`);
+    }
     this._stopKeppAlive();
     return new Promise((resolve, reject) => {
       if (this._ws) {
@@ -247,8 +218,14 @@ export default class Connection extends EventEmitter {
     });
   }
 
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    throw new Error('must implement the method');
+  }
+
   _simulateDisconnection() {
-    this._ws.close();
+    this.close();
+    this.emit(DISCONNECT_EVENT);
+    return Promise.resolve();
   }
 
   _getMsgId() {

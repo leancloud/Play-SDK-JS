@@ -1,9 +1,7 @@
-import _ from 'lodash';
 import { newPlay } from './Utils';
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
-import LobbyRouter from '../src/LobbyRouter';
-import PlayRouter from '../src/PlayRouter';
+import Client from '../src/Client';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Connect');
@@ -14,29 +12,6 @@ describe('test connect', () => {
     await p.connect();
     await p.close();
   });
-
-  // 目前未必能将之前登录的用户踢掉，先停止测试
-  // it('test connect with same id', async () => {
-  //   const p0 = newPlay('tc1_0');
-  //   const p1 = newPlay('tc1_0');
-  //   let f0 = false;
-  //   let f1 = false;
-  //   await p0.connect();
-  //   p0.on(Event.ERROR, async ({ code, detail }) => {
-  //     debug(`${code}, ${detail}`);
-  //     if (code === 4102) {
-  //       f0 = true;
-  //       if (f0 && f1) {
-  //         await p1.close();
-  //       }
-  //     }
-  //   });
-  //   await p1.connect();
-  //   f1 = true;
-  //   if (f0 && f1) {
-  //     await p1.close();
-  //   }
-  // });
 
   it('test disconnect from lobby', async () => {
     let p = newPlay('tc2');
@@ -86,18 +61,19 @@ describe('test connect', () => {
   //   await p.close();
   // });
 
-  it('test ws', async () => {
-    const appId = 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va';
-    const playRouter = new PlayRouter(appId);
-    const router = new LobbyRouter({
-      appId,
-      insecure: true,
+  it('test no ssl', async () => {
+    const client = new Client({
+      appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
+      appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
+      userId: 'tc_6',
+      playServer: 'https://fqr8l8ll.play.lncldapi.com',
+      ssl: false,
     });
-    const lobbyRouterUrl = await playRouter.fetch();
-    const serverInfo = await router.fetch(lobbyRouterUrl);
-    const { primaryServer, secondaryServer } = serverInfo;
-    expect(_.startsWith(primaryServer, 'ws:')).to.be.equal(true);
-    expect(_.startsWith(secondaryServer, 'ws:')).to.be.equal(true);
+    await client.connect();
+    const { _lobbyService } = client;
+    const { addr } = await _lobbyService.createRoom();
+    debug(addr);
+    expect(addr.startsWith('ws:')).to.be.equal(true);
   });
 
   it('test connect repeatedly', done => {

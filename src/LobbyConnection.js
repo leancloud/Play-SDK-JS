@@ -1,17 +1,13 @@
-import Connection, { convertToRoomOptions } from './Connection';
+import Connection from './Connection';
 import LobbyRoom from './LobbyRoom';
-import { serializeObject, deserializeObject } from './CodecUtils';
+import { deserializeObject } from './CodecUtils';
+import { sdkVersion, protocolVersion } from './Config';
+import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 
 const messages = require('./proto/messages_pb');
 
-const {
-  CommandType,
-  OpType,
-  RequestMessage,
-  CreateRoomRequest,
-  JoinRoomRequest,
-  RoomOptions,
-} = messages;
+const { CommandType, OpType, RequestMessage } = messages;
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 
@@ -32,7 +28,7 @@ function convertToLobbyRoom(roomOptions) {
   return lobbyRoom;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_getFastOpenUrl"] }] */
 export default class LobbyConnection extends Connection {
   constructor() {
     super();
@@ -40,149 +36,29 @@ export default class LobbyConnection extends Connection {
   }
 
   async joinLobby() {
+    if (!this._fsm.is('connected')) {
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
+    }
     const req = new RequestMessage();
     await super.sendRequest(CommandType.LOBBY, OpType.ADD, req);
   }
 
   async leaveLobby() {
+    if (!this._fsm.is('connected')) {
+      throw new PlayError(
+        PlayErrorCode.STATE_ERROR,
+        `Error state: ${this._fsm.state}`
+      );
+    }
     const req = new RequestMessage();
     await super.sendRequest(CommandType.LOBBY, OpType.REMOVE, req);
   }
 
-  async createRoom(roomName, roomOptions, expectedUserIds) {
-    const req = new RequestMessage();
-    const roomOpts = convertToRoomOptions(
-      roomName,
-      roomOptions,
-      expectedUserIds
-    );
-    const createRoomReq = new CreateRoomRequest();
-    createRoomReq.setRoomOptions(roomOpts);
-    req.setCreateRoom(createRoomReq);
-    const { res } = await super.sendRequest(
-      CommandType.CONV,
-      OpType.START,
-      req
-    );
-    const roomRes = res.getCreateRoom();
-    return {
-      cid: roomRes.getRoomOptions().getCid(),
-      addr: roomRes.getAddr(),
-    };
-  }
-
-  async joinRoom(roomName, expectedUserIds) {
-    const req = new RequestMessage();
-    const roomOpts = new RoomOptions();
-    roomOpts.setCid(roomName);
-    if (expectedUserIds) {
-      roomOpts.setExpectMembers(expectedUserIds);
-    }
-    const joinRoomReq = new JoinRoomRequest();
-    joinRoomReq.setRoomOptions(roomOpts);
-    req.setJoinRoom(joinRoomReq);
-    const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
-    const roomRes = res.getJoinRoom();
-    return {
-      cid: roomRes.getRoomOptions().getCid(),
-      addr: roomRes.getAddr(),
-    };
-  }
-
-  async joinOrCreateRoom(roomName, roomOptions, expectedUserIds) {
-    const req = new RequestMessage();
-    const joinRoomReq = new JoinRoomRequest();
-    const roomOpts = convertToRoomOptions(
-      roomName,
-      roomOptions,
-      expectedUserIds
-    );
-    joinRoomReq.setRoomOptions(roomOpts);
-    joinRoomReq.setCreateOnNotFound(true);
-    req.setJoinRoom(joinRoomReq);
-    const { op, res } = await super.sendRequest(
-      CommandType.CONV,
-      OpType.ADD,
-      req
-    );
-    if (op === OpType.STARTED) {
-      const roomRes = res.getCreateRoom();
-      return {
-        op: 'create',
-        cid: roomRes.getRoomOptions().getCid(),
-        addr: roomRes.getAddr(),
-      };
-    }
-    const roomRes = res.getJoinRoom();
-    return {
-      op: 'join',
-      cid: roomRes.getRoomOptions().getCid(),
-      addr: roomRes.getAddr(),
-    };
-  }
-
-  async joinRandomRoom(matchProperties, expectedUserIds) {
-    const req = new RequestMessage();
-    const joinRoomReq = new JoinRoomRequest();
-    const roomOpts = new RoomOptions();
-    if (matchProperties) {
-      // 序列化
-      joinRoomReq.setExpectAttr(serializeObject(matchProperties));
-    }
-    if (expectedUserIds) {
-      roomOpts.setExpectMembersList(expectedUserIds);
-    }
-    joinRoomReq.setRoomOptions(roomOpts);
-    req.setJoinRoom(joinRoomReq);
-    const { res } = await this.sendRequest(
-      CommandType.CONV,
-      OpType.ADD_RANDOM,
-      req
-    );
-    const roomRes = res.getJoinRoom();
-    return {
-      cid: roomRes.getRoomOptions().getCid(),
-      addr: roomRes.getAddr(),
-    };
-  }
-
-  async rejoinRoom(roomName) {
-    const req = new RequestMessage();
-    const joinRoomReq = new JoinRoomRequest();
-    joinRoomReq.setRejoin(true);
-    const roomOpts = new RoomOptions();
-    roomOpts.setCid(roomName);
-    joinRoomReq.setRoomOptions(roomOpts);
-    req.setJoinRoom(joinRoomReq);
-    const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
-    const roomRes = res.getJoinRoom();
-    return {
-      cid: roomRes.getRoomOptions().getCid(),
-      addr: roomRes.getAddr(),
-    };
-  }
-
-  async matchRandom(piggybackPeerId, matchProperties, expectedUserIds) {
-    const req = new RequestMessage();
-    const joinRoomReq = new JoinRoomRequest();
-    joinRoomReq.setPiggybackPeerId(piggybackPeerId);
-    if (matchProperties) {
-      joinRoomReq.setExpectAttr(serializeObject(matchProperties));
-    }
-    if (expectedUserIds) {
-      const roomOpts = new RoomOptions();
-      roomOpts.setExpectMembersList(expectedUserIds);
-      joinRoomReq.setRoomOptions(roomOpts);
-    }
-    req.setJoinRoom(joinRoomReq);
-    const { res } = await super.sendRequest(
-      CommandType.CONV,
-      OpType.MATCH_RANDOM,
-      req
-    );
-    // return
-    const roomRes = res.getJoinRoom();
-    return convertToLobbyRoom(roomRes.getRoomOptions());
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    return `${server}/1/multiplayer/lobby/websocket?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
   }
 
   _getPingDuration() {

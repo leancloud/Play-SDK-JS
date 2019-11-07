@@ -7,6 +7,7 @@ import CreateRoomFlag from './CreateRoomFlag';
 import { setAdapters } from './PlayAdapter';
 import { LogLevel, setLogger } from './Logger';
 import PlayError from './PlayError';
+import PlayErrorCode from './PlayErrorCode';
 import { registerType, serializeObject, deserializeObject } from './CodecUtils';
 
 export {
@@ -20,6 +21,7 @@ export {
   LogLevel,
   setLogger,
   PlayError,
+  PlayErrorCode,
   registerType,
   serializeObject,
   deserializeObject,

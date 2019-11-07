@@ -1,12 +1,16 @@
+import { deserializeObject } from './CodecUtils';
+import { tap } from './Utils';
+
 /**
  * 玩家类
  */
 export default class Player {
-  constructor() {
+  constructor(room) {
     this._userId = '';
     this._actorId = 0;
     this._active = true;
     this._properties = {};
+    this._room = room;
   }
 
   /**
@@ -33,7 +37,7 @@ export default class Player {
    * @readonly
    */
   get isLocal() {
-    return this._actorId !== 0 && this._room._play.userId === this._userId;
+    return this._actorId !== 0 && this._room._client.userId === this._userId;
   }
 
   /**
@@ -60,12 +64,17 @@ export default class Player {
    * @param {Object} [opts] 设置选项
    * @param {Object} [opts.expectedValues] 期望属性，用于 CAS 检测
    */
-  async setCustomProperties(properties, { expectedValues = null } = {}) {
-    return this._room._play._setPlayerCustomProperties(
-      this._actorId,
-      properties,
-      expectedValues
-    );
+  setCustomProperties(properties, { expectedValues = null } = {}) {
+    return this._room
+      .setPlayerProperties(this.actorId, properties, expectedValues)
+      .then(
+        tap(res => {
+          const { actorId: aId, attr } = res;
+          if (aId === this.actorId && attr) {
+            this._mergeProperties(attr);
+          }
+        })
+      );
   }
 
   /**
@@ -75,6 +84,13 @@ export default class Player {
    */
   get customProperties() {
     return this._properties;
+  }
+
+  _init(playerData) {
+    this._userId = playerData.getPid();
+    this._actorId = playerData.getActorId();
+    this._active = !playerData.getInactive();
+    this._properties = deserializeObject(playerData.getAttr());
   }
 
   _mergeProperties(changedProperties) {

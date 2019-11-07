@@ -80,7 +80,7 @@ describe('test join room', () => {
   it('test rejoin room', async () => {
     const roomName = 'jr4_r';
     const p0 = newPlay('jr4_0');
-    let p1 = newPlay('jr4_1');
+    const p1 = newPlay('jr4_1');
     await p0.connect();
     const options = {
       playerTtl: 600,
@@ -95,9 +95,8 @@ describe('test join room', () => {
     });
     await p1.connect();
     await p1.joinRoom(roomName);
-    await p1.close();
-    p1 = newPlay('jr4_1');
-    await p1.connect();
+    await p1._simulateDisconnection();
+
     const room = await p1.rejoinRoom(roomName);
     expect(room.name).to.be.equal(roomName);
     await p0.close();
