@@ -5,6 +5,7 @@ function newPlay(userId) {
     appId: 'FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va',
     appKey: 'MJSm46Uu6LjF5eNmqfbuUmt6',
     userId,
+    playServer: 'https://fqr8l8ll.play.lncldapi.com',
   });
   return play;
 }

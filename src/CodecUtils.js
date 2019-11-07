@@ -45,8 +45,13 @@ function serialize(val) {
     genericVal.setType(GenericCollectionValue.Type.BOOL);
     genericVal.setBoolValue(val);
   } else if (typeof val === 'number') {
-    genericVal.setType(GenericCollectionValue.Type.DOUBLE);
-    genericVal.setDoubleValue(val);
+    if (parseInt(val, 10) === val) {
+      genericVal.setType(GenericCollectionValue.Type.INT);
+      genericVal.setIntValue(val);
+    } else {
+      genericVal.setType(GenericCollectionValue.Type.DOUBLE);
+      genericVal.setDoubleValue(val);
+    }
   } else if (typeof val === 'string') {
     genericVal.setType(GenericCollectionValue.Type.STRING);
     genericVal.setStringValue(val);

@@ -1,6 +1,6 @@
 import { newPlay } from './Utils';
 import Client from '../src/Client';
-import { getFallbackRouter } from '../src/PlayRouter';
+import { getFallbackRouter } from '../src/AppRouter';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Codec');

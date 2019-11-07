@@ -1,8 +1,7 @@
-import Connection, { convertToRoomOptions } from './Connection';
-import Room from './Room';
-import Player from './Player';
+import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
+import { sdkVersion, protocolVersion } from './Config';
 
 // eslint-disable-next-line camelcase
 const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
@@ -46,38 +45,64 @@ export const PLAYER_ONLINE_EVENT = 'PLAYER_ONLINE_EVENT';
 export const SEND_CUSTOM_EVENT = 'SEND_CUSTOM_EVENT';
 export const ROOM_KICKED_EVENT = 'ROOM_KICKED_EVENT';
 
-function convertToPlayer(member) {
-  const player = new Player();
-  player._userId = member.getPid();
-  player._actorId = member.getActorId();
-  player._active = !member.getInactive();
-  player._properties = deserializeObject(member.getAttr());
-  return player;
-}
+const MAX_PLAYER_COUNT = 10;
 
-function convertToRoom(roomOptions) {
-  const room = new Room();
-  room._name = roomOptions.getCid();
-  room._open = roomOptions.getOpen().getValue();
-  room._visible = roomOptions.getVisible().getValue();
-  room._maxPlayerCount = roomOptions.getMaxMembers();
-  room._masterActorId = roomOptions.getMasterActorId();
-  room._expectedUserIds = roomOptions.getExpectMembersList();
-  room._players = {};
-  roomOptions.getMembersList().forEach(member => {
-    const player = convertToPlayer(member);
-    room._players[player.actorId] = player;
-  });
-  // 属性
-  if (roomOptions.getAttr()) {
-    room._properties = deserializeObject(roomOptions.getAttr());
-  } else {
-    room._properties = {};
+export function convertToRoomOptions(roomName, options, expectedUserIds) {
+  const roomOptions = new RoomOptions();
+  if (roomName) {
+    roomOptions.setCid(roomName);
   }
-  return room;
+  if (options) {
+    const {
+      open,
+      visible,
+      emptyRoomTtl,
+      playerTtl,
+      maxPlayerCount,
+      customRoomProperties,
+      customRoomPropertyKeysForLobby,
+      flag,
+      pluginName,
+    } = options;
+    if (open !== undefined) {
+      const o = new BoolValue();
+      o.setValue(open);
+      roomOptions.setOpen(open);
+    }
+    if (visible !== undefined) {
+      const v = new BoolValue();
+      v.setValue(visible);
+      roomOptions.setVisible(v);
+    }
+    if (emptyRoomTtl > 0) {
+      roomOptions.setEmptyRoomTtl(emptyRoomTtl);
+    }
+    if (playerTtl > 0) {
+      roomOptions.setPlayerTtl(playerTtl);
+    }
+    if (maxPlayerCount > 0 && maxPlayerCount < MAX_PLAYER_COUNT) {
+      roomOptions.setMaxMembers(maxPlayerCount);
+    }
+    if (customRoomProperties) {
+      roomOptions.setAttr(serializeObject(customRoomProperties));
+    }
+    if (customRoomPropertyKeysForLobby) {
+      roomOptions.setLobbyAttrKeysList(customRoomPropertyKeysForLobby);
+    }
+    if (flag !== undefined) {
+      roomOptions.setFlag(flag);
+    }
+    if (pluginName) {
+      roomOptions.setPluginName(pluginName);
+    }
+  }
+  if (expectedUserIds) {
+    roomOptions.setExpectMembersList(expectedUserIds);
+  }
+  return roomOptions;
 }
 
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["_getPingDuration", "_getFastOpenUrl"] }] */
 export default class GameConnection extends Connection {
   constructor() {
     super();
@@ -95,7 +120,7 @@ export default class GameConnection extends Connection {
       OpType.START,
       req
     );
-    return convertToRoom(res.getCreateRoom().getRoomOptions());
+    return res.getCreateRoom().getRoomOptions();
   }
 
   async joinRoom(roomName, matchProperties, expectedUserIds) {
@@ -112,7 +137,7 @@ export default class GameConnection extends Connection {
     joinRoomReq.setRoomOptions(roomOpts);
     req.setJoinRoom(joinRoomReq);
     const { res } = await super.sendRequest(CommandType.CONV, OpType.ADD, req);
-    return convertToRoom(res.getJoinRoom().getRoomOptions());
+    return res.getJoinRoom().getRoomOptions();
   }
 
   async leaveRoom() {
@@ -207,7 +232,12 @@ export default class GameConnection extends Connection {
     const updateMasterClientReq = new UpdateMasterClientRequest();
     updateMasterClientReq.setMasterActorId(newMasterId);
     req.setUpdateMasterClient(updateMasterClientReq);
-    await super.sendRequest(CommandType.CONV, OpType.UPDATE_MASTER_CLIENT, req);
+    const { res } = await super.sendRequest(
+      CommandType.CONV,
+      OpType.UPDATE_MASTER_CLIENT,
+      req
+    );
+    return res.getUpdateMasterClient().getMasterActorId();
   }
 
   async kickPlayer(actorId, code, msg) {
@@ -292,6 +322,10 @@ export default class GameConnection extends Connection {
     return GAME_KEEPALIVE_DURATION;
   }
 
+  _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
+    return `${server}session?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
+  }
+
   _handleNotification(cmd, op, body) {
     switch (cmd) {
       case CommandType.CONV:
@@ -353,8 +387,7 @@ export default class GameConnection extends Connection {
   }
 
   _handlePlayerJoined(joinRoomNotification) {
-    const newPlayer = convertToPlayer(joinRoomNotification.getMember());
-    this.emit(PLAYER_JOINED_EVENT, newPlayer);
+    this.emit(PLAYER_JOINED_EVENT, joinRoomNotification.getMember());
   }
 
   _handlePlayerLeftMsg(leftRoomNotification) {

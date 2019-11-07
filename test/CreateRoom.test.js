@@ -48,7 +48,7 @@ describe('test create room', () => {
     expect(room.name).to.be.equal(roomName);
     expect(room.visible).to.be.equal(false);
     expect(room.maxPlayerCount).to.be.equal(2);
-    const props = p.room.customProperties;
+    const props = room.customProperties;
     expect(props.title).to.be.equal('room title');
     expect(props.level).to.be.equal(2);
     expect(room.expectedUserIds).to.be.deep.equal(['world']);
@@ -78,7 +78,6 @@ describe('test create room', () => {
     const p1 = newPlay('cr5_1');
     let f0 = false;
     let f1 = false;
-
     return new Promise(async resolve => {
       await p0.connect();
       await p0.createRoom({ roomName });

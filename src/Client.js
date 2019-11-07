@@ -1,9 +1,13 @@
 import EventEmitter from 'eventemitter3';
-import _ from 'lodash';
 
-import { debug } from './Logger';
-import PlayFSM from './PlayFSM';
 import ReceiverGroup from './ReceiverGroup';
+
+import LobbyService from './LobbyService';
+
+import Room from './Room';
+import Lobby from './Lobby';
+
+const DEFAULT_GAME_VERSION = '0.0.1';
 
 /**
  * 多人对战游戏服务的客户端
@@ -55,60 +59,70 @@ export default class Client extends EventEmitter {
     if (opts.gameVersion) {
       this._gameVersion = opts.gameVersion;
     } else {
-      this._gameVersion = '0.0.1';
+      this._gameVersion = DEFAULT_GAME_VERSION;
     }
     this._playServer = opts.playServer;
-    // fsm
-    this._fsm = new PlayFSM({
-      play: this,
-    });
   }
 
   /**
    * 建立连接
    */
-  async connect() {
-    return this._fsm.handle('connect');
+  connect() {
+    this._lobbyService = new LobbyService(this);
+    return this._lobbyService.authorize();
   }
 
   /**
    * 重新连接
    */
   async reconnect() {
-    return this._fsm.handle('reconnect');
+    return this._lobbyService.authorize();
   }
 
   /**
    * 重新连接并自动加入房间
    */
   async reconnectAndRejoin() {
-    if (_.isNull(this._lastRoomId)) {
-      throw new Error('There is not room name for rejoin');
+    if (!this.room) {
+      throw new Error('You have no room.');
     }
-    return this._fsm.handle('reconnectAndRejoin');
+    return this.rejoinRoom(this.room.name);
   }
 
   /**
    * 关闭
    */
   async close() {
-    debug('close');
+    if (this._lobby) {
+      await this._lobby.close();
+    }
+    if (this.room) {
+      await this.room.close();
+    }
     this._clear();
-    return this._fsm.handle('close');
   }
 
   /**
    * 加入大厅
    */
-  async joinLobby() {
-    return this._fsm.handle('joinLobby');
+  joinLobby() {
+    if (this._lobby) {
+      // 已经存在 Lobby 对象
+      throw new Error('You are already in lobby.');
+    }
+    this._lobby = new Lobby(this);
+    return this._lobby.join();
   }
 
   /**
    * 离开大厅
    */
-  async leaveLobby() {
-    return this._fsm.handle('leaveLobby');
+  leaveLobby() {
+    if (!this._lobby) {
+      // 不存在 Lobby 对象
+      throw new Error('You are not in lobby yet');
+    }
+    return this._lobby.leave();
   }
 
   /**
@@ -131,37 +145,34 @@ export default class Client extends EventEmitter {
     roomOptions = null,
     expectedUserIds = null,
   } = {}) {
-    if (roomName !== null && !(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
-    if (roomOptions !== null && !(roomOptions instanceof Object)) {
-      throw new TypeError(`${roomOptions} is not a Object`);
+    if (this._lobby) {
+      this._lobby.close();
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an Array with string`);
-    }
-    debug('create room');
-    return this._fsm.handle(
-      'createRoom',
-      roomName,
-      roomOptions,
-      expectedUserIds
-    );
+    this._room = new Room(this);
+    await this.room.create(roomName, roomOptions, expectedUserIds);
+    return this.room;
   }
 
   /**
-   * 加入房间
+   * 加入房间sss
    * @param {String} roomName 房间名称
    * @param {*} [expectedUserIds] 邀请好友 ID 数组，默认值为 null
    */
   async joinRoom(roomName, { expectedUserIds = null } = {}) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
+    if (this._lobby) {
+      this._lobby.close();
     }
-    return this._fsm.handle('joinRoom', roomName, expectedUserIds);
+    this._room = new Room(this);
+    await this.room.join(roomName, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -169,10 +180,12 @@ export default class Client extends EventEmitter {
    * @param {String} roomName 房间名称
    */
   async rejoinRoom(roomName) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this._lobby) {
+      this._lobby.close();
     }
-    return this._fsm.handle('rejoinRoom', roomName);
+    this._room = new Room(this);
+    await this.room.rejoin(roomName);
+    return this.room;
   }
 
   /**
@@ -194,21 +207,16 @@ export default class Client extends EventEmitter {
     roomName,
     { roomOptions = null, expectedUserIds = null } = {}
   ) {
-    if (!(typeof roomName === 'string')) {
-      throw new TypeError(`${roomName} is not a string`);
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
-    if (roomOptions !== null && !(roomOptions instanceof Object)) {
-      throw new TypeError(`${roomOptions} is not a Object`);
+    if (this._lobby) {
+      this._lobby.close();
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    return this._fsm.handle(
-      'joinOrCreateRoom',
-      roomName,
-      roomOptions,
-      expectedUserIds
-    );
+    this._room = new Room(this);
+    await this.room.joinOrCreate(roomName, roomOptions, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -220,13 +228,16 @@ export default class Client extends EventEmitter {
     matchProperties = null,
     expectedUserIds = null,
   } = {}) {
-    if (matchProperties !== null && !(typeof matchProperties === 'object')) {
-      throw new TypeError(`${matchProperties} is not an object`);
+    if (this.room) {
+      // 判断当前处于游戏中
+      throw new Error('You are already in room.');
     }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
+    if (this._lobby) {
+      this._lobby.close();
     }
-    return this._fsm.handle('joinRandomRoom', matchProperties, expectedUserIds);
+    this._room = new Room(this);
+    await this.room.joinRandom(matchProperties, expectedUserIds);
+    return this.room;
   }
 
   /**
@@ -234,21 +245,11 @@ export default class Client extends EventEmitter {
    * @param {Object} [opts] 随机加入房间选项
    * @param {Object} [opts.matchProperties] 匹配属性，默认值为 null
    */
-  async matchRandom(
+  matchRandom(
     piggybackPeerId,
     { matchProperties = null, expectedUserIds = null } = {}
   ) {
-    if (typeof piggybackPeerId !== 'string') {
-      throw new Error(`${piggybackPeerId} is not a string`);
-    }
-    if (matchProperties !== null && !(typeof matchProperties === 'object')) {
-      throw new TypeError(`${matchProperties} is not an object`);
-    }
-    if (expectedUserIds !== null && !Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array with string`);
-    }
-    return this._fsm.handle(
-      'matchRandom',
+    return this._lobbyService.matchRandom(
       piggybackPeerId,
       matchProperties,
       expectedUserIds
@@ -259,93 +260,87 @@ export default class Client extends EventEmitter {
    * 设置房间开启 / 关闭
    * @param {Boolean} open 是否开启
    */
-  async setRoomOpen(open) {
-    if (!(typeof open === 'boolean')) {
-      throw new TypeError(`${open} is not a boolean value`);
+  setRoomOpen(open) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    return this._fsm.handle('setRoomOpen', open);
+    return this.room.setOpen(open);
   }
 
   /**
    * 设置房间可见 / 不可见
    * @param {Boolean} visible 是否可见
    */
-  async setRoomVisible(visible) {
-    if (!(typeof visible === 'boolean')) {
-      throw new TypeError(`${visible} is not a boolean value`);
+  setRoomVisible(visible) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    return this._fsm.handle('setRoomVisible', visible);
+    return this.room.setVisible(visible);
   }
 
   /**
    * 设置房间允许的最大玩家数量
    * @param {*} count 数量
    */
-  async setRoomMaxPlayerCount(count) {
-    if (!(typeof count === 'number') || count < 1) {
-      throw new TypeError(`${count} is not a positive number`);
+  setRoomMaxPlayerCount(count) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    return this._fsm.handle('setRoomMaxPlayerCount', count);
+    return this.room.setMaxPlayerCount(count);
   }
 
   /**
    * 设置房间占位玩家 Id 列表
    * @param {*} expectedUserIds 玩家 Id 列表
    */
-  async setRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
+  setRoomExpectedUserIds(expectedUserIds) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    return this._fsm.handle('setRoomExpectedUserIds', expectedUserIds);
+    return this.room.setExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 清空房间占位玩家 Id 列表
    */
-  async clearRoomExpectedUserIds() {
-    return this._fsm.handle('clearRoomExpectedUserIds');
+  clearRoomExpectedUserIds() {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room.clearExpectedUserIds();
   }
 
   /**
    * 增加房间占位玩家 Id 列表
    * @param {*} expectedUserIds 增加的玩家 Id 列表
    */
-  async addRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
+  addRoomExpectedUserIds(expectedUserIds) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    return this._fsm.handle('addRoomExpectedUserIds', expectedUserIds);
+    return this.room.addExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 移除房间占位玩家 Id 列表
    * @param {*} expectedUserIds 移除的玩家 Id 列表
    */
-  async removeRoomExpectedUserIds(expectedUserIds) {
-    if (!Array.isArray(expectedUserIds)) {
-      throw new TypeError(`${expectedUserIds} is not an array`);
+  removeRoomExpectedUserIds(expectedUserIds) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    return this._fsm.handle('removeRoomExpectedUserIds', expectedUserIds);
+    return this.room.removeExpectedUserIds(expectedUserIds);
   }
 
   /**
    * 设置房主
    * @param {Number} newMasterId 新房主 ID
    */
-  async setMaster(newMasterId) {
-    if (!(typeof newMasterId === 'number')) {
-      throw new TypeError(`${newMasterId} is not a number`);
+  setMaster(newMasterId) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    return this._fsm.handle('setMaster', newMasterId);
+    return this.room.setMaster(newMasterId);
   }
 
   /**
@@ -356,43 +351,25 @@ export default class Client extends EventEmitter {
    * @param {ReceiverGroup} options.receiverGroup 接收组
    * @param {Array.<Number>} options.targetActorIds 接收者 Id。如果设置，将会覆盖 receiverGroup
    */
-  async sendEvent(
+  sendEvent(
     eventId,
     eventData = {},
     options = { receiverGroup: ReceiverGroup.All }
   ) {
-    if (!(typeof eventId === 'number')) {
-      throw new TypeError(`${eventId} is not a number`);
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    if (eventId < -128 || eventId > 127) {
-      throw new Error('eventId must be [-128, 127]');
-    }
-    if (!(typeof eventData === 'object')) {
-      throw new TypeError(`${eventData} is not an object`);
-    }
-    if (!(options instanceof Object)) {
-      throw new TypeError(`${options} is not a Object`);
-    }
-    if (
-      options.receiverGroup === undefined &&
-      options.targetActorIds === undefined
-    ) {
-      throw new TypeError(`receiverGroup and targetActorIds are null`);
-    }
-    if (this._room === null) {
-      throw new Error('room is null');
-    }
-    if (this._player === null) {
-      throw new Error('player is null');
-    }
-    return this._fsm.handle('sendEvent', eventId, eventData, options);
+    return this.room.sendEvent(eventId, eventData, options);
   }
 
   /**
    * 离开房间
    */
   async leaveRoom() {
-    return this._fsm.handle('leaveRoom');
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    await this.room.leave();
   }
 
   /**
@@ -402,17 +379,11 @@ export default class Client extends EventEmitter {
    * @param {Number} [opts.code] 编码
    * @param {String} [opts.msg] 附带信息
    */
-  async kickPlayer(actorId, { code = null, msg = null } = {}) {
-    if (!_.isNumber(actorId)) {
-      throw new TypeError(`${actorId} is not a number`);
+  kickPlayer(actorId, { code = null, msg = null } = {}) {
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
     }
-    if (!_.isNull(code) && !_.isNumber(code)) {
-      throw new TypeError(`${code} is not a number`);
-    }
-    if (!_.isNull(msg) && !_.isString(msg)) {
-      throw new TypeError(`${msg} is not a string`);
-    }
-    return this._fsm.handle('kickPlayer', actorId, code, msg);
+    return this.room.kickPlayer(actorId, code, msg);
   }
 
   /**
@@ -420,7 +391,10 @@ export default class Client extends EventEmitter {
    * @return {void}
    */
   pauseMessageQueue() {
-    this._fsm.handle('pauseMessageQueue');
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    this.room.pauseMessageQueue();
   }
 
   /**
@@ -428,7 +402,10 @@ export default class Client extends EventEmitter {
    * @return {void}
    */
   resumeMessageQueue() {
-    this._fsm.handle('resumeMessageQueue');
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    this.room.resumeMessageQueue();
   }
 
   /**
@@ -446,7 +423,10 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get player() {
-    return this._player;
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room._player;
   }
 
   /**
@@ -455,41 +435,10 @@ export default class Client extends EventEmitter {
    * @readonly
    */
   get lobbyRoomList() {
-    return this._lobbyRoomList;
-  }
-
-  // 设置房间属性
-  _setRoomCustomProperties(properties, expectedValues) {
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
+    if (!this._lobby) {
+      throw new Error('You are not in lobby yet.s');
     }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    return this._fsm.handle(
-      'setRoomCustomProperties',
-      properties,
-      expectedValues
-    );
-  }
-
-  // 设置玩家属性
-  _setPlayerCustomProperties(actorId, properties, expectedValues) {
-    if (!(typeof actorId === 'number')) {
-      throw new TypeError(`${actorId} is not a number`);
-    }
-    if (!(typeof properties === 'object')) {
-      throw new TypeError(`${properties} is not an object`);
-    }
-    if (expectedValues && !(typeof expectedValues === 'object')) {
-      throw new TypeError(`${expectedValues} is not an object`);
-    }
-    return this._fsm.handle(
-      'setPlayerCustomProperties',
-      actorId,
-      properties,
-      expectedValues
-    );
+    return this._lobby._lobbyRoomList;
   }
 
   // 清理内存数据
@@ -498,13 +447,16 @@ export default class Client extends EventEmitter {
     this._lobbyRoomList = null;
     this._masterServer = null;
     this._gameServer = null;
+    this._lobby = null;
     this._room = null;
-    this._player = null;
   }
 
   // 模拟断线
   _simulateDisconnection() {
-    this._fsm.handle('_simulateDisconnection');
+    if (!this.room) {
+      throw new Error('You are not in room yet.');
+    }
+    return this.room._simulateDisconnection();
   }
 
   /**

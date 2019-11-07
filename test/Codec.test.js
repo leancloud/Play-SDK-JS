@@ -6,7 +6,7 @@ import {
   deserializeObject,
 } from '../src/CodecUtils';
 
-import { convertToRoomOptions } from '../src/Connection';
+import { convertToRoomOptions } from '../src/GameConnection';
 
 const { expect } = require('chai');
 const debug = require('debug')('Test:Codec');
