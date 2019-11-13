@@ -4,10 +4,9 @@ import { deserializeObject } from './CodecUtils';
 import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
+import protocol from './proto/messages_pb';
 
-const messages = require('./proto/messages_pb');
-
-const { CommandType, OpType, RequestMessage } = messages;
+const { CommandType, OpType, RequestMessage } = protocol;
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 

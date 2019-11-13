@@ -5,8 +5,7 @@ import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import { adapters } from './PlayAdapter';
-
-const protocol = require('./proto/messages_pb');
+import protocol from './proto/messages_pb';
 
 const { Command, Body, CommandType, OpType } = protocol;
 
@@ -68,6 +67,7 @@ export default class Connection extends EventEmitter {
       url = `${url}&i=${i}`;
       debug(`url: ${url}`);
       this._ws = new WebSocket(url, 'protobuf.1');
+      this._ws.binaryType = 'arraybuffer';
       this._ws.onopen = () => {
         debug(`${this._userId} : ${this._flag} connection open`);
         if (this._fsm.is('closed')) {

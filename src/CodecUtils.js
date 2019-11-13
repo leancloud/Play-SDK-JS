@@ -1,6 +1,13 @@
-const genericCollection = require('./proto/generic_collection_pb');
+import genericCollection from './proto/generic_collection_pb';
 
 const { GenericCollectionValue, GenericCollection } = genericCollection;
+
+// import {
+//   GenericCollectionValue,
+//   GenericCollection,
+// } from './proto/generic_collection_pb';
+
+// import './proto/generic_collection_pb';
 
 const _typeNameMap = {};
 const _typeIdMap = {};
