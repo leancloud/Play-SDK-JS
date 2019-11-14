@@ -1,4 +1,4 @@
-import { newPlay } from './Utils';
+import { newPlay, newNorthChinaPlay } from './Utils';
 import Event from '../src/Event';
 import ReceiverGroup from '../src/ReceiverGroup';
 import Client from '../src/Client';
@@ -125,5 +125,11 @@ describe('test connect', () => {
       debug(client._userId);
       await p.close();
     });
+  });
+
+  it('test north china connect', async () => {
+    const p = newNorthChinaPlay('tc10');
+    await p.connect();
+    await p.close();
   });
 });

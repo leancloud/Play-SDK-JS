@@ -1,17 +1,11 @@
+import pb from 'google-protobuf/google/protobuf/wrappers_pb';
 import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
 import { sdkVersion, protocolVersion } from './Config';
+import protocol from './proto/messages_pb';
 
-// eslint-disable-next-line camelcase
-const google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
-// eslint-disable-next-line camelcase
-const { BoolValue } = google_protobuf_wrappers_pb;
-
-const GAME_KEEPALIVE_DURATION = 7000;
-
-const messages = require('./proto/messages_pb');
-
+const { BoolValue } = pb;
 const {
   CommandType,
   OpType,
@@ -27,7 +21,9 @@ const {
   DirectCommand,
   Body,
   UpdatePropertyRequest,
-} = messages;
+} = protocol;
+
+const GAME_KEEPALIVE_DURATION = 7000;
 
 // 游戏连接抛出的事件
 export const PLAYER_JOINED_EVENT = 'PLAYER_JOINED_EVENT';

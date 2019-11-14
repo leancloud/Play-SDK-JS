@@ -1,4 +1,4 @@
-import { newPlay } from './Utils';
+import { newPlay, newNorthChinaPlay } from './Utils';
 import { error } from '../src/Logger';
 import Event from '../src/Event';
 
@@ -114,5 +114,12 @@ describe('test create room', () => {
       debug(err);
       done();
     });
+  });
+
+  it('test create room in north China', async () => {
+    const p = newNorthChinaPlay('cr8');
+    await p.connect();
+    await p.createRoom();
+    await p.close();
   });
 });
