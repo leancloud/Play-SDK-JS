@@ -5,9 +5,14 @@ import { debug, error } from './Logger';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 import { adapters } from './PlayAdapter';
-import protocol from './proto/messages_pb';
+import proto from './proto/messages_pb';
 
-const { Command, Body, CommandType, OpType } = protocol;
+const {
+  Command,
+  Body,
+  CommandType,
+  OpType,
+} = proto.game_protobuf_messages.proto.messages;
 
 const CommandTypeSwap = Object.keys(CommandType).reduce(
   (obj, key) => Object.assign({}, obj, { [CommandType[key]]: key }),
@@ -189,7 +194,7 @@ export default class Connection extends EventEmitter {
         OpTypeSwap[op]
       }: ${JSON.stringify(body.toObject())}`
     );
-    this._ws.send(command.serializeBinary());
+    this._ws.send(command.serializeBinary().buffer);
     // ping
     this._ping();
   }

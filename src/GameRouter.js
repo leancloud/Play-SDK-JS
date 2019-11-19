@@ -34,9 +34,9 @@ export default class GameRouter {
         const gameRouterUrl = await this._appRouter.fetch();
         debug(gameRouterUrl);
         const data = {};
-        if (isWeapp) {
-          data.feature = 'wechat';
-        }
+        // if (isWeapp) {
+        //   data.feature = 'wechat';
+        // }
         if (this._feature) {
           data.feature = this._feature;
         }

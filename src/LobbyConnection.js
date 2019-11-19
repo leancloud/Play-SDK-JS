@@ -4,9 +4,13 @@ import { deserializeObject } from './CodecUtils';
 import { sdkVersion, protocolVersion } from './Config';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
-import protocol from './proto/messages_pb';
+import proto from './proto/messages_pb';
 
-const { CommandType, OpType, RequestMessage } = protocol;
+const {
+  CommandType,
+  OpType,
+  RequestMessage,
+} = proto.game_protobuf_messages.proto.messages;
 
 const LOBBY_KEEPALIVE_DURATION = 120000;
 
