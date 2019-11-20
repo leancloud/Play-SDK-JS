@@ -1,4 +1,3 @@
-// import proto from 'google-protobuf/google/protobuf/wrappers_pb';
 import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
@@ -158,7 +157,7 @@ export default class GameConnection extends Connection {
     const sysProps = new RoomSystemProperty();
     const o = new BoolValue();
     o.setValue(open);
-    sysProps.setOpen(open);
+    sysProps.setOpen(o);
     const res = await this.setRoomSystemProps(sysProps);
     return res.getOpen().getValue();
   }
