@@ -21,7 +21,7 @@ const BABEL_CONFIG = {
 // 修改 google-protobuf
 const path = './node_modules/google-protobuf/google/protobuf/wrappers_pb.js';
 const insertCode = '// 适配微信小程序\nvar { proto } = global;';
-const flag = 'goog.exportSymbol(';
+const pattern = /goog.exportSymbol\('(.+)', null, global\)/;
 const code = readFileSync(path, 'utf8');
 if (!code.includes(insertCode)) {
   const lines = code.split('\n');
@@ -29,7 +29,7 @@ if (!code.includes(insertCode)) {
   let end = -1;
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
-    if (line.startsWith(flag)) {
+    if (line.match(pattern)) {
       if (start < 0) {
         start = i;
       }
@@ -38,9 +38,11 @@ if (!code.includes(insertCode)) {
       break;
     }
   }
-  insertLine(path)
-    .contentSync(insertCode)
-    .at(end);
+  if (end > -1) {
+    insertLine(path)
+      .contentSync(insertCode)
+      .at(end);
+  }
 }
 
 export default [
