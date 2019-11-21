@@ -4,7 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 import minify from 'rollup-plugin-babel-minify';
-import insertLine from 'insert-line';
+import modify from 'rollup-plugin-modify';
 
 const babelrc = JSON.parse(readFileSync('./.babelrc', 'utf8'));
 
@@ -18,32 +18,10 @@ const BABEL_CONFIG = {
   exclude: 'node_modules/**',
 };
 
-// 修改 google-protobuf
-const path = './node_modules/google-protobuf/google/protobuf/wrappers_pb.js';
-const insertCode = '// 适配微信小程序\nvar { proto } = global;';
-const pattern = /goog.exportSymbol\('(.+)', null, global\)/;
-const code = readFileSync(path, 'utf8');
-if (!code.includes(insertCode)) {
-  const lines = code.split('\n');
-  let start = -1;
-  let end = -1;
-  for (let i = 0; i < lines.length; i += 1) {
-    const line = lines[i];
-    if (line.match(pattern)) {
-      if (start < 0) {
-        start = i;
-      }
-    } else if (start > -1) {
-      end = i + 1;
-      break;
-    }
-  }
-  if (end > -1) {
-    insertLine(path)
-      .contentSync(insertCode)
-      .at(end);
-  }
-}
+const GOOGLE_PROTOBUF_WRAPPER_FIND =
+  "goog.exportSymbol('proto.google.protobuf.UInt64Value', null, global);";
+const GOOGLE_PROTOBUF_WRAPPER_REPLACE =
+  "goog.exportSymbol('proto.google.protobuf.UInt64Value', null, global);\nvar { proto } = global;";
 
 export default [
   {
@@ -59,6 +37,10 @@ export default [
       babel(BABEL_CONFIG),
       resolve({
         browser: true,
+      }),
+      modify({
+        find: GOOGLE_PROTOBUF_WRAPPER_FIND,
+        replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
       }),
       commonjs(),
     ],
