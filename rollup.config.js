@@ -4,6 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 import minify from 'rollup-plugin-babel-minify';
+import modify from 'rollup-plugin-modify';
 
 const babelrc = JSON.parse(readFileSync('./.babelrc', 'utf8'));
 
@@ -16,6 +17,11 @@ const BABEL_CONFIG = {
   runtimeHelpers: true,
   exclude: 'node_modules/**',
 };
+
+const GOOGLE_PROTOBUF_WRAPPER_FIND =
+  "goog.exportSymbol('proto.google.protobuf.UInt64Value', null, global);";
+const GOOGLE_PROTOBUF_WRAPPER_REPLACE =
+  "goog.exportSymbol('proto.google.protobuf.UInt64Value', null, global);\nvar { proto } = global;";
 
 export default [
   {
@@ -31,6 +37,10 @@ export default [
       babel(BABEL_CONFIG),
       resolve({
         browser: true,
+      }),
+      modify({
+        find: GOOGLE_PROTOBUF_WRAPPER_FIND,
+        replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
       }),
       commonjs(),
     ],

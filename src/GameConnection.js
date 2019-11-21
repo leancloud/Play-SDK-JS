@@ -1,11 +1,10 @@
-import pb from 'google-protobuf/google/protobuf/wrappers_pb';
 import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
 import { sdkVersion, protocolVersion } from './Config';
-import protocol from './proto/messages_pb';
+import proto from './proto/messages_pb';
 
-const { BoolValue } = pb;
+const { BoolValue } = proto;
 const {
   CommandType,
   OpType,
@@ -21,7 +20,7 @@ const {
   DirectCommand,
   Body,
   UpdatePropertyRequest,
-} = protocol;
+} = proto.game_protobuf_messages.proto.messages;
 
 const GAME_KEEPALIVE_DURATION = 7000;
 
@@ -63,7 +62,7 @@ export function convertToRoomOptions(roomName, options, expectedUserIds) {
     if (open !== undefined) {
       const o = new BoolValue();
       o.setValue(open);
-      roomOptions.setOpen(open);
+      roomOptions.setOpen(o);
     }
     if (visible !== undefined) {
       const v = new BoolValue();

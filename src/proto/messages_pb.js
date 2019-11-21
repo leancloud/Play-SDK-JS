@@ -1,4 +1,5 @@
 /* eslint-disable */
+// source: proto/messages.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -10,214 +11,218 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var proto = {};
 
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 goog.object.extend(proto, google_protobuf_wrappers_pb);
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.AckCommand',
+  'game_protobuf_messages.proto.messages.AckCommand',
   null,
-  global
+  proto
+);
+goog.exportSymbol('game_protobuf_messages.proto.messages.AppInfo', null, proto);
+goog.exportSymbol(
+  'game_protobuf_messages.proto.messages.AppStatistic',
+  null,
+  proto
+);
+goog.exportSymbol('game_protobuf_messages.proto.messages.Body', null, proto);
+goog.exportSymbol(
+  'game_protobuf_messages.proto.messages.Body.BodyCase',
+  null,
+  proto
+);
+goog.exportSymbol('game_protobuf_messages.proto.messages.Command', null, proto);
+goog.exportSymbol(
+  'game_protobuf_messages.proto.messages.CommandType',
+  null,
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.AppInfo',
+  'game_protobuf_messages.proto.messages.CreateRoomRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.AppStatistic',
+  'game_protobuf_messages.proto.messages.CreateRoomResponse',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.Body',
+  'game_protobuf_messages.proto.messages.DirectCommand',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.Command',
+  'game_protobuf_messages.proto.messages.ErrorCommand',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.CommandType',
+  'game_protobuf_messages.proto.messages.ErrorInfo',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.CreateRoomRequest',
+  'game_protobuf_messages.proto.messages.EventsCommand',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.CreateRoomResponse',
+  'game_protobuf_messages.proto.messages.EventsRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.DirectCommand',
+  'game_protobuf_messages.proto.messages.IntValue',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.ErrorCommand',
+  'game_protobuf_messages.proto.messages.InterestGroups',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.ErrorInfo',
+  'game_protobuf_messages.proto.messages.JoinLobbyRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.EventsRequest',
+  'game_protobuf_messages.proto.messages.JoinRoomNotification',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.EventsResponse',
+  'game_protobuf_messages.proto.messages.JoinRoomRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.IntValue',
+  'game_protobuf_messages.proto.messages.JoinRoomResponse',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.InterestGroups',
+  'game_protobuf_messages.proto.messages.KickMemberRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.JoinLobbyRequest',
+  'game_protobuf_messages.proto.messages.KickMemberResponse',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.JoinRoomNotification',
+  'game_protobuf_messages.proto.messages.LeftRoomNotification',
   null,
-  global
+  proto
+);
+goog.exportSymbol('game_protobuf_messages.proto.messages.OpType', null, proto);
+goog.exportSymbol(
+  'game_protobuf_messages.proto.messages.RequestMessage',
+  null,
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.JoinRoomRequest',
+  'game_protobuf_messages.proto.messages.RequestMessage.RequestCase',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.JoinRoomResponse',
+  'game_protobuf_messages.proto.messages.ResponseMessage',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.KickMemberRequest',
+  'game_protobuf_messages.proto.messages.ResponseMessage.ResponseCase',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.KickMemberResponse',
+  'game_protobuf_messages.proto.messages.RoomListCommand',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.LeftRoomNotification',
+  'game_protobuf_messages.proto.messages.RoomMember',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.OpType',
+  'game_protobuf_messages.proto.messages.RoomNotification',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RequestMessage',
+  'game_protobuf_messages.proto.messages.RoomNotification.NotificationCase',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.ResponseMessage',
+  'game_protobuf_messages.proto.messages.RoomOptions',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RoomListCommand',
+  'game_protobuf_messages.proto.messages.RoomSystemProperty',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RoomMember',
+  'game_protobuf_messages.proto.messages.SessionOpenRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RoomNotification',
+  'game_protobuf_messages.proto.messages.StatisticCommand',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RoomOptions',
+  'game_protobuf_messages.proto.messages.UpdateMasterClientNotification',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.RoomSystemProperty',
+  'game_protobuf_messages.proto.messages.UpdateMasterClientRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.SessionOpenRequest',
+  'game_protobuf_messages.proto.messages.UpdateMasterClientResponse',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.StatisticCommand',
+  'game_protobuf_messages.proto.messages.UpdatePropertyNotification',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification',
+  'game_protobuf_messages.proto.messages.UpdatePropertyRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest',
+  'game_protobuf_messages.proto.messages.UpdatePropertyResponse',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse',
+  'game_protobuf_messages.proto.messages.UpdateSysPropertyNotification',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification',
+  'game_protobuf_messages.proto.messages.UpdateSysPropertyRequest',
   null,
-  global
+  proto
 );
 goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest',
+  'game_protobuf_messages.proto.messages.UpdateSysPropertyResponse',
   null,
-  global
-);
-goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse',
-  null,
-  global
-);
-goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification',
-  null,
-  global
-);
-goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest',
-  null,
-  global
-);
-goog.exportSymbol(
-  'proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse',
-  null,
-  global
+  proto
 );
 /**
  * Generated by JsPbCodeGenerator.
@@ -990,20 +995,18 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse = function(
-  opt_data
-) {
+proto.game_protobuf_messages.proto.messages.EventsCommand = function(opt_data) {
   jspb.Message.initialize(
     this,
     opt_data,
     0,
     -1,
-    proto.game_protobuf_messages.proto.messages.EventsResponse.repeatedFields_,
+    proto.game_protobuf_messages.proto.messages.EventsCommand.repeatedFields_,
     null
   );
 };
 goog.inherits(
-  proto.game_protobuf_messages.proto.messages.EventsResponse,
+  proto.game_protobuf_messages.proto.messages.EventsCommand,
   jspb.Message
 );
 if (goog.DEBUG && !COMPILED) {
@@ -1011,8 +1014,8 @@ if (goog.DEBUG && !COMPILED) {
    * @public
    * @override
    */
-  proto.game_protobuf_messages.proto.messages.EventsResponse.displayName =
-    'proto.game_protobuf_messages.proto.messages.EventsResponse';
+  proto.game_protobuf_messages.proto.messages.EventsCommand.displayName =
+    'proto.game_protobuf_messages.proto.messages.EventsCommand';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1311,13 +1314,15 @@ if (goog.DEBUG && !COMPILED) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.IntValue.prototype.toObject = function(
@@ -1331,8 +1336,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.IntValue} msg The msg instance to transform.
    * @return {!Object}
@@ -1438,22 +1443,27 @@ proto.game_protobuf_messages.proto.messages.IntValue.prototype.getVal = function
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.IntValue} returns this
+ */
 proto.game_protobuf_messages.proto.messages.IntValue.prototype.setVal = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.toObject = function(
@@ -1467,8 +1477,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} msg The msg instance to transform.
    * @return {!Object}
@@ -1625,18 +1635,22 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getOpen
   ));
 };
 
-/** @param {?proto.google.protobuf.BoolValue|undefined} value */
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setOpen = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.clearOpen = function() {
-  this.setOpen(undefined);
+  return this.setOpen(undefined);
 };
 
 /**
@@ -1659,18 +1673,22 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getVisi
   ));
 };
 
-/** @param {?proto.google.protobuf.BoolValue|undefined} value */
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setVisible = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.clearVisible = function() {
-  this.setVisible(undefined);
+  return this.setVisible(undefined);
 };
 
 /**
@@ -1689,11 +1707,14 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getExpe
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setExpectMembers = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 /**
@@ -1704,22 +1725,27 @@ proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.getMaxM
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomSystemProperty} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomSystemProperty.prototype.setMaxMembers = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RoomMember.prototype.toObject = function(
@@ -1733,8 +1759,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RoomMember} msg The msg instance to transform.
    * @return {!Object}
@@ -1749,7 +1775,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         pid: jspb.Message.getFieldWithDefault(msg, 1, ''),
         actorId: jspb.Message.getFieldWithDefault(msg, 2, 0),
         attr: msg.getAttr_asB64(),
-        inactive: jspb.Message.getFieldWithDefault(msg, 4, false),
+        inactive: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
       };
 
     if (includeInstance) {
@@ -1867,11 +1893,14 @@ proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getPid = functi
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomMember} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setPid = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 /**
@@ -1882,11 +1911,14 @@ proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getActorId = fu
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomMember} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 /**
@@ -1921,43 +1953,49 @@ proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getAttr_asU8 = 
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getAttr()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomMember} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 /**
  * optional bool inactive = 4;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.game_protobuf_messages.proto.messages.RoomMember.prototype.getInactive = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
     this,
     4,
     false
   ));
 };
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomMember} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomMember.prototype.setInactive = function(
   value
 ) {
-  jspb.Message.setProto3BooleanField(this, 4, value);
+  return jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.AppInfo.prototype.toObject = function(
@@ -1971,8 +2009,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.AppInfo} msg The msg instance to transform.
    * @return {!Object}
@@ -2087,11 +2125,14 @@ proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppCode = funct
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppInfo} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppCode = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -2102,22 +2143,27 @@ proto.game_protobuf_messages.proto.messages.AppInfo.prototype.getAppMsg = functi
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppInfo} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppInfo.prototype.setAppMsg = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.toObject = function(
@@ -2131,8 +2177,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.ErrorInfo} msg The msg instance to transform.
    * @return {!Object}
@@ -2271,11 +2317,14 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getReasonCode = 
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorInfo} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setReasonCode = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -2286,11 +2335,14 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getDetail = func
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorInfo} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setDetail = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 /**
@@ -2305,18 +2357,22 @@ proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.getAppInfo = fun
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorInfo} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.setAppInfo = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorInfo} returns this
  */
 proto.game_protobuf_messages.proto.messages.ErrorInfo.prototype.clearAppInfo = function() {
-  this.setAppInfo(undefined);
+  return this.setAppInfo(undefined);
 };
 
 /**
@@ -2340,13 +2396,15 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.repeatedFields_ = [
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.toObject = function(
@@ -2360,8 +2418,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RoomOptions} msg The msg instance to transform.
    * @return {!Object}
@@ -2386,8 +2444,10 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         flag: jspb.Message.getFieldWithDefault(msg, 7, 0),
         pluginName: jspb.Message.getFieldWithDefault(msg, 8, ''),
         attr: msg.getAttr_asB64(),
-        expectMembersList: jspb.Message.getRepeatedField(msg, 10),
-        lobbyAttrKeysList: jspb.Message.getRepeatedField(msg, 11),
+        expectMembersList:
+          (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+        lobbyAttrKeysList:
+          (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
         membersList: jspb.Message.toObjectList(
           msg.getMembersList(),
           proto.game_protobuf_messages.proto.messages.RoomMember.toObject,
@@ -2618,11 +2678,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getCid = funct
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setCid = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 /**
@@ -2637,18 +2700,22 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getVisible = f
   ));
 };
 
-/** @param {?proto.google.protobuf.BoolValue|undefined} value */
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setVisible = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearVisible = function() {
-  this.setVisible(undefined);
+  return this.setVisible(undefined);
 };
 
 /**
@@ -2671,18 +2738,22 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getOpen = func
   ));
 };
 
-/** @param {?proto.google.protobuf.BoolValue|undefined} value */
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setOpen = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearOpen = function() {
-  this.setOpen(undefined);
+  return this.setOpen(undefined);
 };
 
 /**
@@ -2701,11 +2772,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getEmptyRoomTt
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setEmptyRoomTtl = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 /**
@@ -2716,11 +2790,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPlayerTtl =
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPlayerTtl = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 /**
@@ -2731,11 +2808,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMaxMembers 
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMaxMembers = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 /**
@@ -2746,11 +2826,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getFlag = func
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setFlag = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 /**
@@ -2761,11 +2844,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getPluginName 
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setPluginName = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 8, value);
+  return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 /**
@@ -2800,11 +2886,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getAttr_asU8 =
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getAttr()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 9, value);
+  return jspb.Message.setProto3BytesField(this, 9, value);
 };
 
 /**
@@ -2818,29 +2907,34 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getExpectMembe
   ));
 };
 
-/** @param {!Array<string>} value */
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setExpectMembersList = function(
   value
 ) {
-  jspb.Message.setField(this, 10, value || []);
+  return jspb.Message.setField(this, 10, value || []);
 };
 
 /**
  * @param {string} value
  * @param {number=} opt_index
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addExpectMembers = function(
   value,
   opt_index
 ) {
-  jspb.Message.addToRepeatedField(this, 10, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 10, value, opt_index);
 };
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearExpectMembersList = function() {
-  this.setExpectMembersList([]);
+  return this.setExpectMembersList([]);
 };
 
 /**
@@ -2854,29 +2948,34 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getLobbyAttrKe
   ));
 };
 
-/** @param {!Array<string>} value */
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setLobbyAttrKeysList = function(
   value
 ) {
-  jspb.Message.setField(this, 11, value || []);
+  return jspb.Message.setField(this, 11, value || []);
 };
 
 /**
  * @param {string} value
  * @param {number=} opt_index
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addLobbyAttrKeys = function(
   value,
   opt_index
 ) {
-  jspb.Message.addToRepeatedField(this, 11, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 11, value, opt_index);
 };
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearLobbyAttrKeysList = function() {
-  this.setLobbyAttrKeysList([]);
+  return this.setLobbyAttrKeysList([]);
 };
 
 /**
@@ -2891,11 +2990,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMembersList
   ));
 };
 
-/** @param {!Array<!proto.game_protobuf_messages.proto.messages.RoomMember>} value */
+/**
+ * @param {!Array<!proto.game_protobuf_messages.proto.messages.RoomMember>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMembersList = function(
   value
 ) {
-  jspb.Message.setRepeatedWrapperField(this, 12, value);
+  return jspb.Message.setRepeatedWrapperField(this, 12, value);
 };
 
 /**
@@ -2918,9 +3020,10 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.addMembers = f
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.clearMembersList = function() {
-  this.setMembersList([]);
+  return this.setMembersList([]);
 };
 
 /**
@@ -2931,11 +3034,14 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMemberCount
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 13, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMemberCount = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 13, value);
+  return jspb.Message.setProto3IntField(this, 13, value);
 };
 
 /**
@@ -2946,22 +3052,27 @@ proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.getMasterActor
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 14, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomOptions} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomOptions.prototype.setMasterActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 14, value);
+  return jspb.Message.setProto3IntField(this, 14, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.toObject = function(
@@ -2975,8 +3086,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -3163,11 +3274,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getAppI
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setAppId = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 /**
@@ -3178,11 +3292,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getPeer
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setPeerId = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 /**
@@ -3193,11 +3310,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getGame
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setGameVersion = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 /**
@@ -3208,11 +3328,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getSdkV
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setSdkVersion = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 /**
@@ -3223,11 +3346,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getProt
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setProtocolVersion = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 /**
@@ -3238,11 +3364,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getT = 
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setT = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 /**
@@ -3253,11 +3382,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getN = 
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setN = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 7, value);
+  return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 /**
@@ -3268,11 +3400,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getS = 
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setS = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 8, value);
+  return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 /**
@@ -3283,11 +3418,14 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getConf
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setConfigBitmap = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 9, value);
+  return jspb.Message.setProto3IntField(this, 9, value);
 };
 
 /**
@@ -3298,22 +3436,27 @@ proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.getSess
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.SessionOpenRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.SessionOpenRequest.prototype.setSessionToken = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 10, value);
+  return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.toObject = function(
@@ -3327,8 +3470,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.CreateRoomRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -3453,18 +3596,22 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.getRoomO
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.setRoomOptions = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.clearRoomOptions = function() {
-  this.setRoomOptions(undefined);
+  return this.setRoomOptions(undefined);
 };
 
 /**
@@ -3477,13 +3624,15 @@ proto.game_protobuf_messages.proto.messages.CreateRoomRequest.prototype.hasRoomO
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.toObject = function(
@@ -3497,8 +3646,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.CreateRoomResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -3517,6 +3666,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
             f
           ),
         addr: jspb.Message.getFieldWithDefault(msg, 2, ''),
+        roomCreated: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
       };
 
     if (includeInstance) {
@@ -3572,6 +3722,10 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.deserializeBinary
         var value = /** @type {string} */ (reader.readString());
         msg.setAddr(value);
         break;
+      case 3:
+        var value = /** @type {boolean} */ (reader.readBool());
+        msg.setRoomCreated(value);
+        break;
       default:
         reader.skipField();
         break;
@@ -3618,6 +3772,10 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.serializeBinaryTo
   if (f.length > 0) {
     writer.writeString(2, f);
   }
+  f = message.getRoomCreated();
+  if (f) {
+    writer.writeBool(3, f);
+  }
 };
 
 /**
@@ -3632,18 +3790,22 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getRoom
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setRoomOptions = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomResponse} returns this
  */
 proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.clearRoomOptions = function() {
-  this.setRoomOptions(undefined);
+  return this.setRoomOptions(undefined);
 };
 
 /**
@@ -3662,22 +3824,49 @@ proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getAddr
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setAddr = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+/**
+ * optional bool room_created = 3;
+ * @return {boolean}
+ */
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.getRoomCreated = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
+    this,
+    3,
+    false
+  ));
+};
+
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.CreateRoomResponse} returns this
+ */
+proto.game_protobuf_messages.proto.messages.CreateRoomResponse.prototype.setRoomCreated = function(
+  value
+) {
+  return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.toObject = function(
@@ -3691,8 +3880,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -3704,7 +3893,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        rejoin: jspb.Message.getFieldWithDefault(msg, 1, false),
+        rejoin: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
         roomOptions:
           (f = msg.getRoomOptions()) &&
           proto.game_protobuf_messages.proto.messages.RoomOptions.toObject(
@@ -3713,7 +3902,11 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
           ),
         expectAttr: msg.getExpectAttr_asB64(),
         piggybackPeerId: jspb.Message.getFieldWithDefault(msg, 4, ''),
-        createOnNotFound: jspb.Message.getFieldWithDefault(msg, 5, false),
+        createOnNotFound: jspb.Message.getBooleanFieldWithDefault(
+          msg,
+          5,
+          false
+        ),
       };
 
     if (includeInstance) {
@@ -3843,23 +4036,24 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.serializeBinaryToWri
 
 /**
  * optional bool rejoin = 1;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getRejoin = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
     this,
     1,
     false
   ));
 };
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRejoin = function(
   value
 ) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 /**
@@ -3874,18 +4068,22 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getRoomOpt
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setRoomOptions = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.clearRoomOptions = function() {
-  this.setRoomOptions(undefined);
+  return this.setRoomOptions(undefined);
 };
 
 /**
@@ -3930,11 +4128,14 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getExpectA
   ));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setExpectAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 /**
@@ -3945,43 +4146,49 @@ proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getPiggyba
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setPiggybackPeerId = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 /**
  * optional bool create_on_not_found = 5;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.getCreateOnNotFound = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
     this,
     5,
     false
   ));
 };
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomRequest.prototype.setCreateOnNotFound = function(
   value
 ) {
-  jspb.Message.setProto3BooleanField(this, 5, value);
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.toObject = function(
@@ -3995,8 +4202,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.JoinRoomResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -4130,18 +4337,22 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.getRoomOp
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomOptions|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.setRoomOptions = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomResponse} returns this
  */
 proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.clearRoomOptions = function() {
-  this.setRoomOptions(undefined);
+  return this.setRoomOptions(undefined);
 };
 
 /**
@@ -4160,22 +4371,27 @@ proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.getAddr =
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomResponse.prototype.setAddr = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.JoinRoomNotification.prototype.toObject = function(
@@ -4189,8 +4405,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.JoinRoomNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -4315,18 +4531,22 @@ proto.game_protobuf_messages.proto.messages.JoinRoomNotification.prototype.getMe
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomMember|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomMember|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinRoomNotification.prototype.setMember = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinRoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.JoinRoomNotification.prototype.clearMember = function() {
-  this.setMember(undefined);
+  return this.setMember(undefined);
 };
 
 /**
@@ -4339,13 +4559,15 @@ proto.game_protobuf_messages.proto.messages.JoinRoomNotification.prototype.hasMe
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.toObject = function(
@@ -4359,8 +4581,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.LeftRoomNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -4466,22 +4688,27 @@ proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.getAc
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.LeftRoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.LeftRoomNotification.prototype.setActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.toObject = function(
@@ -4495,8 +4722,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.KickMemberRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -4626,11 +4853,14 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getTarge
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.KickMemberRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setTargetActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -4645,18 +4875,22 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.getAppIn
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.KickMemberRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.setAppInfo = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.KickMemberRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.clearAppInfo = function() {
-  this.setAppInfo(undefined);
+  return this.setAppInfo(undefined);
 };
 
 /**
@@ -4669,13 +4903,15 @@ proto.game_protobuf_messages.proto.messages.KickMemberRequest.prototype.hasAppIn
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.toObject = function(
@@ -4689,8 +4925,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.KickMemberResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -4796,22 +5032,27 @@ proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.getTarg
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.KickMemberResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.KickMemberResponse.prototype.setTargetActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.toObject = function(
@@ -4825,8 +5066,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -4950,11 +5191,14 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getT
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setTargetActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -4991,11 +5235,14 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getE
   ));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setExpectAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 /**
@@ -5030,22 +5277,27 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.getA
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getAttr()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.prototype.setAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.toObject = function(
@@ -5059,8 +5311,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -5199,11 +5451,14 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.get
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getAttr()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.setAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 /**
@@ -5214,22 +5469,27 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.get
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.prototype.setActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.toObject = function(
@@ -5243,8 +5503,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -5383,11 +5643,14 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getAttr()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.setAttr = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 /**
@@ -5398,22 +5661,27 @@ proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.prototype.setActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.toObject = function(
@@ -5427,8 +5695,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -5577,18 +5845,22 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.g
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setExpectSysAttr = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearExpectSysAttr = function() {
-  this.setExpectSysAttr(undefined);
+  return this.setExpectSysAttr(undefined);
 };
 
 /**
@@ -5611,18 +5883,22 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.g
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.setSysAttr = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.clearSysAttr = function() {
-  this.setSysAttr(undefined);
+  return this.setSysAttr(undefined);
 };
 
 /**
@@ -5635,13 +5911,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.prototype.h
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.toObject = function(
@@ -5655,8 +5933,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -5781,18 +6059,22 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.setSysAttr = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse} returns this
  */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.clearSysAttr = function() {
-  this.setSysAttr(undefined);
+  return this.setSysAttr(undefined);
 };
 
 /**
@@ -5805,13 +6087,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.prototype.
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.toObject = function(
@@ -5825,8 +6109,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -5951,18 +6235,22 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.protot
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomSystemProperty|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.setSysAttr = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.prototype.clearSysAttr = function() {
-  this.setSysAttr(undefined);
+  return this.setSysAttr(undefined);
 };
 
 /**
@@ -5975,13 +6263,15 @@ proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.protot
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.toObject = function(
@@ -5995,8 +6285,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -6102,22 +6392,27 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.prototype.setMasterActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.toObject = function(
@@ -6131,8 +6426,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse} msg The msg instance to transform.
    * @return {!Object}
@@ -6238,22 +6533,27 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.prototype.setMasterActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.toObject = function(
@@ -6267,8 +6567,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -6374,11 +6674,14 @@ proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.proto
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.prototype.setMasterActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -6417,13 +6720,15 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getNotifi
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.toObject = function(
@@ -6437,8 +6742,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RoomNotification} msg The msg instance to transform.
    * @return {!Object}
@@ -6457,7 +6762,7 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
             includeInstance,
             f
           ),
-        byMaster: jspb.Message.getFieldWithDefault(msg, 4, false),
+        byMaster: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
         joinRoom:
           (f = msg.getJoinRoom()) &&
           proto.game_protobuf_messages.proto.messages.JoinRoomNotification.toObject(
@@ -6697,11 +7002,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getInitBy
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setInitByActor = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -6716,18 +7024,22 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getAppInf
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.AppInfo|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setAppInfo = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearAppInfo = function() {
-  this.setAppInfo(undefined);
+  return this.setAppInfo(undefined);
 };
 
 /**
@@ -6740,23 +7052,24 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.hasAppInf
 
 /**
  * optional bool by_master = 4;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getByMaster = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
     this,
     4,
     false
   ));
 };
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setByMaster = function(
   value
 ) {
-  jspb.Message.setProto3BooleanField(this, 4, value);
+  return jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 /**
@@ -6771,11 +7084,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getJoinRo
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.JoinRoomNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setJoinRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     20,
     proto.game_protobuf_messages.proto.messages.RoomNotification
@@ -6786,9 +7102,10 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setJoinRo
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearJoinRoom = function() {
-  this.setJoinRoom(undefined);
+  return this.setJoinRoom(undefined);
 };
 
 /**
@@ -6811,11 +7128,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     21,
     proto.game_protobuf_messages.proto.messages.RoomNotification
@@ -6826,9 +7146,10 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateProperty = function() {
-  this.setUpdateProperty(undefined);
+  return this.setUpdateProperty(undefined);
 };
 
 /**
@@ -6851,11 +7172,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateSysProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     22,
     proto.game_protobuf_messages.proto.messages.RoomNotification
@@ -6866,9 +7190,10 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateSysProperty = function() {
-  this.setUpdateSysProperty(undefined);
+  return this.setUpdateSysProperty(undefined);
 };
 
 /**
@@ -6891,11 +7216,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getUpdate
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdateMasterClient = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     23,
     proto.game_protobuf_messages.proto.messages.RoomNotification
@@ -6906,9 +7234,10 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setUpdate
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearUpdateMasterClient = function() {
-  this.setUpdateMasterClient(undefined);
+  return this.setUpdateMasterClient(undefined);
 };
 
 /**
@@ -6931,11 +7260,14 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.getLeftRo
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.LeftRoomNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.LeftRoomNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setLeftRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     24,
     proto.game_protobuf_messages.proto.messages.RoomNotification
@@ -6946,9 +7278,10 @@ proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.setLeftRo
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomNotification} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomNotification.prototype.clearLeftRoom = function() {
-  this.setLeftRoom(undefined);
+  return this.setLeftRoom(undefined);
 };
 
 /**
@@ -6968,13 +7301,15 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.repeatedFields_ = [6];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.toObject = function(
@@ -6988,8 +7323,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.DirectCommand} msg The msg instance to transform.
    * @return {!Object}
@@ -7001,12 +7336,13 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        cached: jspb.Message.getFieldWithDefault(msg, 1, false),
+        cached: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
         eventId: jspb.Message.getFieldWithDefault(msg, 2, 0),
         receiverGroup: jspb.Message.getFieldWithDefault(msg, 3, 0),
         cachingOption: jspb.Message.getFieldWithDefault(msg, 4, 0),
         eventOptions: jspb.Message.getFieldWithDefault(msg, 5, 0),
-        toActorIdsList: jspb.Message.getRepeatedField(msg, 6),
+        toActorIdsList:
+          (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
         msg: msg.getMsg_asB64(),
         timestamp: jspb.Message.getFieldWithDefault(msg, 8, 0),
         fromActorId: jspb.Message.getFieldWithDefault(msg, 9, 0),
@@ -7179,23 +7515,24 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.serializeBinaryToWrite
 
 /**
  * optional bool cached = 1;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getCached = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(
     this,
     1,
     false
   ));
 };
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setCached = function(
   value
 ) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 /**
@@ -7206,11 +7543,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventId =
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 /**
@@ -7221,11 +7561,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getReceiverG
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setReceiverGroup = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 /**
@@ -7236,11 +7579,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getCachingOp
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setCachingOption = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 /**
@@ -7251,11 +7597,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getEventOpti
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setEventOptions = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 /**
@@ -7266,29 +7615,34 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getToActorId
   return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 6));
 };
 
-/** @param {!Array<number>} value */
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setToActorIdsList = function(
   value
 ) {
-  jspb.Message.setField(this, 6, value || []);
+  return jspb.Message.setField(this, 6, value || []);
 };
 
 /**
  * @param {number} value
  * @param {number=} opt_index
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
  */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.addToActorIds = function(
   value,
   opt_index
 ) {
-  jspb.Message.addToRepeatedField(this, 6, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 6, value, opt_index);
 };
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
  */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.clearToActorIdsList = function() {
-  this.setToActorIdsList([]);
+  return this.setToActorIdsList([]);
 };
 
 /**
@@ -7323,11 +7677,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getMsg_asU8 
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getMsg()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setMsg = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 7, value);
+  return jspb.Message.setProto3BytesField(this, 7, value);
 };
 
 /**
@@ -7338,11 +7695,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getTimestamp
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setTimestamp = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 8, value);
+  return jspb.Message.setProto3IntField(this, 8, value);
 };
 
 /**
@@ -7353,11 +7713,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getFromActor
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setFromActorId = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 9, value);
+  return jspb.Message.setProto3IntField(this, 9, value);
 };
 
 /**
@@ -7368,11 +7731,14 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getI = funct
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setI = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 10, value);
+  return jspb.Message.setProto3IntField(this, 10, value);
 };
 
 /**
@@ -7383,22 +7749,27 @@ proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.getInterestG
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.DirectCommand.prototype.setInterestGroup = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 11, value);
+  return jspb.Message.setProto3IntField(this, 11, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.AckCommand.prototype.toObject = function(
@@ -7412,8 +7783,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.AckCommand} msg The msg instance to transform.
    * @return {!Object}
@@ -7528,11 +7899,14 @@ proto.game_protobuf_messages.proto.messages.AckCommand.prototype.getTimestamp = 
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AckCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AckCommand.prototype.setTimestamp = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -7543,22 +7917,27 @@ proto.game_protobuf_messages.proto.messages.AckCommand.prototype.getI = function
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AckCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AckCommand.prototype.setI = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 11, value);
+  return jspb.Message.setProto3IntField(this, 11, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.toObject = function(
@@ -7572,8 +7951,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.EventsRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -7741,11 +8120,14 @@ proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.getMsg_asU8 
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getMsg()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.setMsg = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 /**
@@ -7760,18 +8142,22 @@ proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.getActorId =
   ));
 };
 
-/** @param {?proto.google.protobuf.Int32Value|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Int32Value|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.setActorId = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.clearActorId = function() {
-  this.setActorId(undefined);
+  return this.setActorId(undefined);
 };
 
 /**
@@ -7794,18 +8180,22 @@ proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.getEventId =
   ));
 };
 
-/** @param {?proto.google.protobuf.Int32Value|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Int32Value|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.setEventId = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsRequest} returns this
  */
 proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.clearEventId = function() {
-  this.setEventId(undefined);
+  return this.setEventId(undefined);
 };
 
 /**
@@ -7821,25 +8211,25 @@ proto.game_protobuf_messages.proto.messages.EventsRequest.prototype.hasEventId =
  * @private {!Array<number>}
  * @const
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.repeatedFields_ = [
-  1,
-];
+proto.game_protobuf_messages.proto.messages.EventsCommand.repeatedFields_ = [1];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
-  proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.toObject = function(
+  proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.toObject = function(
     opt_includeInstance
   ) {
-    return proto.game_protobuf_messages.proto.messages.EventsResponse.toObject(
+    return proto.game_protobuf_messages.proto.messages.EventsCommand.toObject(
       opt_includeInstance,
       this
     );
@@ -7847,14 +8237,14 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
-   * @param {!proto.game_protobuf_messages.proto.messages.EventsResponse} msg The msg instance to transform.
+   * @param {!proto.game_protobuf_messages.proto.messages.EventsCommand} msg The msg instance to transform.
    * @return {!Object}
    * @suppress {unusedLocalVariables} f is only used for nested messages
    */
-  proto.game_protobuf_messages.proto.messages.EventsResponse.toObject = function(
+  proto.game_protobuf_messages.proto.messages.EventsCommand.toObject = function(
     includeInstance,
     msg
   ) {
@@ -7877,14 +8267,14 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.game_protobuf_messages.proto.messages.EventsResponse}
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsCommand}
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.deserializeBinary = function(
+proto.game_protobuf_messages.proto.messages.EventsCommand.deserializeBinary = function(
   bytes
 ) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.game_protobuf_messages.proto.messages.EventsResponse();
-  return proto.game_protobuf_messages.proto.messages.EventsResponse.deserializeBinaryFromReader(
+  var msg = new proto.game_protobuf_messages.proto.messages.EventsCommand();
+  return proto.game_protobuf_messages.proto.messages.EventsCommand.deserializeBinaryFromReader(
     msg,
     reader
   );
@@ -7893,11 +8283,11 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.deserializeBinary = f
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.game_protobuf_messages.proto.messages.EventsResponse} msg The message object to deserialize into.
+ * @param {!proto.game_protobuf_messages.proto.messages.EventsCommand} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.game_protobuf_messages.proto.messages.EventsResponse}
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsCommand}
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.deserializeBinaryFromReader = function(
+proto.game_protobuf_messages.proto.messages.EventsCommand.deserializeBinaryFromReader = function(
   msg,
   reader
 ) {
@@ -7928,9 +8318,9 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.deserializeBinaryFrom
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.serializeBinary = function() {
+proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.game_protobuf_messages.proto.messages.EventsResponse.serializeBinaryToWriter(
+  proto.game_protobuf_messages.proto.messages.EventsCommand.serializeBinaryToWriter(
     this,
     writer
   );
@@ -7940,11 +8330,11 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.serializeBi
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.game_protobuf_messages.proto.messages.EventsResponse} message
+ * @param {!proto.game_protobuf_messages.proto.messages.EventsCommand} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.serializeBinaryToWriter = function(
+proto.game_protobuf_messages.proto.messages.EventsCommand.serializeBinaryToWriter = function(
   message,
   writer
 ) {
@@ -7964,7 +8354,7 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.serializeBinaryToWrit
  * repeated DirectCommand events = 1;
  * @return {!Array<!proto.game_protobuf_messages.proto.messages.DirectCommand>}
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.getEventsList = function() {
+proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.getEventsList = function() {
   return /** @type{!Array<!proto.game_protobuf_messages.proto.messages.DirectCommand>} */ (jspb.Message.getRepeatedWrapperField(
     this,
     proto.game_protobuf_messages.proto.messages.DirectCommand,
@@ -7972,11 +8362,14 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.getEventsLi
   ));
 };
 
-/** @param {!Array<!proto.game_protobuf_messages.proto.messages.DirectCommand>} value */
-proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.setEventsList = function(
+/**
+ * @param {!Array<!proto.game_protobuf_messages.proto.messages.DirectCommand>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsCommand} returns this
+ */
+proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.setEventsList = function(
   value
 ) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 /**
@@ -7984,7 +8377,7 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.setEventsLi
  * @param {number=} opt_index
  * @return {!proto.game_protobuf_messages.proto.messages.DirectCommand}
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.addEvents = function(
+proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.addEvents = function(
   opt_value,
   opt_index
 ) {
@@ -7999,9 +8392,10 @@ proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.addEvents =
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.EventsCommand} returns this
  */
-proto.game_protobuf_messages.proto.messages.EventsResponse.prototype.clearEventsList = function() {
-  this.setEventsList([]);
+proto.game_protobuf_messages.proto.messages.EventsCommand.prototype.clearEventsList = function() {
+  return this.setEventsList([]);
 };
 
 /**
@@ -8016,13 +8410,15 @@ proto.game_protobuf_messages.proto.messages.InterestGroups.repeatedFields_ = [
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.toObject = function(
@@ -8036,8 +8432,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.InterestGroups} msg The msg instance to transform.
    * @return {!Object}
@@ -8049,8 +8445,10 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
   ) {
     var f,
       obj = {
-        disabledGroupsList: jspb.Message.getRepeatedField(msg, 1),
-        enabledGroupsList: jspb.Message.getRepeatedField(msg, 2),
+        disabledGroupsList:
+          (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
+        enabledGroupsList:
+          (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
       };
 
     if (includeInstance) {
@@ -8152,29 +8550,34 @@ proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.getDisabled
   return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 1));
 };
 
-/** @param {!Array<number>} value */
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
+ */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.setDisabledGroupsList = function(
   value
 ) {
-  jspb.Message.setField(this, 1, value || []);
+  return jspb.Message.setField(this, 1, value || []);
 };
 
 /**
  * @param {number} value
  * @param {number=} opt_index
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
  */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.addDisabledGroups = function(
   value,
   opt_index
 ) {
-  jspb.Message.addToRepeatedField(this, 1, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 1, value, opt_index);
 };
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
  */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.clearDisabledGroupsList = function() {
-  this.setDisabledGroupsList([]);
+  return this.setDisabledGroupsList([]);
 };
 
 /**
@@ -8185,40 +8588,47 @@ proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.getEnabledG
   return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
-/** @param {!Array<number>} value */
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
+ */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.setEnabledGroupsList = function(
   value
 ) {
-  jspb.Message.setField(this, 2, value || []);
+  return jspb.Message.setField(this, 2, value || []);
 };
 
 /**
  * @param {number} value
  * @param {number=} opt_index
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
  */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.addEnabledGroups = function(
   value,
   opt_index
 ) {
-  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.InterestGroups} returns this
  */
 proto.game_protobuf_messages.proto.messages.InterestGroups.prototype.clearEnabledGroupsList = function() {
-  this.setEnabledGroupsList([]);
+  return this.setEnabledGroupsList([]);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.toObject = function(
@@ -8232,8 +8642,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.JoinLobbyRequest} msg The msg instance to transform.
    * @return {!Object}
@@ -8339,11 +8749,14 @@ proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.getLobbyI
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ''));
 };
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.game_protobuf_messages.proto.messages.JoinLobbyRequest} returns this
+ */
 proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.prototype.setLobbyId = function(
   value
 ) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 /**
@@ -8357,13 +8770,15 @@ proto.game_protobuf_messages.proto.messages.RoomListCommand.repeatedFields_ = [
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RoomListCommand.prototype.toObject = function(
@@ -8377,8 +8792,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RoomListCommand} msg The msg instance to transform.
    * @return {!Object}
@@ -8502,11 +8917,14 @@ proto.game_protobuf_messages.proto.messages.RoomListCommand.prototype.getListLis
   ));
 };
 
-/** @param {!Array<!proto.game_protobuf_messages.proto.messages.RoomOptions>} value */
+/**
+ * @param {!Array<!proto.game_protobuf_messages.proto.messages.RoomOptions>} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomListCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RoomListCommand.prototype.setListList = function(
   value
 ) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 /**
@@ -8529,20 +8947,23 @@ proto.game_protobuf_messages.proto.messages.RoomListCommand.prototype.addList = 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.game_protobuf_messages.proto.messages.RoomListCommand} returns this
  */
 proto.game_protobuf_messages.proto.messages.RoomListCommand.prototype.clearListList = function() {
-  this.setListList([]);
+  return this.setListList([]);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.toObject = function(
@@ -8556,8 +8977,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.AppStatistic} msg The msg instance to transform.
    * @return {!Object}
@@ -8690,11 +9111,14 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfRoo
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppStatistic} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfRooms = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -8705,11 +9129,14 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPla
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppStatistic} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayersOnRouter = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 /**
@@ -8720,11 +9147,14 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPla
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppStatistic} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayersInRooms = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 /**
@@ -8735,22 +9165,27 @@ proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.getCountOfPla
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.AppStatistic} returns this
+ */
 proto.game_protobuf_messages.proto.messages.AppStatistic.prototype.setCountOfPlayers = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.toObject = function(
@@ -8764,8 +9199,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.StatisticCommand} msg The msg instance to transform.
    * @return {!Object}
@@ -8890,18 +9325,22 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.getAppSta
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.AppStatistic|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.AppStatistic|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.StatisticCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.setAppStats = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.StatisticCommand} returns this
  */
 proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.clearAppStats = function() {
-  this.setAppStats(undefined);
+  return this.setAppStats(undefined);
 };
 
 /**
@@ -8914,13 +9353,15 @@ proto.game_protobuf_messages.proto.messages.StatisticCommand.prototype.hasAppSta
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.toObject = function(
@@ -8934,8 +9375,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.ErrorCommand} msg The msg instance to transform.
    * @return {!Object}
@@ -9060,18 +9501,22 @@ proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.getErrorInfo 
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorCommand} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.setErrorInfo = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ErrorCommand} returns this
  */
 proto.game_protobuf_messages.proto.messages.ErrorCommand.prototype.clearErrorInfo = function() {
-  this.setErrorInfo(undefined);
+  return this.setErrorInfo(undefined);
 };
 
 /**
@@ -9123,13 +9568,15 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getRequestC
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.toObject = function(
@@ -9143,8 +9590,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.RequestMessage} msg The msg instance to transform.
    * @return {!Object}
@@ -9490,11 +9937,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getI = func
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setI = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -9509,11 +9959,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getSessionO
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.SessionOpenRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.SessionOpenRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setSessionOpen = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     20,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9523,9 +9976,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setSessionO
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearSessionOpen = function() {
-  this.setSessionOpen(undefined);
+  return this.setSessionOpen(undefined);
 };
 
 /**
@@ -9548,11 +10002,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getCreateRo
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.CreateRoomRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.CreateRoomRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setCreateRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     21,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9562,9 +10019,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setCreateRo
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearCreateRoom = function() {
-  this.setCreateRoom(undefined);
+  return this.setCreateRoom(undefined);
 };
 
 /**
@@ -9587,11 +10045,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinRoom
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.JoinRoomRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     22,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9601,9 +10062,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinRoom
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinRoom = function() {
-  this.setJoinRoom(undefined);
+  return this.setJoinRoom(undefined);
 };
 
 /**
@@ -9626,11 +10088,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdatePr
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     23,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9640,9 +10105,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdatePr
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateProperty = function() {
-  this.setUpdateProperty(undefined);
+  return this.setUpdateProperty(undefined);
 };
 
 /**
@@ -9665,11 +10131,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateSy
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateSysProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     24,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9679,9 +10148,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateSy
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateSysProperty = function() {
-  this.setUpdateSysProperty(undefined);
+  return this.setUpdateSysProperty(undefined);
 };
 
 /**
@@ -9704,11 +10174,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getUpdateMa
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateMasterClient = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     25,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9718,9 +10191,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setUpdateMa
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearUpdateMasterClient = function() {
-  this.setUpdateMasterClient(undefined);
+  return this.setUpdateMasterClient(undefined);
 };
 
 /**
@@ -9743,11 +10217,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getKickMemb
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.KickMemberRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.KickMemberRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setKickMember = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     26,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9757,9 +10234,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setKickMemb
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearKickMember = function() {
-  this.setKickMember(undefined);
+  return this.setKickMember(undefined);
 };
 
 /**
@@ -9782,11 +10260,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getEvents =
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.EventsRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.EventsRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setEvents = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     27,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9796,9 +10277,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setEvents =
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearEvents = function() {
-  this.setEvents(undefined);
+  return this.setEvents(undefined);
 };
 
 /**
@@ -9821,11 +10303,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getInterest
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.InterestGroups|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.InterestGroups|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setInterestGroups = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     28,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9835,9 +10320,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setInterest
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearInterestGroups = function() {
-  this.setInterestGroups(undefined);
+  return this.setInterestGroups(undefined);
 };
 
 /**
@@ -9860,11 +10346,14 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.getJoinLobb
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.JoinLobbyRequest|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.JoinLobbyRequest|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinLobby = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     54,
     proto.game_protobuf_messages.proto.messages.RequestMessage.oneofGroups_[0],
@@ -9874,9 +10363,10 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.setJoinLobb
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.RequestMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.clearJoinLobby = function() {
-  this.setJoinLobby(undefined);
+  return this.setJoinLobby(undefined);
 };
 
 /**
@@ -9896,7 +10386,7 @@ proto.game_protobuf_messages.proto.messages.RequestMessage.prototype.hasJoinLobb
  * @const
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_ = [
-  [20, 21, 22, 23, 24, 25, 26, 27, 28],
+  [20, 21, 22, 23, 24, 25, 26, 28],
 ];
 
 /**
@@ -9911,7 +10401,6 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.ResponseCase = {
   UPDATE_MASTER_CLIENT: 24,
   KICK_MEMBER: 25,
   ACK: 26,
-  EVENTS: 27,
   INTEREST_GROUPS: 28,
 };
 
@@ -9927,13 +10416,15 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getRespons
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.toObject = function(
@@ -9947,8 +10438,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.ResponseMessage} msg The msg instance to transform.
    * @return {!Object}
@@ -10006,12 +10497,6 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         ack:
           (f = msg.getAck()) &&
           proto.game_protobuf_messages.proto.messages.AckCommand.toObject(
-            includeInstance,
-            f
-          ),
-        events:
-          (f = msg.getEvents()) &&
-          proto.game_protobuf_messages.proto.messages.EventsResponse.toObject(
             includeInstance,
             f
           ),
@@ -10139,15 +10624,6 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.deserializeBinaryFro
         );
         msg.setAck(value);
         break;
-      case 27:
-        var value = new proto.game_protobuf_messages.proto.messages.EventsResponse();
-        reader.readMessage(
-          value,
-          proto.game_protobuf_messages.proto.messages.EventsResponse
-            .deserializeBinaryFromReader
-        );
-        msg.setEvents(value);
-        break;
       case 28:
         var value = new proto.game_protobuf_messages.proto.messages.InterestGroups();
         reader.readMessage(
@@ -10266,15 +10742,6 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.serializeBinaryToWri
         .serializeBinaryToWriter
     );
   }
-  f = message.getEvents();
-  if (f != null) {
-    writer.writeMessage(
-      27,
-      f,
-      proto.game_protobuf_messages.proto.messages.EventsResponse
-        .serializeBinaryToWriter
-    );
-  }
   f = message.getInterestGroups();
   if (f != null) {
     writer.writeMessage(
@@ -10294,11 +10761,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getI = fun
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setI = function(
   value
 ) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 /**
@@ -10313,18 +10783,22 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getErrorIn
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.ErrorInfo|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setErrorInfo = function(
   value
 ) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearErrorInfo = function() {
-  this.setErrorInfo(undefined);
+  return this.setErrorInfo(undefined);
 };
 
 /**
@@ -10347,11 +10821,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getCreateR
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.CreateRoomResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.CreateRoomResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setCreateRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     20,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10361,9 +10838,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setCreateR
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearCreateRoom = function() {
-  this.setCreateRoom(undefined);
+  return this.setCreateRoom(undefined);
 };
 
 /**
@@ -10386,11 +10864,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getJoinRoo
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.JoinRoomResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.JoinRoomResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setJoinRoom = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     21,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10400,9 +10881,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setJoinRoo
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearJoinRoom = function() {
-  this.setJoinRoom(undefined);
+  return this.setJoinRoom(undefined);
 };
 
 /**
@@ -10425,11 +10907,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateP
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     22,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10439,9 +10924,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateP
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateProperty = function() {
-  this.setUpdateProperty(undefined);
+  return this.setUpdateProperty(undefined);
 };
 
 /**
@@ -10464,11 +10950,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateS
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateSysProperty = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     23,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10478,9 +10967,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateS
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateSysProperty = function() {
-  this.setUpdateSysProperty(undefined);
+  return this.setUpdateSysProperty(undefined);
 };
 
 /**
@@ -10503,11 +10993,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getUpdateM
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateMasterClient = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     24,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10517,9 +11010,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setUpdateM
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearUpdateMasterClient = function() {
-  this.setUpdateMasterClient(undefined);
+  return this.setUpdateMasterClient(undefined);
 };
 
 /**
@@ -10542,11 +11036,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getKickMem
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.KickMemberResponse|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.KickMemberResponse|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setKickMember = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     25,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10556,9 +11053,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setKickMem
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearKickMember = function() {
-  this.setKickMember(undefined);
+  return this.setKickMember(undefined);
 };
 
 /**
@@ -10581,11 +11079,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getAck = f
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.AckCommand|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.AckCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setAck = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     26,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10595,9 +11096,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setAck = f
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearAck = function() {
-  this.setAck(undefined);
+  return this.setAck(undefined);
 };
 
 /**
@@ -10606,45 +11108,6 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearAck =
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasAck = function() {
   return jspb.Message.getField(this, 26) != null;
-};
-
-/**
- * optional EventsResponse events = 27;
- * @return {?proto.game_protobuf_messages.proto.messages.EventsResponse}
- */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getEvents = function() {
-  return /** @type{?proto.game_protobuf_messages.proto.messages.EventsResponse} */ (jspb.Message.getWrapperField(
-    this,
-    proto.game_protobuf_messages.proto.messages.EventsResponse,
-    27
-  ));
-};
-
-/** @param {?proto.game_protobuf_messages.proto.messages.EventsResponse|undefined} value */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setEvents = function(
-  value
-) {
-  jspb.Message.setOneofWrapperField(
-    this,
-    27,
-    proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
-    value
-  );
-};
-
-/**
- * Clears the message field making it undefined.
- */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearEvents = function() {
-  this.setEvents(undefined);
-};
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasEvents = function() {
-  return jspb.Message.getField(this, 27) != null;
 };
 
 /**
@@ -10659,11 +11122,14 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.getInteres
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.InterestGroups|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.InterestGroups|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
+ */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setInterestGroups = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     28,
     proto.game_protobuf_messages.proto.messages.ResponseMessage.oneofGroups_[0],
@@ -10673,9 +11139,10 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.setInteres
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.ResponseMessage} returns this
  */
 proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.clearInterestGroups = function() {
-  this.setInterestGroups(undefined);
+  return this.setInterestGroups(undefined);
 };
 
 /**
@@ -10695,7 +11162,7 @@ proto.game_protobuf_messages.proto.messages.ResponseMessage.prototype.hasInteres
  * @const
  */
 proto.game_protobuf_messages.proto.messages.Body.oneofGroups_ = [
-  [1, 2, 3, 4, 50, 51, 127],
+  [1, 2, 3, 4, 5, 50, 51, 127],
 ];
 
 /**
@@ -10707,6 +11174,7 @@ proto.game_protobuf_messages.proto.messages.Body.BodyCase = {
   RESPONSE: 2,
   DIRECT: 3,
   ROOM_NOTIFICATION: 4,
+  EVENTS: 5,
   STATISTIC: 50,
   ROOM_LIST: 51,
   ERROR: 127,
@@ -10724,13 +11192,15 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getBodyCase = functio
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.Body.prototype.toObject = function(
@@ -10744,8 +11214,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.Body} msg The msg instance to transform.
    * @return {!Object}
@@ -10778,6 +11248,12 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
         roomNotification:
           (f = msg.getRoomNotification()) &&
           proto.game_protobuf_messages.proto.messages.RoomNotification.toObject(
+            includeInstance,
+            f
+          ),
+        events:
+          (f = msg.getEvents()) &&
+          proto.game_protobuf_messages.proto.messages.EventsCommand.toObject(
             includeInstance,
             f
           ),
@@ -10877,6 +11353,15 @@ proto.game_protobuf_messages.proto.messages.Body.deserializeBinaryFromReader = f
         );
         msg.setRoomNotification(value);
         break;
+      case 5:
+        var value = new proto.game_protobuf_messages.proto.messages.EventsCommand();
+        reader.readMessage(
+          value,
+          proto.game_protobuf_messages.proto.messages.EventsCommand
+            .deserializeBinaryFromReader
+        );
+        msg.setEvents(value);
+        break;
       case 50:
         var value = new proto.game_protobuf_messages.proto.messages.StatisticCommand();
         reader.readMessage(
@@ -10973,6 +11458,15 @@ proto.game_protobuf_messages.proto.messages.Body.serializeBinaryToWriter = funct
         .serializeBinaryToWriter
     );
   }
+  f = message.getEvents();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      proto.game_protobuf_messages.proto.messages.EventsCommand
+        .serializeBinaryToWriter
+    );
+  }
   f = message.getStatistic();
   if (f != null) {
     writer.writeMessage(
@@ -11014,11 +11508,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getRequest = function
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RequestMessage|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RequestMessage|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setRequest = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     1,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11028,9 +11525,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setRequest = function
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearRequest = function() {
-  this.setRequest(undefined);
+  return this.setRequest(undefined);
 };
 
 /**
@@ -11053,11 +11551,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getResponse = functio
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.ResponseMessage|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.ResponseMessage|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setResponse = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     2,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11067,9 +11568,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setResponse = functio
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearResponse = function() {
-  this.setResponse(undefined);
+  return this.setResponse(undefined);
 };
 
 /**
@@ -11092,11 +11594,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getDirect = function(
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.DirectCommand|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.DirectCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setDirect = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     3,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11106,9 +11611,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setDirect = function(
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearDirect = function() {
-  this.setDirect(undefined);
+  return this.setDirect(undefined);
 };
 
 /**
@@ -11131,11 +11637,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomNotification =
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomNotification|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomNotification|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomNotification = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     4,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11145,9 +11654,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomNotification =
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomNotification = function() {
-  this.setRoomNotification(undefined);
+  return this.setRoomNotification(undefined);
 };
 
 /**
@@ -11156,6 +11666,49 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomNotification
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.hasRoomNotification = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+/**
+ * optional EventsCommand events = 5;
+ * @return {?proto.game_protobuf_messages.proto.messages.EventsCommand}
+ */
+proto.game_protobuf_messages.proto.messages.Body.prototype.getEvents = function() {
+  return /** @type{?proto.game_protobuf_messages.proto.messages.EventsCommand} */ (jspb.Message.getWrapperField(
+    this,
+    proto.game_protobuf_messages.proto.messages.EventsCommand,
+    5
+  ));
+};
+
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.EventsCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
+proto.game_protobuf_messages.proto.messages.Body.prototype.setEvents = function(
+  value
+) {
+  return jspb.Message.setOneofWrapperField(
+    this,
+    5,
+    proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
+    value
+  );
+};
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
+proto.game_protobuf_messages.proto.messages.Body.prototype.clearEvents = function() {
+  return this.setEvents(undefined);
+};
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.game_protobuf_messages.proto.messages.Body.prototype.hasEvents = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 /**
@@ -11170,11 +11723,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getStatistic = functi
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.StatisticCommand|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.StatisticCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setStatistic = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     50,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11184,9 +11740,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setStatistic = functi
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearStatistic = function() {
-  this.setStatistic(undefined);
+  return this.setStatistic(undefined);
 };
 
 /**
@@ -11209,11 +11766,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getRoomList = functio
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.RoomListCommand|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.RoomListCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomList = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     51,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11223,9 +11783,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setRoomList = functio
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearRoomList = function() {
-  this.setRoomList(undefined);
+  return this.setRoomList(undefined);
 };
 
 /**
@@ -11248,11 +11809,14 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.getError = function()
   ));
 };
 
-/** @param {?proto.game_protobuf_messages.proto.messages.ErrorCommand|undefined} value */
+/**
+ * @param {?proto.game_protobuf_messages.proto.messages.ErrorCommand|undefined} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Body.prototype.setError = function(
   value
 ) {
-  jspb.Message.setOneofWrapperField(
+  return jspb.Message.setOneofWrapperField(
     this,
     127,
     proto.game_protobuf_messages.proto.messages.Body.oneofGroups_[0],
@@ -11262,9 +11826,10 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.setError = function(
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.game_protobuf_messages.proto.messages.Body} returns this
  */
 proto.game_protobuf_messages.proto.messages.Body.prototype.clearError = function() {
-  this.setError(undefined);
+  return this.setError(undefined);
 };
 
 /**
@@ -11277,13 +11842,15 @@ proto.game_protobuf_messages.proto.messages.Body.prototype.hasError = function()
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
   /**
-   * Creates an object representation of this proto suitable for use in Soy templates.
+   * Creates an object representation of this proto.
    * Field names that are reserved in JavaScript and will be renamed to pb_name.
+   * Optional fields that are not set will be set to undefined.
    * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
    * For the list of reserved names please see:
-   *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
-   * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
-   *     for transitional soy proto support: http://goto/soy-param-migration
+   *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+   * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+   *     JSPB instance for transitional soy proto support:
+   *     http://goto/soy-param-migration
    * @return {!Object}
    */
   proto.game_protobuf_messages.proto.messages.Command.prototype.toObject = function(
@@ -11297,8 +11864,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
 
   /**
    * Static version of the {@see toObject} method.
-   * @param {boolean|undefined} includeInstance Whether to include the JSPB
-   *     instance for transitional soy proto support:
+   * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+   *     the JSPB instance for transitional soy proto support:
    *     http://goto/soy-param-migration
    * @param {!proto.game_protobuf_messages.proto.messages.Command} msg The msg instance to transform.
    * @return {!Object}
@@ -11426,11 +11993,14 @@ proto.game_protobuf_messages.proto.messages.Command.prototype.getCmd = function(
   ));
 };
 
-/** @param {!proto.game_protobuf_messages.proto.messages.CommandType} value */
+/**
+ * @param {!proto.game_protobuf_messages.proto.messages.CommandType} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Command} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Command.prototype.setCmd = function(
   value
 ) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 /**
@@ -11445,11 +12015,14 @@ proto.game_protobuf_messages.proto.messages.Command.prototype.getOp = function()
   ));
 };
 
-/** @param {!proto.game_protobuf_messages.proto.messages.OpType} value */
+/**
+ * @param {!proto.game_protobuf_messages.proto.messages.OpType} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Command} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Command.prototype.setOp = function(
   value
 ) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 /**
@@ -11484,11 +12057,14 @@ proto.game_protobuf_messages.proto.messages.Command.prototype.getBody_asU8 = fun
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(this.getBody()));
 };
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.game_protobuf_messages.proto.messages.Command} returns this
+ */
 proto.game_protobuf_messages.proto.messages.Command.prototype.setBody = function(
   value
 ) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 /**
@@ -11554,4 +12130,4 @@ proto.game_protobuf_messages.proto.messages.OpType = {
   FOUND_FRIENDS: 102,
 };
 
-goog.object.extend(exports, proto.game_protobuf_messages.proto.messages);
+goog.object.extend(exports, proto);

@@ -1,6 +1,9 @@
 import genericCollection from './proto/generic_collection_pb';
 
-const { GenericCollectionValue, GenericCollection } = genericCollection;
+const {
+  GenericCollectionValue,
+  GenericCollection,
+} = genericCollection.cn.leancloud.play.proto;
 
 // import {
 //   GenericCollectionValue,
