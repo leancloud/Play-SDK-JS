@@ -20,6 +20,15 @@ function newNorthChinaPlay(userId) {
   return play;
 }
 
+function newUSPlay(userId) {
+  const play = new Client({
+    appId: 'yR48IPheWK2by2dfouYtlzTU-MdYXbMMI',
+    appKey: 'gw3bfkG2EAuN8e9ft5y9kPMq',
+    userId,
+  });
+  return play;
+}
+
 function newWechatPlay(userId) {
   const play = new Client({
     appId: 'vwDice44bmatVulkQvErSg5C-gzGzoHsz',
@@ -30,4 +39,4 @@ function newWechatPlay(userId) {
   return play;
 }
 
-export { newPlay, newNorthChinaPlay, newWechatPlay };
+export { newPlay, newNorthChinaPlay, newWechatPlay, newUSPlay };

@@ -205,7 +205,7 @@ describe('test join room', () => {
   });
 
   it('test join room concurrently', async () => {
-    const roomName = 'jr8_r';
+    const roomName = 'jr8_r_';
     const p0 = newPlay('jr8_0');
     const p1 = newPlay('jr8_1');
     const p2 = newPlay('jr8_2');
