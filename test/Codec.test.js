@@ -19,7 +19,7 @@ const {
   OpType,
   Command,
   Body,
-} = protocol;
+} = protocol.game_protobuf_messages.proto.messages;
 
 describe('test codec', () => {
   it('protocol', async () => {

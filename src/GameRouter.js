@@ -54,7 +54,7 @@ export default class GameRouter {
           sessionToken: this._sessionToken,
         });
       } catch (e) {
-        error(e);
+        error(JSON.stringify(e));
         reject(e);
       }
     });
