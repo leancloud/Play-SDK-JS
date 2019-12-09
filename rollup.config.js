@@ -60,6 +60,10 @@ export default [
         browser: true,
       }),
       commonjs(),
+      modify({
+        find: GOOGLE_PROTOBUF_WRAPPER_FIND,
+        replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
+      }),
       minify({
         // Options for babel-minify.
       }),
@@ -87,6 +91,10 @@ export default [
       babel(BABEL_CONFIG),
       resolve({
         browser: true,
+      }),
+      modify({
+        find: GOOGLE_PROTOBUF_WRAPPER_FIND,
+        replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
       }),
       commonjs(),
     ],
