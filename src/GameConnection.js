@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
@@ -318,7 +319,17 @@ export default class GameConnection extends Connection {
   }
 
   _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
-    return `${server}session?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
+    const parsedUrl = queryString.parseUrl(server);
+    const { url, query } = parsedUrl;
+    const queries = Object.assign(query, {
+      appId,
+      sdkVersion,
+      protocolVersion,
+      gameVersion,
+      userId,
+      sessionToken,
+    });
+    return `${url}session?${queryString.stringify(queries)}`;
   }
 
   _handleNotification(cmd, op, body) {
