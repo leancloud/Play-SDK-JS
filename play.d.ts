@@ -346,6 +346,6 @@ export function registerType<T>(
   typeId: number,
   serializeMethod: (obj: T) => Uint8Array,
   deserializeMethod: (bytes: Uint8Array) => T
-);
-export function serializeObject(obj: Object);
-export function deserializeObject(bytes: Uint8Array);
+): void;
+export function serializeObject(obj: Object): Uint8Array;
+export function deserializeObject(bytes: Uint8Array): Object;
