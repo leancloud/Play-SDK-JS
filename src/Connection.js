@@ -244,7 +244,9 @@ export default class Connection extends EventEmitter {
       this._pingTimer = null;
     }
     this._pingTimer = setTimeout(() => {
+      debug('ping');
       this._ws.send('{}');
+      this._ping();
     }, this._getPingDuration());
   }
 
@@ -255,6 +257,7 @@ export default class Connection extends EventEmitter {
     }
     this._pongTimer = setTimeout(() => {
       this._pingTimer = setTimeout(() => {
+        debug('pong timeout');
         this._ws.close();
       }, this._getPingDuration());
     }, this._getPingDuration() * MAX_NO_PONG_TIMES);
