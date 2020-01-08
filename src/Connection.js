@@ -279,8 +279,8 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  _handleErrorNotify(body) {
-    const errorInfo = body.getErrorInfo();
+  _handleErrorNotify(err) {
+    const errorInfo = err.getErrorInfo();
     const code = errorInfo.getRaseonCode();
     const detail = errorInfo.getDetail();
     this.emit(ERROR_EVENT, { code, detail });

@@ -384,7 +384,7 @@ export default class GameConnection extends Connection {
         this._handleSendEventMsg(body.getDirect());
         break;
       case CommandType.ERROR:
-        super._handleErrorNotify(body);
+        super._handleErrorNotify(body.getError());
         break;
       default:
         // super._handleUnknownMsg(msg);
