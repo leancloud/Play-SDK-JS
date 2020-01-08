@@ -108,6 +108,7 @@ export default class Connection extends EventEmitter {
     // 每次连接成功后将会得到最新快照，之前的缓存没有意义了
     this._isMessageQueueRunning = true;
     this._messageQueue = [];
+    this._ping();
     this._ws.onmessage = message => {
       this._pong();
       const command = Command.deserializeBinary(message.data);
@@ -195,8 +196,6 @@ export default class Connection extends EventEmitter {
       }: ${JSON.stringify(body.toObject())}`
     );
     this._ws.send(command.serializeBinary().buffer);
-    // ping
-    this._ping();
   }
 
   close() {
@@ -243,10 +242,9 @@ export default class Connection extends EventEmitter {
       clearTimeout(this._pingTimer);
       this._pingTimer = null;
     }
-    this._pingTimer = setTimeout(() => {
+    this._pingTimer = setInterval(() => {
       debug('ping');
-      this._ws.send('{}');
-      this._ping();
+      this.sendCommand(CommandType.ECHO, OpType.NONE, new Body());
     }, this._getPingDuration());
   }
 
@@ -256,10 +254,8 @@ export default class Connection extends EventEmitter {
       this._pongTimer = null;
     }
     this._pongTimer = setTimeout(() => {
-      this._pingTimer = setTimeout(() => {
-        debug('pong timeout');
-        this._ws.close();
-      }, this._getPingDuration());
+      debug('pong timeout');
+      this._ws.close();
     }, this._getPingDuration() * MAX_NO_PONG_TIMES);
   }
 
@@ -283,8 +279,8 @@ export default class Connection extends EventEmitter {
     throw new Error('must implement the method');
   }
 
-  _handleErrorNotify(body) {
-    const errorInfo = body.getErrorInfo();
+  _handleErrorNotify(err) {
+    const errorInfo = err.getErrorInfo();
     const code = errorInfo.getRaseonCode();
     const detail = errorInfo.getDetail();
     this.emit(ERROR_EVENT, { code, detail });

@@ -12080,6 +12080,7 @@ proto.game_protobuf_messages.proto.messages.CommandType = {
   STATISTIC: 6,
   EVENTS: 7,
   ACK: 8,
+  ECHO: 9,
 };
 
 /**

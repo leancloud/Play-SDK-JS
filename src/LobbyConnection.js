@@ -85,7 +85,7 @@ export default class LobbyConnection extends Connection {
         // 目前不作处理
         break;
       case CommandType.ERROR:
-        super._handleErrorNotify(body);
+        super._handleErrorNotify(body.getError());
         break;
       default:
         super._handleUnknownMsg(cmd, op, body);
