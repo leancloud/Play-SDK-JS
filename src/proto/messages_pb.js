@@ -1,4 +1,3 @@
-/* eslint-disable */
 // source: proto/messages.proto
 /**
  * @fileoverview

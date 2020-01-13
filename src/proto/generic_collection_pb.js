@@ -1,4 +1,3 @@
-/* eslint-disable */
 // source: proto/generic_collection.proto
 /**
  * @fileoverview
