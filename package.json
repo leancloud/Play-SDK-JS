@@ -6,6 +6,7 @@
   "main": "dist/play-node.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
+    "protoc": "protoc --js_out=import_style=commonjs_strict,binary:./src/ ./proto/*.proto",
     "lint": "eslint src test && tsc play.d.ts",
     "build": "rollup -c",
     "test:node": "nyc mocha test/**.js --exit",

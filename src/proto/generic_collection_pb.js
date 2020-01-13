@@ -1,4 +1,4 @@
-// source: generic_collection.proto
+// source: proto/generic_collection.proto
 /**
  * @fileoverview
  * @enhanceable
