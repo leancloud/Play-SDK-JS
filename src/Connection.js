@@ -281,7 +281,7 @@ export default class Connection extends EventEmitter {
 
   _handleErrorNotify(err) {
     const errorInfo = err.getErrorInfo();
-    const code = errorInfo.getRaseonCode();
+    const code = errorInfo.getReasonCode();
     const detail = errorInfo.getDetail();
     this.emit(ERROR_EVENT, { code, detail });
   }
