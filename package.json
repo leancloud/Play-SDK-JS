@@ -1,6 +1,6 @@
 {
   "name": "@leancloud/play",
-  "version": "0.18.0-beta.11",
+  "version": "0.18.0-beta.12",
   "protocolVersion": "0",
   "description": "LeanCloud Play SDK",
   "main": "dist/play-node.js",
@@ -55,7 +55,7 @@
     "rollup-plugin-modify": "^3.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
     "typescript": "^2.9.2",
-    "weapp-polyfill": "^3.2.0"
+    "weapp-polyfill": "^3.2.1"
   },
   "types": "./play.d.ts",
   "browser": "dist/play.js",
