@@ -9,6 +9,15 @@ import Lobby from './Lobby';
 
 const DEFAULT_GAME_VERSION = '0.0.1';
 
+function getDafaultServer(appId) {
+  const suffix = appId.slice(-9);
+  if (suffix !== '-MdYXbMMI') {
+    throw new Error('Please init with your server url.');
+  }
+  const prefix = appId.slice(0, 8).toLowerCase();
+  return `https://${prefix}.play.lncldglobal.com`;
+}
+
 /**
  * 多人对战游戏服务的客户端
  * @param {Object} opts
@@ -61,7 +70,10 @@ export default class Client extends EventEmitter {
     } else {
       this._gameVersion = DEFAULT_GAME_VERSION;
     }
-    this._playServer = opts.playServer;
+    this._playServer =
+      opts.playServer !== undefined
+        ? opts.playServer
+        : getDafaultServer(opts.appId);
   }
 
   /**

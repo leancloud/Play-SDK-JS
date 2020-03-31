@@ -93,6 +93,7 @@ export default class Connection extends EventEmitter {
         );
       };
       this._ws.onerror = err => {
+        error(JSON.stringify(err));
         this._fsm.connectFailed();
         reject(err);
       };

@@ -1,7 +1,6 @@
 import request from 'superagent';
 import { debug, error } from './Logger';
 import isWeapp from './Utils';
-import AppRouter from './AppRouter';
 
 export default class GameRouter {
   constructor(appId, appKey, userId, server, feature) {
@@ -11,10 +10,6 @@ export default class GameRouter {
     this._server = server;
     this._feature = feature;
 
-    this._appRouter = new AppRouter({
-      appId,
-      server,
-    });
     // 缓存的 Lobby 信息，包括地址和 token
     this._sessionToken = null;
     this._url = null;
@@ -31,8 +26,6 @@ export default class GameRouter {
     }
     return new Promise(async (resolve, reject) => {
       try {
-        const gameRouterUrl = await this._appRouter.fetch();
-        debug(gameRouterUrl);
         const data = {};
         if (isWeapp) {
           data.feature = 'wechat';
@@ -40,8 +33,9 @@ export default class GameRouter {
         if (this._feature) {
           data.feature = this._feature;
         }
+        const url = `${this._server}/1/multiplayer/router/authorize`;
         const res = await request
-          .post(gameRouterUrl)
+          .post(url)
           .set(this._getHeaders())
           .send(data);
         debug(res.text);
