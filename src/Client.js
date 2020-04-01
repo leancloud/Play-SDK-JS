@@ -9,7 +9,7 @@ import Lobby from './Lobby';
 
 const DEFAULT_GAME_VERSION = '0.0.1';
 
-function isInternalApp(appId) {
+function isInternationalApp(appId) {
   const suffix = appId.slice(-9);
   return suffix === '-MdYXbMMI';
 }
@@ -54,7 +54,7 @@ export default class Client extends EventEmitter {
     ) {
       throw new TypeError(`${opts.playServer} is not a string`);
     }
-    if (opts.playServer === undefined && !isInternalApp(opts.appId)) {
+    if (opts.playServer === undefined && !isInternationalApp(opts.appId)) {
       throw new Error('Please init with your server url.');
     }
     this._userId = opts.userId;
