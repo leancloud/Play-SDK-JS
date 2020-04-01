@@ -9,6 +9,11 @@ import Lobby from './Lobby';
 
 const DEFAULT_GAME_VERSION = '0.0.1';
 
+function isInternationalApp(appId) {
+  const suffix = appId.slice(-9);
+  return suffix === '-MdYXbMMI';
+}
+
 /**
  * 多人对战游戏服务的客户端
  * @param {Object} opts
@@ -48,6 +53,9 @@ export default class Client extends EventEmitter {
       !(typeof opts.playServer === 'string')
     ) {
       throw new TypeError(`${opts.playServer} is not a string`);
+    }
+    if (opts.playServer === undefined && !isInternationalApp(opts.appId)) {
+      throw new Error('Please init with your server url.');
     }
     this._userId = opts.userId;
     this._appId = opts.appId;

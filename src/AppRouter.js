@@ -1,23 +1,9 @@
 import request from 'superagent';
 import { debug } from './Logger';
 
-const EAST_CHINA_SUFFIX = '-9Nh9j0Va';
-const US_SUFFIX = '-MdYXbMMI';
-
 export function getFallbackRouter(appId) {
-  if (typeof appId !== 'string') {
-    throw new TypeError(`${appId} is not a string`);
-  }
   const prefix = appId.slice(0, 8).toLowerCase();
-  const suffix = appId.slice(-9);
-  switch (suffix) {
-    case EAST_CHINA_SUFFIX:
-      return `https://${prefix}.play.lncldapi.com/1/multiplayer/router/route`;
-    case US_SUFFIX:
-      return `https://${prefix}.play.lncldglobal.com/1/multiplayer/router/route`;
-    default:
-      return `https://${prefix}.play.lncld.com/1/multiplayer/router/route`;
-  }
+  return `https://${prefix}.play.lncldglobal.com/1/multiplayer/router/route`;
 }
 
 export default class AppRouter {
