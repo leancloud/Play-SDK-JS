@@ -2,12 +2,12 @@ import { newPlay } from './Utils';
 import Event from '../src/Event';
 
 describe('test lobby', () => {
-  // it('test join lobby manually', async () => {
-  //   const p = newPlay('tl0');
-  //   await p.connect();
-  //   await p.joinLobby();
-  //   await p.close();
-  // });
+  it('test join lobby manually', async () => {
+    const p = newPlay('tl0');
+    await p.connect();
+    await p.joinLobby();
+    await p.close();
+  });
 
   it('test room list update', async () =>
     new Promise(async resolve => {
