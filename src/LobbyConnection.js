@@ -1,3 +1,5 @@
+import queryString from 'query-string';
+import urljoin from 'url-join';
 import Connection from './Connection';
 import LobbyRoom from './LobbyRoom';
 import { deserializeObject } from './CodecUtils';
@@ -61,7 +63,19 @@ export default class LobbyConnection extends Connection {
   }
 
   _getFastOpenUrl(server, appId, gameVersion, userId, sessionToken) {
-    return `${server}/1/multiplayer/lobby/websocket?appId=${appId}&sdkVersion=${sdkVersion}&protocolVersion=${protocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}`;
+    const queries = {
+      appId,
+      sdkVersion,
+      protocolVersion,
+      gameVersion,
+      userId,
+      sessionToken,
+    };
+    return urljoin(
+      server,
+      '/1/multiplayer/lobby/websocket',
+      `?${queryString.stringify(queries)}`
+    );
   }
 
   _getPingDuration() {
