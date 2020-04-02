@@ -1,4 +1,5 @@
 import queryString from 'query-string';
+import urljoin from 'url-join';
 import Connection from './Connection';
 import ReceiverGroup from './ReceiverGroup';
 import { deserializeObject, serializeObject } from './CodecUtils';
@@ -329,7 +330,7 @@ export default class GameConnection extends Connection {
       userId,
       sessionToken,
     });
-    return `${url}session?${queryString.stringify(queries)}`;
+    return urljoin(url, 'session', `?${queryString.stringify(queries)}`);
   }
 
   _handleNotification(cmd, op, body) {
