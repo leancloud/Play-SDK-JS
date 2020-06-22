@@ -5,6 +5,8 @@ import Event from './Event';
 import PlayError from './PlayError';
 import PlayErrorCode from './PlayErrorCode';
 
+import { debug } from './Logger';
+
 /**
  * 大厅类，用来请求和接收大厅相关事件
  */
@@ -60,9 +62,14 @@ export default class Lobby {
       const { url, sessionToken } = lobbyInfo;
       const { _appId, _gameVersion, _userId } = this._client;
       this._lobbyConn = new LobbyConnection();
+      // 微信小程序不支持使用 http 协议构造 WebSocket
+      const lobbyUrl = url
+        .replace('https://', 'wss://')
+        .replace('http://', 'ws://');
+      debug(`lobby url: ${lobbyUrl}`);
       await this._lobbyConn.connect(
         _appId,
-        url,
+        lobbyUrl,
         _gameVersion,
         _userId,
         sessionToken

@@ -35,6 +35,7 @@ function newWechatPlay(userId) {
     appKey: 'caOtXw8Lm1jFmPjdtkPSM0mC',
     userId,
     feature: 'wechat',
+    playServer: 'https://g2b0x6om.lc-cn-n1-shared.com',
   });
   return play;
 }
