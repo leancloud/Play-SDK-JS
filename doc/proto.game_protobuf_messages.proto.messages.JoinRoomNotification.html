@@ -1,0 +1,2113 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Class: JoinRoomNotification | @leancloud/play</title>
+    <link type="text/css" rel="stylesheet" href="styles/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+
+    
+</head>
+<body>
+<div class="main-container">
+    <input type="checkbox" id="nav-trigger" class="nav-trigger">
+    <label for="nav-trigger" class="navicon-button x">
+      <div class="navicon"></div>
+    </label>
+    <label for="nav-trigger" class="overlay"></label>
+    <nav class="lnb" id="lnb">
+        <div class="nav-main">
+            <h1><a href="index.html" class="link">@leancloud/play</a></h1>
+            <span class="version">
+            
+                v1.0.0
+            
+            </span>
+        </div>
+        <div class="nav-search js-search">
+            <input type="text" placeholder="Search docs">
+            <ul class="searched-list"></ul>
+        </div>
+
+        
+
+        <div class="scroll">
+        <div class="nav-api hidden"><h3>Global</h3><ul><li class="nav-item"><a href="global.html#CreateRoomFlag">CreateRoomFlag</a></li><li class="nav-item"><a href="global.html#deserializeObject">deserializeObject</a></li><li class="nav-item"><a href="global.html#Event">Event</a></li><li class="nav-item"><a href="global.html#LogLevel">LogLevel</a></li><li class="nav-item"><a href="global.html#ReceiverGroup">ReceiverGroup</a></li><li class="nav-item"><a href="global.html#registerType">registerType</a></li><li class="nav-item"><a href="global.html#serializeObject">serializeObject</a></li><li class="nav-item"><a href="global.html#setAdapters">setAdapters</a></li></ul></div><div class="nav-api hidden"><h3>Classes</h3><ul class="nav-items"><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="Client.html">Client</a>
+                </header>
+                <div class="nav-item-sub hidden" id="Client_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="Client.html#lobbyRoomList">lobbyRoomList</a></a></li><li class="sub-nav-item "><a href="Client.html#player">player</a></a></li><li class="sub-nav-item "><a href="Client.html#room">room</a></a></li><li class="sub-nav-item "><a href="Client.html#userId">userId</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="Client.html#addRoomExpectedUserIds">addRoomExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Client.html#clearRoomExpectedUserIds">clearRoomExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Client.html#close">close</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#connect">connect</a></a></li><li class="sub-nav-item "><a href="Client.html#createRoom">createRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#joinLobby">joinLobby</a></a></li><li class="sub-nav-item "><a href="Client.html#joinOrCreateRoom">joinOrCreateRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#joinRandomRoom">joinRandomRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#joinRoom">joinRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#kickPlayer">kickPlayer</a></a></li><li class="sub-nav-item "><a href="Client.html#leaveLobby">leaveLobby</a></a></li><li class="sub-nav-item "><a href="Client.html#leaveRoom">leaveRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#matchRandom">matchRandom</a></a></li><li class="sub-nav-item "><a href="Client.html#pauseMessageQueue">pauseMessageQueue</a></a></li><li class="sub-nav-item "><a href="Client.html#reconnect">reconnect</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#reconnectAndRejoin">reconnectAndRejoin</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#rejoinRoom">rejoinRoom</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Client.html#removeRoomExpectedUserIds">removeRoomExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Client.html#resumeMessageQueue">resumeMessageQueue</a></a></li><li class="sub-nav-item "><a href="Client.html#sendEvent">sendEvent</a></a></li><li class="sub-nav-item "><a href="Client.html#setMaster">setMaster</a></a></li><li class="sub-nav-item "><a href="Client.html#setRoomExpectedUserIds">setRoomExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Client.html#setRoomMaxPlayerCount">setRoomMaxPlayerCount</a></a></li><li class="sub-nav-item "><a href="Client.html#setRoomOpen">setRoomOpen</a></a></li><li class="sub-nav-item "><a href="Client.html#setRoomVisible">setRoomVisible</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="Lobby.html">Lobby</a>
+                </header>
+                <div class="nav-item-sub hidden" id="Lobby_sub"></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="LobbyRoom.html">LobbyRoom</a>
+                </header>
+                <div class="nav-item-sub hidden" id="LobbyRoom_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="LobbyRoom.html#customRoomProperties">customRoomProperties</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#emptyRoomTtl">emptyRoomTtl</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#expectedUserIds">expectedUserIds</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#maxPlayerCount">maxPlayerCount</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#open">open</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#playerCount">playerCount</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#playerTtl">playerTtl</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#roomName">roomName</a></a></li><li class="sub-nav-item "><a href="LobbyRoom.html#visible">visible</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="Player.html">Player</a>
+                </header>
+                <div class="nav-item-sub hidden" id="Player_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="Player.html#actorId">actorId</a></a></li><li class="sub-nav-item "><a href="Player.html#customProperties">customProperties</a></a></li><li class="sub-nav-item "><a href="Player.html#isActive">isActive</a></a></li><li class="sub-nav-item "><a href="Player.html#isLocal">isLocal</a></a></li><li class="sub-nav-item "><a href="Player.html#isMaster">isMaster</a></a></li><li class="sub-nav-item "><a href="Player.html#userId">userId</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="Player.html#setCustomProperties">setCustomProperties</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.cn.leancloud.play.proto.GenericCollection.html">GenericCollection</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_cn_leancloud_play_proto_GenericCollection_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#addListValue">addListValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#addMapEntryValue">addMapEntryValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#clearListValueList">clearListValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#clearMapEntryValueList">clearMapEntryValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#getListValueList">getListValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#getMapEntryValueList">getMapEntryValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#setListValueList">setListValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#setMapEntryValueList">setMapEntryValueList</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html">MapEntry</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_cn_leancloud_play_proto_GenericCollection_MapEntry_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#clearVal">clearVal</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#getKey">getKey</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#getVal">getVal</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#hasVal">hasVal</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#setKey">setKey</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#setVal">setVal</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollection.MapEntry.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html">GenericCollectionValue</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_cn_leancloud_play_proto_GenericCollectionValue_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.displayName">displayName</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.Type">Type</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.ValueCase">ValueCase</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearBoolValue">clearBoolValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearBytesValue">clearBytesValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearDoubleValue">clearDoubleValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearFloatValue">clearFloatValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearIntValue">clearIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearLongIntValue">clearLongIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#clearStringValue">clearStringValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getBoolValue">getBoolValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getBytesValue">getBytesValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getBytesValue_asB64">getBytesValue_asB64</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getBytesValue_asU8">getBytesValue_asU8</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getDoubleValue">getDoubleValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getFloatValue">getFloatValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getIntValue">getIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getLongIntValue">getLongIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getObjectTypeId">getObjectTypeId</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getStringValue">getStringValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getType">getType</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#getValueCase">getValueCase</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasBoolValue">hasBoolValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasBytesValue">hasBytesValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasDoubleValue">hasDoubleValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasFloatValue">hasFloatValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasIntValue">hasIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasLongIntValue">hasLongIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#hasStringValue">hasStringValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setBoolValue">setBoolValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setBytesValue">setBytesValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setDoubleValue">setDoubleValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setFloatValue">setFloatValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setIntValue">setIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setLongIntValue">setLongIntValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setObjectTypeId">setObjectTypeId</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setStringValue">setStringValue</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#setType">setType</a></a></li><li class="sub-nav-item "><a href="proto.cn.leancloud.play.proto.GenericCollectionValue.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.AckCommand.html">AckCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_AckCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#getI">getI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#getTimestamp">getTimestamp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#setI">setI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#setTimestamp">setTimestamp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AckCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.AppInfo.html">AppInfo</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_AppInfo_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#getAppCode">getAppCode</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#getAppMsg">getAppMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#setAppCode">setAppCode</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#setAppMsg">setAppMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppInfo.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html">AppStatistic</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_AppStatistic_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#getCountOfPlayers">getCountOfPlayers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#getCountOfPlayersInRooms">getCountOfPlayersInRooms</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#getCountOfPlayersOnRouter">getCountOfPlayersOnRouter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#getCountOfRooms">getCountOfRooms</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#setCountOfPlayers">setCountOfPlayers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#setCountOfPlayersInRooms">setCountOfPlayersInRooms</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#setCountOfPlayersOnRouter">setCountOfPlayersOnRouter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#setCountOfRooms">setCountOfRooms</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.AppStatistic.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.Body.html">Body</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_Body_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.BodyCase">BodyCase</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearDirect">clearDirect</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearError">clearError</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearEvents">clearEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearRequest">clearRequest</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearResponse">clearResponse</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearRoomList">clearRoomList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearRoomNotification">clearRoomNotification</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#clearStatistic">clearStatistic</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getBodyCase">getBodyCase</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getDirect">getDirect</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getError">getError</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getEvents">getEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getRequest">getRequest</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getResponse">getResponse</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getRoomList">getRoomList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getRoomNotification">getRoomNotification</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#getStatistic">getStatistic</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasDirect">hasDirect</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasError">hasError</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasEvents">hasEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasRequest">hasRequest</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasResponse">hasResponse</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasRoomList">hasRoomList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasRoomNotification">hasRoomNotification</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#hasStatistic">hasStatistic</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setDirect">setDirect</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setError">setError</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setEvents">setEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setRequest">setRequest</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setResponse">setResponse</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setRoomList">setRoomList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setRoomNotification">setRoomNotification</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#setStatistic">setStatistic</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Body.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.Command.html">Command</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_Command_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#getBody">getBody</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#getBody_asB64">getBody_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#getBody_asU8">getBody_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#getCmd">getCmd</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#getOp">getOp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#setBody">setBody</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#setCmd">setCmd</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#setOp">setOp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.Command.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html">CreateRoomRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_CreateRoomRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#clearRoomOptions">clearRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#getRoomOptions">getRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#hasRoomOptions">hasRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#setRoomOptions">setRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html">CreateRoomResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_CreateRoomResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#clearRoomOptions">clearRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#getAddr">getAddr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#getRoomCreated">getRoomCreated</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#getRoomOptions">getRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#hasRoomOptions">hasRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#setAddr">setAddr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#setRoomCreated">setRoomCreated</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#setRoomOptions">setRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.CreateRoomResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html">DirectCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_DirectCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#addToActorIds">addToActorIds</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#clearToActorIdsList">clearToActorIdsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getCached">getCached</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getCachingOption">getCachingOption</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getEventId">getEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getEventOptions">getEventOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getFromActorId">getFromActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getI">getI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getInterestGroup">getInterestGroup</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getMsg">getMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getMsg_asB64">getMsg_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getMsg_asU8">getMsg_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getReceiverGroup">getReceiverGroup</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getTimestamp">getTimestamp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#getToActorIdsList">getToActorIdsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setCached">setCached</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setCachingOption">setCachingOption</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setEventId">setEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setEventOptions">setEventOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setFromActorId">setFromActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setI">setI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setInterestGroup">setInterestGroup</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setMsg">setMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setReceiverGroup">setReceiverGroup</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setTimestamp">setTimestamp</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#setToActorIdsList">setToActorIdsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.DirectCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html">ErrorCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_ErrorCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#clearErrorInfo">clearErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#getErrorInfo">getErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#hasErrorInfo">hasErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#setErrorInfo">setErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html">ErrorInfo</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_ErrorInfo_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#clearAppInfo">clearAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#getAppInfo">getAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#getDetail">getDetail</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#getReasonCode">getReasonCode</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#hasAppInfo">hasAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#setAppInfo">setAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#setDetail">setDetail</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#setReasonCode">setReasonCode</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ErrorInfo.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html">EventsCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_EventsCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#addEvents">addEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#clearEventsList">clearEventsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#getEventsList">getEventsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#setEventsList">setEventsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html">EventsRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_EventsRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#clearActorId">clearActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#clearEventId">clearEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#getActorId">getActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#getEventId">getEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#getMsg">getMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#getMsg_asB64">getMsg_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#getMsg_asU8">getMsg_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#hasActorId">hasActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#hasEventId">hasEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#setActorId">setActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#setEventId">setEventId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#setMsg">setMsg</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.EventsRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html">InterestGroups</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_InterestGroups_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#addDisabledGroups">addDisabledGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#addEnabledGroups">addEnabledGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#clearDisabledGroupsList">clearDisabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#clearEnabledGroupsList">clearEnabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#getDisabledGroupsList">getDisabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#getEnabledGroupsList">getEnabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#setDisabledGroupsList">setDisabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#setEnabledGroupsList">setEnabledGroupsList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.InterestGroups.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.IntValue.html">IntValue</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_IntValue_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#getVal">getVal</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#setVal">setVal</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.IntValue.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html">JoinLobbyRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_JoinLobbyRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#getLobbyId">getLobbyId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#setLobbyId">setLobbyId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinLobbyRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">JoinRoomNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_JoinRoomNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#clearMember">clearMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#getMember">getMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#hasMember">hasMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#setMember">setMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html">JoinRoomRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_JoinRoomRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#clearRoomOptions">clearRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getCreateOnNotFound">getCreateOnNotFound</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getExpectAttr">getExpectAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getExpectAttr_asB64">getExpectAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getExpectAttr_asU8">getExpectAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getPiggybackPeerId">getPiggybackPeerId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getRejoin">getRejoin</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#getRoomOptions">getRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#hasRoomOptions">hasRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#setCreateOnNotFound">setCreateOnNotFound</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#setExpectAttr">setExpectAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#setPiggybackPeerId">setPiggybackPeerId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#setRejoin">setRejoin</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#setRoomOptions">setRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html">JoinRoomResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_JoinRoomResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#clearRoomOptions">clearRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#getAddr">getAddr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#getRoomOptions">getRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#hasRoomOptions">hasRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#setAddr">setAddr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#setRoomOptions">setRoomOptions</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.JoinRoomResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html">KickMemberRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_KickMemberRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#clearAppInfo">clearAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#getAppInfo">getAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#getTargetActorId">getTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#hasAppInfo">hasAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#setAppInfo">setAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#setTargetActorId">setTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html">KickMemberResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_KickMemberResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#getTargetActorId">getTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#setTargetActorId">setTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.KickMemberResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html">LeftRoomNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_LeftRoomNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#getActorId">getActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#setActorId">setActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.LeftRoomNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html">RequestMessage</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RequestMessage_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.displayName">displayName</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.RequestCase">RequestCase</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearCreateRoom">clearCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearEvents">clearEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearInterestGroups">clearInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearJoinLobby">clearJoinLobby</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearJoinRoom">clearJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearKickMember">clearKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearSessionOpen">clearSessionOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearUpdateMasterClient">clearUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearUpdateProperty">clearUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#clearUpdateSysProperty">clearUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getCreateRoom">getCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getEvents">getEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getI">getI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getInterestGroups">getInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getJoinLobby">getJoinLobby</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getJoinRoom">getJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getKickMember">getKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getRequestCase">getRequestCase</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getSessionOpen">getSessionOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getUpdateMasterClient">getUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getUpdateProperty">getUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#getUpdateSysProperty">getUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasCreateRoom">hasCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasEvents">hasEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasInterestGroups">hasInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasJoinLobby">hasJoinLobby</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasJoinRoom">hasJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasKickMember">hasKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasSessionOpen">hasSessionOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasUpdateMasterClient">hasUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasUpdateProperty">hasUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#hasUpdateSysProperty">hasUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setCreateRoom">setCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setEvents">setEvents</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setI">setI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setInterestGroups">setInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setJoinLobby">setJoinLobby</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setJoinRoom">setJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setKickMember">setKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setSessionOpen">setSessionOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setUpdateMasterClient">setUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setUpdateProperty">setUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#setUpdateSysProperty">setUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RequestMessage.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html">ResponseMessage</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_ResponseMessage_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.displayName">displayName</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.ResponseCase">ResponseCase</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearAck">clearAck</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearCreateRoom">clearCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearErrorInfo">clearErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearInterestGroups">clearInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearJoinRoom">clearJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearKickMember">clearKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearUpdateMasterClient">clearUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearUpdateProperty">clearUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#clearUpdateSysProperty">clearUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getAck">getAck</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getCreateRoom">getCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getErrorInfo">getErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getI">getI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getInterestGroups">getInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getJoinRoom">getJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getKickMember">getKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getResponseCase">getResponseCase</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getUpdateMasterClient">getUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getUpdateProperty">getUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#getUpdateSysProperty">getUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasAck">hasAck</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasCreateRoom">hasCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasErrorInfo">hasErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasInterestGroups">hasInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasJoinRoom">hasJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasKickMember">hasKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasUpdateMasterClient">hasUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasUpdateProperty">hasUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#hasUpdateSysProperty">hasUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setAck">setAck</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setCreateRoom">setCreateRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setErrorInfo">setErrorInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setI">setI</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setInterestGroups">setInterestGroups</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setJoinRoom">setJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setKickMember">setKickMember</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setUpdateMasterClient">setUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setUpdateProperty">setUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#setUpdateSysProperty">setUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.ResponseMessage.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html">RoomListCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RoomListCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#addList">addList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#clearListList">clearListList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#getListList">getListList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#setListList">setListList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomListCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RoomMember.html">RoomMember</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RoomMember_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getActorId">getActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getAttr">getAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getAttr_asB64">getAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getAttr_asU8">getAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getInactive">getInactive</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#getPid">getPid</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#setActorId">setActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#setAttr">setAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#setInactive">setInactive</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#setPid">setPid</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html">RoomNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RoomNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.displayName">displayName</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.NotificationCase">NotificationCase</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearAppInfo">clearAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearJoinRoom">clearJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearLeftRoom">clearLeftRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearUpdateMasterClient">clearUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearUpdateProperty">clearUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#clearUpdateSysProperty">clearUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getAppInfo">getAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getByMaster">getByMaster</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getInitByActor">getInitByActor</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getJoinRoom">getJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getLeftRoom">getLeftRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getNotificationCase">getNotificationCase</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getUpdateMasterClient">getUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getUpdateProperty">getUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#getUpdateSysProperty">getUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasAppInfo">hasAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasJoinRoom">hasJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasLeftRoom">hasLeftRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasUpdateMasterClient">hasUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasUpdateProperty">hasUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#hasUpdateSysProperty">hasUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setAppInfo">setAppInfo</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setByMaster">setByMaster</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setInitByActor">setInitByActor</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setJoinRoom">setJoinRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setLeftRoom">setLeftRoom</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setUpdateMasterClient">setUpdateMasterClient</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setUpdateProperty">setUpdateProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#setUpdateSysProperty">setUpdateSysProperty</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html">RoomOptions</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RoomOptions_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#addExpectMembers">addExpectMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#addLobbyAttrKeys">addLobbyAttrKeys</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#addMembers">addMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#clearExpectMembersList">clearExpectMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#clearLobbyAttrKeysList">clearLobbyAttrKeysList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#clearMembersList">clearMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#clearOpen">clearOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#clearVisible">clearVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getAttr">getAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getAttr_asB64">getAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getAttr_asU8">getAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getCid">getCid</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getEmptyRoomTtl">getEmptyRoomTtl</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getExpectMembersList">getExpectMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getFlag">getFlag</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getLobbyAttrKeysList">getLobbyAttrKeysList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getMasterActorId">getMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getMaxMembers">getMaxMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getMemberCount">getMemberCount</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getMembersList">getMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getOpen">getOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getPlayerTtl">getPlayerTtl</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getPluginName">getPluginName</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#getVisible">getVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#hasOpen">hasOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#hasVisible">hasVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setAttr">setAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setCid">setCid</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setEmptyRoomTtl">setEmptyRoomTtl</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setExpectMembersList">setExpectMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setFlag">setFlag</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setLobbyAttrKeysList">setLobbyAttrKeysList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setMasterActorId">setMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setMaxMembers">setMaxMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setMemberCount">setMemberCount</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setMembersList">setMembersList</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setOpen">setOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setPlayerTtl">setPlayerTtl</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setPluginName">setPluginName</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#setVisible">setVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomOptions.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html">RoomSystemProperty</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_RoomSystemProperty_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#clearOpen">clearOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#clearVisible">clearVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#getExpectMembers">getExpectMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#getMaxMembers">getMaxMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#getOpen">getOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#getVisible">getVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#hasOpen">hasOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#hasVisible">hasVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#setExpectMembers">setExpectMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#setMaxMembers">setMaxMembers</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#setOpen">setOpen</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#setVisible">setVisible</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.RoomSystemProperty.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html">SessionOpenRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_SessionOpenRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getAppId">getAppId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getConfigBitmap">getConfigBitmap</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getGameVersion">getGameVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getN">getN</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getPeerId">getPeerId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getProtocolVersion">getProtocolVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getS">getS</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getSdkVersion">getSdkVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getSessionToken">getSessionToken</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#getT">getT</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setAppId">setAppId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setConfigBitmap">setConfigBitmap</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setGameVersion">setGameVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setN">setN</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setPeerId">setPeerId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setProtocolVersion">setProtocolVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setS">setS</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setSdkVersion">setSdkVersion</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setSessionToken">setSessionToken</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#setT">setT</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.SessionOpenRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html">StatisticCommand</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_StatisticCommand_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#clearAppStats">clearAppStats</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#getAppStats">getAppStats</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#hasAppStats">hasAppStats</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#setAppStats">setAppStats</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.StatisticCommand.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html">UpdateMasterClientNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateMasterClientNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#getMasterActorId">getMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#setMasterActorId">setMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html">UpdateMasterClientRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateMasterClientRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#getMasterActorId">getMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#setMasterActorId">setMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html">UpdateMasterClientResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateMasterClientResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#getMasterActorId">getMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#setMasterActorId">setMasterActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateMasterClientResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html">UpdatePropertyNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdatePropertyNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#getActorId">getActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#getAttr">getAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#getAttr_asB64">getAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#getAttr_asU8">getAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#setActorId">setActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#setAttr">setAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html">UpdatePropertyRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdatePropertyRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getAttr">getAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getAttr_asB64">getAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getAttr_asU8">getAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getExpectAttr">getExpectAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getExpectAttr_asB64">getExpectAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getExpectAttr_asU8">getExpectAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#getTargetActorId">getTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#setAttr">setAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#setExpectAttr">setExpectAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#setTargetActorId">setTargetActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html">UpdatePropertyResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdatePropertyResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#getActorId">getActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#getAttr">getAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#getAttr_asB64">getAttr_asB64</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#getAttr_asU8">getAttr_asU8</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#setActorId">setActorId</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#setAttr">setAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdatePropertyResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html">UpdateSysPropertyNotification</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateSysPropertyNotification_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#clearSysAttr">clearSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#getSysAttr">getSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#hasSysAttr">hasSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#setSysAttr">setSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyNotification.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html">UpdateSysPropertyRequest</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateSysPropertyRequest_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#clearExpectSysAttr">clearExpectSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#clearSysAttr">clearSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#getExpectSysAttr">getExpectSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#getSysAttr">getSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#hasExpectSysAttr">hasExpectSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#hasSysAttr">hasSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#setExpectSysAttr">setExpectSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#setSysAttr">setSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyRequest.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html">UpdateSysPropertyResponse</a>
+                </header>
+                <div class="nav-item-sub hidden" id="proto_game_protobuf_messages_proto_messages_UpdateSysPropertyResponse_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#.displayName">displayName</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#.deserializeBinary">deserializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#.deserializeBinaryFromReader">deserializeBinaryFromReader</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#.serializeBinaryToWriter">serializeBinaryToWriter</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#.toObject">toObject</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#clearSysAttr">clearSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#getSysAttr">getSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#hasSysAttr">hasSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#serializeBinary">serializeBinary</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#setSysAttr">setSysAttr</a></a></li><li class="sub-nav-item "><a href="proto.game_protobuf_messages.proto.messages.UpdateSysPropertyResponse.html#toObject">toObject</a></a></li></ul></div></div>
+            </li><li class="nav-item">
+                <header>
+                    <span class="toggle-subnav invisible btn btn-link fa fa-plus"></span>
+                    <a href="Room.html">Room</a>
+                </header>
+                <div class="nav-item-sub hidden" id="Room_sub"><div><div class="member-type">Members</div><ul class="inner"><li class="sub-nav-item "><a href="Room.html#customProperties">customProperties</a></a></li><li class="sub-nav-item "><a href="Room.html#expectedUserIds">expectedUserIds</a></a></li><li class="sub-nav-item "><a href="Room.html#master">master</a></a></li><li class="sub-nav-item "><a href="Room.html#masterId">masterId</a></a></li><li class="sub-nav-item "><a href="Room.html#maxPlayerCount">maxPlayerCount</a></a></li><li class="sub-nav-item "><a href="Room.html#name">name</a></a></li><li class="sub-nav-item "><a href="Room.html#open">open</a></a></li><li class="sub-nav-item "><a href="Room.html#playerList">playerList</a></a></li><li class="sub-nav-item "><a href="Room.html#visible">visible</a></a></li></ul></div><div><div class="member-type">Methods</div><ul class="inner"><li class="sub-nav-item "><a href="Room.html#addExpectedUserIds">addExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Room.html#clearExpectedUserIds">clearExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Room.html#close">close</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Room.html#getPlayer">getPlayer</a></a></li><li class="sub-nav-item "><a href="Room.html#kickPlayer">kickPlayer</a></a></li><li class="sub-nav-item "><a href="Room.html#leave">leave</a> <span class="async"> async</span></a></li><li class="sub-nav-item "><a href="Room.html#removeExpectedUserIds">removeExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Room.html#sendEvent">sendEvent</a></a></li><li class="sub-nav-item "><a href="Room.html#setCustomProperties">setCustomProperties</a></a></li><li class="sub-nav-item "><a href="Room.html#setExpectedUserIds">setExpectedUserIds</a></a></li><li class="sub-nav-item "><a href="Room.html#setMaster">setMaster</a></a></li><li class="sub-nav-item "><a href="Room.html#setMaxPlayerCount">setMaxPlayerCount</a></a></li><li class="sub-nav-item "><a href="Room.html#setOpen">setOpen</a></a></li><li class="sub-nav-item "><a href="Room.html#setVisible">setVisible</a></a></li></ul></div></div>
+            </li></ul></div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <ul class="breadcrumbs">
+            <li><a href="index.html">Docs</a> »</li>
+            <li>Class: JoinRoomNotification</li>
+        </ul>
+        <hr>
+        
+
+
+
+<header>
+    
+        <h2>JoinRoomNotification</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+<dt>
+
+    
+
+    <h4 class="name" id="JoinRoomNotification">
+        <span class="type-signature"></span>new JoinRoomNotification<span class="signature">(opt_data<span class="signature-attributes">opt</span>)</span>
+                   <span class="type-signature"></span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line530"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Generated by JsPbCodeGenerator.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Optional initial data array, typically from a
+server response, or constructed directly in Javascript. The array is used
+in place and becomes part of the constructed object. It is not cloned.
+If no data is provided, the constructed object will be empty, but still
+valid.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title"><i class="fa fa-chain"></i>Extends</h3>
+
+        
+
+
+    <ul>
+        <li>jspb.Message</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title"><i class="fa fa-cube"></i>Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id=".displayName">
+    <span class="type-signature"><span class="icon green">static</span> </span>displayName<span class="type-signature"></span>
+    
+    <a href="proto_messages_pb.js.html#line544"><i class="source fa fa-file-code-o"></i></a>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title"><i class="fa fa-lightbulb-o"></i>Methods</h3>
+
+        <dl>
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id=".deserializeBinary">
+        <span class="type-signature"><span class="icon green">static</span> </span>deserializeBinary<span class="signature">(bytes)</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {<a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a>}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4440"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Deserializes binary data (in protobuf wire format).
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">jspb.ByteSource</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bytes to deserialize.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id=".deserializeBinaryFromReader">
+        <span class="type-signature"><span class="icon green">static</span> </span>deserializeBinaryFromReader<span class="signature">(msg<span class="signature-attributes">non-null</span>, reader<span class="signature-attributes">non-null</span>)</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {<a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a>}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4458"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Deserializes binary data (in protobuf wire format) from the
+given reader into the given message object.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The message object to deserialize into.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reader</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">jspb.BinaryReader</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The BinaryReader to use.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id=".serializeBinaryToWriter">
+        <span class="type-signature"><span class="icon green">static</span> </span>serializeBinaryToWriter<span class="signature">(message<span class="signature-attributes">non-null</span>, writer<span class="signature-attributes">non-null</span>)</span>
+                   <span class="type-signature"></span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4505"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Serializes the given message to binary data (in protobuf wire
+format), writing to the given BinaryWriter.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>writer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">jspb.BinaryWriter</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id=".toObject">
+        <span class="type-signature"><span class="icon green">static</span> </span>toObject<span class="signature">(includeInstance, msg<span class="signature-attributes">non-null</span>)</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {Object}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4414"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Static version of the {@see toObject} method.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>includeInstance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Deprecated. Whether to include
+    the JSPB instance for transitional soy proto support:
+    http://goto/soy-param-migration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The msg instance to transform.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Object</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="clearMember">
+        <span class="type-signature"></span>clearMember<span class="signature">()</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {<a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a>}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4547"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Clears the message field making it undefined.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+
+
+
+- returns this
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="getMember">
+        <span class="type-signature"></span>getMember<span class="signature">()</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">nullable</span> {<a href="proto.game_protobuf_messages.proto.messages.RoomMember.html">proto.game_protobuf_messages.proto.messages.RoomMember</a>}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4525"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        optional RoomMember member = 1;
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html">proto.game_protobuf_messages.proto.messages.RoomMember</a></span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="hasMember">
+        <span class="type-signature"></span>hasMember<span class="signature">()</span>
+                   <span class="type-signature"> &rarr; {boolean}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4555"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Returns whether this field is set.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">boolean</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="serializeBinary">
+        <span class="type-signature"></span>serializeBinary<span class="signature">()</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {Uint8Array}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4489"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Serializes the message to binary data (in protobuf wire format).
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Uint8Array</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="setMember">
+        <span class="type-signature"></span>setMember<span class="signature">(value)</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {<a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a>}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4537"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.RoomMember.html">proto.game_protobuf_messages.proto.messages.RoomMember</a></span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="proto.game_protobuf_messages.proto.messages.JoinRoomNotification.html">proto.game_protobuf_messages.proto.messages.JoinRoomNotification</a></span>
+
+
+
+
+
+- returns this
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+
+    <h4 class="name" id="toObject">
+        <span class="type-signature"></span>toObject<span class="signature">(opt_includeInstance<span class="signature-attributes">opt</span>)</span>
+                   <span class="type-signature"> &rarr; <span class="icon green">non-null</span> {Object}</span>
+        
+        <span class="source">
+            <a href="proto_messages_pb.js.html#line4396"><i class="source fa fa-file-code-o"></i></a>
+        </span>
+    </h4>
+
+    
+
+    
+
+    
+
+</dt>
+
+<dd>
+    
+    <div class="description">
+        Creates an object representation of this proto.
+Field names that are reserved in JavaScript and will be renamed to pb_name.
+Optional fields that are not set will be set to undefined.
+To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+For the list of reserved names please see:
+    net/proto2/compiler/js/internal/generator.cc#kKeyword.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opt_includeInstance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Deprecated. whether to include the
+    JSPB instance for transitional soy proto support:
+    http://goto/soy-param-migration</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Object</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+
+
+
+
+        <hr>
+        <footer>
+            <strong></strong><br/>
+            Documented with <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
+        </footer>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script>
+
+window.isApi = true
+window.isManual = false
+window.doc = {
+    name: 'JoinRoomNotification',
+    longname: 'proto.game_protobuf_messages.proto.messages.JoinRoomNotification',
+}
+
+if (!doc.name) isApi = false
+
+</script>
+<script src="js/rtd.js"></script>
+</body>
+</html>
