@@ -1,5 +1,8 @@
 # Play-SDK-JS
 
+![build](https://img.shields.io/travis/leancloud/Play-SDK-JS)
+![version](https://img.shields.io/github/package-json/v/leancloud/Play-SDK-JS)
+
 ## 安装
 
 从 Release 下载 play.js 并拖拽至 Cocos Creator 中作为源码引用（无需做插件配置）
