@@ -391,7 +391,7 @@ export default class Client extends EventEmitter {
     if (!this.room) {
       throw new Error('You are not in room yet.');
     }
-    return this.room.kickPlayer(actorId, code, msg);
+    return this.room.kickPlayer(actorId, { code, msg });
   }
 
   /**
