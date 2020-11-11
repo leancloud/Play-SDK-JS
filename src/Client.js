@@ -353,7 +353,7 @@ export default class Client extends EventEmitter {
 
   /**
    * 发送自定义消息
-   * @param {Number|String} eventId 事件 ID
+   * @param {Number} eventId 事件 ID
    * @param {Object} eventData 事件参数
    * @param {Object} options 发送事件选项
    * @param {ReceiverGroup} options.receiverGroup 接收组
