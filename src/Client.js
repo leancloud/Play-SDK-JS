@@ -444,7 +444,7 @@ export default class Client extends EventEmitter {
    */
   get lobbyRoomList() {
     if (!this._lobby) {
-      throw new Error('You are not in lobby yet.s');
+      throw new Error('You are not in lobby yet.');
     }
     return this._lobby._lobbyRoomList;
   }
