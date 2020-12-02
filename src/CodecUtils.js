@@ -170,10 +170,13 @@ function serializeObject(obj) {
     return null;
   }
   const entryList = [];
-  Object.keys(obj).forEach(k => {
+  Object.entries(obj).forEach(([key, val]) => {
+    if (typeof val === 'undefined') {
+      return;
+    }
     const entry = new GenericCollection.MapEntry();
-    entry.setKey(k);
-    entry.setVal(serialize(obj[k]));
+    entry.setKey(key);
+    entry.setVal(serialize(val));
     entryList.push(entry);
   });
   const map = new GenericCollection();
