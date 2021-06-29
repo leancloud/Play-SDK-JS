@@ -56,7 +56,7 @@
     "rollup-plugin-modify": "^3.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
     "typescript": "^2.9.2",
-    "weapp-polyfill": "^3.2.1"
+    "weapp-polyfill": "^3.2.2"
   },
   "types": "./play.d.ts",
   "browser": "dist/play.js",
