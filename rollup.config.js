@@ -3,8 +3,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
-import minify from 'rollup-plugin-babel-minify';
 import modify from 'rollup-plugin-modify';
+import { terser } from 'rollup-plugin-terser';
 
 const babelrc = JSON.parse(readFileSync('./.babelrc', 'utf8'));
 
@@ -64,9 +64,7 @@ export default [
         find: GOOGLE_PROTOBUF_WRAPPER_FIND,
         replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
       }),
-      minify({
-        // Options for babel-minify.
-      }),
+      terser(),
     ],
   },
   {
@@ -97,6 +95,28 @@ export default [
         replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
       }),
       commonjs(),
+    ],
+  },
+  {
+    input: 'src/index-weapp.js',
+    output: {
+      name: 'Play',
+      file: 'dist/play-weapp-min.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    plugins: [
+      json(),
+      babel(BABEL_CONFIG),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+      modify({
+        find: GOOGLE_PROTOBUF_WRAPPER_FIND,
+        replace: GOOGLE_PROTOBUF_WRAPPER_REPLACE,
+      }),
+      terser(),
     ],
   },
   {
