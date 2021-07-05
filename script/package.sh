@@ -9,4 +9,5 @@ cp play-egret.zip ./release
 cp ./dist/play-laya.js ./release
 cp ./dist/play-weapp.js ./release
 cp ./dist/play.js ./release
+cp ./dist/play-weapp-min.js ./release
 cp play.d.ts ./release
